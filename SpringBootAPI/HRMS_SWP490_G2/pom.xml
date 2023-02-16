@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.0.1</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/> <!-- lookup parent from repositories -->
     </parent>
     <groupId>com.swp490_g2</groupId>
     <artifactId>HRMS_SWP490_G2</artifactId>
