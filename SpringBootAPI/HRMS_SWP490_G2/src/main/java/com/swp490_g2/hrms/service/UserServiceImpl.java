@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     public User addNewUser(AddUserRequest user) {
         return userRepository.save(
                 User.builder()
-                .dateOfBirth(user.getDateOfBirth())
+//                .dateOfBirth(user.getDateOfBirth())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .middleName(user.getMiddleName())
@@ -29,10 +29,10 @@ public class UserServiceImpl implements UserService {
                 .password(user.getPassword())
                 .phoneNumber(user.getPhoneNumber())
                 .isActive(user.getIsActive())
-                .isBanned(user.getIsBanned())
-                .gender(user.getGender())
-                .avatar(user.getAvatar())
-                .citizenIdentification(user.getCitizenIdentification())
+//                .isBanned(user.getIsBanned())
+//                .gender(user.getGender())
+//                .avatar(user.getAvatar())
+//                .citizenIdentification(user.getCitizenIdentification())
 
                 .build());
     }
