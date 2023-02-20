@@ -22,7 +22,10 @@ public class UserController {
         return ResponseEntity.ok(userServiceImpl.addNewUser(user));
     }
 
-
+    @RequestMapping(value = "/index")
+    public String index() {
+        return "index";
+    }
 
 
 
