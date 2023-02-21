@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, NgForm, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { Title } from "@angular/platform-browser";
+import { Client } from "../ngswag/client";
 
 @Component({
   selector: 'app-register',
@@ -15,6 +16,7 @@ export class RegisterComponent implements OnInit {
   constructor(
     private $title: Title,
     private $fb: FormBuilder,
+    private $client: Client
   ) {
     $title.setTitle("Register");
   }
@@ -65,15 +67,13 @@ export class RegisterComponent implements OnInit {
 
   register(): void {
     if (this.form.invalid) {
-      if(this.form.controls["email"].errors)
-      {
+      if (this.form.controls["email"].errors) {
         alert("Email is not valid");
         return;
       }
 
       // This is how to get message from the form field's error
-      if(this.form.controls["confirmPassword"].errors)
-      {
+      if (this.form.controls["confirmPassword"].errors) {
         alert(this.form.controls["confirmPassword"].errors['message']);
         return;
       }
@@ -82,6 +82,9 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    console.log(this.form.value);
+    this.$client.addNewUser(this.form.value)
+      .subscribe(user => {
+        console.log(user);
+      });
   }
 }

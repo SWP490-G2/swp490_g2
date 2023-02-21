@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.swp490_g2.hrms.repositories.UserRepository;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -14,12 +16,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addNewUser(RegisterRequest user) {
-        return userRepository.save(
-                User.builder()
-                        .email(user.getEmail())
-                        .password(user.getPassword())
-                        .isActive(true)
-                        .build());
+        User u = User.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .isActive(true)
+                .build();
+
+        u.setCreatedAt(new Date());
+
+        return userRepository.save(u);
     }
 
 

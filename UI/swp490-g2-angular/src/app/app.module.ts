@@ -15,6 +15,8 @@ import { CarouselModule } from 'primeng/carousel';
 import { DividerModule } from 'primeng/divider';
 import { RippleModule } from 'primeng/ripple';
 import { FormsModule } from "@angular/forms";
+import { Client } from "./ngswag/client";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -34,9 +36,11 @@ import { FormsModule } from "@angular/forms";
     DividerModule,
     RippleModule,
     CheckboxModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -12,7 +12,7 @@ import lombok.*;
 @Table(name = "user")
 @AttributeOverride(name = "id", column = @Column(name = "userId"))
 public class User extends BaseEntity {
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -37,7 +37,7 @@ public class User extends BaseEntity {
 //    private String phoneNumber;
 
     @Column(nullable = false, columnDefinition="tinyint(1) default 1")
-    private Boolean isActive = true;
+    private Boolean isActive;
 
 //    @Column(name = "is_banned")
 //    private Boolean isBanned;
