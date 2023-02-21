@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @Table(name = "admin")
-@AttributeOverride(name = "id", column = @Column(name = "user_id"))
+@AttributeOverride(name = "id", column = @Column(name = "userId"))
 public class Admin extends User{
 
 

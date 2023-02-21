@@ -14,6 +14,7 @@ import { ButtonModule } from 'primeng/button';
 import { CarouselModule } from 'primeng/carousel';
 import { DividerModule } from 'primeng/divider';
 import { RippleModule } from 'primeng/ripple';
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { RippleModule } from 'primeng/ripple';
     DividerModule,
     RippleModule,
     CheckboxModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -17,7 +17,6 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BaseEntity {
 
     public BaseEntity(Long id) {
@@ -25,31 +24,31 @@ public class BaseEntity {
     }
 
     @Id
-    @Column(name = "id")
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "created_by")
+    @Column
     private Long createdBy;
 
-    @Column(name = "created_at")
+    @Column
     @JsonIgnore
     private Date createdAt;
 
-    @Column(name = "modified_by")
+    @Column
     @JsonIgnore
     private Long modifiedBy;
 
-    @Column(name = "modified_at")
+    @Column
     private Date modifiedAt;
 
-    @JsonGetter("created_at")
-    public String getCreatedAtt(){
+    @JsonGetter("createdAt")
+    public String getCreatedAt(){
         return DateUtils.format(this.createdAt, DateUtils.DATE_FORMAT_3);
     }
 
-    @JsonGetter("modified_at")
-    public String getModifyAtt(){
+    @JsonGetter("modifiedAt")
+    public String getModifiedAt(){
         return DateUtils.format(this.modifiedAt, DateUtils.DATE_FORMAT_3);
     }
 }

@@ -1,7 +1,14 @@
 <div class="register-container">
-  <div class="surface-card p-4 shadow-2 border-round w-full lg:w-6">
+  <!-- #form is a viewChild in Angular -->
+  <form
+    #form="ngForm"
+    class="surface-card p-4 shadow-2 border-round w-full lg:w-6"
+    (ngSubmit)="register()"
+  >
     <div class="text-center mb-5">
-      <div class="text-900 text-3xl font-medium mb-3">Register a new account</div>
+      <div class="text-900 text-3xl font-medium mb-3">
+        Register a new account
+      </div>
       <span class="text-600 font-medium line-height-3"
         >Don't have an account?</span
       >
@@ -11,18 +18,39 @@
     </div>
 
     <div>
-      <label for="email1" class="block text-900 font-medium mb-2">Email</label>
-      <input id="email1" type="text" pInputText class="w-full mb-3" />
+      <label for="email" class="block text-900 font-medium mb-2">Email</label>
+      <input
+        id="email"
+        type="text"
+        pInputText
+        class="w-full mb-3"
+        name="email"
+        ngModel
+      />
 
       <label for="password" class="block text-900 font-medium mb-2"
         >Password</label
       >
-      <input id="password" type="password" pInputText class="w-full mb-3" />
+      <input
+        id="password"
+        type="password"
+        pInputText
+        class="w-full mb-3"
+        name="password"
+        ngModel
+      />
 
       <label for="confirmPassword" class="block text-900 font-medium mb-2"
         >Confirm Password</label
       >
-      <input id="confirmPassword" type="password" pInputText class="w-full mb-3" />
+      <input
+        id="confirmPassword"
+        type="password"
+        pInputText
+        class="w-full mb-3"
+        name="confirmPassword"
+        ngModel
+      />
 
       <div class="flex align-items-center justify-content-between mb-6">
         <div class="flex align-items-center">
@@ -47,5 +75,5 @@
         class="w-full"
       ></button>
     </div>
-  </div>
+  </form>
 </div>

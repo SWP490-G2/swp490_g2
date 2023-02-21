@@ -13,6 +13,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "buyer")
-@AttributeOverride(name = "id", column = @Column(name = "user_id"))
+@AttributeOverride(name = "id", column = @Column(name = "userId"))
 public class Buyer extends User{
 }

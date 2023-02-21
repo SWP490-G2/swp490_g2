@@ -10,22 +10,22 @@ import lombok.*;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "user")
-@AttributeOverride(name = "id", column = @Column(name = "user_id"))
+@AttributeOverride(name = "id", column = @Column(name = "userId"))
 public class User extends BaseEntity {
-    @Column(name = "email", nullable = false)
+    @Column(nullable = false)
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     private String password;
-
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
-
-    @Column(name = "middle_name", nullable = true)
-    private String middleName;
-
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+//
+//    @Column(name = "first_name", nullable = false)
+//    private String firstName;
+//
+//    @Column(name = "middle_name", nullable = true)
+//    private String middleName;
+//
+//    @Column(name = "last_name", nullable = false)
+//    private String lastName;
 
 //    @Column(name = "date_of_birth", nullable = false)
 //    private Date dateOfBirth;
@@ -33,11 +33,11 @@ public class User extends BaseEntity {
 //    @Column(name = "gender", nullable = false)
 //    private Boolean gender;
 
-    @Column(name = "phone_number", nullable = false)
-    private String phoneNumber;
+//    @Column(name = "phone_number", nullable = false)
+//    private String phoneNumber;
 
-    @Column(name = "is_active", nullable = false, columnDefinition="tinyint(1) default 1")
-    private Boolean isActive;
+    @Column(nullable = false, columnDefinition="tinyint(1) default 1")
+    private Boolean isActive = true;
 
 //    @Column(name = "is_banned")
 //    private Boolean isBanned;
