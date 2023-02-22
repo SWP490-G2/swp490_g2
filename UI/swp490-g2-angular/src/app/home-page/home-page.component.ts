@@ -13,6 +13,6 @@ export class HomePageComponent {
   ) {}
 
   navToRegister() {
-    this.router.navigate(['register'], {relativeTo: this.route});
+    this.router.navigate(['auth', 'register'], {relativeTo: this.route});
   }
 }

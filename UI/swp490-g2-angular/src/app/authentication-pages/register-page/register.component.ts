@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, NgForm, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { Title } from "@angular/platform-browser";
-import { Client } from "../ngswag/client";
+import { Client } from 'src/app/ngswag/client';
 
 @Component({
   selector: 'app-register',
