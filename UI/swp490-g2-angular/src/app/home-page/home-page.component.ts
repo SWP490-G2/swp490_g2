@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -8,11 +9,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class HomePageComponent {
   constructor(
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+    private $router: Router,
+    private $route: ActivatedRoute,
+    private $title: Title,
+  ) {
+    $title.setTitle("Home");
+  }
 
   navToRegister() {
-    this.router.navigate(['auth', 'register'], {relativeTo: this.route});
+    this.$router.navigate(['auth', 'register'], {relativeTo: this.$route});
   }
 }
