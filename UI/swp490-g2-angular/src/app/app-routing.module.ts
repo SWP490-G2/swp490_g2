@@ -4,6 +4,7 @@ import { RegisterComponent } from "./register/register.component";
 
 const routes: Routes = [
   { path: 'register', component: RegisterComponent },
+  { path: '', loadChildren: () => import('./home-page/home-page.module').then(m => m.HomePageModule) },
 ];
 
 @NgModule({

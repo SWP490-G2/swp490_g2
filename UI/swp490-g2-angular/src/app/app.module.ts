@@ -16,6 +16,7 @@ import { DividerModule } from 'primeng/divider';
 import { RippleModule } from 'primeng/ripple';
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
+import { HomePageModule } from './home-page/home-page.module';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { HttpClientModule } from "@angular/common/http";
     CheckboxModule,
     FormsModule,
     HttpClientModule,
+    HomePageModule,
   ],
   providers: [
   ],
