@@ -12,7 +12,7 @@ import { Title } from '@angular/platform-browser';
 import { Message, MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { Client } from 'src/app/ngswag/client';
-import { CustomValidators } from 'src/app/utils/CustomValidators';
+import { CustomValidators } from 'src/app/utils';
 
 @Component({
   selector: 'app-register',
