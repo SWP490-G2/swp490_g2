@@ -13,3 +13,19 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.text-warning {
+  color: rgb(255, 206, 68) !important;
+}
+
+.text-danger {
+  color: rgb(224, 48, 53) !important;
+}
+
+.text-success {
+  color: rgb(30, 215, 96) !important;
+}
+
+.text-info {
+  color: rgb(0, 36, 81) !important;
+}

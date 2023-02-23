@@ -1,24 +1,35 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, NgForm, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
-import { Title } from "@angular/platform-browser";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  NgForm,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { Title } from '@angular/platform-browser';
+import { Message, MessageService } from 'primeng/api';
+import { finalize } from 'rxjs';
 import { Client } from 'src/app/ngswag/client';
+import { CustomValidators } from 'src/app/utils';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-
   @ViewChild('form', { static: false }) form!: NgForm;
 
   // To change title, we need to import title service
   constructor(
     private $title: Title,
     private $fb: FormBuilder,
-    private $client: Client
+    private $client: Client,
+    private $message: MessageService
   ) {
-    $title.setTitle("Register");
+    $title.setTitle('Register');
   }
 
   private initConfirmPasswordValidator(): void {
@@ -32,13 +43,13 @@ export class RegisterComponent implements OnInit {
 
      */
 
-
     const validator = (): ValidatorFn => {
       return (control: AbstractControl<any, any>): ValidationErrors | null => {
-        const password = this.form.controls["password"].value;
+        const password = this.form.controls['password'].value;
         if (password !== control.value) {
           return {
-            message: "Confirm password must be the same as the entered password"
+            message:
+              'Confirm password must be the same as the entered password',
           };
         }
 
@@ -46,45 +57,99 @@ export class RegisterComponent implements OnInit {
       };
     };
 
-    this.form.controls["confirmPassword"].addValidators([Validators.required, validator()]);
+    this.form.controls['confirmPassword'].addValidators([
+      Validators.required,
+      validator(),
+    ]);
     this.form.controls['confirmPassword'].updateValueAndValidity();
   }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.form.controls["email"].addValidators([Validators.required, Validators.email]);
+      this.form.controls['email'].addValidators([
+        Validators.required,
+        Validators.email,
+      ]);
       this.form.controls['email'].updateValueAndValidity(); // !Important: this line must be added after validators created
 
-      this.form.controls["password"].addValidators([Validators.required, Validators.minLength(8)]);
+      this.form.controls['password'].addValidators([
+        Validators.required,
+        // 2. check whether the entered password has a number
+        CustomValidators.patternValidator(/\d/, { hasNumber: true }),
+        // 3. check whether the entered password has upper case letter
+        CustomValidators.patternValidator(/[A-Z]/, { hasCapitalCase: true }),
+        // 4. check whether the entered password has a lower-case letter
+        CustomValidators.patternValidator(/[a-z]/, { hasSmallCase: true }),
+        // 5. check whether the entered password has a special character
+        CustomValidators.patternValidator(
+          /[ !"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~]/,
+          { hasSpecialCharacters: true }
+        ),
+        // 6. Has a minimum length of 8 characters
+        Validators.minLength(8),
+        // 7. Has a maximum length of 25 characters
+        Validators.maxLength(25),
+      ]);
       this.form.controls['password'].updateValueAndValidity();
+
+      this.form.controls['phoneNumber'].addValidators([
+        Validators.required,
+        Validators.pattern('^(0[3|5|7|8|9])+([0-9]{8})$'),
+      ]);
+      this.form.controls['phoneNumber'].updateValueAndValidity();
 
       this.initConfirmPasswordValidator();
     }, 0);
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   register(): void {
-    if (this.form.invalid) {
-      if (this.form.controls["email"].errors) {
-        alert("Email is not valid");
-        return;
-      }
+    this._registerButtonDisabled = true;
+    // this.$client
+    //   .addNewUser(this.form.value)
+    //   .pipe(
+    //     finalize(() => {
+    //       this._registerButtonDisabled = false;
+    //     })
+    //   )
+    //   .subscribe({
+    //     next: (user) => {
+    //       console.log(user);
+    //     },
+    //     error: (err) => {
+    //       this.$message.add({
+    //         severity: "error",
+    //         summary: "Error",
+    //         detail: "A server error occurs."
+    //       })
+    //     },
+    //   });
 
-      // This is how to get message from the form field's error
-      if (this.form.controls["confirmPassword"].errors) {
-        alert(this.form.controls["confirmPassword"].errors['message']);
-        return;
-      }
+    // Open popup here
+  }
 
-      alert("Form is not valid");
-      return;
-    }
+  validatePasswordStyle(field: string): boolean {
+    if (!this.form || !this.form.controls['password']) return true;
 
-    this.$client.addNewUser(this.form.value)
-      .subscribe(user => {
-        console.log(user);
-      });
+    return (
+      this.form.controls['password'].errors &&
+      (this.form.controls['password'].errors['required'] ||
+        this.form.controls['password'].errors[field])
+    );
+  }
+
+  private _registerButtonDisabled: boolean = false;
+  get registerButtonDisabled(): boolean {
+    // Force type <boolean | null> to <boolean>, add double exclaimation mark !!
+    // a = 1
+    // !a = false
+    // !!a = true
+
+    return !!this.form?.invalid || this._registerButtonDisabled;
+  }
+
+  set registerButtonDisabled(value: boolean) {
+    this._registerButtonDisabled = value;
   }
 }
