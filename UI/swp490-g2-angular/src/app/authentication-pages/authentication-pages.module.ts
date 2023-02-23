@@ -10,9 +10,12 @@ import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
 import { StyleClassModule } from 'primeng/styleclass';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
 import { LoginComponent } from './login-page/login.component';
 import { RegisterComponent } from './register-page/register.component';
 import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 
 
 @NgModule({
@@ -32,6 +35,11 @@ import { FormsModule } from '@angular/forms';
     RippleModule,
     CheckboxModule,
     FormsModule,
+    MessageModule,
+    ToastModule,
+  ],
+  providers: [
+    MessageService
   ]
 })
 export class AuthenticationPagesModule { }
