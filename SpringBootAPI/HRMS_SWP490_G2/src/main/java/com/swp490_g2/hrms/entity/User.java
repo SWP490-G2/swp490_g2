@@ -12,19 +12,19 @@ import lombok.*;
 @Table(name = "user")
 @AttributeOverride(name = "id", column = @Column(name = "user_id"))
 public class User extends BaseEntity {
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "middle_name", nullable = true)
+    @Column(name = "middle_name")
     private String middleName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     private String lastName;
 
 //    @Column(name = "date_of_birth", nullable = false)
@@ -33,10 +33,10 @@ public class User extends BaseEntity {
 //    @Column(name = "gender", nullable = false)
 //    private Boolean gender;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "is_active", nullable = false, columnDefinition="tinyint(1) default 1")
+    @Column(name = "is_active")
     private Boolean isActive;
 
 //    @Column(name = "is_banned")

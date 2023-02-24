@@ -21,13 +21,13 @@ public class AddUserRequest {
     private String firstName;
     private String middleName;
     private String lastName;
-    private Date dateOfBirth;
-    private Boolean gender;
+//    private Date dateOfBirth;
+//    private Boolean gender;
     private String phoneNumber;
     private Boolean isActive;
-    private Boolean isBanned;
-    private String avatar;
-    private String citizenIdentification;
-    private Address address;
+//    private Boolean isBanned;
+//    private String avatar;
+//    private String citizenIdentification;
+//    private Address address;
 
 }

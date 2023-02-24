@@ -12,22 +12,15 @@ import com.swp490_g2.hrms.service.UserServiceImpl;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/CrudUser")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserServiceImpl userServiceImpl;
 
-    @PostMapping("/addNewUser")
-    public ResponseEntity<?> addNewUser(@RequestBody AddUserRequest user){
-        return ResponseEntity.ok(userServiceImpl.addNewUser(user));
+    @PostMapping("/register")
+    public ResponseEntity<User> registerNewUserAccount(@RequestBody AddUserRequest user){
+        return ResponseEntity.ok(userServiceImpl.registerNewUserAccount(user));
     }
-
-    @RequestMapping(value = "/index")
-    public String index() {
-        return "index";
-    }
-
-
 
 
 }
