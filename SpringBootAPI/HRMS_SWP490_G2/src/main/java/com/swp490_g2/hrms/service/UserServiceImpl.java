@@ -28,20 +28,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
-    public User registerNewUserAccount(RegisterRequest registerRequest) {
+    public void registerNewUserAccount(RegisterRequest registerRequest) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodePassword = passwordEncoder.encode(registerRequest.getPassword());
         if (userRepository.findUserByEmail(registerRequest.getEmail()).isPresent()) {
             throw new BusinessException(EXISTED_EMAIL, "Account: " + registerRequest.getEmail() + " is already exists.");
         }
 
-        User user = userRepository.save(
+        userRepository.save(
                 User.builder()
                         .email(registerRequest.getEmail())
                         .password(encodePassword)
                         .build());
+    }
 
-        return user;
+    @Override
+    public User getById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 }

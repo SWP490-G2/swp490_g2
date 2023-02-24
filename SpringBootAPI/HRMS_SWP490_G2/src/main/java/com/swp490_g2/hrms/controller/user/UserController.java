@@ -5,10 +5,7 @@ import com.swp490_g2.hrms.requests.RegisterRequest;
 import jakarta.validation.Valid;
 import lombok.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.swp490_g2.hrms.service.UserServiceImpl;
 
 @RestController
@@ -18,9 +15,12 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerNewUserAccount(@Valid @RequestBody RegisterRequest user){
-        return ResponseEntity.ok(userServiceImpl.registerNewUserAccount(user));
+    public void registerNewUserAccount(@Valid @RequestBody RegisterRequest user){
+        userServiceImpl.registerNewUserAccount(user);
     }
 
-
+    @GetMapping("/get-by-id/{id}")
+    public ResponseEntity<User> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(userServiceImpl.getById(id));
+    }
 }
