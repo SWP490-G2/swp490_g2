@@ -23,4 +23,15 @@ public class UserController {
     public ResponseEntity<User> getById(@PathVariable Long id) {
         return ResponseEntity.ok(userServiceImpl.getById(id));
     }
+
+    @GetMapping("/get-by-email/{email}")
+    public ResponseEntity<User> getById(@PathVariable String email) {
+        return ResponseEntity.ok(userServiceImpl.getByEmail(email));
+    }
+
+    @PostMapping("/verify-code/{email}")
+    public void verifyCode(@PathVariable String email, @RequestBody String code)
+    {
+        userServiceImpl.verifyCode(email, code);
+    }
 }

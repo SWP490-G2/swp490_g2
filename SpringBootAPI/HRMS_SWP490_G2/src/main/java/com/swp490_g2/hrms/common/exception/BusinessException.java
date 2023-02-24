@@ -21,6 +21,10 @@ public class BusinessException extends RuntimeException {
     public BusinessException(String msg){
         super(msg);
     }
+
+    public BusinessException(ErrorStatusConstants errorStatus) {
+        super(GetJsonExceptionMessage(errorStatus, null));
+    }
 //
 //    public BusinessException(String message, Throwable cause, ErrorStatusConstants errorStatus, String msg) {
 //        super(message, cause);

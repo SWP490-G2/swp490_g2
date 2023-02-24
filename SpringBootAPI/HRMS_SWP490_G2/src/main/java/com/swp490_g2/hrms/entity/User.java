@@ -39,6 +39,9 @@ public class User extends BaseEntity {
     @Column(nullable = false, columnDefinition="tinyint(1) default 1", insertable = false)
     private boolean isActive;
 
+    @Column(columnDefinition = "NVARCHAR(6)")
+    private String verificationCode;
+
 //    @Column(name = "is_banned")
 //    private Boolean isBanned;
 

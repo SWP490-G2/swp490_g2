@@ -8,7 +8,10 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 
 public enum ErrorStatusConstants {
-    EXISTED_EMAIL(HttpStatus.BAD_REQUEST, 400002, "Email is already exists. Try again!");
+    EXISTED_EMAIL(HttpStatus.BAD_REQUEST, 400000, "Email is already exists. Try again!"),
+    INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, 400001, "Invalid verification code."),
+    NOT_EXISTED_USER_ID(HttpStatus.BAD_REQUEST, 400003, "The user does not exist.")
+    ;
 
     private final HttpStatus errorStatus;
 

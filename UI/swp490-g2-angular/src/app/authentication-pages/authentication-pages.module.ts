@@ -12,17 +12,20 @@ import { RippleModule } from 'primeng/ripple';
 import { StyleClassModule } from 'primeng/styleclass';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 import { LoginComponent } from './login-page/login.component';
 import { RegisterComponent } from './register-page/register.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { CodeValidatorComponent } from './register-page/code-validator/code-validator.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegisterComponent,
-    ForgotPassPageComponent
+    ForgotPassPageComponent,
+    CodeValidatorComponent
   ],
   imports: [
     CommonModule,
@@ -37,6 +40,8 @@ import { MessageService } from 'primeng/api';
     FormsModule,
     MessageModule,
     ToastModule,
+    DialogModule,
+    ReactiveFormsModule,
   ],
   providers: [
     MessageService
