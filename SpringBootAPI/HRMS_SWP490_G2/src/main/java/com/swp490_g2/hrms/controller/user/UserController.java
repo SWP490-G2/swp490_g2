@@ -2,6 +2,7 @@ package com.swp490_g2.hrms.controller.user;
 
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.requests.RegisterRequest;
+import jakarta.validation.Valid;
 import lombok.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,9 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
 
     @PostMapping("/register")
-    public ResponseEntity<User> addNewUser(@RequestBody RegisterRequest user){
-        return ResponseEntity.ok(userServiceImpl.addNewUser(user));
+    public ResponseEntity<User> registerNewUserAccount(@Valid @RequestBody RegisterRequest user){
+        return ResponseEntity.ok(userServiceImpl.registerNewUserAccount(user));
     }
+
+
 }

@@ -36,8 +36,8 @@ public class User extends BaseEntity {
 //    @Column(name = "phone_number", nullable = false)
 //    private String phoneNumber;
 
-    @Column(nullable = false, columnDefinition="tinyint(1) default 1")
-    private Boolean isActive;
+    @Column(nullable = false, columnDefinition="tinyint(1) default 1", insertable = false)
+    private boolean isActive;
 
 //    @Column(name = "is_banned")
 //    private Boolean isBanned;

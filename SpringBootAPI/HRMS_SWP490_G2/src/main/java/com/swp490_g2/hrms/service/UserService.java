@@ -5,6 +5,6 @@ import com.swp490_g2.hrms.requests.RegisterRequest;
 
 
 public interface  UserService {
+    User registerNewUserAccount(RegisterRequest user);
 
-    User addNewUser(RegisterRequest user);
 }
