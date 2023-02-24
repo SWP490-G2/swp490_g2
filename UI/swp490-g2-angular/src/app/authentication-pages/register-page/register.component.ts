@@ -11,7 +11,7 @@ import {
 import { Title } from '@angular/platform-browser';
 import { Message, MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
-import { Client } from 'src/app/ngswag/client';
+import { ApiException, Client } from 'src/app/ngswag/client';
 import { CustomValidators } from 'src/app/utils';
 
 @Component({
@@ -21,12 +21,12 @@ import { CustomValidators } from 'src/app/utils';
 })
 export class RegisterComponent implements OnInit {
   @ViewChild('form', { static: false }) form!: NgForm;
+  client = new Client();
 
   // To change title, we need to import title service
   constructor(
     private $title: Title,
     private $fb: FormBuilder,
-    private $client: Client,
     private $message: MessageService
   ) {
     $title.setTitle('Register');
@@ -104,27 +104,24 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  register(): void {
+  async register(): Promise<void> {
     this._registerButtonDisabled = true;
-    // this.$client
-    //   .addNewUser(this.form.value)
-    //   .pipe(
-    //     finalize(() => {
-    //       this._registerButtonDisabled = false;
-    //     })
-    //   )
-    //   .subscribe({
-    //     next: (user) => {
-    //       console.log(user);
-    //     },
-    //     error: (err) => {
-    //       this.$message.add({
-    //         severity: "error",
-    //         summary: "Error",
-    //         detail: "A server error occurs."
-    //       })
-    //     },
-    //   });
+
+    try {
+      const user = await this.client.addNewUser(this.form.value);
+      console.log(user);
+    }
+    catch (err){
+      console.log(err);
+      this.$message.add({
+        severity: "error",
+        summary: "Error",
+        detail: (err as ApiException).message
+      });
+    }
+    finally {
+      this._registerButtonDisabled = false;
+    }
 
     // Open popup here
   }
