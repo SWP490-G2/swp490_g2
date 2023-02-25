@@ -12,6 +12,12 @@
   >
     <input type="text" pInputText name="code" ngModel />
     <!-- <small class="p-error block">Username is not available.</small> -->
-    <p-button label="Submit" class="mt-2"></p-button>
+    <p-button
+      label="Submit"
+      class="mt-2"
+      [disabled]="buttonDisabled"
+      type="submit"
+    ></p-button>
   </form>
 </p-dialog>
+<p-confirmDialog [rejectVisible]="false" [closable]="false"></p-confirmDialog>

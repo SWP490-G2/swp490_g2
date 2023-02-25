@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { ConfirmationService } from 'primeng/api';
 import { Client } from 'src/app/ngswag/client';
 import { CustomValidators } from 'src/app/utils';
 
@@ -21,7 +22,7 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
   @Input() email = 'longlunglay5@gmail.com';
   code = '';
 
-  constructor() {}
+  constructor(private confirmationService: ConfirmationService) {}
 
   ngOnInit(): void {
     console.log(this.email);
@@ -31,18 +32,34 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.form.controls['code'].addValidators([
         Validators.required,
-        CustomValidators.patternValidator(/^[0-9]{1,6}$/, { hasNumber: true }),
+        CustomValidators.patternValidator(/^[0-9]{6}$/, { hasNumber: true }),
       ]);
+      this.form.controls['code'].updateValueAndValidity();
     }, 0);
   }
 
   async submit() {
+    this._buttonDisabled = true;
     try {
       await this.client.verifyCode(this.email, this.code);
-      console.log('Account registered successfully');
+      this.confirmationService.confirm({
+        message: 'Register successfully! Click “YES” to back to login.',
+        header: 'Confirmation',
+        accept: () => {
+          // TODO
+          console.log('Navigate to login');
+        },
+        reject: () => {},
+      });
     } catch (err) {
       alert('Invalid code verification');
     } finally {
+      this._buttonDisabled = false;
     }
+  }
+
+  private _buttonDisabled: boolean = false;
+  get buttonDisabled(): boolean {
+    return !!this.form?.invalid || this._buttonDisabled;
   }
 }

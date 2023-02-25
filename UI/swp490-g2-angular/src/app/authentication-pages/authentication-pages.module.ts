@@ -18,6 +18,8 @@ import { RegisterComponent } from './register-page/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { CodeValidatorComponent } from './register-page/code-validator/code-validator.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 
 @NgModule({
@@ -42,9 +44,13 @@ import { CodeValidatorComponent } from './register-page/code-validator/code-vali
     ToastModule,
     DialogModule,
     ReactiveFormsModule,
+    ConfirmDialogModule,
+
   ],
   providers: [
-    MessageService
+    MessageService,
+    ConfirmationService
+
   ]
 })
 export class AuthenticationPagesModule { }
