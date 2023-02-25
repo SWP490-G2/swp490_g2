@@ -19,7 +19,7 @@
     </div>
 
     <div>
-      <label for="email" class="block text-900 font-medium my-2">Email</label>
+      <label for="email" class="block text-900 font-medium my-2">Email*</label>
       <input
         id="email"
         type="text"
@@ -28,15 +28,30 @@
         name="email"
         ngModel
       />
-      <div class="flex align-items-center gap-1" *ngIf="form.controls['email']?.errors">
+      <div
+        class="flex align-items-center gap-1"
+        *ngIf="form.controls['email']?.errors"
+      >
         <i class="pi pi-times-circle text-danger"></i>
-        <small class="text-danger">
-          Enter a valid email address!
-        </small>
+        <small class="text-danger"> Enter a valid email address! </small>
+      </div>
+
+      <label for="username" class="block text-900 font-medium my-2">Username*</label>
+      <input
+        id="username"
+        type="text"
+        pInputText
+        class="w-full"
+        name="username"
+        ngModel
+      />
+      <div
+        class="flex align-items-center gap-1"
+      >
       </div>
 
       <label for="password" class="block text-900 font-medium my-2"
-        >Password</label
+        >Password*</label
       >
       <input
         id="password"
@@ -144,7 +159,7 @@
       </div>
 
       <label for="confirmPassword" class="block text-900 font-medium my-2"
-        >Confirm Password</label
+        >Confirm Password*</label
       >
       <input
         id="confirmPassword"
@@ -155,7 +170,10 @@
         ngModel
       />
 
-      <div class="flex align-items-center gap-1" *ngIf="form.controls['confirmPassword']?.errors">
+      <div
+        class="flex align-items-center gap-1"
+        *ngIf="form.controls['confirmPassword']?.errors"
+      >
         <i class="pi pi-times-circle text-danger"></i>
         <small class="text-danger">
           Your comfirmed password must match. Try again!
@@ -163,7 +181,7 @@
       </div>
 
       <label for="phoneNumber" class="block text-900 font-medium my-2"
-        >Phone number</label
+        >Phone number*</label
       >
       <input
         id="phoneNumber"
@@ -174,19 +192,20 @@
         ngModel
       />
 
-      <div class="flex align-items-center gap-1" *ngIf="form.controls['phoneNumber']?.errors">
+      <div
+        class="flex align-items-center gap-1"
+        *ngIf="form.controls['phoneNumber']?.errors"
+      >
         <i class="pi pi-times-circle text-danger"></i>
-        <small class="text-danger">
-          Enter a valid phone number!
-        </small>
+        <small class="text-danger"> Enter a valid phone number! </small>
       </div>
-
+      <h5>*: The required fill</h5>
       <button
         pButton
         pRipple
         label="Register"
         icon="pi pi-user"
-        class="w-full mt-5"
+        class="w-full mt-3"
         [disabled]="registerButtonDisabled"
       ></button>
     </div>
