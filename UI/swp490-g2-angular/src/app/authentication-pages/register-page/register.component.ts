@@ -11,7 +11,7 @@ import {
 import { Title } from '@angular/platform-browser';
 import { Message, MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
-import { ApiException, Client } from 'src/app/ngswag/client';
+import { ApiException, Client, User } from 'src/app/ngswag/client';
 import { CustomValidators } from 'src/app/utils';
 
 @Component({
@@ -22,6 +22,8 @@ import { CustomValidators } from 'src/app/utils';
 export class RegisterComponent implements OnInit {
   @ViewChild('form', { static: false }) form!: NgForm;
   client = new Client();
+  codeValidatorDialogVisible = true;
+  user?: User;
 
   // To change title, we need to import title service
   constructor(
@@ -102,16 +104,20 @@ export class RegisterComponent implements OnInit {
     }, 0);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   async register(): Promise<void> {
     this._registerButtonDisabled = true;
 
     try {
-      const user = await this.client.addNewUser(this.form.value);
-      console.log(user);
+
+      await this.client.registerNewUserAccount(this.form.value);
+      /**
+       * Register succeeded.
+       */
+      this.codeValidatorDialogVisible = true;
     }
-    catch (err){
+    catch (err) {
       console.log(err);
       this.$message.add({
         severity: "error",

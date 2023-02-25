@@ -21,7 +21,47 @@ export class Client {
   /**
    * @return OK
    */
-  addNewUser(body: RegisterRequest): Promise<User> {
+  verifyCode(email: string, body: string): Promise<void> {
+      let url_ = this.baseUrl + "/user/verify-code/{email}";
+      if (email === undefined || email === null)
+          throw new Error("The parameter 'email' must be defined.");
+      url_ = url_.replace("{email}", encodeURIComponent("" + email));
+      url_ = url_.replace(/[?&]$/, "");
+
+      const content_ = JSON.stringify(body);
+
+      let options_: RequestInit = {
+          body: content_,
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          }
+      };
+
+      return this.http.fetch(url_, options_).then((_response: Response) => {
+          return this.processVerifyCode(_response);
+      });
+  }
+
+  protected processVerifyCode(response: Response): Promise<void> {
+      const status = response.status;
+      let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+      if (status === 200) {
+          return response.text().then((_responseText) => {
+          return;
+          });
+      } else if (status !== 200 && status !== 204) {
+          return response.text().then((_responseText) => {
+          return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+          });
+      }
+      return Promise.resolve<void>(null as any);
+  }
+
+  /**
+   * @return OK
+   */
+  registerNewUserAccount(body: RegisterRequest): Promise<void> {
       let url_ = this.baseUrl + "/user/register";
       url_ = url_.replace(/[?&]$/, "");
 
@@ -32,16 +72,103 @@ export class Client {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
+          }
+      };
+
+      return this.http.fetch(url_, options_).then((_response: Response) => {
+          return this.processRegisterNewUserAccount(_response);
+      });
+  }
+
+  protected processRegisterNewUserAccount(response: Response): Promise<void> {
+      const status = response.status;
+      let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+      if (status === 200) {
+          return response.text().then((_responseText) => {
+          return;
+          });
+      } else if (status !== 200 && status !== 204) {
+          return response.text().then((_responseText) => {
+          return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+          });
+      }
+      return Promise.resolve<void>(null as any);
+  }
+
+  /**
+   * @return OK
+   */
+  getById(id: number): Promise<User> {
+      let url_ = this.baseUrl + "/user/get-by-id/{id}";
+      if (id === undefined || id === null)
+          throw new Error("The parameter 'id' must be defined.");
+      url_ = url_.replace("{id}", encodeURIComponent("" + id));
+      url_ = url_.replace(/[?&]$/, "");
+
+      let options_: RequestInit = {
+          method: "GET",
+          headers: {
               "Accept": "*/*"
           }
       };
 
       return this.http.fetch(url_, options_).then((_response: Response) => {
-          return this.processAddNewUser(_response);
+          return this.processGetById(_response);
       });
   }
 
-  protected processAddNewUser(response: Response): Promise<User> {
+  protected processGetById(response: Response): Promise<User> {
+      const status = response.status;
+      let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+      if (status === 200) {
+          return response.text().then((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = User.fromJS(resultData200);
+          return result200;
+          });
+      } else if (status !== 200 && status !== 204) {
+          return response.text().then((_responseText) => {
+          return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+          });
+      }
+      return Promise.resolve<User>(null as any);
+  }
+}
+
+export class GetByIdClient {
+  private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+      this.http = http ? http : window as any;
+      this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:8080";
+  }
+
+  /**
+   * @return OK
+   */
+  1(email: string): Promise<User> {
+      let url_ = this.baseUrl + "/user/get-by-email/{email}";
+      if (email === undefined || email === null)
+          throw new Error("The parameter 'email' must be defined.");
+      url_ = url_.replace("{email}", encodeURIComponent("" + email));
+      url_ = url_.replace(/[?&]$/, "");
+
+      let options_: RequestInit = {
+          method: "GET",
+          headers: {
+              "Accept": "*/*"
+          }
+      };
+
+      return this.http.fetch(url_, options_).then((_response: Response) => {
+          return this.process1(_response);
+      });
+  }
+
+  protected process1(response: Response): Promise<User> {
       const status = response.status;
       let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
       if (status === 200) {
@@ -115,11 +242,13 @@ export interface IRegisterRequest {
 export class User implements IUser {
   id?: number;
   createdBy?: number;
+  createdAt?: Date;
+  modifiedBy?: number;
+  modifiedAt?: Date;
   email?: string;
   password?: string;
-  isActive?: boolean;
-  createdAt?: string;
-  modifiedAt?: string;
+  verificationCode?: string;
+  active?: boolean;
 
   [key: string]: any;
 
@@ -140,11 +269,13 @@ export class User implements IUser {
           }
           this.id = _data["id"];
           this.createdBy = _data["createdBy"];
+          this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+          this.modifiedBy = _data["modifiedBy"];
+          this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
           this.email = _data["email"];
           this.password = _data["password"];
-          this.isActive = _data["isActive"];
-          this.createdAt = _data["createdAt"];
-          this.modifiedAt = _data["modifiedAt"];
+          this.verificationCode = _data["verificationCode"];
+          this.active = _data["active"];
       }
   }
 
@@ -163,11 +294,13 @@ export class User implements IUser {
       }
       data["id"] = this.id;
       data["createdBy"] = this.createdBy;
+      data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+      data["modifiedBy"] = this.modifiedBy;
+      data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
       data["email"] = this.email;
       data["password"] = this.password;
-      data["isActive"] = this.isActive;
-      data["createdAt"] = this.createdAt;
-      data["modifiedAt"] = this.modifiedAt;
+      data["verificationCode"] = this.verificationCode;
+      data["active"] = this.active;
       return data;
   }
 }
@@ -175,11 +308,13 @@ export class User implements IUser {
 export interface IUser {
   id?: number;
   createdBy?: number;
+  createdAt?: Date;
+  modifiedBy?: number;
+  modifiedAt?: Date;
   email?: string;
   password?: string;
-  isActive?: boolean;
-  createdAt?: string;
-  modifiedAt?: string;
+  verificationCode?: string;
+  active?: boolean;
 
   [key: string]: any;
 }

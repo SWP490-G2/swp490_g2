@@ -209,5 +209,6 @@
         [disabled]="registerButtonDisabled"
       ></button>
     </div>
+    <app-code-validator *ngIf="codeValidatorDialogVisible" [email]="form.value.email"></app-code-validator>
   </form>
 </div>
