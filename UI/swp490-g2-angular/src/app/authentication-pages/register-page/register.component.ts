@@ -2,15 +2,13 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormGroup,
   NgForm,
   ValidationErrors,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { Message, MessageService } from 'primeng/api';
-import { finalize } from 'rxjs';
+import { MessageService } from 'primeng/api';
 import { ApiException, Client, User } from 'src/app/ngswag/client';
 import { CustomValidators } from 'src/app/utils';
 
@@ -19,10 +17,10 @@ import { CustomValidators } from 'src/app/utils';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, AfterViewInit {
   @ViewChild('form', { static: false }) form!: NgForm;
   client = new Client();
-  codeValidatorDialogVisible = true;
+  codeValidatorDialogVisible = false;
   user?: User;
 
   // To change title, we need to import title service
