@@ -15,8 +15,15 @@ export class HomePageComponent {
   ) {
     $title.setTitle("Home");
   }
+  navToLogin() {
+    this.$router.navigate(['auth', 'login'], {relativeTo: this.$route});
+  }
 
   navToRegister() {
     this.$router.navigate(['auth', 'register'], {relativeTo: this.$route});
+  }
+
+  navToForgotPassword() {
+    this.$router.navigate(['auth', 'forgot-password'], {relativeTo: this.$route});
   }
 }
