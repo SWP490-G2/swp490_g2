@@ -5,13 +5,13 @@
     (ngSubmit)="login()"
   >
     <div class="text-center mb-5">
-      <div class="text-900 text-3xl font-medium mb-3">
-        Login
-      </div>
+      <div class="text-900 text-3xl font-medium mb-3">Login</div>
       <span class="text-600 font-medium line-height-3"
         >Don't have an account?</span
       >
-      <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer"
+      <a
+        class="font-medium no-underline ml-2 text-blue-500 cursor-pointer"
+        (click)="navToRegister()"
         >Create today!</a
       >
     </div>
@@ -22,14 +22,14 @@
         id="email"
         type="text"
         pInputText
-        class="w-full"
+        class="w-full mb-1"
         name="email"
         ngModel
         placeholder="example@fpt.edu.vn"
       />
       <div
         class="flex align-items-center gap-1"
-        *ngIf="form.controls['email']?.errors"
+        *ngIf="form.controls['email']?.dirty && form.controls['email']?.errors"
       >
         <i class="pi pi-times-circle text-danger"></i>
         <small class="text-danger"> Enter a valid email address! </small>
@@ -42,26 +42,23 @@
         id="password"
         type="password"
         pInputText
-        class="w-full"
+        class="w-full mb-1"
         name="password"
         ngModel
         placeholder="Password here"
       />
 
       <!-- {{ form.controls["password"].errors | json }} -->
-      <div class="flex align-items-center gap-1">
-      </div>
+      <div class="flex align-items-center gap-1"></div>
     </div>
-    <h5>*: The required fill</h5>
+
     <button
       pButton
       pRipple
       label="Login"
       icon="pi pi-user"
-      class="w-full mt-3"
+      class="w-full mt-4"
       [disabled]="loginButtonDisabled"
     ></button>
   </form>
 </div>
-
-
