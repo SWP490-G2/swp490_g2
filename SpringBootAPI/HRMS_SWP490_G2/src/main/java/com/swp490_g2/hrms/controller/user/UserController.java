@@ -1,7 +1,9 @@
 package com.swp490_g2.hrms.controller.user;
 
 import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.requests.LoginRequest;
 import com.swp490_g2.hrms.requests.RegisterRequest;
+import com.swp490_g2.hrms.response.JWTAuthResponse;
 import jakarta.validation.Valid;
 import lombok.*;
 import org.springframework.http.ResponseEntity;
@@ -34,4 +36,14 @@ public class UserController {
     {
         userServiceImpl.verifyCode(email, code);
     }
+
+    @PostMapping(value = "/login")
+    public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginRequest loginRequest){
+        String token = userServiceImpl.login(loginRequest);
+        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
+        jwtAuthResponse.setAccessToken(token);
+        return ResponseEntity.ok(jwtAuthResponse);
+    }
+
+
 }
