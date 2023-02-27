@@ -11,7 +11,7 @@ import { HomePageModule } from './home-page/home-page.module';
 import { AuthenticationPagesModule } from './authentication-pages/authentication-pages.module';
 import { HttpErrorHandler } from "./global/http-error-handler";
 import { ToastModule } from "primeng/toast";
-import { Client } from "./ngswag/client";
+import { MessageService, ConfirmationService } from "primeng/api";
 
 @NgModule({
   declarations: [
@@ -28,7 +28,8 @@ import { Client } from "./ngswag/client";
     ToastModule,
   ],
   providers: [
-    Client,
+    MessageService,
+    ConfirmationService,
     {
       // processes all errors
       provide: ErrorHandler,

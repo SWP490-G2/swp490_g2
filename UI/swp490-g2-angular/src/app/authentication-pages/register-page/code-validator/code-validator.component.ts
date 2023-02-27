@@ -5,8 +5,10 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { NgForm, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from "@angular/router";
 import { ConfirmationService } from 'primeng/api';
+import { finalize } from "rxjs";
 import { Client } from 'src/app/ngswag/client';
 import { CustomValidators } from 'src/app/utils';
 
@@ -21,11 +23,12 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
   @Input() email = 'longlunglay5@gmail.com';
 
   constructor(private confirmationService: ConfirmationService,
-    private $client: Client
-  ) { }
+    private $client: Client,
+    private $router: Router,
+    private $route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    console.log(this.email);
+    // console.log(this.email);
   }
 
   ngAfterViewInit(): void {
@@ -40,22 +43,22 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
 
   async submit() {
     this._buttonDisabled = true;
-    try {
-      await this.$client.verifyCode(this.email, this.form.controls['code'].value);
-      this.confirmationService.confirm({
-        message: 'Register successfully! Click “YES” to back to login.',
-        header: 'Confirmation',
-        accept: () => {
-          // TODO
-          console.log('Navigate to login');
-        },
-        reject: () => { },
+    this.$client.verifyCode(this.email, this.form.controls['code'].value)
+      .pipe(finalize(() => {
+        this._buttonDisabled = false;
+      }))
+      .subscribe({
+        next: () => {
+          this.confirmationService.confirm({
+            message: 'Register successfully! Click “YES” to back to login.',
+            header: 'Confirmation',
+            accept: () => {
+              this.$router.navigate(["..", 'login'], { relativeTo: this.$route });
+            },
+            reject: () => { },
+          });
+        }
       });
-    } catch (err) {
-      alert('Invalid code verification');
-    } finally {
-      this._buttonDisabled = false;
-    }
   }
 
   private _buttonDisabled: boolean = false;

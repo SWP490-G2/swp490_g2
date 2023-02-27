@@ -11,7 +11,6 @@ import { Client, User } from 'src/app/ngswag/client';
 })
 export class LoginComponent implements OnInit, AfterViewInit {
   @ViewChild('form', { static: false }) form!: NgForm;
-  client = new Client();
   codeValidatorDialogVisible = true;
   user?: User;
 
@@ -19,8 +18,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   constructor(
     $title: Title,
     private $router: Router,
-    private $route: ActivatedRoute
-  ) {
+    private $route: ActivatedRoute  ) {
     $title.setTitle('Login');
   }
   ngAfterViewInit(): void {

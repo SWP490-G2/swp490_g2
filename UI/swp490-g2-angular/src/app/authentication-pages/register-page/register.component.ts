@@ -9,8 +9,8 @@ import {
 } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { MessageService } from 'primeng/api';
-import { lastValueFrom } from "rxjs";
-import { ApiException, Client, User } from 'src/app/ngswag/client';
+import { finalize } from "rxjs";
+import { Client, User } from 'src/app/ngswag/client';
 import { CustomValidators } from 'src/app/utils';
 
 @Component({
@@ -105,22 +105,18 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void { }
 
-  async register(): Promise<void> {
+  register(): void {
     this._registerButtonDisabled = true;
 
-    try {
-
-      await lastValueFrom(this.$client.addNewUser(this.form.value));
-      /**
-       * Register succeeded.
-       */
-      this.codeValidatorDialogVisible = true;
-    }
-    finally {
-      this._registerButtonDisabled = false;
-    }
-
-    // Open popup here
+    this.$client.registerNewUserAccount(this.form.value)
+      .pipe(finalize(() => {
+        this._registerButtonDisabled = false;
+      }))
+      .subscribe({
+        next: () => {
+          this.codeValidatorDialogVisible = true;
+        }
+      });
   }
 
   validatePasswordStyle(field: string): boolean {

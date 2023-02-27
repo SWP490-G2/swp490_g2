@@ -1,50 +1,55 @@
 import { HttpStatusCode } from "@angular/common/http";
 import { Injectable, ErrorHandler, NgZone } from "@angular/core";
 import { MessageService } from "primeng/api";
-import { ApiException } from "../ngswag/client";
+import { BusinessException } from "../ngswag/client";
 
 @Injectable({
-    providedIn: "root"
+  providedIn: "root"
 })
-export class HttpErrorHandler implements ErrorHandler
-{
-    constructor(
-        private $message: MessageService,
-        private $zone: NgZone,
-    )
-    { }
+export class HttpErrorHandler implements ErrorHandler {
+  constructor(
+    private $message: MessageService,
+    private $zone: NgZone,
+  ) { }
 
-    handleError(error: any)
-    {
-        if (!error)
-            return;
+  handleError(error: any) {
+    if (!error)
+      return;
 
-        let message: string;
-        if (ApiException.isApiException(error))
-        {
-            switch (error.status)
+    let message: string;
+    if (BusinessException.isBusinessException(error)) {
+      switch (error.status) {
+        case HttpStatusCode.InternalServerError:
+          try {
+            const errorObject = JSON.parse(error.response);
+            if(errorObject?.exception === "com.swp490_g2.hrms.common.exception.BusinessException")
             {
-                case HttpStatusCode.InternalServerError:
-                    message = "Server gặp lỗi không xác định (500)";
-                    break;
-
-                case HttpStatusCode.Unauthorized:
-                    message = "Người dùng hiện tại không có quyền thực hiện truy cập này (401)";
-                    break;
-
-                case HttpStatusCode.Forbidden:
-                    message = "Người dùng hiện tại không có quyền thực hiện truy cập này (403)";
-                    break;
+              message = JSON.parse(errorObject.message)?.message;
             }
-        }
+          }
+          catch (error) {
+            message = "Server gặp lỗi không xác định (500)";
+          }
 
-        this.$zone.run(() =>
-            this.$message.add(
-                {
-                    severity: "error",
-                    detail: message || error.message || "Undefined client error",
-                }
-            )
-        );
+          break;
+
+        case HttpStatusCode.Unauthorized:
+          message = "Người dùng hiện tại không có quyền thực hiện truy cập này (401)";
+          break;
+
+        case HttpStatusCode.Forbidden:
+          message = "Người dùng hiện tại không có quyền thực hiện truy cập này (403)";
+          break;
+      }
     }
+
+    this.$zone.run(() =>
+      this.$message.add(
+        {
+          severity: "error",
+          detail: message || error.message || "Undefined client error",
+        }
+      )
+    );
+  }
 }

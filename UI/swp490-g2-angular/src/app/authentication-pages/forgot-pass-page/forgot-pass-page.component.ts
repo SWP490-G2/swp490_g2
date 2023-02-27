@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { Client, User } from 'src/app/ngswag/client';
+import { User } from 'src/app/ngswag/client';
 
 @Component({
   selector: 'app-forgot-pass-page',
@@ -10,7 +10,6 @@ import { Client, User } from 'src/app/ngswag/client';
 })
 export class ForgotPassPageComponent {
   @ViewChild('form', { static: false }) form!: NgForm;
-  client = new Client();
   codeValidatorDialogVisible = true;
   user?: User;
   $router: any;
