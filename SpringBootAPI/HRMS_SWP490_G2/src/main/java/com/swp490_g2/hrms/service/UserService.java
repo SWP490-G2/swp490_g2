@@ -9,7 +9,7 @@ import java.util.Set;
 
 
 public interface  UserService {
-    String registerNewUserAccount(RegisterRequest user);
+    void registerNewUserAccount(RegisterRequest user);
     User getById(Long id);
     void verifyCode(String email, String code);
     User getByEmail(String email);
