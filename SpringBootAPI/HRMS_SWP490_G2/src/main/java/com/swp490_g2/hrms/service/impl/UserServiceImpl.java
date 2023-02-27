@@ -1,8 +1,9 @@
-package com.swp490_g2.hrms.service;
+package com.swp490_g2.hrms.service.impl;
 
 import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.requests.RegisterRequest;
+import com.swp490_g2.hrms.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

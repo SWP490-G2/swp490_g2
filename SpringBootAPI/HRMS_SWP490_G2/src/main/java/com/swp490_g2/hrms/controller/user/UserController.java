@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import lombok.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.swp490_g2.hrms.service.UserServiceImpl;
+import com.swp490_g2.hrms.service.impl.UserServiceImpl;
 
 @RestController
 @RequiredArgsConstructor
