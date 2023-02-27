@@ -36,10 +36,10 @@ public class User extends BaseEntity {
 //    @Column(name = "phone_number", nullable = false)
 //    private String phoneNumber;
 
-    @Column(nullable = false, columnDefinition="tinyint(1) default 1", insertable = false)
+    @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)
     private boolean isActive;
 
-    @Column(columnDefinition = "NVARCHAR(6)")
+    @Column(columnDefinition = "VARCHAR(6)")
     private String verificationCode;
 
 //    @Column(name = "is_banned")

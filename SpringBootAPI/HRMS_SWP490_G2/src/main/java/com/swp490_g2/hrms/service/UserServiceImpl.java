@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.service;
 
+import com.google.gson.Gson;
 import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.requests.RegisterRequest;
@@ -40,18 +41,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerNewUserAccount(RegisterRequest registerRequest) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodePassword = passwordEncoder.encode(registerRequest.getPassword());
-        if (userRepository.findUserByEmail(registerRequest.getEmail()).isPresent()) {
+        User user = userRepository.findUserByEmail(registerRequest.getEmail()).orElse(null);
+        if (user != null && user.isActive()) {
             throw new BusinessException(EXISTED_EMAIL, "Account: " + registerRequest.getEmail() + " is already exists.");
         }
 
-        userRepository.save(
-                User.builder()
-                        .email(registerRequest.getEmail())
-                        .password(encodePassword)
-                        .verificationCode(generateVerificationCode())
-                        .build());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodePassword = passwordEncoder.encode(registerRequest.getPassword());
+
+        if (user == null) {
+            userRepository.save(
+                    User.builder()
+                            .email(registerRequest.getEmail())
+                            .password(encodePassword)
+                            .verificationCode(generateVerificationCode())
+                            .build());
+        } else {
+            user.setPassword(encodePassword);
+            user.setVerificationCode(generateVerificationCode());
+            userRepository.save(user);
+        }
     }
 
     @Override
@@ -61,8 +70,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void verifyCode(String email, String code) {
-//        if (code.matches("[0-9]{6}"))
-//            throw new BusinessException(INVALID_VERIFICATION_CODE);
+        code = code.substring(1, 7);
+        if (!code.matches("[0-9]{6}"))
+            throw new BusinessException(INVALID_VERIFICATION_CODE);
 
         User user = getByEmail(email);
         if (user == null)
@@ -70,6 +80,9 @@ public class UserServiceImpl implements UserService {
 
         if (!user.getVerificationCode().equals(code))
             throw new BusinessException(INVALID_VERIFICATION_CODE);
+
+        user.setActive(true);
+        userRepository.save(user);
     }
 
     @Override
