@@ -48,9 +48,6 @@ import { ConfirmationService } from 'primeng/api';
 
   ],
   providers: [
-    MessageService,
-    ConfirmationService
-
   ]
 })
 export class AuthenticationPagesModule { }
