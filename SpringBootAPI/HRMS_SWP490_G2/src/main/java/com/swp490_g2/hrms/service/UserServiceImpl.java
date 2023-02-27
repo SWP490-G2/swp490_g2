@@ -40,11 +40,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerNewUserAccount(RegisterRequest registerRequest) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodePassword = passwordEncoder.encode(registerRequest.getPassword());
         if (userRepository.findUserByEmail(registerRequest.getEmail()).isPresent()) {
             throw new BusinessException(EXISTED_EMAIL, "Account: " + registerRequest.getEmail() + " is already exists.");
         }
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodePassword = passwordEncoder.encode(registerRequest.getPassword());
 
         userRepository.save(
                 User.builder()

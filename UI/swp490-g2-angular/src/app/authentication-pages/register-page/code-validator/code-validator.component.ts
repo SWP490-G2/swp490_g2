@@ -17,12 +17,12 @@ import { CustomValidators } from 'src/app/utils';
 })
 export class CodeValidatorComponent implements OnInit, AfterViewInit {
   @ViewChild('form', { static: false }) form!: NgForm;
-  client = new Client();
   visible = true;
   @Input() email = 'longlunglay5@gmail.com';
-  code = '';
 
-  constructor(private confirmationService: ConfirmationService) {}
+  constructor(private confirmationService: ConfirmationService,
+    private $client: Client
+  ) { }
 
   ngOnInit(): void {
     console.log(this.email);
@@ -41,7 +41,7 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
   async submit() {
     this._buttonDisabled = true;
     try {
-      await this.client.verifyCode(this.email, this.code);
+      await this.$client.verifyCode(this.email, this.form.controls['code'].value);
       this.confirmationService.confirm({
         message: 'Register successfully! Click “YES” to back to login.',
         header: 'Confirmation',
@@ -49,7 +49,7 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
           // TODO
           console.log('Navigate to login');
         },
-        reject: () => {},
+        reject: () => { },
       });
     } catch (err) {
       alert('Invalid code verification');

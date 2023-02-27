@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { MessageService } from 'primeng/api';
+import { lastValueFrom } from "rxjs";
 import { ApiException, Client, User } from 'src/app/ngswag/client';
 import { CustomValidators } from 'src/app/utils';
 
@@ -19,7 +20,6 @@ import { CustomValidators } from 'src/app/utils';
 })
 export class RegisterComponent implements OnInit, AfterViewInit {
   @ViewChild('form', { static: false }) form!: NgForm;
-  client = new Client();
   codeValidatorDialogVisible = false;
   user?: User;
 
@@ -27,7 +27,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   constructor(
     private $title: Title,
     private $fb: FormBuilder,
-    private $message: MessageService
+    private $message: MessageService,
+    private $client: Client
   ) {
     $title.setTitle('Register');
   }
@@ -109,19 +110,11 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
     try {
 
-      await this.client.registerNewUserAccount(this.form.value);
+      await lastValueFrom(this.$client.addNewUser(this.form.value));
       /**
        * Register succeeded.
        */
       this.codeValidatorDialogVisible = true;
-    }
-    catch (err) {
-      console.log(err);
-      this.$message.add({
-        severity: "error",
-        summary: "Error",
-        detail: (err as ApiException).message
-      });
     }
     finally {
       this._registerButtonDisabled = false;

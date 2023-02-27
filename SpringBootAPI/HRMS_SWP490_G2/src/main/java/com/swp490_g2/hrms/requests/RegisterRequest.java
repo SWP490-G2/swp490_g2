@@ -18,6 +18,6 @@ public class RegisterRequest {
     @Pattern(regexp = "^[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}$", flags = Pattern.Flag.UNICODE_CASE)
     private String email;
 
-    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,25}$", flags = Pattern.Flag.UNICODE_CASE)
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[ !\"#$%&'()*+,-./:;<=>?@\\[\\\\\\]^_`{|}~]).{8,25}$", flags = Pattern.Flag.UNICODE_CASE)
     private String password;
 }

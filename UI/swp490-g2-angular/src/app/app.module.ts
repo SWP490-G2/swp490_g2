@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -9,6 +9,9 @@ import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { HomePageModule } from './home-page/home-page.module';
 import { AuthenticationPagesModule } from './authentication-pages/authentication-pages.module';
+import { HttpErrorHandler } from "./global/http-error-handler";
+import { ToastModule } from "primeng/toast";
+import { Client } from "./ngswag/client";
 
 @NgModule({
   declarations: [
@@ -21,9 +24,16 @@ import { AuthenticationPagesModule } from './authentication-pages/authentication
     FormsModule,
     HttpClientModule,
     HomePageModule,
-    AuthenticationPagesModule
+    AuthenticationPagesModule,
+    ToastModule,
   ],
   providers: [
+    Client,
+    {
+      // processes all errors
+      provide: ErrorHandler,
+      useClass: HttpErrorHandler,
+    },
   ],
   bootstrap: [AppComponent]
 })
