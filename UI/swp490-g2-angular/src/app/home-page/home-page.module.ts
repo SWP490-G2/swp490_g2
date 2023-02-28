@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MenubarModule } from 'primeng/menubar';
 import { InputTextModule } from 'primeng/inputtext';
 import { TabViewModule } from 'primeng/tabview';
+import { ContextMenuModule } from 'primeng/contextmenu';
 
 import { HomePageRoutingModule } from './home-page-routing.module';
 import { HomePageComponent } from './home-page.component';
@@ -19,7 +20,8 @@ import { ButtonModule } from 'primeng/button';
     ButtonModule,
     MenubarModule,
     InputTextModule,
-    TabViewModule
+    TabViewModule,
+    ContextMenuModule
   ]
 })
 export class HomePageModule { }

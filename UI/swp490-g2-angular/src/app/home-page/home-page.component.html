@@ -1,18 +1,25 @@
 <p-menubar [model]="items">
   <ng-template pTemplate="start">
     <img
-      src="https://primefaces.org/cdn/primeng/images/primeng.svg"
+      src="../../favicon.ico"
       height="40"
       class="mr-2"
     />
   </ng-template>
   <ng-template pTemplate="end">
     <input type="text" pInputText placeholder="Search" />
-    <p-button label="Login" (click)="navToLogin()"></p-button>
-    <p-button label="Register" (click)="navToRegister()"></p-button>
+    <p-button
+      label="Login"
+      (click)="navToLogin()">
+    </p-button>
+    <p-button
+      label="Register"
+      (click)="navToRegister()">
+    </p-button>
     <p-button
       label="Forgot Password"
       (click)="navToForgotPassword()"
     ></p-button>
   </ng-template>
 </p-menubar>
+

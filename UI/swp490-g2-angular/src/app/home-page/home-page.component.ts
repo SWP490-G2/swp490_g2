@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { ContextMenuModule } from 'primeng/contextmenu';
 
 @Component({
   selector: 'app-home-page',
@@ -21,20 +22,16 @@ export class HomePageComponent {
   ngOnInit() {
     this.items = [
       {
-        label: 'Home',
-        icon: 'pi pi-fw pi-home'
-      },
-      {
         label: 'Categories',
-        icon: 'pi pi-fw pi-book'
+        icon: 'pi pi-fw pi-book',
       },
       {
         label: 'My Order',
-        icon: 'pi pi-fw pi-shopping-bag'
+        icon: 'pi pi-fw pi-shopping-bag',
       },
       {
         label: 'Cart',
-        icon: 'pi pi-fw pi-shopping-cart'
+        icon: 'pi pi-fw pi-shopping-cart',
       },
       {
         label: 'Notifications',
