@@ -21,10 +21,6 @@ export class HomePageComponent {
   ngOnInit() {
     this.items = [
       {
-        label: 'Home',
-        icon: 'pi pi-fw pi-home'
-      },
-      {
         label: 'Categories',
         icon: 'pi pi-fw pi-book'
       },
