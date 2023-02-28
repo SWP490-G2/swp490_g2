@@ -1,8 +1,7 @@
-package com.swp490_g2.hrms;
+package com.swp490_g2.hrms.config;
 
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 public class SwaggerUiWebMvcConfigurer implements WebMvcConfigurer {
