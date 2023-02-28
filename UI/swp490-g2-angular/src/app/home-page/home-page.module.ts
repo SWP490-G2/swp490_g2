@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MenubarModule } from 'primeng/menubar';
+import { InputTextModule } from 'primeng/inputtext';
+import { TabViewModule } from 'primeng/tabview';
 
 import { HomePageRoutingModule } from './home-page-routing.module';
 import { HomePageComponent } from './home-page.component';
@@ -13,7 +16,10 @@ import { ButtonModule } from 'primeng/button';
   imports: [
     CommonModule,
     HomePageRoutingModule,
-    ButtonModule
+    ButtonModule,
+    MenubarModule,
+    InputTextModule,
+    TabViewModule
   ]
 })
 export class HomePageModule { }
