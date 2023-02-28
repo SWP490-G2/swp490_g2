@@ -8,8 +8,14 @@
   </ng-template>
   <ng-template pTemplate="end">
     <input type="text" pInputText placeholder="Search" />
-    <p-button label="Login" (click)="navToLogin()"></p-button>
-    <p-button label="Register" (click)="navToRegister()"></p-button>
+    <p-button
+      label="Login"
+      (click)="navToLogin()">
+    </p-button>
+    <p-button
+      label="Register"
+      (click)="navToRegister()">
+    </p-button>
     <p-button
       label="Forgot Password"
       (click)="navToForgotPassword()"
