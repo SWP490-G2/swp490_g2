@@ -85,7 +85,7 @@ export class Client {
     /**
      * @return OK
      */
-    registerNewUserAccount(body: RegisterRequest): Observable<void> {
+    registerNewUserAccount(body: RegisterRequest): Observable<AuthenticationResponse> {
         let url_ = this.baseUrl + "/user/register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -97,6 +97,7 @@ export class Client {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
+                "Accept": "*/*"
             })
         };
 
@@ -107,14 +108,14 @@ export class Client {
                 try {
                     return this.processRegisterNewUserAccount(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<AuthenticationResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<AuthenticationResponse>;
         }));
     }
 
-    protected processRegisterNewUserAccount(response: HttpResponseBase): Observable<void> {
+    protected processRegisterNewUserAccount(response: HttpResponseBase): Observable<AuthenticationResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -123,7 +124,116 @@ export class Client {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuthenticationResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    login(body: AuthenticationRequest): Observable<AuthenticationResponse> {
+        let url_ = this.baseUrl + "/user/login";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "*/*"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLogin(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLogin(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AuthenticationResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AuthenticationResponse>;
+        }));
+    }
+
+    protected processLogin(response: HttpResponseBase): Observable<AuthenticationResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuthenticationResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getCurrentUser(): Observable<User> {
+        let url_ = this.baseUrl + "/user/get-current-user";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "*/*"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCurrentUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCurrentUser(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<User>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<User>;
+        }));
+    }
+
+    protected processGetCurrentUser(response: HttpResponseBase): Observable<User> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = User.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -301,6 +411,175 @@ export interface IRegisterRequest {
     [key: string]: any;
 }
 
+export class AuthenticationResponse implements IAuthenticationResponse {
+    token?: string;
+
+    [key: string]: any;
+
+    constructor(data?: IAuthenticationResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.token = _data["token"];
+        }
+    }
+
+    static fromJS(data: any): AuthenticationResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthenticationResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["token"] = this.token;
+        return data;
+    }
+
+    clone(): AuthenticationResponse {
+        const json = this.toJSON();
+        let result = new AuthenticationResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAuthenticationResponse {
+    token?: string;
+
+    [key: string]: any;
+}
+
+export class AuthenticationRequest implements IAuthenticationRequest {
+    email?: string;
+    password?: string;
+
+    [key: string]: any;
+
+    constructor(data?: IAuthenticationRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.email = _data["email"];
+            this.password = _data["password"];
+        }
+    }
+
+    static fromJS(data: any): AuthenticationRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthenticationRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["email"] = this.email;
+        data["password"] = this.password;
+        return data;
+    }
+
+    clone(): AuthenticationRequest {
+        const json = this.toJSON();
+        let result = new AuthenticationRequest();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAuthenticationRequest {
+    email?: string;
+    password?: string;
+
+    [key: string]: any;
+}
+
+export class GrantedAuthority implements IGrantedAuthority {
+    authority?: string;
+
+    [key: string]: any;
+
+    constructor(data?: IGrantedAuthority) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.authority = _data["authority"];
+        }
+    }
+
+    static fromJS(data: any): GrantedAuthority {
+        data = typeof data === 'object' ? data : {};
+        let result = new GrantedAuthority();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["authority"] = this.authority;
+        return data;
+    }
+
+    clone(): GrantedAuthority {
+        const json = this.toJSON();
+        let result = new GrantedAuthority();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGrantedAuthority {
+    authority?: string;
+
+    [key: string]: any;
+}
+
 export class User implements IUser {
     id?: number;
     createdBy?: number;
@@ -310,7 +589,14 @@ export class User implements IUser {
     email?: string;
     password?: string;
     verificationCode?: string;
+    role?: UserRole;
     active?: boolean;
+    enabled?: boolean;
+    accountNonLocked?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonExpired?: boolean;
+    authorities?: GrantedAuthority[];
+    username?: string;
 
     [key: string]: any;
 
@@ -337,7 +623,18 @@ export class User implements IUser {
             this.email = _data["email"];
             this.password = _data["password"];
             this.verificationCode = _data["verificationCode"];
+            this.role = _data["role"];
             this.active = _data["active"];
+            this.enabled = _data["enabled"];
+            this.accountNonLocked = _data["accountNonLocked"];
+            this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.accountNonExpired = _data["accountNonExpired"];
+            if (Array.isArray(_data["authorities"])) {
+                this.authorities = [] as any;
+                for (let item of _data["authorities"])
+                    this.authorities!.push(GrantedAuthority.fromJS(item));
+            }
+            this.username = _data["username"];
         }
     }
 
@@ -362,7 +659,18 @@ export class User implements IUser {
         data["email"] = this.email;
         data["password"] = this.password;
         data["verificationCode"] = this.verificationCode;
+        data["role"] = this.role;
         data["active"] = this.active;
+        data["enabled"] = this.enabled;
+        data["accountNonLocked"] = this.accountNonLocked;
+        data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["accountNonExpired"] = this.accountNonExpired;
+        if (Array.isArray(this.authorities)) {
+            data["authorities"] = [];
+            for (let item of this.authorities)
+                data["authorities"].push(item.toJSON());
+        }
+        data["username"] = this.username;
         return data;
     }
 
@@ -383,10 +691,19 @@ export interface IUser {
     email?: string;
     password?: string;
     verificationCode?: string;
+    role?: UserRole;
     active?: boolean;
+    enabled?: boolean;
+    accountNonLocked?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonExpired?: boolean;
+    authorities?: GrantedAuthority[];
+    username?: string;
 
     [key: string]: any;
 }
+
+export type UserRole = "USER" | "ADMIN";
 
 export class BusinessException extends Error {
     override message: string;
