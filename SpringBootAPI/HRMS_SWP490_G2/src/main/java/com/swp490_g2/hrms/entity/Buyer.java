@@ -1,9 +1,6 @@
 package com.swp490_g2.hrms.entity;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,5 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "buyer")
 @AttributeOverride(name = "id", column = @Column(name = "userId"))
+@PrimaryKeyJoinColumn(name = "userId")
 public class Buyer extends User{
+
 }
