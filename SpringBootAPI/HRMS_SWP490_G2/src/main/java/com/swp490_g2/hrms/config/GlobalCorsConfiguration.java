@@ -8,10 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class GlobalCorsConfiguration {
 
-    public GlobalCorsConfiguration() {
-        super();
-    }
-
     /**
      * Bean to define global CORS.
      *
