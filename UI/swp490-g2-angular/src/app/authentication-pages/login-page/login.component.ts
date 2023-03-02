@@ -2,6 +2,8 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
+import { finalize } from "rxjs";
+import { AuthService } from "src/app/global/auth.service";
 import { Client, User } from 'src/app/ngswag/client';
 
 @Component({
@@ -11,14 +13,15 @@ import { Client, User } from 'src/app/ngswag/client';
 })
 export class LoginComponent implements OnInit, AfterViewInit {
   @ViewChild('form', { static: false }) form!: NgForm;
-  codeValidatorDialogVisible = true;
   user?: User;
 
   // To change title, we need to import title service
   constructor(
     $title: Title,
     private $router: Router,
-    private $route: ActivatedRoute  ) {
+    private $route: ActivatedRoute,
+    private $auth: AuthService
+  ) {
     $title.setTitle('Login');
   }
   ngAfterViewInit(): void {
@@ -33,10 +36,20 @@ export class LoginComponent implements OnInit, AfterViewInit {
       this.form.controls['password'].updateValueAndValidity();
     }, 0);
   }
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  async login(): Promise<void> {
-    // TODO
+  login() {
+    this._loginButtonDisabled = true;
+
+    this.$auth.login(this.form.value)
+      .pipe(finalize(() => {
+        this._loginButtonDisabled = false;
+      }))
+      .subscribe({
+        next: () => {
+          this.$router.navigate(["/"]);
+        }
+      });
   }
 
   private _loginButtonDisabled: boolean = false;
