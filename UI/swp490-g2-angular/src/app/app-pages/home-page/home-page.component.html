@@ -12,12 +12,32 @@
         >The applications support Buyer and Seller feel comfortable during
         ordering and delivering</span
       >
-      <p-button label="Login" (click)="navToLogin()"> </p-button>
-      <p-button label="Register" (click)="navToRegister()"> </p-button>
+      <button pButton type="button" label="Sign In Now!" icon="pi pi-users" class="p-button-info p-button-raised p-button-rounded mr-2" (click)="navToLogin()"></button>
+      <button pButton type="button" label="Register Now!" icon="pi pi-id-card"class="p-button-secondary p-button-raised p-button-rounded" (click)="navToRegister()"></button>
       <!-- <p-button
         label="Forgot Password"
         (click)="navToForgotPassword()"
       ></p-button> -->
     </div>
+  </div>
+</div>
+
+<div class="surface-section px-4 py-8 md:px-6 lg:px-8">
+  <div class="flex justify-content-between flex-wrap">
+    <div class="flex align-items-center mb-4 md:mb-0">
+      <div class="text-900 font-bold text-3xl">Special Menu</div>
+      <p-badge styleClass="ml-3 bg-gray-200 text-gray-900 p-0 border-circle"></p-badge>
+    </div>
+    <div>
+      <button type="button" pButton icon="pi pi-sort-alt" class="p-button-outlined p-button-secondary w-8rem p-2" iconPos="right" label="Sort By" (click)="menu.toggle($event)" ></button>
+      <p-menu #menu [popup]="true" [model]="items"></p-menu>
+    </div>
+  </div>
+  <p class="text-600 text-xl">
+    Many delicious meals and beverages are waiting for you, with a lot of promotion are very interesting
+  </p>
+  <p-divider styleClass="w-full border-gray-200"></p-divider>
+  <div class="grid grid-nogutter align-items-center">
+
   </div>
 </div>
