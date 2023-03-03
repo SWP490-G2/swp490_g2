@@ -29,7 +29,7 @@
       "generateOptionalParameters": false,
       "exportTypes": true,
       "wrapDtoExceptions": false,
-      "exceptionClass": "ApiException",
+      "exceptionClass": "BusinessException",
       "clientBaseClass": null,
       "wrapResponses": false,
       "wrapResponseMethods": [],
