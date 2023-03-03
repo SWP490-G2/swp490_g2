@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { ContextMenuModule } from 'primeng/contextmenu';
 
 @Component({
   selector: 'app-home-page',
@@ -18,7 +17,6 @@ export class HomePageComponent {
     $title.setTitle('Home');
   }
   items!: MenuItem[];
-
   ngOnInit() {
     this.items = [
       {
@@ -38,6 +36,8 @@ export class HomePageComponent {
         icon: 'pi pi-fw pi-bell',
       },
     ];
+
+
   }
 
   navToLogin() {
@@ -53,4 +53,5 @@ export class HomePageComponent {
       relativeTo: this.$route,
     });
   }
+
 }
