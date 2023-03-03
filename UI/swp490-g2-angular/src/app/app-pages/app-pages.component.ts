@@ -7,6 +7,8 @@ import { Client, User } from '../ngswag/client';
   styleUrls: ['./app-pages.component.scss']
 })
 export class AppPagesComponent implements OnInit{
+  user?: User;
+
   constructor(
     private $client: Client
   ) {
@@ -15,7 +17,9 @@ export class AppPagesComponent implements OnInit{
   ngOnInit(): void {
     this.$client.getCurrentUser().subscribe({
       next: (user: User) => {
-        console.log(user)
+        // this.user: thuoc ve AppPages
+        // user: from API
+        this.user = user;
       }
     })
   }

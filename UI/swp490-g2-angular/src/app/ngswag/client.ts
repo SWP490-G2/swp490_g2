@@ -31,7 +31,7 @@ export class Client {
     /**
      * @return OK
      */
-    verifyCode(email: string, body: string): Observable<void> {
+    verifyCode(email: string, body: string): Observable<string> {
         let url_ = this.baseUrl + "/user/verify-code/{email}";
         if (email === undefined || email === null)
             throw new Error("The parameter 'email' must be defined.");
@@ -46,6 +46,7 @@ export class Client {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
+                "Accept": "*/*"
             })
         };
 
@@ -56,14 +57,14 @@ export class Client {
                 try {
                     return this.processVerifyCode(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<string>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<string>;
         }));
     }
 
-    protected processVerifyCode(response: HttpResponseBase): Observable<void> {
+    protected processVerifyCode(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -72,7 +73,11 @@ export class Client {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -355,6 +360,7 @@ export class Client {
 export class RegisterRequest implements IRegisterRequest {
     email?: string;
     password?: string;
+    phoneNumber?: string;
 
     [key: string]: any;
 
@@ -375,6 +381,7 @@ export class RegisterRequest implements IRegisterRequest {
             }
             this.email = _data["email"];
             this.password = _data["password"];
+            this.phoneNumber = _data["phoneNumber"];
         }
     }
 
@@ -393,6 +400,7 @@ export class RegisterRequest implements IRegisterRequest {
         }
         data["email"] = this.email;
         data["password"] = this.password;
+        data["phoneNumber"] = this.phoneNumber;
         return data;
     }
 
@@ -407,6 +415,7 @@ export class RegisterRequest implements IRegisterRequest {
 export interface IRegisterRequest {
     email?: string;
     password?: string;
+    phoneNumber?: string;
 
     [key: string]: any;
 }
@@ -588,15 +597,16 @@ export class User implements IUser {
     modifiedAt?: Date;
     email?: string;
     password?: string;
+    phoneNumber?: string;
     verificationCode?: string;
     role?: UserRole;
     active?: boolean;
     enabled?: boolean;
-    accountNonLocked?: boolean;
-    credentialsNonExpired?: boolean;
     accountNonExpired?: boolean;
-    authorities?: GrantedAuthority[];
+    credentialsNonExpired?: boolean;
     username?: string;
+    authorities?: GrantedAuthority[];
+    accountNonLocked?: boolean;
 
     [key: string]: any;
 
@@ -622,19 +632,20 @@ export class User implements IUser {
             this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
             this.email = _data["email"];
             this.password = _data["password"];
+            this.phoneNumber = _data["phoneNumber"];
             this.verificationCode = _data["verificationCode"];
             this.role = _data["role"];
             this.active = _data["active"];
             this.enabled = _data["enabled"];
-            this.accountNonLocked = _data["accountNonLocked"];
-            this.credentialsNonExpired = _data["credentialsNonExpired"];
             this.accountNonExpired = _data["accountNonExpired"];
+            this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.username = _data["username"];
             if (Array.isArray(_data["authorities"])) {
                 this.authorities = [] as any;
                 for (let item of _data["authorities"])
                     this.authorities!.push(GrantedAuthority.fromJS(item));
             }
-            this.username = _data["username"];
+            this.accountNonLocked = _data["accountNonLocked"];
         }
     }
 
@@ -658,19 +669,20 @@ export class User implements IUser {
         data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
         data["email"] = this.email;
         data["password"] = this.password;
+        data["phoneNumber"] = this.phoneNumber;
         data["verificationCode"] = this.verificationCode;
         data["role"] = this.role;
         data["active"] = this.active;
         data["enabled"] = this.enabled;
-        data["accountNonLocked"] = this.accountNonLocked;
-        data["credentialsNonExpired"] = this.credentialsNonExpired;
         data["accountNonExpired"] = this.accountNonExpired;
+        data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["username"] = this.username;
         if (Array.isArray(this.authorities)) {
             data["authorities"] = [];
             for (let item of this.authorities)
                 data["authorities"].push(item.toJSON());
         }
-        data["username"] = this.username;
+        data["accountNonLocked"] = this.accountNonLocked;
         return data;
     }
 
@@ -690,20 +702,21 @@ export interface IUser {
     modifiedAt?: Date;
     email?: string;
     password?: string;
+    phoneNumber?: string;
     verificationCode?: string;
     role?: UserRole;
     active?: boolean;
     enabled?: boolean;
-    accountNonLocked?: boolean;
-    credentialsNonExpired?: boolean;
     accountNonExpired?: boolean;
-    authorities?: GrantedAuthority[];
+    credentialsNonExpired?: boolean;
     username?: string;
+    authorities?: GrantedAuthority[];
+    accountNonLocked?: boolean;
 
     [key: string]: any;
 }
 
-export type UserRole = "USER" | "ADMIN";
+export type UserRole = "USER" | "ADMIN" | "BUYER" | "SELLER";
 
 export class BusinessException extends Error {
     override message: string;
