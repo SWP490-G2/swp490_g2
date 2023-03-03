@@ -60,5 +60,13 @@
       class="w-full mt-4"
       [disabled]="loginButtonDisabled"
     ></button>
+    <button
+      pButton
+      pRipple
+      label="Forgot Password"
+      icon="pi pi-user"
+      class="w-full mt-4"
+      (click)="navToForgotPassword()"
+    ></button>
   </form>
 </div>
