@@ -73,7 +73,7 @@ export class NavbarComponent {
       return <string>this.user?.email;
     }
 
-    return 'Account';
+    return "Account";
   }
 
   userExisted(): boolean {
