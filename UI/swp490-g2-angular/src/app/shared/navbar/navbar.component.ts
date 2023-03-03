@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { AuthService } from 'src/app/global/auth.service';
+import { User } from 'src/app/ngswag/client';
 
 @Component({
   selector: 'app-navbar',
@@ -9,10 +11,14 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
+  // @Input: duoc truyen vao tu parent
+  @Input() user?: User;
+
   constructor(
     private $router: Router,
     private $route: ActivatedRoute,
-    private $title: Title
+    private $title: Title,
+    private $auth: AuthService
   ) {
     $title.setTitle('Home');
   }
@@ -55,5 +61,27 @@ export class NavbarComponent {
     this.$router.navigate(['auth', 'forgot-password'], {
       relativeTo: this.$route,
     });
+  }
+
+  getUserDisplay(): string {
+    // Thoa man 2 dieu kien:
+    // 1. this.user ton tai
+    // 2. this.user.email ton tai
+    if (this.userExisted()) {
+      // if(this.user?.email)
+      // this.user.email: string | undefined
+      return <string>this.user?.email;
+    }
+
+    return 'Account';
+  }
+
+  userExisted(): boolean {
+    // !! giup ep kieu sang boolean
+    return !!(this.user && this.user.email);
+  }
+
+  logOut(): void {
+    this.$auth.logout();
   }
 }
