@@ -15,4 +15,7 @@ import lombok.Setter;
 @Table(name = "seller")
 @AttributeOverride(name = "id", column = @Column(name = "userId"))
 public class Seller extends User{
+    @Column(nullable = false)
+    private String restaurantName;
+
 }

@@ -12,6 +12,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./home-page/home-page.module').then((m) => m.HomePageModule),
       },
+      {
+        path: 'restaurant-feed',
+        loadChildren: () =>
+          import('./restaurant-feed/restaurant-feed.module').then(
+            (m) => m.RestaurantFeedModule
+          ),
+      },
     ],
   },
 ];

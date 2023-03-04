@@ -53,12 +53,22 @@ public class UserService {
         // this will convert any number sequence into 6 character.
         return String.format("%06d", number);
     }
-
+    private boolean isPhoneNumberExisted(String phoneNumber){
+        User user = userRepository.findByPhoneNumber(phoneNumber).orElse(null);
+        return user != null && user.isActive();
+    }
     public AuthenticationResponse registerNewUserAccount(RegisterRequest registerRequest) {
         User user = userRepository.findByEmail(registerRequest.getEmail()).orElse(null);
         if (user != null && user.isActive()) {
-            return null;
+            return AuthenticationResponse.builder()
+                    .errorMessage("\"User existed\"")
+                    .build();
         }
+
+        if(isPhoneNumberExisted(registerRequest.getPhoneNumber()))
+            return AuthenticationResponse.builder()
+                    .errorMessage("\"Phone number existed\"")
+                    .build();
 
         if (user == null) {
             user = new User();
