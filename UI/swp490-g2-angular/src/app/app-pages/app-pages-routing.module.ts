@@ -19,6 +19,13 @@ const routes: Routes = [
             (m) => m.RestaurantFeedModule
           ),
       },
+      {
+        path: 'buyer-information',
+        loadChildren: () =>
+          import('./buyer-information/buyer-information.module').then(
+            (m) => m.BuyerInformationModule
+          ),
+      },
     ],
   },
 ];

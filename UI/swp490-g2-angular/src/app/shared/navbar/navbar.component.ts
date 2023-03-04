@@ -73,7 +73,7 @@ export class NavbarComponent {
       return <string>this.user?.email;
     }
 
-    return "Account";
+    return 'Account';
   }
 
   userExisted(): boolean {
@@ -83,5 +83,9 @@ export class NavbarComponent {
 
   logOut(): void {
     this.$auth.logout();
+  }
+
+  navToBuyerInformationSetting() {
+    this.$router.navigate(['buyer-information'], { relativeTo: this.$route });
   }
 }
