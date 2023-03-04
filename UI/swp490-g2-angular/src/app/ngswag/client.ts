@@ -422,6 +422,7 @@ export interface IRegisterRequest {
 
 export class AuthenticationResponse implements IAuthenticationResponse {
     token?: string;
+    errorMessage?: string;
 
     [key: string]: any;
 
@@ -441,6 +442,7 @@ export class AuthenticationResponse implements IAuthenticationResponse {
                     this[property] = _data[property];
             }
             this.token = _data["token"];
+            this.errorMessage = _data["errorMessage"];
         }
     }
 
@@ -458,6 +460,7 @@ export class AuthenticationResponse implements IAuthenticationResponse {
                 data[property] = this[property];
         }
         data["token"] = this.token;
+        data["errorMessage"] = this.errorMessage;
         return data;
     }
 
@@ -471,6 +474,7 @@ export class AuthenticationResponse implements IAuthenticationResponse {
 
 export interface IAuthenticationResponse {
     token?: string;
+    errorMessage?: string;
 
     [key: string]: any;
 }
@@ -602,11 +606,11 @@ export class User implements IUser {
     role?: UserRole;
     active?: boolean;
     enabled?: boolean;
-    accountNonExpired?: boolean;
-    credentialsNonExpired?: boolean;
-    username?: string;
     authorities?: GrantedAuthority[];
     accountNonLocked?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonExpired?: boolean;
+    username?: string;
 
     [key: string]: any;
 
@@ -637,15 +641,15 @@ export class User implements IUser {
             this.role = _data["role"];
             this.active = _data["active"];
             this.enabled = _data["enabled"];
-            this.accountNonExpired = _data["accountNonExpired"];
-            this.credentialsNonExpired = _data["credentialsNonExpired"];
-            this.username = _data["username"];
             if (Array.isArray(_data["authorities"])) {
                 this.authorities = [] as any;
                 for (let item of _data["authorities"])
                     this.authorities!.push(GrantedAuthority.fromJS(item));
             }
             this.accountNonLocked = _data["accountNonLocked"];
+            this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.accountNonExpired = _data["accountNonExpired"];
+            this.username = _data["username"];
         }
     }
 
@@ -674,15 +678,15 @@ export class User implements IUser {
         data["role"] = this.role;
         data["active"] = this.active;
         data["enabled"] = this.enabled;
-        data["accountNonExpired"] = this.accountNonExpired;
-        data["credentialsNonExpired"] = this.credentialsNonExpired;
-        data["username"] = this.username;
         if (Array.isArray(this.authorities)) {
             data["authorities"] = [];
             for (let item of this.authorities)
                 data["authorities"].push(item.toJSON());
         }
         data["accountNonLocked"] = this.accountNonLocked;
+        data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["accountNonExpired"] = this.accountNonExpired;
+        data["username"] = this.username;
         return data;
     }
 
@@ -707,11 +711,11 @@ export interface IUser {
     role?: UserRole;
     active?: boolean;
     enabled?: boolean;
-    accountNonExpired?: boolean;
-    credentialsNonExpired?: boolean;
-    username?: string;
     authorities?: GrantedAuthority[];
     accountNonLocked?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonExpired?: boolean;
+    username?: string;
 
     [key: string]: any;
 }
