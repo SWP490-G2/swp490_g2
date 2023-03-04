@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @PostMapping("/verify-code/{email}")
-    public void verifyCode(@PathVariable String email, @RequestBody String code) {
-        userServiceImpl.verifyCode(email, code);
+    public ResponseEntity<String> verifyCode(@PathVariable String email, @RequestBody String code) {
+        return ResponseEntity.ok(userServiceImpl.verifyCode(email, code));
     }
 
     @PostMapping(value = "/login")

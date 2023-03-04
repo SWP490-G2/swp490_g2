@@ -53,12 +53,22 @@ public class UserService {
         // this will convert any number sequence into 6 character.
         return String.format("%06d", number);
     }
-
+    private boolean isPhoneNumberExisted(String phoneNumber){
+        User user = userRepository.findByPhoneNumber(phoneNumber).orElse(null);
+        return user != null && user.isActive();
+    }
     public AuthenticationResponse registerNewUserAccount(RegisterRequest registerRequest) {
         User user = userRepository.findByEmail(registerRequest.getEmail()).orElse(null);
         if (user != null && user.isActive()) {
-            return null;
+            return AuthenticationResponse.builder()
+                    .errorMessage("\"User existed\"")
+                    .build();
         }
+
+        if(isPhoneNumberExisted(registerRequest.getPhoneNumber()))
+            return AuthenticationResponse.builder()
+                    .errorMessage("\"Phone number existed\"")
+                    .build();
 
         if (user == null) {
             user = new User();
@@ -94,23 +104,24 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public void verifyCode(String email, String code) {
+    public String verifyCode(String email, String code) {
         code = code.substring(1, 7);
         if (!code.matches("[0-9]{6}"))
-            return;
+            return "\"Invalid code\"";
 
         User user = getByEmail(email);
         if (user == null)
-            return;
+            return "\"User not existed\"";
 
         if (!user.getVerificationCode().equals(code))
-            return;
+            return "\"Invalid code\"";
 
         user.setActive(true);
         user.setRole(Role.BUYER);
 
         userRepository.save(user);
         buyerRepository.addFromUser(user.getId());
+        return null;
     }
 
     public User getByEmail(String email) {

@@ -40,10 +40,10 @@ export class ForgotPassPageComponent {
   }
 
   navToLogin() {
-    this.$router.navigate(['auth', 'login'], {relativeTo: this.$route});
+    this.$router.navigate(['..', 'login'], {relativeTo: this.$route});
   }
 
   navToRegister() {
-    this.$router.navigate(['auth', 'register'], {relativeTo: this.$route});
+    this.$router.navigate(['..', 'register'], {relativeTo: this.$route});
   }
 }

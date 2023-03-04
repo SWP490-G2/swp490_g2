@@ -40,7 +40,7 @@ public class User extends BaseEntity implements UserDetails {
 //    @Column(name = "gender", nullable = false)
 //    private Boolean gender;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
     @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)

@@ -9,8 +9,8 @@ import {
 } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { MessageService } from 'primeng/api';
-import { finalize } from "rxjs";
-import { Client, User } from 'src/app/ngswag/client';
+import { finalize } from 'rxjs';
+import { AuthenticationResponse, Client, User } from 'src/app/ngswag/client';
 import { CustomValidators } from 'src/app/utils';
 
 @Component({
@@ -103,19 +103,25 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   register(): void {
     this._registerButtonDisabled = true;
 
-    this.$client.registerNewUserAccount(this.form.value)
-      .pipe(finalize(() => {
-        this._registerButtonDisabled = false;
-      }))
+    this.$client
+      .registerNewUserAccount(this.form.value)
+      .pipe(
+        finalize(() => {
+          this._registerButtonDisabled = false;
+        })
+      )
       .subscribe({
-        next: () => {
+        next: (authenticationResponse: AuthenticationResponse) => {
+          if (authenticationResponse.errorMessage) {
+            throw new Error(authenticationResponse.errorMessage);
+          }
           this.codeValidatorDialogVisible = true;
-        }
+        },
       });
   }
 

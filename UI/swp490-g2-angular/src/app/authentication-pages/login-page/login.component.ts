@@ -69,4 +69,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
      * /auth/register
      */
   }
+
+  navToForgotPassword() {
+    this.$router.navigate(['..', 'forgot-password'], {
+      relativeTo: this.$route,
+    });
+  }
 }
