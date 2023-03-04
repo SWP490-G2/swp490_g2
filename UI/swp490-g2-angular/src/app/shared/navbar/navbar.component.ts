@@ -84,4 +84,8 @@ export class NavbarComponent {
   logOut(): void {
     this.$auth.logout();
   }
+
+  navToFeed() {
+    this.$router.navigate(['feed-page'], { relativeTo: this.$route });
+  }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../global/auth.service';
 import { Client, User } from '../ngswag/client';
 
 @Component({
@@ -10,13 +11,14 @@ export class AppPagesComponent implements OnInit{
   user?: User;
 
   constructor(
-    private $client: Client
+    private $client: Client,
+    private $auth: AuthService,
   ) {
 
   }
   ngOnInit(): void {
-    this.$client.getCurrentUser().subscribe({
-      next: (user: User) => {
+    this.$auth.getCurrentUser().subscribe({
+      next: (user?: User) => {
         // this.user: thuoc ve AppPages
         // user: from API
         this.user = user;
