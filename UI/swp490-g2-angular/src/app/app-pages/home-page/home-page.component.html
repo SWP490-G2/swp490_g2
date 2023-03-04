@@ -13,7 +13,7 @@
         ordering and delivering</span
       >
       <button pButton type="button" label="Sign In Now!" icon="pi pi-users" class="p-button-info p-button-raised p-button-rounded mr-2" (click)="navToLogin()"></button>
-      <button pButton type="button" label="Register Now!" icon="pi pi-id-card"class="p-button-secondary p-button-raised p-button-rounded" (click)="navToRegister()"></button>
+      <button pButton type="button" label="Register Now!" icon="pi pi-id-card" class="p-button-secondary p-button-raised p-button-rounded" (click)="navToRegister()"></button>
       <!-- <p-button
         label="Forgot Password"
         (click)="navToForgotPassword()"
@@ -38,6 +38,74 @@
   </p>
   <p-divider styleClass="w-full border-gray-200"></p-divider>
   <div class="grid grid-nogutter align-items-center">
+    <p-multiSelect defaultLabel="Restaurant Category" optionLabel="name" styleClass="w-full" selectedItemsLabel="{0} brands selected" class="flex-auto lg:flex-1 mb-3 lg:mt-0 w-full mr-0 lg:mr-4 text-900"></p-multiSelect>
+    <p-multiSelect defaultLabel="Promoting" optionLabel="name" styleClass="w-full" selectedItemsLabel="{0} colors selected" class="flex-auto lg:flex-1 mb-3 lg:mt-0 w-full mr-0 lg:mr-4 text-900"></p-multiSelect>
+    <p-multiSelect defaultLabel="Price" optionLabel="range" styleClass="w-full" selectedItemsLabel="{0} prices selected" class="flex-auto lg:flex-1 mb-3 lg:mt-0 lg:col w-full mr-0 lg:mr-4 text-900"></p-multiSelect>
+    <p-button class="p-button-secondary p-button-raised p-button-rounded text-900"><a pRipple tabindex="0">Clear All</a></p-button>
 
+    <div class="col-12">
+      <div class="grid mt-4">
+        <div class="col-12 md:col-6 lg:col-3 mb-5 lg:mb-0">
+          <div class="mb-3 relative">
+            <img src="./assets/images/blog-img-05.jpg" class="w-full" />
+            <button type="button" pRipple class="border-1 border-white border-round py-2 px-3 absolute bg-black-alpha-30 text-white inline-flex align-items-center justify-content-center hover:bg-black-alpha-40 transition-colors transition-duration-300 cursor-pointer"
+                style="bottom: 1rem; left: 1rem; width: calc(100% - 2rem)">
+                <i class="pi pi-shopping-cart mr-3 text-base"></i>
+                <span class="text-base">Add to Cart</span>
+            </button>
+          </div>
+          <div class="flex flex-column align-items-center">
+            <span class="text-xl text-900 font-medium mb-3">Product Name</span>
+            <span class="text-xl text-900 mb-3">$150.00</span>
+            <span class="text-500">ABC</span>
+          </div>
+        </div>
+        <div class="col-12 md:col-6 lg:col-3 mb-5 lg:mb-0">
+          <div class="mb-3 relative">
+            <img src="./assets/images/blog-img-05.jpg" class="w-full" />
+            <button type="button" pRipple class="border-1 border-white border-round py-2 px-3 absolute bg-black-alpha-30 text-white inline-flex align-items-center justify-content-center hover:bg-black-alpha-40 transition-colors transition-duration-300 cursor-pointer"
+                style="bottom: 1rem; left: 1rem; width: calc(100% - 2rem)">
+                <i class="pi pi-shopping-cart mr-3 text-base"></i>
+                <span class="text-base">Add to Cart</span>
+            </button>
+          </div>
+          <div class="flex flex-column align-items-center">
+            <span class="text-xl text-900 font-medium mb-3">Product Name</span>
+            <span class="text-xl text-900 mb-3">$150.00</span>
+            <span class="text-500">ABC</span>
+          </div>
+        </div>
+        <div class="col-12 md:col-6 lg:col-3 mb-5 lg:mb-0">
+          <div class="mb-3 relative">
+            <img src="./assets/images/blog-img-05.jpg" class="w-full" />
+            <button type="button" pRipple class="border-1 border-white border-round py-2 px-3 absolute bg-black-alpha-30 text-white inline-flex align-items-center justify-content-center hover:bg-black-alpha-40 transition-colors transition-duration-300 cursor-pointer"
+                style="bottom: 1rem; left: 1rem; width: calc(100% - 2rem)">
+                <i class="pi pi-shopping-cart mr-3 text-base"></i>
+                <span class="text-base">Add to Cart</span>
+            </button>
+          </div>
+          <div class="flex flex-column align-items-center">
+            <span class="text-xl text-900 font-medium mb-3">Product Name</span>
+            <span class="text-xl text-900 mb-3">$150.00</span>
+            <span class="text-500">ABC</span>
+          </div>
+        </div>
+        <div class="col-12 md:col-6 lg:col-3 mb-5 lg:mb-0">
+          <div class="mb-3 relative">
+            <img src="./assets/images/blog-img-05.jpg" class="w-full" />
+            <button type="button" pRipple class="border-1 border-white border-round py-2 px-3 absolute bg-black-alpha-30 text-white inline-flex align-items-center justify-content-center hover:bg-black-alpha-40 transition-colors transition-duration-300 cursor-pointer"
+                style="bottom: 1rem; left: 1rem; width: calc(100% - 2rem)">
+                <i class="pi pi-shopping-cart mr-3 text-base"></i>
+                <span class="text-base">Add to Cart</span>
+            </button>
+          </div>
+          <div class="flex flex-column align-items-center">
+            <span class="text-xl text-900 font-medium mb-3">Product Name</span>
+            <span class="text-xl text-900 mb-3">$150.00</span>
+            <span class="text-500">ABC</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
