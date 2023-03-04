@@ -35,7 +35,7 @@ public class BaseEntity {
 
     @Column(insertable = false, updatable = false, nullable = false, columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a z")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATETIME_FORMAT_CUSTOM)
     private Date createdAt;
 
     @Column
@@ -43,16 +43,6 @@ public class BaseEntity {
 
     @Column(insertable = false, updatable = false, nullable = false, columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a z")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATETIME_FORMAT_CUSTOM)
     private Date modifiedAt;
-
-//    @JsonGetter("createdAt")
-//    public String getCreatedAt(){
-//        return DateUtils.format(this.createdAt, DateUtils.DATE_FORMAT_3);
-//    }
-//
-//    @JsonGetter("modifiedAt")
-//    public String getModifiedAt(){
-//        return DateUtils.format(this.modifiedAt, DateUtils.DATE_FORMAT_3);
-//    }
 }

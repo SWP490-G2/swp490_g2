@@ -2,31 +2,31 @@ package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
+import com.swp490_g2.hrms.config.JwtService;
+import com.swp490_g2.hrms.entity.Buyer;
 import com.swp490_g2.hrms.entity.Role;
 import com.swp490_g2.hrms.entity.Token;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.shallowEntities.TokenType;
+import com.swp490_g2.hrms.repositories.BuyerRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.RegisterRequest;
 import com.swp490_g2.hrms.security.AuthenticationRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
-import com.swp490_g2.hrms.config.JwtService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
-import static com.swp490_g2.hrms.common.constants.ErrorStatusConstants.*;
+import static com.swp490_g2.hrms.common.constants.ErrorStatusConstants.INVALID_VERIFICATION_CODE;
+import static com.swp490_g2.hrms.common.constants.ErrorStatusConstants.NOT_EXISTED_USER_ID;
 
 
 @Service
@@ -34,13 +34,10 @@ import static com.swp490_g2.hrms.common.constants.ErrorStatusConstants.*;
 public class UserService {
 
     private final UserRepository userRepository;
-
+    private final BuyerRepository buyerRepository;
     private final TokenRepository tokenRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final JwtService jwtService;
-
     private final AuthenticationManager authenticationManager;
 
 
@@ -60,7 +57,7 @@ public class UserService {
     public AuthenticationResponse registerNewUserAccount(RegisterRequest registerRequest) {
         User user = userRepository.findByEmail(registerRequest.getEmail()).orElse(null);
         if (user != null && user.isActive()) {
-            throw new BusinessException(EXISTED_EMAIL, "Account: " + registerRequest.getEmail() + " is already exists.");
+            return null;
         }
 
         if (user == null) {
@@ -71,6 +68,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRole(Role.USER);
         user.setVerificationCode(generateVerificationCode());
+        user.setPhoneNumber(registerRequest.getPhoneNumber());
 
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
@@ -96,20 +94,24 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public void verifyCode(String email, String code) {
+    public String verifyCode(String email, String code) {
         code = code.substring(1, 7);
         if (!code.matches("[0-9]{6}"))
-            throw new BusinessException(INVALID_VERIFICATION_CODE);
+            return "\"Invalid code\"";
 
         User user = getByEmail(email);
         if (user == null)
-            throw new BusinessException(NOT_EXISTED_USER_ID);
+            return "\"User not existed\"";
 
         if (!user.getVerificationCode().equals(code))
-            throw new BusinessException(INVALID_VERIFICATION_CODE);
+            return "\"Invalid code\"";
 
         user.setActive(true);
+        user.setRole(Role.BUYER);
+
         userRepository.save(user);
+        buyerRepository.addFromUser(user.getId());
+        return null;
     }
 
     public User getByEmail(String email) {
@@ -125,11 +127,10 @@ public class UserService {
         );
 
 
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
+        var user = userRepository.findByEmail(request.getEmail()).orElse(null);
 
-        if (!user.isActive())
-            throw new BusinessException(NOT_EXISTED_USER_ID);
+        if (user == null || !user.isActive())
+            return null;
 
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
@@ -137,28 +138,6 @@ public class UserService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
-    }
-
-    public void logout(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Authentication authentication
-    ) {
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return;
-        }
-
-        jwt = authHeader.substring(7);
-        var storedToken = tokenRepository.findByToken(jwt)
-                .orElse(null);
-        if (storedToken != null) {
-            storedToken.setExpired(true);
-            storedToken.setRevoked(true);
-            tokenRepository.save(storedToken);
-            SecurityContextHolder.clearContext();
-        }
     }
 
     private void revokeAllUserTokens(User user) {
@@ -175,7 +154,11 @@ public class UserService {
     }
 
     public User getCurrentUser() {
-        String email = authenticationFacade.getAuthentication().getName();
+        Authentication authentication = authenticationFacade.getAuthentication();
+        if(authentication == null)
+            return null;
+
+        String email = authentication.getName();
         return getByEmail(email);
     }
 }

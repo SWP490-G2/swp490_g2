@@ -47,6 +47,7 @@ export class HttpErrorHandler implements ErrorHandler {
       this.$message.add(
         {
           severity: "error",
+          summary: "Error occurred",
           detail: message || error.message || "Undefined client error",
         }
       )

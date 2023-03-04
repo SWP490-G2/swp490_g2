@@ -25,7 +25,8 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
   constructor(private confirmationService: ConfirmationService,
     private $client: Client,
     private $router: Router,
-    private $route: ActivatedRoute) { }
+    private $route: ActivatedRoute,
+    ) { }
 
   ngOnInit(): void {
     // console.log(this.email);
@@ -48,15 +49,19 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
         this._buttonDisabled = false;
       }))
       .subscribe({
-        next: () => {
-          this.confirmationService.confirm({
-            message: 'Register successfully! Click “YES” to back to login.',
-            header: 'Confirmation',
-            accept: () => {
-              this.$router.navigate(["..", 'login'], { relativeTo: this.$route });
-            },
-            reject: () => { },
-          });
+        next: (errorMessage) => {
+          if (!errorMessage) {
+            return this.confirmationService.confirm({
+              message: 'Register successfully! Click “YES” to back to login.',
+              header: 'Confirmation',
+              accept: () => {
+                this.$router.navigate(["..", 'login'], { relativeTo: this.$route });
+              },
+              reject: () => { },
+            });
+          }
+
+          throw new Error(errorMessage);
         }
       });
   }
