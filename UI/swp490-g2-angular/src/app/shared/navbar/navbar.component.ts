@@ -1,16 +1,16 @@
-import { Component, Input } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MenuItem } from 'primeng/api';
-import { AuthService } from 'src/app/global/auth.service';
-import { User } from 'src/app/ngswag/client';
+import { Component, Input, OnInit } from "@angular/core";
+import { Title } from "@angular/platform-browser";
+import { Router, ActivatedRoute } from "@angular/router";
+import { MenuItem } from "primeng/api";
+import { AuthService } from "src/app/global/auth.service";
+import { User } from "src/app/ngswag/client";
 
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss'],
+  selector: "app-navbar",
+  templateUrl: "./navbar.component.html",
+  styleUrls: ["./navbar.component.scss"],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   // @Input: duoc truyen vao tu parent
   @Input() user?: User;
 
@@ -20,45 +20,45 @@ export class NavbarComponent {
     private $title: Title,
     private $auth: AuthService
   ) {
-    $title.setTitle('Home');
+    $title.setTitle("Home");
   }
   items!: MenuItem[];
 
   ngOnInit() {
     this.items = [
       {
-        label: 'Categories',
-        icon: 'pi pi-fw pi-book',
+        label: "Categories",
+        icon: "pi pi-fw pi-book",
       },
       {
-        label: 'My Order',
-        icon: 'pi pi-fw pi-shopping-bag',
+        label: "My Order",
+        icon: "pi pi-fw pi-shopping-bag",
       },
       {
-        label: 'Cart',
-        icon: 'pi pi-fw pi-shopping-cart',
+        label: "Cart",
+        icon: "pi pi-fw pi-shopping-cart",
       },
       {
-        label: 'Notifications',
-        icon: 'pi pi-fw pi-bell',
+        label: "Notifications",
+        icon: "pi pi-fw pi-bell",
       },
     ];
   }
 
   navToHome() {
-    this.$router.navigate([''], { relativeTo: this.$route });
+    this.$router.navigate([""], { relativeTo: this.$route });
   }
 
   navToLogin() {
-    this.$router.navigate(['auth', 'login'], { relativeTo: this.$route });
+    this.$router.navigate(["auth", "login"], { relativeTo: this.$route });
   }
 
   navToRegister() {
-    this.$router.navigate(['auth', 'register'], { relativeTo: this.$route });
+    this.$router.navigate(["auth", "register"], { relativeTo: this.$route });
   }
 
   navToForgotPassword() {
-    this.$router.navigate(['auth', 'forgot-password'], {
+    this.$router.navigate(["auth", "forgot-password"], {
       relativeTo: this.$route,
     });
   }
@@ -83,5 +83,9 @@ export class NavbarComponent {
 
   logOut(): void {
     this.$auth.logout();
+  }
+
+  navToBuyerInformationSetting() {
+    this.$router.navigate(["buyer-information"], { relativeTo: this.$route });
   }
 }
