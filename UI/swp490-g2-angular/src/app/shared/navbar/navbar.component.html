@@ -20,6 +20,7 @@
       <ng-container *ngIf="userExisted()">
         <li class="h-full">
           <a
+            (click)="navToHome()"
             pRipple
             class="cursor-pointer h-full inline-flex align-items-center text-600 border-left-2 lg:border-left-none lg:border-bottom-2 border-blue-500 transition-colors transition-duration-150 py-3 lg:py-0 px-3"
           >
