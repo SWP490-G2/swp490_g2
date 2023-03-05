@@ -1,15 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
-import { User } from 'src/app/ngswag/client';
+import { Component, ViewChild } from "@angular/core";
+import { NgForm } from "@angular/forms";
+import { Title } from "@angular/platform-browser";
+import { User } from "src/app/ngswag/client";
 
 @Component({
-  selector: 'app-forgot-pass-page',
-  templateUrl: './forgot-pass-page.component.html',
-  styleUrls: ['./forgot-pass-page.component.scss']
+  selector: "app-forgot-pass-page",
+  templateUrl: "./forgot-pass-page.component.html",
+  styleUrls: ["./forgot-pass-page.component.scss"]
 })
 export class ForgotPassPageComponent {
-  @ViewChild('form', { static: false }) form!: NgForm;
+  @ViewChild("form", { static: false }) form!: NgForm;
   codeValidatorDialogVisible = true;
   user?: User;
   $router: any;
@@ -18,14 +18,14 @@ export class ForgotPassPageComponent {
   // To change title, we need to import title service
   constructor(
     $title: Title  ) {
-    $title.setTitle('Forgot Password');
+    $title.setTitle("Forgot Password");
   }
 
   async forgotPassword(): Promise<void> {
 
   }
 
-  private _fgtPassButtonDisabled: boolean = false;
+  private _fgtPassButtonDisabled = false;
   get fgtPassButtonDisabled(): boolean {
     // Force type <boolean | null> to <boolean>, add double exclaimation mark !!
     // a = 1
@@ -40,10 +40,10 @@ export class ForgotPassPageComponent {
   }
 
   navToLogin() {
-    this.$router.navigate(['..', 'login'], {relativeTo: this.$route});
+    this.$router.navigate(["..", "login"], {relativeTo: this.$route});
   }
 
   navToRegister() {
-    this.$router.navigate(['..', 'register'], {relativeTo: this.$route});
+    this.$router.navigate(["..", "register"], {relativeTo: this.$route});
   }
 }
