@@ -1,9 +1,7 @@
 package com.swp490_g2.hrms.service;
 
-import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.config.JwtService;
-import com.swp490_g2.hrms.entity.Buyer;
 import com.swp490_g2.hrms.entity.Role;
 import com.swp490_g2.hrms.entity.Token;
 import com.swp490_g2.hrms.entity.User;
@@ -15,7 +13,6 @@ import com.swp490_g2.hrms.requests.RegisterRequest;
 import com.swp490_g2.hrms.security.AuthenticationRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,9 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
-
-import static com.swp490_g2.hrms.common.constants.ErrorStatusConstants.INVALID_VERIFICATION_CODE;
-import static com.swp490_g2.hrms.common.constants.ErrorStatusConstants.NOT_EXISTED_USER_ID;
 
 
 @Service
@@ -140,7 +134,9 @@ public class UserService {
         var user = userRepository.findByEmail(request.getEmail()).orElse(null);
 
         if (user == null || !user.isActive())
-            return null;
+            return AuthenticationResponse.builder()
+                    .errorMessage("User has not been activated!")
+                    .build();
 
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);

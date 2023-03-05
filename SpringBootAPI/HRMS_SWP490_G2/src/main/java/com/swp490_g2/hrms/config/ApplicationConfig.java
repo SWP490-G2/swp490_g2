@@ -3,7 +3,6 @@ package com.swp490_g2.hrms.config;
 
 import com.swp490_g2.hrms.common.constants.ErrorStatusConstants;
 import com.swp490_g2.hrms.common.exception.BusinessException;
-import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +24,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> repository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorStatusConstants.NOT_EXISTED_USER_ID));
+                .orElseThrow(() -> new BusinessException(ErrorStatusConstants.NOT_EXISTED_USER));
     }
 
     @Bean
