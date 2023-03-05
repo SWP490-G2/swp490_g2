@@ -1,46 +1,97 @@
 <div class="buyer-information-container">
-    <form #form="ngForm" class="surface-card p-4 shadow-2 border-round w-full lg:w-6">
-        <div class="text-center mb-5">
-            <div class="text-900 text-3xl font-medium mb-3">
-                Buyer Information
-            </div>
-        </div>
-        <div class="card">
-            <label for="email" class="block text-900 font-medium my-3">Email*</label>
-            <input id="email" type="text" pInputText class="w-6 mb-1" name="email"
-                placeholder="khanhnqhe141470@fpt.edu.vn" ngModel />
-            <div class="flex align-items-center gap-1"
-                *ngIf="form.controls['email']?.dirty && form.controls['email']?.errors">
-            </div>
+  <form
+    #form="ngForm"
+    class="surface-card p-4 shadow-2 border-round w-full lg:w-6"
+  >
+    <div class="text-center mb-5">
+      <div class="text-900 text-3xl font-medium mb-3">Buyer Information</div>
+    </div>
+    <div class="card">
+      <label for="email" class="block text-900 font-medium my-3">Email*</label>
+      <input
+        id="email"
+        type="text"
+        pInputText
+        class="w-6 mb-1"
+        name="email"
+        placeholder="khanhnqhe141470@fpt.edu.vn"
+        ngModel
+      />
+      <div
+        class="flex align-items-center gap-1"
+        *ngIf="form.controls['email']?.dirty && form.controls['email']?.errors"
+      ></div>
 
-            <label for="first_name" class="block text-900 font-medium my-2">First Name*</label>
-            <input id="first_name" type="text" pInputText class="w-6 mb-1" name="firstName"
-                placeholder="Enter your first name" ngModel />
-            <div class="flex align-items-center gap-1"
-                *ngIf="form.controls['firstName']?.dirty && form.controls['firstName']?.errors">
-            </div>
+      <label for="first_name" class="block text-900 font-medium my-2"
+        >First Name*</label
+      >
+      <input
+        id="first_name"
+        type="text"
+        pInputText
+        class="w-6 mb-1"
+        name="firstName"
+        placeholder="Enter your first name"
+        ngModel
+      />
+      <div
+        class="flex align-items-center gap-1"
+        *ngIf="
+          form.controls['firstName']?.dirty &&
+          form.controls['firstName']?.errors
+        "
+      ></div>
 
-            <label for="middle_name" class="block text-900 font-medium my-2">Middle Name*</label>
-            <input id="middle_name" type="text" pInputText class="w-6 mb-1" name="middleName"
-                placeholder="Enter your middle name" ngModel />
-            <div class="flex align-items-center gap-1"
-                *ngIf="form.controls['middleName']?.dirty && form.controls['middleName']?.errors">
-            </div>
+      <label for="middle_name" class="block text-900 font-medium my-2"
+        >Middle Name*</label
+      >
+      <input
+        id="middle_name"
+        type="text"
+        pInputText
+        class="w-6 mb-1"
+        name="middleName"
+        placeholder="Enter your middle name"
+        ngModel
+      />
+      <div
+        class="flex align-items-center gap-1"
+        *ngIf="
+          form.controls['middleName']?.dirty &&
+          form.controls['middleName']?.errors
+        "
+      ></div>
 
-            <label for="last_name" class="block text-900 font-medium my-2">Last Name*</label>
-            <input id="last_name" type="text" pInputText class="w-6 mb-1" name="lastName"
-                placeholder="Enter your last name" ngModel />
-            <div class="flex align-items-center gap-1"
-                *ngIf="form.controls['lastName']?.dirty && form.controls['lastName']?.errors">
-            </div>
+      <label for="last_name" class="block text-900 font-medium my-2"
+        >Last Name*</label
+      >
+      <input
+        id="last_name"
+        type="text"
+        pInputText
+        class="w-6 mb-1"
+        name="lastName"
+        placeholder="Enter your last name"
+        ngModel
+      />
+      <div
+        class="flex align-items-center gap-1"
+        *ngIf="
+          form.controls['lastName']?.dirty && form.controls['lastName']?.errors
+        "
+      ></div>
 
-            <div class="p-fluid grid">
-                <label for="date_of_birth" class="block text-900 font-medium my-2"
-                    style="margin-right: 130px; margin-left: 10px;">Date of Birth*</label>
-                <label for="city" class="block text-900 font-medium my-2">City*</label>
-            </div>
+      <div class="p-fluid grid">
+        <label
+          for="date_of_birth"
+          class="block text-900 font-medium my-2"
+          style="margin-right: 130px; margin-left: 10px"
+          >Date of Birth*</label
+        >
+        <label for="city" class="block text-900 font-medium my-2">City*</label>
+      </div>
 
-            <!-- <div class="p-fluid grid">
+      <!-- <div class="p-fluid grid">
                 <div class="field col-8 md:col-3">
                     <span class="flex align-items-center gap-1">
                         <p-calendar inputId="calendar" placeholder="mm/dd/yyyy"></p-calendar>
@@ -51,28 +102,45 @@
                 </div>
             </div> -->
 
-            <div class="p-fluid grid">
-                <label for="district" class="block text-900 font-medium my-2"
-                    style="margin-right: 170px; margin-left: 10px;">District*</label>
-                <label for="ward" class="block text-900 font-medium my-2">Ward*</label>
-            </div>
+      <div class="p-fluid grid">
+        <label
+          for="district"
+          class="block text-900 font-medium my-2"
+          style="margin-right: 170px; margin-left: 10px"
+          >District*</label
+        >
+        <label for="ward" class="block text-900 font-medium my-2">Ward*</label>
+      </div>
 
-            <div class="p-fluid grid">
-                <div class="field col-12 md:col-3">
-                    <p-dropdown optionLabel="name"></p-dropdown>
-                </div>
-                <div class="field col-12 md:col-3">
-                    <p-dropdown optionLabel="name"></p-dropdown>
-                </div>
-            </div>
+      <div class="p-fluid grid">
+        <div class="field col-12 md:col-3">
+          <p-dropdown optionLabel="name"></p-dropdown>
+        </div>
+        <div class="field col-12 md:col-3">
+          <p-dropdown optionLabel="name"></p-dropdown>
+        </div>
+      </div>
 
-            <label for="specific_address" class="block text-900 font-medium mb-2">Specific Address*</label>
-            <input id="specific_address" type="text" pInputText class="w-6 mb-1" name="specific_address"
-                placeholder="House Number,..." ngModel />
-            <div class="flex align-items-center gap-1"
-                *ngIf="form.controls['specific_address']?.dirty && form.controls['specific_address']?.errors">
-            </div>
-
+      <label for="specific_address" class="block text-900 font-medium mb-2"
+        >Specific Address*</label
+      >
+      <input
+        id="specific_address"
+        type="text"
+        pInputText
+        class="w-6 mb-1"
+        name="specific_address"
+        placeholder="House Number,..."
+        ngModel
+      />
+      <div
+        class="flex align-items-center gap-1"
+        *ngIf="
+          form.controls['specific_address']?.dirty &&
+          form.controls['specific_address']?.errors
+        "
+      ></div>
+      <!-- 
             <div class="d-inline-flex p-2">
                 <div class="card w-6 ">
                     <div class="flex align-items-stretch flex-wrap card-container blue-container">
@@ -86,13 +154,53 @@
                         </p-fileUpload>
                     </div>
                 </div>
-            </div>
-            <div class="flex gap-2">
-                <button pButton pRipple label="Save" class="w-6 mt-3" type="submit"></button>
-                <button pButton pRipple label="Restaurant Opening Request" class="w-6 mt-3" type="button" (click)="navToOpenRestaurantRequest()"></button>
-            </div>
+            </div> -->
 
+      <p-dialog
+        header="Do you want to become a seller? Choose now:"
+        [(visible)]="display"
+        [style]="{ width: '50vw' }"
+        [closable]="true"
+        [modal]="true"
+      >
+        <div class="flex gap-2">
+          <button
+            pButton
+            pRipple
+            label="Open new restaurant"
+            class="w-6 mt-3"
+            type="submit"
+            (click)="navToOpenNewRestaurant()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            label="List of restaurants"
+            class="w-6 mt-3"
+            type="submit"
+            (click)="navToListOfRestaurants()"
+          ></button>
         </div>
+      </p-dialog>
 
-    </form>
+      <div class="flex gap-2">
+        <button
+          pButton
+          pRipple
+          label="Save"
+          class="w-6 mt-3"
+          type="submit"
+        ></button>
+        <!-- <button pButton pRipple label="Restaurant Opening Request" class="w-6 mt-3" type="button" (click)="navToOpenRestaurantRequest()"></button> -->
+        <button
+          pButton
+          pRipple
+          label="Change role to seller"
+          class="w-6 mt-3"
+          type="button"
+          (click)="showDialog()"
+        ></button>
+      </div>
+    </div>
+  </form>
 </div>

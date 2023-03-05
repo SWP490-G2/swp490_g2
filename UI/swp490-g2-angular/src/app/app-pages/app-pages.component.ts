@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../global/auth.service';
-import { Client, User } from '../ngswag/client';
+import { Component, OnInit } from "@angular/core";
+import { AuthService } from "../global/auth.service";
+import { Client, User } from "../ngswag/client";
 
 @Component({
-  selector: 'app-app-pages',
-  templateUrl: './app-pages.component.html',
-  styleUrls: ['./app-pages.component.scss']
+  selector: "app-app-pages",
+  templateUrl: "./app-pages.component.html",
+  styleUrls: ["./app-pages.component.scss"]
 })
 export class AppPagesComponent implements OnInit{
   user?: User;
