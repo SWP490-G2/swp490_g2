@@ -76,7 +76,7 @@ export class Client {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
+
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -606,8 +606,8 @@ export class User implements IUser {
     role?: UserRole;
     active?: boolean;
     enabled?: boolean;
-    accountNonExpired?: boolean;
     credentialsNonExpired?: boolean;
+    accountNonExpired?: boolean;
     authorities?: GrantedAuthority[];
     username?: string;
     accountNonLocked?: boolean;
@@ -641,8 +641,8 @@ export class User implements IUser {
             this.role = _data["role"];
             this.active = _data["active"];
             this.enabled = _data["enabled"];
-            this.accountNonExpired = _data["accountNonExpired"];
             this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.accountNonExpired = _data["accountNonExpired"];
             if (Array.isArray(_data["authorities"])) {
                 this.authorities = [] as any;
                 for (let item of _data["authorities"])
@@ -678,8 +678,8 @@ export class User implements IUser {
         data["role"] = this.role;
         data["active"] = this.active;
         data["enabled"] = this.enabled;
-        data["accountNonExpired"] = this.accountNonExpired;
         data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["accountNonExpired"] = this.accountNonExpired;
         if (Array.isArray(this.authorities)) {
             data["authorities"] = [];
             for (let item of this.authorities)
@@ -711,8 +711,8 @@ export interface IUser {
     role?: UserRole;
     active?: boolean;
     enabled?: boolean;
-    accountNonExpired?: boolean;
     credentialsNonExpired?: boolean;
+    accountNonExpired?: boolean;
     authorities?: GrantedAuthority[];
     username?: string;
     accountNonLocked?: boolean;
