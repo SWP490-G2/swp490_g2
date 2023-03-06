@@ -1,18 +1,15 @@
 package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.entity.Restaurant;
-import com.swp490_g2.hrms.repositories.RestaurantRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.swp490_g2.hrms.requests.RestaurantInformationRequest;
+import org.springframework.web.multipart.MultipartFile;
 
-@Service
-@RequiredArgsConstructor
-public class RestaurantService {
-    private final RestaurantRepository restaurantRepository;
+public interface RestaurantService {
+    Restaurant getRestaurantById(Long id);
 
-    public Restaurant insert(Restaurant restaurant)
-    {
-        return restaurantRepository.save(restaurant);
-    }
+    void updateInformation(Long id, RestaurantInformationRequest restaurantInformationRequest);
+
+    void updateAvatar(Long id, MultipartFile avatar);
+
+    void updateCover(Long id, MultipartFile cover);
 }

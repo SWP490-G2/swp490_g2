@@ -16,26 +16,26 @@ public class BuyerService {
     private final UserService userService;
     private final RestaurantService restaurantService;
 
-    public void requestOpeningNewRestaurant(Restaurant restaurant) {
-        User user = userService.getCurrentUser();
-        if (user == null) {
-            throw new BusinessException(ErrorStatusConstants.NOT_EXISTED_USER);
-        }
-
-        if (user.getRole() == Role.BUYER) {
-            Restaurant createdRestaurant = restaurantService.insert(restaurant);
-            Buyer buyer = repository.findById(user.getId()).orElse(null);
-
-            if (buyer == null) {
-                throw new BusinessException("Buyer not existed");
-            }
-
-            buyer.setRequestingRestaurant(createdRestaurant);
-            repository.save(buyer);
-        } else {
-            throw new BusinessException("The current user must be a buyer");
-        }
-    }
+//    public void requestOpeningNewRestaurant(Restaurant restaurant) {
+//        User user = userService.getCurrentUser();
+//        if (user == null) {
+//            throw new BusinessException(ErrorStatusConstants.NOT_EXISTED_USER);
+//        }
+//
+//        if (user.getRole() == Role.BUYER) {
+//            Restaurant createdRestaurant = restaurantService.insert(restaurant);
+//            Buyer buyer = repository.findById(user.getId()).orElse(null);
+//
+//            if (buyer == null) {
+//                throw new BusinessException("Buyer not existed");
+//            }
+//
+//            buyer.setRequestingRestaurant(createdRestaurant);
+//            repository.save(buyer);
+//        } else {
+//            throw new BusinessException("The current user must be a buyer");
+//        }
+//    }
 
 
 }

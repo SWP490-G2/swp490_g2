@@ -16,7 +16,7 @@ public class BuyerController {
 
     @PostMapping("/request-opening-new-restaurant")
     public void requestOpeningNewRestaurant(@RequestBody Restaurant restaurant){
-        buyerService.requestOpeningNewRestaurant(restaurant);
+//        buyerService.requestOpeningNewRestaurant(restaurant);
     }
 
 }

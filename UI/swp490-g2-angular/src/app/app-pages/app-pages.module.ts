@@ -8,11 +8,13 @@ import { FooterModule } from "../shared/footer/footer.module";
 import { HomePageModule } from "./home-page/home-page.module";
 import { RestaurantFeedModule } from "./restaurant-feed/restaurant-feed.module";
 import { AccountInformationModule } from "./account-information/account-information.module";
+import { UpdateRestaurantInformationComponent } from './update-restaurant-information/update-restaurant-information.component';
 
 
 @NgModule({
   declarations: [
-    AppPagesComponent
+    AppPagesComponent,
+    UpdateRestaurantInformationComponent
   ],
   imports: [
     CommonModule,
