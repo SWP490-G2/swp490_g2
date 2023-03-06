@@ -2,6 +2,7 @@ package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.requests.ChangePasswordRequest;
 import com.swp490_g2.hrms.requests.RegisterRequest;
 import com.swp490_g2.hrms.security.*;
 import jakarta.validation.Valid;
@@ -47,4 +48,10 @@ public class UserController {
     public ResponseEntity<User> getCurrentUser() {
         return ResponseEntity.ok(userServiceImpl.getCurrentUser());
     }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<AuthenticationResponse> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        return ResponseEntity.ok(userServiceImpl.changePassword(request));
+    }
 }
+

@@ -31,6 +31,61 @@ export class Client {
     /**
      * @return OK
      */
+    changePassword(body: ChangePasswordRequest): Observable<AuthenticationResponse> {
+        let url_ = this.baseUrl + "/user/change-password";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "*/*"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangePassword(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangePassword(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AuthenticationResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AuthenticationResponse>;
+        }));
+    }
+
+    protected processChangePassword(response: HttpResponseBase): Observable<AuthenticationResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuthenticationResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
     verifyCode(email: string, body: string): Observable<string> {
         let url_ = this.baseUrl + "/user/verify-code/{email}";
         if (email === undefined || email === null)
@@ -408,14 +463,13 @@ export class Client {
     }
 }
 
-export class RegisterRequest implements IRegisterRequest {
+export class ChangePasswordRequest implements IChangePasswordRequest {
     email?: string;
     password?: string;
-    phoneNumber?: string;
 
     [key: string]: any;
 
-    constructor(data?: IRegisterRequest) {
+    constructor(data?: IChangePasswordRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -432,13 +486,12 @@ export class RegisterRequest implements IRegisterRequest {
             }
             this.email = _data["email"];
             this.password = _data["password"];
-            this.phoneNumber = _data["phoneNumber"];
         }
     }
 
-    static fromJS(data: any): RegisterRequest {
+    static fromJS(data: any): ChangePasswordRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new RegisterRequest();
+        let result = new ChangePasswordRequest();
         result.init(data);
         return result;
     }
@@ -451,22 +504,20 @@ export class RegisterRequest implements IRegisterRequest {
         }
         data["email"] = this.email;
         data["password"] = this.password;
-        data["phoneNumber"] = this.phoneNumber;
         return data;
     }
 
-    clone(): RegisterRequest {
+    clone(): ChangePasswordRequest {
         const json = this.toJSON();
-        let result = new RegisterRequest();
+        let result = new ChangePasswordRequest();
         result.init(json);
         return result;
     }
 }
 
-export interface IRegisterRequest {
+export interface IChangePasswordRequest {
     email?: string;
     password?: string;
-    phoneNumber?: string;
 
     [key: string]: any;
 }
@@ -526,6 +577,69 @@ export class AuthenticationResponse implements IAuthenticationResponse {
 export interface IAuthenticationResponse {
     token?: string;
     errorMessage?: string;
+
+    [key: string]: any;
+}
+
+export class RegisterRequest implements IRegisterRequest {
+    email?: string;
+    password?: string;
+    phoneNumber?: string;
+
+    [key: string]: any;
+
+    constructor(data?: IRegisterRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.email = _data["email"];
+            this.password = _data["password"];
+            this.phoneNumber = _data["phoneNumber"];
+        }
+    }
+
+    static fromJS(data: any): RegisterRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new RegisterRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["email"] = this.email;
+        data["password"] = this.password;
+        data["phoneNumber"] = this.phoneNumber;
+        return data;
+    }
+
+    clone(): RegisterRequest {
+        const json = this.toJSON();
+        let result = new RegisterRequest();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IRegisterRequest {
+    email?: string;
+    password?: string;
+    phoneNumber?: string;
 
     [key: string]: any;
 }
@@ -738,9 +852,9 @@ export class User implements IUser {
     enabled?: boolean;
     authorities?: GrantedAuthority[];
     username?: string;
-    accountNonExpired?: boolean;
-    credentialsNonExpired?: boolean;
     accountNonLocked?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonExpired?: boolean;
 
     [key: string]: any;
 
@@ -777,9 +891,9 @@ export class User implements IUser {
                     this.authorities!.push(GrantedAuthority.fromJS(item));
             }
             this.username = _data["username"];
-            this.accountNonExpired = _data["accountNonExpired"];
-            this.credentialsNonExpired = _data["credentialsNonExpired"];
             this.accountNonLocked = _data["accountNonLocked"];
+            this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.accountNonExpired = _data["accountNonExpired"];
         }
     }
 
@@ -814,9 +928,9 @@ export class User implements IUser {
                 data["authorities"].push(item.toJSON());
         }
         data["username"] = this.username;
-        data["accountNonExpired"] = this.accountNonExpired;
-        data["credentialsNonExpired"] = this.credentialsNonExpired;
         data["accountNonLocked"] = this.accountNonLocked;
+        data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["accountNonExpired"] = this.accountNonExpired;
         return data;
     }
 
@@ -843,9 +957,9 @@ export interface IUser {
     enabled?: boolean;
     authorities?: GrantedAuthority[];
     username?: string;
-    accountNonExpired?: boolean;
-    credentialsNonExpired?: boolean;
     accountNonLocked?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonExpired?: boolean;
 
     [key: string]: any;
 }

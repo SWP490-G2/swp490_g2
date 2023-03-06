@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.service;
 
+import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.config.JwtService;
 import com.swp490_g2.hrms.entity.Role;
@@ -9,6 +10,7 @@ import com.swp490_g2.hrms.entity.shallowEntities.TokenType;
 import com.swp490_g2.hrms.repositories.BuyerRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
+import com.swp490_g2.hrms.requests.ChangePasswordRequest;
 import com.swp490_g2.hrms.requests.RegisterRequest;
 import com.swp490_g2.hrms.security.AuthenticationRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
@@ -168,5 +170,22 @@ public class UserService {
 
         String email = authentication.getName();
         return getByEmail(email);
+    }
+
+    public AuthenticationResponse changePassword(ChangePasswordRequest request) {
+        User user = userRepository.findByEmail(request.getEmail()).orElse(null);
+        if (user == null) {
+            return AuthenticationResponse.builder()
+                    .errorMessage("\"User not existed\"")
+                    .build();
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        var savedUser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        saveUserToken(savedUser, jwtToken);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
     }
 }
