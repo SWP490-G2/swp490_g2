@@ -2,18 +2,21 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
+import { AuthService } from "src/app/global/auth.service";
+import { User } from "src/app/ngswag/client";
 
 interface City {
   name: string,
   code: string
 }
+
 @Component({
-  selector: "app-buyer-information",
-  templateUrl: "./buyer-information.component.html",
-  styleUrls: ["./buyer-information.component.scss"]
+  selector: "app-account-information",
+  templateUrl: "./account-information.component.html",
+  styleUrls: ["./account-information.component.scss"]
 })
 
-export class BuyerInformationComponent implements OnInit {
+export class AccountInformationComponent implements OnInit {
   @ViewChild("form", { static: false }) form!: NgForm;
 
   cities: City[];
@@ -21,13 +24,13 @@ export class BuyerInformationComponent implements OnInit {
   uploadedFiles: any[] = [];
 
   display = false;
-
-  ngOnInit() {
-  }
+  user?: User;
 
   constructor(private messageService: MessageService,
     private $router: Router,
-    private $route: ActivatedRoute,) {
+    private $route: ActivatedRoute,
+    private $auth: AuthService,
+  ) {
     this.cities = [
       { name: "Hà Nội", code: "NY" },
       { name: "Rome", code: "RM" },
@@ -35,6 +38,12 @@ export class BuyerInformationComponent implements OnInit {
       { name: "Istanbul", code: "IST" },
       { name: "Paris", code: "PRS" }
     ];
+  }
+
+  ngOnInit() {
+    this.$auth.getCurrentUser(true).subscribe(user => {
+      this.user = user;
+    });
   }
 
   onUpload(event: any) {
@@ -45,17 +54,18 @@ export class BuyerInformationComponent implements OnInit {
   }
 
   showDialog() {
-        this.display = true;
+    this.display = true;
   }
 
   navToOpenNewRestaurant() {
     this.$router.navigate(["open-restaurant-request"], { relativeTo: this.$route });
   }
 
-  navToListOfRestaurants(){
+  navToListOfRestaurants() {
     this.$router.navigate(["list-of-restaurants"], { relativeTo: this.$route });
   }
 
-  
-
+  get isBuyer(): boolean {
+    return this.user?.role === "BUYER";
+  }
 }

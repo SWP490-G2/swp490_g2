@@ -20,8 +20,10 @@
       <li class="h-full">
         <a
           pRipple
-          (click)="navToHome()"
-          class="cursor-pointer h-full inline-flex align-items-center text-600 border-left-2 lg:border-left-none lg:border-bottom-2 border-blue-500 transition-colors transition-duration-150 py-3 lg:py-0 px-3"
+          class="cursor-pointer h-full inline-flex align-items-center text-600 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 hover:border-500 transition-colors transition-duration-150 py-3 lg:py-0 px-3"
+          routerLink=""
+          routerLinkActive="lg:border-bottom-2 border-blue-500"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
           <span class="pi pi-home mr-2"></span>
           <span class="font-medium">Home</span>
@@ -144,7 +146,8 @@
                 <a
                   pRipple
                   class="cursor-pointer h-full inline-flex align-items-center text-600 border-left-2 border-transparent hover:border-500 transition-colors transition-duration-150 p-3"
-                  (click)="navToBuyerInformationSetting()"
+                  routerLink="account-information"
+                  routerLinkActive="border-blue-500"
                 >
                   <span class="pi pi-cog mr-2"></span>
                   <span class="font-medium">Setting</span>

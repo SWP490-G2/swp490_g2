@@ -7,7 +7,7 @@ import { NavbarModule } from "../shared/navbar/navbar.module";
 import { FooterModule } from "../shared/footer/footer.module";
 import { HomePageModule } from "./home-page/home-page.module";
 import { RestaurantFeedModule } from "./restaurant-feed/restaurant-feed.module";
-import { BuyerInformationModule } from "./buyer-information/buyer-information.module";
+import { AccountInformationModule } from "./account-information/account-information.module";
 
 
 @NgModule({
@@ -21,7 +21,7 @@ import { BuyerInformationModule } from "./buyer-information/buyer-information.mo
     FooterModule,
     HomePageModule,
     RestaurantFeedModule,
-    BuyerInformationModule
+    AccountInformationModule
   ],
   bootstrap: [AppPagesComponent]
 })

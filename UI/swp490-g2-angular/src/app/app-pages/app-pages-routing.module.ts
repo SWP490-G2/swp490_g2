@@ -20,10 +20,10 @@ const routes: Routes = [
           ),
       },
       {
-        path: "buyer-information",
+        path: "account-information",
         loadChildren: () =>
-          import("./buyer-information/buyer-information.module").then(
-            (m) => m.BuyerInformationModule
+          import("./account-information/account-information.module").then(
+            (m) => m.AccountInformationModule
           ),
       },
     ],
@@ -34,4 +34,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AppPagesRoutingModule {}
+export class AppPagesRoutingModule { }
