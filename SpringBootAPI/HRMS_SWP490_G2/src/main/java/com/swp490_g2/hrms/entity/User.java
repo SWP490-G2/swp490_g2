@@ -24,24 +24,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
     private String password;
-//
-//    @Column(name = "first_name", nullable = false)
-//    private String firstName;
-//
-//    @Column(name = "middle_name", nullable = true)
-//    private String middleName;
-//
-//    @Column(name = "last_name", nullable = false)
-//    private String lastName;
 
-//    @Column(name = "date_of_birth", nullable = false)
-//    private Date dateOfBirth;
-
-//    @Column(name = "gender", nullable = false)
-//    private Boolean gender;
-
-//    @Column(name = "phone_number", nullable = false)
-//    private String phoneNumber;
+    @Column(nullable = false, unique = true)
+    private String phoneNumber;
 
     @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)
     private boolean isActive;
@@ -49,22 +34,8 @@ public class User extends BaseEntity implements UserDetails {
     @Column(columnDefinition = "VARCHAR(6)")
     private String verificationCode;
 
-//    @Column(name = "is_banned")
-//    private Boolean isBanned;
-
-//    @Column(name = "avatar")
-//    private String avatar; implement later
-
-//    @Column(name = "citizen_identification")
-//    private String citizenIdentification;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "address_id", nullable = false)
-//    private Address address;
-
     @Enumerated(EnumType.STRING)
     private Role role;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -100,4 +71,7 @@ public class User extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
+
 }

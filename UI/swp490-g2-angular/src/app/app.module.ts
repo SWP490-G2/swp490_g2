@@ -1,14 +1,12 @@
-import { ErrorHandler, NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ErrorHandler, NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
-import { HomePageModule } from './home-page/home-page.module';
-import { AuthenticationPagesModule } from './authentication-pages/authentication-pages.module';
+import { AuthenticationPagesModule } from "./authentication-pages/authentication-pages.module";
 import { HttpErrorHandler } from "./global/http-error-handler";
 import { ToastModule } from "primeng/toast";
 import { MessageService, ConfirmationService } from "primeng/api";
@@ -26,7 +24,6 @@ import { TokenInterceptor } from "./global/token.interceptor";
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
-    HomePageModule,
     AuthenticationPagesModule,
     ToastModule,
   ],

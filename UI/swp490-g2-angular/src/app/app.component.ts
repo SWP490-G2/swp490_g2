@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
-import { PrimeNGConfig } from 'primeng/api';
+import { Component, OnInit } from "@angular/core";
+import { PrimeNGConfig } from "primeng/api";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"],
 })
-export class AppComponent {
-  title = 'swp490-g2-angular';
+export class AppComponent implements OnInit {
+  title = "swp490-g2-angular";
 
   constructor(
-    private primengConfig: PrimeNGConfig  ) {}
+    private primengConfig: PrimeNGConfig) { }
 
   ngOnInit() {
     this.primengConfig.ripple = true;

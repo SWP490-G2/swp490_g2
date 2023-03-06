@@ -8,10 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class GlobalCorsConfiguration {
 
-    public GlobalCorsConfiguration() {
-        super();
-    }
-
     /**
      * Bean to define global CORS.
      *
@@ -22,7 +18,7 @@ public class GlobalCorsConfiguration {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+                registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS");
             }
         };
     }

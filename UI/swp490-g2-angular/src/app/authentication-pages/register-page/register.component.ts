@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import {
   AbstractControl,
   FormBuilder,
@@ -6,20 +6,20 @@ import {
   ValidationErrors,
   ValidatorFn,
   Validators,
-} from '@angular/forms';
-import { Title } from '@angular/platform-browser';
-import { MessageService } from 'primeng/api';
+} from "@angular/forms";
+import { Title } from "@angular/platform-browser";
+import { MessageService } from "primeng/api";
 import { finalize } from "rxjs";
-import { Client, User } from 'src/app/ngswag/client';
-import { CustomValidators } from 'src/app/utils';
+import { AuthenticationResponse, Client, User } from "src/app/ngswag/client";
+import { CustomValidators } from "src/app/utils";
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  selector: "app-register",
+  templateUrl: "./register.component.html",
+  styleUrls: ["./register.component.scss"],
 })
 export class RegisterComponent implements OnInit, AfterViewInit {
-  @ViewChild('form', { static: false }) form!: NgForm;
+  @ViewChild("form", { static: false }) form!: NgForm;
   codeValidatorDialogVisible = false;
   user?: User;
 
@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     private $message: MessageService,
     private $client: Client
   ) {
-    $title.setTitle('Register');
+    $title.setTitle("Register");
   }
 
   private initConfirmPasswordValidator(): void {
@@ -46,11 +46,11 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
     const validator = (): ValidatorFn => {
       return (control: AbstractControl<any, any>): ValidationErrors | null => {
-        const password = this.form.controls['password'].value;
+        const password = this.form.controls["password"].value;
         if (password !== control.value) {
           return {
             message:
-              'Confirm password must be the same as the entered password',
+              "Confirm password must be the same as the entered password",
           };
         }
 
@@ -58,22 +58,22 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       };
     };
 
-    this.form.controls['confirmPassword'].addValidators([
+    this.form.controls["confirmPassword"].addValidators([
       Validators.required,
       validator(),
     ]);
-    this.form.controls['confirmPassword'].updateValueAndValidity();
+    this.form.controls["confirmPassword"].updateValueAndValidity();
   }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.form.controls['email'].addValidators([
+      this.form.controls["email"].addValidators([
         Validators.required,
         Validators.email,
       ]);
-      this.form.controls['email'].updateValueAndValidity(); // !Important: this line must be added after validators created
+      this.form.controls["email"].updateValueAndValidity(); // !Important: this line must be added after validators created
 
-      this.form.controls['password'].addValidators([
+      this.form.controls["password"].addValidators([
         Validators.required,
         // 2. check whether the entered password has a number
         CustomValidators.patternValidator(/\d/, { hasNumber: true }),
@@ -91,13 +91,13 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         // 7. Has a maximum length of 25 characters
         Validators.maxLength(25),
       ]);
-      this.form.controls['password'].updateValueAndValidity();
+      this.form.controls["password"].updateValueAndValidity();
 
-      this.form.controls['phoneNumber'].addValidators([
+      this.form.controls["phoneNumber"].addValidators([
         Validators.required,
-        Validators.pattern('^(0[3|5|7|8|9])+([0-9]{8})$'),
+        Validators.pattern("^(0[3|5|7|8|9])+([0-9]{8})$"),
       ]);
-      this.form.controls['phoneNumber'].updateValueAndValidity();
+      this.form.controls["phoneNumber"].updateValueAndValidity();
 
       this.initConfirmPasswordValidator();
     }, 0);
@@ -108,34 +108,35 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   register(): void {
     this._registerButtonDisabled = true;
 
-    this.$client.registerNewUserAccount(this.form.value)
-      .pipe(finalize(() => {
-        this._registerButtonDisabled = false;
-      }))
+    this.$client
+      .registerNewUserAccount(this.form.value)
+      .pipe(
+        finalize(() => {
+          this._registerButtonDisabled = false;
+        })
+      )
       .subscribe({
-        next: () => {
+        next: (authenticationResponse: AuthenticationResponse) => {
+          if (authenticationResponse.errorMessage) {
+            throw new Error(authenticationResponse.errorMessage);
+          }
           this.codeValidatorDialogVisible = true;
-        }
+        },
       });
   }
 
   validatePasswordStyle(field: string): boolean {
-    if (!this.form || !this.form.controls['password']) return true;
+    if (!this.form || !this.form.controls["password"]) return true;
 
     return (
-      this.form.controls['password'].errors &&
-      (this.form.controls['password'].errors['required'] ||
-        this.form.controls['password'].errors[field])
+      this.form.controls["password"].errors &&
+      (this.form.controls["password"].errors["required"] ||
+        this.form.controls["password"].errors[field])
     );
   }
 
-  private _registerButtonDisabled: boolean = false;
+  private _registerButtonDisabled = false;
   get registerButtonDisabled(): boolean {
-    // Force type <boolean | null> to <boolean>, add double exclaimation mark !!
-    // a = 1
-    // !a = false
-    // !!a = true
-
     return !!this.form?.invalid || this._registerButtonDisabled;
   }
 

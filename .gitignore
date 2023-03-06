@@ -78,3 +78,8 @@ fabric.properties
 
 # Mysql Secret
 MySQLDB/mysql.cnf
+
+.idea
+
+# Generated API Layer for Angular
+UI/swp490-g2-angular/src/app/ngswag/client.ts

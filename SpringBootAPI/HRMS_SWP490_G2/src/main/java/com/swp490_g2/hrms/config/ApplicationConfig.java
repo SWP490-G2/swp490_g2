@@ -24,7 +24,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> repository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorStatusConstants.NOT_EXISTED_USER_ID));
+                .orElseThrow(() -> new BusinessException(ErrorStatusConstants.NOT_EXISTED_USER));
     }
 
     @Bean

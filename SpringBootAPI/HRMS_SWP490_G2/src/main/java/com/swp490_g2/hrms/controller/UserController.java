@@ -1,4 +1,4 @@
-package com.swp490_g2.hrms.controller.user;
+package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.User;
@@ -28,14 +28,14 @@ public class UserController {
         return ResponseEntity.ok(userServiceImpl.getById(id));
     }
 
-    @GetMapping("/get-by-email/{email}")
+    @GetMapping("")
     public ResponseEntity<User> getByEmail(@PathVariable String email) {
         return ResponseEntity.ok(userServiceImpl.getByEmail(email));
     }
 
     @PostMapping("/verify-code/{email}")
-    public void verifyCode(@PathVariable String email, @RequestBody String code) {
-        userServiceImpl.verifyCode(email, code);
+    public ResponseEntity<String> verifyCode(@PathVariable String email, @RequestBody String code) {
+        return ResponseEntity.ok(userServiceImpl.verifyCode(email, code));
     }
 
     @PostMapping(value = "/login")
