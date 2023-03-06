@@ -1,6 +1,6 @@
-import { Component, OnInit } from "@angular/core";
-import { AuthService } from "../global/auth.service";
-import { Client, User } from "../ngswag/client";
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../global/auth.service';
+import { Client, User } from '../ngswag/client';
 
 @Component({
   selector: "app-app-pages",

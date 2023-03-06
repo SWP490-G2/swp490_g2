@@ -1,7 +1,9 @@
-import { Component, OnInit } from "@angular/core";
-import { Title } from "@angular/platform-browser";
-import { Router, ActivatedRoute } from "@angular/router";
-import { MenuItem } from "primeng/api";
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MenuItem } from 'primeng/api';
+import { AuthService } from 'src/app/global/auth.service';
+import { User } from 'src/app/ngswag/client';
 
 @Component({
   selector: "app-home-page",
@@ -9,15 +11,19 @@ import { MenuItem } from "primeng/api";
   styleUrls: ["./home-page.component.scss"],
 })
 export class HomePageComponent implements OnInit{
+  user?: User;
+
   constructor(
     private $router: Router,
     private $route: ActivatedRoute,
-    private $title: Title
+    private $title: Title,
+    private $auth: AuthService
   ) {
     $title.setTitle("Home");
   }
   items!: MenuItem[];
   ngOnInit() {
+    this.$auth.getCurrentUser().subscribe((user) => this.user = user);
     this.items = [
       {
         label: "Categories",
@@ -54,4 +60,12 @@ export class HomePageComponent implements OnInit{
     });
   }
 
+  navToFeed() {
+    //this.$router.navigate(['feed-page'], { relativeTo: this.$route });
+  }
+
+  userExisted(): boolean {
+    // !! giup ep kieu sang boolean
+    return !!this.user?.email;
+  }
 }

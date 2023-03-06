@@ -53,6 +53,9 @@ export class NavbarComponent implements OnInit {
         this.$router.navigate(["auth", "login"], { relativeTo: this.$route });
     }
 
+  navToFeed() {
+    this.$router.navigate(['feed-page'], { relativeTo: this.$route });
+  }
     navToRegister() {
         this.$router.navigate(["auth", "register"], { relativeTo: this.$route });
     }

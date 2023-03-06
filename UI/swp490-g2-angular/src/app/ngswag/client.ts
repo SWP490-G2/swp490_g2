@@ -736,11 +736,11 @@ export class User implements IUser {
     role?: UserRole;
     active?: boolean;
     enabled?: boolean;
-    accountNonLocked?: boolean;
-    accountNonExpired?: boolean;
-    credentialsNonExpired?: boolean;
     authorities?: GrantedAuthority[];
     username?: string;
+    accountNonExpired?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonLocked?: boolean;
 
     [key: string]: any;
 
@@ -771,15 +771,15 @@ export class User implements IUser {
             this.role = _data["role"];
             this.active = _data["active"];
             this.enabled = _data["enabled"];
-            this.accountNonLocked = _data["accountNonLocked"];
-            this.accountNonExpired = _data["accountNonExpired"];
-            this.credentialsNonExpired = _data["credentialsNonExpired"];
             if (Array.isArray(_data["authorities"])) {
                 this.authorities = [] as any;
                 for (let item of _data["authorities"])
                     this.authorities!.push(GrantedAuthority.fromJS(item));
             }
             this.username = _data["username"];
+            this.accountNonExpired = _data["accountNonExpired"];
+            this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.accountNonLocked = _data["accountNonLocked"];
         }
     }
 
@@ -808,15 +808,15 @@ export class User implements IUser {
         data["role"] = this.role;
         data["active"] = this.active;
         data["enabled"] = this.enabled;
-        data["accountNonLocked"] = this.accountNonLocked;
-        data["accountNonExpired"] = this.accountNonExpired;
-        data["credentialsNonExpired"] = this.credentialsNonExpired;
         if (Array.isArray(this.authorities)) {
             data["authorities"] = [];
             for (let item of this.authorities)
                 data["authorities"].push(item.toJSON());
         }
         data["username"] = this.username;
+        data["accountNonExpired"] = this.accountNonExpired;
+        data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["accountNonLocked"] = this.accountNonLocked;
         return data;
     }
 
@@ -841,11 +841,11 @@ export interface IUser {
     role?: UserRole;
     active?: boolean;
     enabled?: boolean;
-    accountNonLocked?: boolean;
-    accountNonExpired?: boolean;
-    credentialsNonExpired?: boolean;
     authorities?: GrantedAuthority[];
     username?: string;
+    accountNonExpired?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonLocked?: boolean;
 
     [key: string]: any;
 }

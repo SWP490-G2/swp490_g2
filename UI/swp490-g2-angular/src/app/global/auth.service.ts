@@ -8,7 +8,7 @@ import { User, Client, AuthenticationRequest } from "../ngswag/client";
   providedIn: "root",
 })
 export class AuthService {
-  private readonly JWT_TOKEN = "JWT_TOKEN";
+  private readonly JWT_TOKEN = 'JWT_TOKEN';
   private _currentUser?: User;
 
   constructor(private $client: Client, private $router: Router) { }
