@@ -10,7 +10,7 @@ import { User } from 'src/app/ngswag/client';
   styleUrls: ['./forgot-pass-page.component.scss'],
 })
 export class ForgotPassPageComponent {
-  @ViewChild('form', { static: false }) form!: NgForm;
+  @ViewChild("form", { static: false }) form!: NgForm;
   codeValidatorDialogVisible = true;
   user?: User;
 
@@ -25,7 +25,7 @@ export class ForgotPassPageComponent {
 
   async forgotPassword(): Promise<void> {}
 
-  private _fgtPassButtonDisabled: boolean = false;
+  private _fgtPassButtonDisabled = false;
   get fgtPassButtonDisabled(): boolean {
     // Force type <boolean | null> to <boolean>, add double exclaimation mark !!
     // a = 1
