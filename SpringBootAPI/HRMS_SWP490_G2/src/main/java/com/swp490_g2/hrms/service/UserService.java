@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 
@@ -55,13 +56,13 @@ public class UserService {
         User user = userRepository.findByEmail(registerRequest.getEmail()).orElse(null);
         if (user != null && user.isActive()) {
             return AuthenticationResponse.builder()
-                    .errorMessage("\"User existed\"")
+                    .errorMessage("User existed")
                     .build();
         }
 
         if(isPhoneNumberExisted(registerRequest.getPhoneNumber()))
             return AuthenticationResponse.builder()
-                    .errorMessage("\"Phone number existed\"")
+                    .errorMessage("Phone number existed")
                     .build();
 
         if (user == null) {
@@ -98,6 +99,7 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public String verifyCode(String email, String code) {
         code = code.substring(1, 7);
         if (!code.matches("[0-9]{6}"))

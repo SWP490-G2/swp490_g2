@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface BuyerRepository extends  JpaRepository<Buyer, Long>  {
     @Modifying
     @Query(value = "insert into buyer (userId) values (:userId)", nativeQuery = true)
-    @Transactional
     void addFromUser(Long userId);
 
 //    Optional<BuyerRequest> addNewBuyerInformation(BuyerRequest buyerRequest);

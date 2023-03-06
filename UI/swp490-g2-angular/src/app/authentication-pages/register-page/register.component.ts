@@ -103,7 +103,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   register(): void {
     this._registerButtonDisabled = true;
@@ -137,11 +137,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
   private _registerButtonDisabled = false;
   get registerButtonDisabled(): boolean {
-    // Force type <boolean | null> to <boolean>, add double exclaimation mark !!
-    // a = 1
-    // !a = false
-    // !!a = true
-
     return !!this.form?.invalid || this._registerButtonDisabled;
   }
 

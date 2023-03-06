@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,8 +19,10 @@ public class Restaurant extends BaseEntity{
     @Column(nullable = false)
     private String restaurantName;
 
-    @ManyToMany(mappedBy = "restaurants")
-    private Set<Seller> sellers;
+    @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)
+    private boolean isActive;
 
-
+    @OneToOne(mappedBy = "requestingRestaurant")
+    @JsonIgnore
+    private Buyer requestingRestaurantBuyer;
 }

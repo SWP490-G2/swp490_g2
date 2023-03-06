@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable, of } from "rxjs";
-import { catchError, switchMap } from "rxjs/operators";
+import { catchError, mergeMap, switchMap } from "rxjs/operators";
 import { User, Client, AuthenticationRequest } from "../ngswag/client";
 
 @Injectable({
@@ -11,10 +11,10 @@ export class AuthService {
   private readonly JWT_TOKEN = "JWT_TOKEN";
   private _currentUser?: User;
 
-  constructor(private $client: Client, private $router: Router) {}
+  constructor(private $client: Client, private $router: Router) { }
 
-  getCurrentUser(): Observable<User | undefined> {
-    if (this._currentUser) return of(this._currentUser);
+  getCurrentUser(forceRefresh = false): Observable<User | undefined> {
+    if (!forceRefresh && this._currentUser) return of(this._currentUser);
 
     return this.$client.getCurrentUser().pipe(
       switchMap((user) => {
@@ -50,7 +50,8 @@ export class AuthService {
           if (response.token) {
             localStorage.setItem(this.JWT_TOKEN, response.token);
           }
-          return this.getCurrentUser();
+
+          return of(response);
         })
       );
   }
