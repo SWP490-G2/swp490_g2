@@ -76,7 +76,7 @@ export class Client {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
-
+    
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -200,6 +200,111 @@ export class Client {
     /**
      * @return OK
      */
+    requestOpeningNewRestaurant(body: Restaurant): Observable<void> {
+        let url_ = this.baseUrl + "/buyer/request-opening-new-restaurant";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRequestOpeningNewRestaurant(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRequestOpeningNewRestaurant(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processRequestOpeningNewRestaurant(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getByEmail(email: string): Observable<User> {
+        let url_ = this.baseUrl + "/user";
+        if (email === undefined || email === null)
+            throw new Error("The parameter 'email' must be defined.");
+        url_ = url_.replace("{email}", encodeURIComponent("" + email));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "*/*"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByEmail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByEmail(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<User>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<User>;
+        }));
+    }
+
+    protected processGetByEmail(response: HttpResponseBase): Observable<User> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = User.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
     getCurrentUser(): Observable<User> {
         let url_ = this.baseUrl + "/user/get-current-user";
         url_ = url_.replace(/[?&]$/, "");
@@ -281,60 +386,6 @@ export class Client {
     }
 
     protected processGetById(response: HttpResponseBase): Observable<User> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = User.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
-     * @return OK
-     */
-    getByEmail(email: string): Observable<User> {
-        let url_ = this.baseUrl + "/user/get-by-email/{email}";
-        if (email === undefined || email === null)
-            throw new Error("The parameter 'email' must be defined.");
-        url_ = url_.replace("{email}", encodeURIComponent("" + email));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "*/*"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetByEmail(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetByEmail(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<User>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<User>;
-        }));
-    }
-
-    protected processGetByEmail(response: HttpResponseBase): Observable<User> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -538,6 +589,85 @@ export interface IAuthenticationRequest {
     [key: string]: any;
 }
 
+export class Restaurant implements IRestaurant {
+    id?: number;
+    createdBy?: number;
+    createdAt?: Date;
+    modifiedBy?: number;
+    modifiedAt?: Date;
+    restaurantName?: string;
+    active?: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: IRestaurant) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.createdBy = _data["createdBy"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.modifiedBy = _data["modifiedBy"];
+            this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
+            this.restaurantName = _data["restaurantName"];
+            this.active = _data["active"];
+        }
+    }
+
+    static fromJS(data: any): Restaurant {
+        data = typeof data === 'object' ? data : {};
+        let result = new Restaurant();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["createdBy"] = this.createdBy;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["modifiedBy"] = this.modifiedBy;
+        data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
+        data["restaurantName"] = this.restaurantName;
+        data["active"] = this.active;
+        return data;
+    }
+
+    clone(): Restaurant {
+        const json = this.toJSON();
+        let result = new Restaurant();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IRestaurant {
+    id?: number;
+    createdBy?: number;
+    createdAt?: Date;
+    modifiedBy?: number;
+    modifiedAt?: Date;
+    restaurantName?: string;
+    active?: boolean;
+
+    [key: string]: any;
+}
+
 export class GrantedAuthority implements IGrantedAuthority {
     authority?: string;
 
@@ -607,10 +737,10 @@ export class User implements IUser {
     active?: boolean;
     enabled?: boolean;
     authorities?: GrantedAuthority[];
-    accountNonLocked?: boolean;
-    credentialsNonExpired?: boolean;
-    accountNonExpired?: boolean;
     username?: string;
+    accountNonExpired?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonLocked?: boolean;
 
     [key: string]: any;
 
@@ -646,10 +776,10 @@ export class User implements IUser {
                 for (let item of _data["authorities"])
                     this.authorities!.push(GrantedAuthority.fromJS(item));
             }
-            this.accountNonLocked = _data["accountNonLocked"];
-            this.credentialsNonExpired = _data["credentialsNonExpired"];
-            this.accountNonExpired = _data["accountNonExpired"];
             this.username = _data["username"];
+            this.accountNonExpired = _data["accountNonExpired"];
+            this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.accountNonLocked = _data["accountNonLocked"];
         }
     }
 
@@ -683,10 +813,10 @@ export class User implements IUser {
             for (let item of this.authorities)
                 data["authorities"].push(item.toJSON());
         }
-        data["accountNonLocked"] = this.accountNonLocked;
-        data["credentialsNonExpired"] = this.credentialsNonExpired;
-        data["accountNonExpired"] = this.accountNonExpired;
         data["username"] = this.username;
+        data["accountNonExpired"] = this.accountNonExpired;
+        data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["accountNonLocked"] = this.accountNonLocked;
         return data;
     }
 
@@ -712,10 +842,10 @@ export interface IUser {
     active?: boolean;
     enabled?: boolean;
     authorities?: GrantedAuthority[];
-    accountNonLocked?: boolean;
-    credentialsNonExpired?: boolean;
-    accountNonExpired?: boolean;
     username?: string;
+    accountNonExpired?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonLocked?: boolean;
 
     [key: string]: any;
 }

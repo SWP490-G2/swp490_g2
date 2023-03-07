@@ -1,18 +1,18 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm, Validators } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
-import { Router, ActivatedRoute } from '@angular/router';
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { NgForm, Validators } from "@angular/forms";
+import { Title } from "@angular/platform-browser";
+import { Router, ActivatedRoute } from "@angular/router";
 import { finalize } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
-import { Client, User } from 'src/app/ngswag/client';
+import { User } from "src/app/ngswag/client";
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: "app-login",
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit, AfterViewInit {
-  @ViewChild('form', { static: false }) form!: NgForm;
+  @ViewChild("form", { static: false }) form!: NgForm;
   user?: User;
 
   // To change title, we need to import title service
@@ -22,37 +22,40 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private $route: ActivatedRoute,
     private $auth: AuthService
   ) {
-    $title.setTitle('Login');
+    $title.setTitle("Login");
   }
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.form.controls['email'].addValidators([
+      this.form.controls["email"].addValidators([
         Validators.required,
         Validators.email,
       ]);
-      this.form.controls['email'].updateValueAndValidity(); // !Important: this line must be added after validators created
+      this.form.controls["email"].updateValueAndValidity(); // !Important: this line must be added after validators created
 
-      this.form.controls['password'].addValidators([Validators.required]);
-      this.form.controls['password'].updateValueAndValidity();
+      this.form.controls["password"].addValidators([Validators.required]);
+      this.form.controls["password"].updateValueAndValidity();
     }, 0);
   }
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   login() {
     this._loginButtonDisabled = true;
 
-    this.$auth.login(this.form.value)
-      .pipe(finalize(() => {
-        this._loginButtonDisabled = false;
-      }))
+    this.$auth
+      .login(this.form.value)
+      .pipe(
+        finalize(() => {
+          this._loginButtonDisabled = false;
+        })
+      )
       .subscribe({
         next: () => {
           this.$router.navigate(["/"]);
-        }
+        },
       });
   }
 
-  private _loginButtonDisabled: boolean = false;
+  private _loginButtonDisabled = false;
   get loginButtonDisabled(): boolean {
     return !!this.form?.invalid || this._loginButtonDisabled;
   }
@@ -62,7 +65,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   navToRegister() {
-    this.$router.navigate(['..', 'register'], { relativeTo: this.$route });
+    this.$router.navigate(["..", "register"], { relativeTo: this.$route });
     /**
      * /auth/login
      * /auth
@@ -71,7 +74,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   navToForgotPassword() {
-    this.$router.navigate(['..', 'forgot-password'], {
+    this.$router.navigate(["..", "forgot-password"], {
+      relativeTo: this.$route,
+    });
+  }
+
+  navToHome() {
+    this.$router.navigate(["../.."], {
       relativeTo: this.$route,
     });
   }

@@ -1,6 +1,6 @@
 import { BusinessException } from "../ngswag/client";
 
-export * from './CustomValidators';
+export * from "./CustomValidators";
 
 export function getBusinessExceptionErrorCode(error: BusinessException): number {
   if (error instanceof BusinessException)

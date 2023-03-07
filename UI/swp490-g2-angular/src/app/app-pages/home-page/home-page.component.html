@@ -12,8 +12,13 @@
         >The applications support Buyer and Seller feel comfortable during
         ordering and delivering</span
       >
-      <button pButton type="button" label="Sign In Now!" icon="pi pi-users" class="p-button-info p-button-raised p-button-rounded mr-2" (click)="navToLogin()"></button>
-      <button pButton type="button" label="Register Now!" icon="pi pi-id-card" class="p-button-secondary p-button-raised p-button-rounded" (click)="navToRegister()"></button>
+      <ng-container *ngIf="!userExisted()">
+        <button pButton type="button" label="Sign In Now!" icon="pi pi-users" class="p-button-info p-button-raised p-button-rounded mr-2" (click)="navToLogin()"></button>
+        <button pButton type="button" label="Register Now!" icon="pi pi-id-card" class="p-button-secondary p-button-raised p-button-rounded" (click)="navToRegister()"></button>
+      </ng-container>
+      <ng-container *ngIf="userExisted()">
+        <button pButton type="button" label="Go To Feed!" icon="pi pi-bookmark" class="p-button-info p-button-raised p-button-rounded mr-2" (click)="navToFeed()"></button>
+      </ng-container>
       <!-- <p-button
         label="Forgot Password"
         (click)="navToForgotPassword()"
