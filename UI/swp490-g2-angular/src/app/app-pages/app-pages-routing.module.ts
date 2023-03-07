@@ -13,10 +13,10 @@ const routes: Routes = [
           import("./home-page/home-page.module").then((m) => m.HomePageModule),
       },
       {
-        path: "restaurant-feed",
+        path: "restaurant",
         loadChildren: () =>
-          import("./restaurant-feed/restaurant-feed.module").then(
-            (m) => m.RestaurantFeedModule
+          import("./restaurant/restaurant.module").then(
+            (m) => m.RestaurantModule
           ),
       },
       {
@@ -34,4 +34,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AppPagesRoutingModule { }
+export class AppPagesRoutingModule {}

@@ -1,0 +1,90 @@
+<ng-container *ngIf="restaurant">
+  <h1 *ngIf="!restaurant.id">The restaurant does not exist!</h1>
+
+  <div class="flex relative lg:static surface-ground" *ngIf="restaurant.id">
+    <div class="flex flex-column relative flex-auto">
+      <div class="flex flex-column flex-auto">
+        <div class="surface-section p-5">
+          <div
+            class="flex align-items-start flex-column lg:flex-row lg:justify-content-between"
+          >
+            <div class="flex align-items-start flex-column md:flex-row">
+              <img
+                src="assets/images/blocks/avatars/circle/avatar-f-1@2x.png"
+                class="mr-5 mb-3 lg:mb-0"
+                style="width: 90px; height: 90px"
+              />
+              <div>
+                <span class="text-900 font-medium text-3xl">
+                  {{ restaurant.restaurantName }}
+                </span>
+                <i class="pi pi-star text-2xl ml-4 text-yellow-500"></i>
+                <div class="flex align-items-center flex-wrap text-sm">
+                  <div class="mr-5 mt-3">
+                    <span class="font-medium text-500">FOLLOWERS</span>
+                    <div class="text-700 mt-2">333</div>
+                  </div>
+                  <div class="mr-5 mt-3">
+                    <span class="font-medium text-500">PROJECTS</span>
+                    <div class="text-700 mt-2">26</div>
+                  </div>
+                  <div class="mr-5 mt-3">
+                    <span class="font-medium text-500">COLLECTIONS</span>
+                    <div class="text-700 mt-2">17</div>
+                  </div>
+                  <div class="mt-3">
+                    <span class="font-medium text-500">SHOTS</span>
+                    <div class="text-700 mt-2">130</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 lg:mt-0">
+              <button
+                pButton
+                pRipple
+                icon="pi pi-bookmark"
+                class="p-button-rounded mr-2"
+              ></button>
+              <button
+                pButton
+                pRipple
+                icon="pi pi-heart"
+                class="p-button-rounded p-button-success mr-2"
+              ></button>
+              <button
+                pButton
+                pRipple
+                icon="pi pi-list"
+                class="p-button-rounded p-button-help"
+              ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="surface-section px-4 md:px-6 lg:px-8">
+    <div class="flex flex-wrap lg:flex-nowrap">
+      <div class="col-fixed lg:col-2 mr-4 flex p-0 flex-column">
+        <div class="flex flex-column p-0">
+          <p *ngIf="restaurant.productCategories?.length === 0">
+            No categories
+          </p>
+          <a
+            tabindex="0"
+            class="cursor-pointer text-900 font-medium mb-3 hover:text-primary transition-duration-150"
+            *ngFor="let category of restaurant.productCategories"
+          >
+            {{ category.productCategoryName }}
+          </a>
+        </div>
+      </div>
+      <div
+        class="w-full border-2 border-dashed surface-border surface-section mt-3 lg:mt-0"
+        style="min-height: 25rem"
+      ></div>
+    </div>
+  </div>
+</ng-container>

@@ -22,9 +22,7 @@ export class HomePageComponent implements OnInit {
     $title.setTitle("Home");
   }
   items!: MenuItem[];
-  ngOnInit(): void {
-    throw new Error("Method not implemented.");
-  }
+  ngOnInit(): void {}
 
   navToLogin() {
     this.$router.navigate(["auth", "login"], { relativeTo: this.$route });
