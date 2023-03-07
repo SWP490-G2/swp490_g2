@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable, of } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
-import { User, Client, AuthenticationRequest } from "../ngswag/client";
+import { User, AuthenticationRequest, UserClient } from "../ngswag/client";
 
 @Injectable({
   providedIn: "root",
@@ -11,7 +11,7 @@ export class AuthService {
   private readonly JWT_TOKEN = "JWT_TOKEN";
   private _currentUser?: User;
 
-  constructor(private $client: Client, private $router: Router) {}
+  constructor(private $client: UserClient, private $router: Router) {}
 
   getCurrentUser(forceRefresh = false): Observable<User | undefined> {
     if (!forceRefresh && this._currentUser) return of(this._currentUser);

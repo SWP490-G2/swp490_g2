@@ -6,23 +6,20 @@ import { AppPagesComponent } from "./app-pages.component";
 import { NavbarModule } from "../shared/navbar/navbar.module";
 import { FooterModule } from "../shared/footer/footer.module";
 import { HomePageModule } from "./home-page/home-page.module";
-import { RestaurantFeedModule } from "./restaurant-feed/restaurant-feed.module";
+import { RestaurantModule } from "./restaurant/restaurant.module";
 import { AccountInformationModule } from "./account-information/account-information.module";
 
-
 @NgModule({
-  declarations: [
-    AppPagesComponent
-  ],
+  declarations: [AppPagesComponent],
   imports: [
     CommonModule,
     AppPagesRoutingModule,
     NavbarModule,
     FooterModule,
     HomePageModule,
-    RestaurantFeedModule,
-    AccountInformationModule
+    RestaurantModule,
+    AccountInformationModule,
   ],
-  bootstrap: [AppPagesComponent]
+  bootstrap: [AppPagesComponent],
 })
-export class AppPagesModule { }
+export class AppPagesModule {}
