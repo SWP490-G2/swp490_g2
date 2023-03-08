@@ -7,6 +7,7 @@ import com.swp490_g2.hrms.entity.Token;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.shallowEntities.TokenType;
 import com.swp490_g2.hrms.repositories.BuyerRepository;
+import com.swp490_g2.hrms.repositories.SellerRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.RegisterRequest;
@@ -34,10 +35,9 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-
-
-    @Autowired
-    private AuthenticationFacade authenticationFacade;
+    private final BuyerService buyerService;
+    private final SellerService sellerService;
+    private final AuthenticationFacade authenticationFacade;
 
     private static String generateVerificationCode() {
         // It will generate 6 digit random Number.
@@ -167,6 +167,16 @@ public class UserService {
             return null;
 
         String email = authentication.getName();
-        return getByEmail(email);
+        User user = getByEmail(email);
+        if(user == null)
+            return null;
+
+        if(user.getRole() == Role.BUYER)
+            return buyerService.getById(user.getId());
+
+        if(user.getRole() == Role.SELLER)
+            return sellerService.getById(user.getId());
+
+        return null;
     }
 }

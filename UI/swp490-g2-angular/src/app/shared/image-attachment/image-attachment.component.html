@@ -10,9 +10,13 @@
     *ngIf="!url"
     class="round-button"
     [ngStyle]="imageStyle"
+    [ngClass]="{
+      'cursor-pointer': editable,
+      hover: editable
+    }"
     (click)="openDialog()"
   >
-    <i class="pi pi-paperclip"></i>
+    <i *ngIf="editable" class="pi pi-paperclip"></i>
   </div>
 </ng-container>
 

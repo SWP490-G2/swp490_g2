@@ -812,9 +812,9 @@ export class ProductCategoryClient {
 export class File implements IFile {
     id?: number;
     createdBy?: number;
-    createdAt?: string;
+    createdAt?: Date;
     modifiedBy?: number;
-    modifiedAt?: string;
+    modifiedAt?: Date;
     filePath?: string;
 
     [key: string]: any;
@@ -836,9 +836,9 @@ export class File implements IFile {
             }
             this.id = _data["id"];
             this.createdBy = _data["createdBy"];
-            this.createdAt = _data["createdAt"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
             this.modifiedBy = _data["modifiedBy"];
-            this.modifiedAt = _data["modifiedAt"];
+            this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
             this.filePath = _data["filePath"];
         }
     }
@@ -858,9 +858,9 @@ export class File implements IFile {
         }
         data["id"] = this.id;
         data["createdBy"] = this.createdBy;
-        data["createdAt"] = this.createdAt;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         data["modifiedBy"] = this.modifiedBy;
-        data["modifiedAt"] = this.modifiedAt;
+        data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
         data["filePath"] = this.filePath;
         return data;
     }
@@ -876,10 +876,65 @@ export class File implements IFile {
 export interface IFile {
     id?: number;
     createdBy?: number;
-    createdAt?: string;
+    createdAt?: Date;
     modifiedBy?: number;
-    modifiedAt?: string;
+    modifiedAt?: Date;
     filePath?: string;
+
+    [key: string]: any;
+}
+
+export class GrantedAuthority implements IGrantedAuthority {
+    authority?: string;
+
+    [key: string]: any;
+
+    constructor(data?: IGrantedAuthority) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.authority = _data["authority"];
+        }
+    }
+
+    static fromJS(data: any): GrantedAuthority {
+        data = typeof data === 'object' ? data : {};
+        let result = new GrantedAuthority();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["authority"] = this.authority;
+        return data;
+    }
+
+    clone(): GrantedAuthority {
+        const json = this.toJSON();
+        let result = new GrantedAuthority();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGrantedAuthority {
+    authority?: string;
 
     [key: string]: any;
 }
@@ -887,9 +942,9 @@ export interface IFile {
 export class ProductCategory implements IProductCategory {
     id?: number;
     createdBy?: number;
-    createdAt?: string;
+    createdAt?: Date;
     modifiedBy?: number;
-    modifiedAt?: string;
+    modifiedAt?: Date;
     productCategoryName?: string;
     restaurant?: Restaurant;
 
@@ -912,9 +967,9 @@ export class ProductCategory implements IProductCategory {
             }
             this.id = _data["id"];
             this.createdBy = _data["createdBy"];
-            this.createdAt = _data["createdAt"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
             this.modifiedBy = _data["modifiedBy"];
-            this.modifiedAt = _data["modifiedAt"];
+            this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
             this.productCategoryName = _data["productCategoryName"];
             this.restaurant = _data["restaurant"] ? Restaurant.fromJS(_data["restaurant"]) : <any>undefined;
         }
@@ -935,9 +990,9 @@ export class ProductCategory implements IProductCategory {
         }
         data["id"] = this.id;
         data["createdBy"] = this.createdBy;
-        data["createdAt"] = this.createdAt;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         data["modifiedBy"] = this.modifiedBy;
-        data["modifiedAt"] = this.modifiedAt;
+        data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
         data["productCategoryName"] = this.productCategoryName;
         data["restaurant"] = this.restaurant ? this.restaurant.toJSON() : <any>undefined;
         return data;
@@ -954,9 +1009,9 @@ export class ProductCategory implements IProductCategory {
 export interface IProductCategory {
     id?: number;
     createdBy?: number;
-    createdAt?: string;
+    createdAt?: Date;
     modifiedBy?: number;
-    modifiedAt?: string;
+    modifiedAt?: Date;
     productCategoryName?: string;
     restaurant?: Restaurant;
 
@@ -966,12 +1021,13 @@ export interface IProductCategory {
 export class Restaurant implements IRestaurant {
     id?: number;
     createdBy?: number;
-    createdAt?: string;
+    createdAt?: Date;
     modifiedBy?: number;
-    modifiedAt?: string;
+    modifiedAt?: Date;
     restaurantName?: string;
     productCategories?: ProductCategory[];
     avatarFile?: File;
+    sellers?: Seller[];
     active?: boolean;
 
     [key: string]: any;
@@ -993,9 +1049,9 @@ export class Restaurant implements IRestaurant {
             }
             this.id = _data["id"];
             this.createdBy = _data["createdBy"];
-            this.createdAt = _data["createdAt"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
             this.modifiedBy = _data["modifiedBy"];
-            this.modifiedAt = _data["modifiedAt"];
+            this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
             this.restaurantName = _data["restaurantName"];
             if (Array.isArray(_data["productCategories"])) {
                 this.productCategories = [] as any;
@@ -1003,6 +1059,11 @@ export class Restaurant implements IRestaurant {
                     this.productCategories!.push(ProductCategory.fromJS(item));
             }
             this.avatarFile = _data["avatarFile"] ? File.fromJS(_data["avatarFile"]) : <any>undefined;
+            if (Array.isArray(_data["sellers"])) {
+                this.sellers = [] as any;
+                for (let item of _data["sellers"])
+                    this.sellers!.push(Seller.fromJS(item));
+            }
             this.active = _data["active"];
         }
     }
@@ -1022,9 +1083,9 @@ export class Restaurant implements IRestaurant {
         }
         data["id"] = this.id;
         data["createdBy"] = this.createdBy;
-        data["createdAt"] = this.createdAt;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         data["modifiedBy"] = this.modifiedBy;
-        data["modifiedAt"] = this.modifiedAt;
+        data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
         data["restaurantName"] = this.restaurantName;
         if (Array.isArray(this.productCategories)) {
             data["productCategories"] = [];
@@ -1032,6 +1093,11 @@ export class Restaurant implements IRestaurant {
                 data["productCategories"].push(item.toJSON());
         }
         data["avatarFile"] = this.avatarFile ? this.avatarFile.toJSON() : <any>undefined;
+        if (Array.isArray(this.sellers)) {
+            data["sellers"] = [];
+            for (let item of this.sellers)
+                data["sellers"].push(item.toJSON());
+        }
         data["active"] = this.active;
         return data;
     }
@@ -1047,13 +1113,153 @@ export class Restaurant implements IRestaurant {
 export interface IRestaurant {
     id?: number;
     createdBy?: number;
-    createdAt?: string;
+    createdAt?: Date;
     modifiedBy?: number;
-    modifiedAt?: string;
+    modifiedAt?: Date;
     restaurantName?: string;
     productCategories?: ProductCategory[];
     avatarFile?: File;
+    sellers?: Seller[];
     active?: boolean;
+
+    [key: string]: any;
+}
+
+export class Seller implements ISeller {
+    id?: number;
+    createdBy?: number;
+    createdAt?: Date;
+    modifiedBy?: number;
+    modifiedAt?: Date;
+    email?: string;
+    password?: string;
+    phoneNumber?: string;
+    verificationCode?: string;
+    role?: SellerRole;
+    restaurants?: Restaurant[];
+    active?: boolean;
+    enabled?: boolean;
+    username?: string;
+    authorities?: GrantedAuthority[];
+    accountNonExpired?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonLocked?: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: ISeller) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.createdBy = _data["createdBy"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.modifiedBy = _data["modifiedBy"];
+            this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
+            this.email = _data["email"];
+            this.password = _data["password"];
+            this.phoneNumber = _data["phoneNumber"];
+            this.verificationCode = _data["verificationCode"];
+            this.role = _data["role"];
+            if (Array.isArray(_data["restaurants"])) {
+                this.restaurants = [] as any;
+                for (let item of _data["restaurants"])
+                    this.restaurants!.push(Restaurant.fromJS(item));
+            }
+            this.active = _data["active"];
+            this.enabled = _data["enabled"];
+            this.username = _data["username"];
+            if (Array.isArray(_data["authorities"])) {
+                this.authorities = [] as any;
+                for (let item of _data["authorities"])
+                    this.authorities!.push(GrantedAuthority.fromJS(item));
+            }
+            this.accountNonExpired = _data["accountNonExpired"];
+            this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.accountNonLocked = _data["accountNonLocked"];
+        }
+    }
+
+    static fromJS(data: any): Seller {
+        data = typeof data === 'object' ? data : {};
+        let result = new Seller();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["createdBy"] = this.createdBy;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["modifiedBy"] = this.modifiedBy;
+        data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
+        data["email"] = this.email;
+        data["password"] = this.password;
+        data["phoneNumber"] = this.phoneNumber;
+        data["verificationCode"] = this.verificationCode;
+        data["role"] = this.role;
+        if (Array.isArray(this.restaurants)) {
+            data["restaurants"] = [];
+            for (let item of this.restaurants)
+                data["restaurants"].push(item.toJSON());
+        }
+        data["active"] = this.active;
+        data["enabled"] = this.enabled;
+        data["username"] = this.username;
+        if (Array.isArray(this.authorities)) {
+            data["authorities"] = [];
+            for (let item of this.authorities)
+                data["authorities"].push(item.toJSON());
+        }
+        data["accountNonExpired"] = this.accountNonExpired;
+        data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["accountNonLocked"] = this.accountNonLocked;
+        return data;
+    }
+
+    clone(): Seller {
+        const json = this.toJSON();
+        let result = new Seller();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISeller {
+    id?: number;
+    createdBy?: number;
+    createdAt?: Date;
+    modifiedBy?: number;
+    modifiedAt?: Date;
+    email?: string;
+    password?: string;
+    phoneNumber?: string;
+    verificationCode?: string;
+    role?: SellerRole;
+    restaurants?: Restaurant[];
+    active?: boolean;
+    enabled?: boolean;
+    username?: string;
+    authorities?: GrantedAuthority[];
+    accountNonExpired?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonLocked?: boolean;
 
     [key: string]: any;
 }
@@ -1239,67 +1445,12 @@ export interface IAuthenticationRequest {
     [key: string]: any;
 }
 
-export class GrantedAuthority implements IGrantedAuthority {
-    authority?: string;
-
-    [key: string]: any;
-
-    constructor(data?: IGrantedAuthority) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-            this.authority = _data["authority"];
-        }
-    }
-
-    static fromJS(data: any): GrantedAuthority {
-        data = typeof data === 'object' ? data : {};
-        let result = new GrantedAuthority();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        data["authority"] = this.authority;
-        return data;
-    }
-
-    clone(): GrantedAuthority {
-        const json = this.toJSON();
-        let result = new GrantedAuthority();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IGrantedAuthority {
-    authority?: string;
-
-    [key: string]: any;
-}
-
 export class User implements IUser {
     id?: number;
     createdBy?: number;
-    createdAt?: string;
+    createdAt?: Date;
     modifiedBy?: number;
-    modifiedAt?: string;
+    modifiedAt?: Date;
     email?: string;
     password?: string;
     phoneNumber?: string;
@@ -1307,11 +1458,11 @@ export class User implements IUser {
     role?: UserRole;
     active?: boolean;
     enabled?: boolean;
-    authorities?: GrantedAuthority[];
     username?: string;
-    accountNonLocked?: boolean;
+    authorities?: GrantedAuthority[];
     accountNonExpired?: boolean;
     credentialsNonExpired?: boolean;
+    accountNonLocked?: boolean;
 
     [key: string]: any;
 
@@ -1332,9 +1483,9 @@ export class User implements IUser {
             }
             this.id = _data["id"];
             this.createdBy = _data["createdBy"];
-            this.createdAt = _data["createdAt"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
             this.modifiedBy = _data["modifiedBy"];
-            this.modifiedAt = _data["modifiedAt"];
+            this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
             this.email = _data["email"];
             this.password = _data["password"];
             this.phoneNumber = _data["phoneNumber"];
@@ -1342,15 +1493,15 @@ export class User implements IUser {
             this.role = _data["role"];
             this.active = _data["active"];
             this.enabled = _data["enabled"];
+            this.username = _data["username"];
             if (Array.isArray(_data["authorities"])) {
                 this.authorities = [] as any;
                 for (let item of _data["authorities"])
                     this.authorities!.push(GrantedAuthority.fromJS(item));
             }
-            this.username = _data["username"];
-            this.accountNonLocked = _data["accountNonLocked"];
             this.accountNonExpired = _data["accountNonExpired"];
             this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.accountNonLocked = _data["accountNonLocked"];
         }
     }
 
@@ -1369,9 +1520,9 @@ export class User implements IUser {
         }
         data["id"] = this.id;
         data["createdBy"] = this.createdBy;
-        data["createdAt"] = this.createdAt;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         data["modifiedBy"] = this.modifiedBy;
-        data["modifiedAt"] = this.modifiedAt;
+        data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
         data["email"] = this.email;
         data["password"] = this.password;
         data["phoneNumber"] = this.phoneNumber;
@@ -1379,15 +1530,15 @@ export class User implements IUser {
         data["role"] = this.role;
         data["active"] = this.active;
         data["enabled"] = this.enabled;
+        data["username"] = this.username;
         if (Array.isArray(this.authorities)) {
             data["authorities"] = [];
             for (let item of this.authorities)
                 data["authorities"].push(item.toJSON());
         }
-        data["username"] = this.username;
-        data["accountNonLocked"] = this.accountNonLocked;
         data["accountNonExpired"] = this.accountNonExpired;
         data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["accountNonLocked"] = this.accountNonLocked;
         return data;
     }
 
@@ -1402,9 +1553,9 @@ export class User implements IUser {
 export interface IUser {
     id?: number;
     createdBy?: number;
-    createdAt?: string;
+    createdAt?: Date;
     modifiedBy?: number;
-    modifiedAt?: string;
+    modifiedAt?: Date;
     email?: string;
     password?: string;
     phoneNumber?: string;
@@ -1412,11 +1563,11 @@ export interface IUser {
     role?: UserRole;
     active?: boolean;
     enabled?: boolean;
-    authorities?: GrantedAuthority[];
     username?: string;
-    accountNonLocked?: boolean;
+    authorities?: GrantedAuthority[];
     accountNonExpired?: boolean;
     credentialsNonExpired?: boolean;
+    accountNonLocked?: boolean;
 
     [key: string]: any;
 }
@@ -1475,6 +1626,8 @@ export interface IBody {
 
     [key: string]: any;
 }
+
+export type SellerRole = "USER" | "ADMIN" | "BUYER" | "SELLER";
 
 export type UserRole = "USER" | "ADMIN" | "BUYER" | "SELLER";
 

@@ -1,5 +1,13 @@
 import { HttpHeaders } from "@angular/common/http";
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from "@angular/core";
 import { AccordionTab } from "primeng/accordion";
 import { FileUpload } from "primeng/fileupload";
 import { AuthService } from "src/app/global/auth.service";
@@ -9,7 +17,7 @@ import { File, FileClient } from "../../ngswag/client";
 @Component({
   selector: "app-image-attachment",
   templateUrl: "./image-attachment.component.html",
-  styleUrls: ["./image-attachment.component.scss"]
+  styleUrls: ["./image-attachment.component.scss"],
 })
 export class ImageAttachmentComponent implements OnInit {
   @Input() height = "90px";
@@ -19,7 +27,8 @@ export class ImageAttachmentComponent implements OnInit {
   dialogOpened = false;
   @Input() uploadUrl: string;
   @ViewChild("fileUpload", { static: false }) fileUpload: FileUpload;
-  @ViewChild("imageSelectionTab", { static: false }) imageSelectionTab: AccordionTab;
+  @ViewChild("imageSelectionTab", { static: false })
+  imageSelectionTab: AccordionTab;
   headers: HttpHeaders;
   @Input() method: "POST" | "PUT" = "POST";
   imageSrc: any;
@@ -28,25 +37,29 @@ export class ImageAttachmentComponent implements OnInit {
   images: File[];
   selectedImage?: File;
   @Output() selectedImageHandler = new EventEmitter<File>();
+  @Input() editable = false;
 
-  constructor(private $auth: AuthService, private $fileUpload: FileUploadService, private $fileClient: FileClient, private $cdRef: ChangeDetectorRef) {
-
-  }
+  constructor(
+    private $auth: AuthService,
+    private $fileUpload: FileUploadService,
+    private $fileClient: FileClient,
+    private $cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.imageStyle = {
       height: this.height,
       width: this.width,
-    }
+    };
 
     this.headers = new HttpHeaders({
-      "Authorization": `Bearer ${this.$auth.getJwtToken()}`,
+      Authorization: `Bearer ${this.$auth.getJwtToken()}`,
     });
 
     this.loadImage();
-    this.$fileClient.getAll().subscribe(files => {
+    this.$fileClient.getAll().subscribe((files) => {
       this.images = files;
-      this.images.map(image => {
+      this.images.map((image) => {
         this.getSrc(image);
       });
     });
@@ -54,11 +67,15 @@ export class ImageAttachmentComponent implements OnInit {
 
   private loadImage() {
     if (this.url) {
-      this.$fileClient.load(this.url).subscribe(res => {
+      this.$fileClient.load(this.url).subscribe((res) => {
         const reader = new FileReader();
-        reader.addEventListener("load", () => {
-          this.imageSrc = reader.result;
-        }, false);
+        reader.addEventListener(
+          "load",
+          () => {
+            this.imageSrc = reader.result;
+          },
+          false
+        );
 
         if (res) {
           reader.readAsDataURL(res.data);
@@ -68,7 +85,7 @@ export class ImageAttachmentComponent implements OnInit {
   }
 
   openDialog(): void {
-    this.dialogOpened = true;
+    if (this.editable) this.dialogOpened = true;
   }
 
   onUpload() {
@@ -82,8 +99,7 @@ export class ImageAttachmentComponent implements OnInit {
       return;
     }
 
-    if (!this.selectedImage)
-      return;
+    if (!this.selectedImage) return;
 
     this.selectedImageHandler.emit(this.selectedImage);
   }
@@ -96,7 +112,7 @@ export class ImageAttachmentComponent implements OnInit {
         if (event.type === 1 && event.loaded === event.total) {
           this.fileUpload.onUpload.emit(file);
         }
-      }
+      },
     });
   }
 
@@ -106,18 +122,21 @@ export class ImageAttachmentComponent implements OnInit {
       return;
     }
 
-    this.fileUpload.progress = $event.loaded / $event.total * 100;
+    this.fileUpload.progress = ($event.loaded / $event.total) * 100;
   }
 
   getSrc(image: File) {
-    if (!image.filePath)
-      return;
+    if (!image.filePath) return;
 
-    this.$fileClient.load(image.filePath).subscribe(res => {
+    this.$fileClient.load(image.filePath).subscribe((res) => {
       const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        (<any>image).src = reader.result;
-      }, false);
+      reader.addEventListener(
+        "load",
+        () => {
+          (<any>image).src = reader.result;
+        },
+        false
+      );
 
       if (res) {
         reader.readAsDataURL(res.data);

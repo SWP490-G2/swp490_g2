@@ -4,7 +4,6 @@ img#mainImage {
 }
 
 .round-button {
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,7 +21,7 @@ img#mainImage {
     font-size: 1.5em;
   }
 }
-.round-button:hover {
+.round-button.hover:hover {
   background: var(--primary-500);
 }
 
