@@ -1,9 +1,10 @@
 import { HttpHeaders } from "@angular/common/http";
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { AccordionTab } from "primeng/accordion";
 import { FileUpload } from "primeng/fileupload";
 import { AuthService } from "src/app/global/auth.service";
 import { FileUploadService } from "src/app/global/file-upload.service";
-import { FileClient } from "../../ngswag/client";
+import { File, FileClient } from "../../ngswag/client";
 
 @Component({
   selector: "app-image-attachment",
@@ -18,12 +19,15 @@ export class ImageAttachmentComponent implements OnInit {
   dialogOpened = false;
   @Input() uploadUrl: string;
   @ViewChild("fileUpload", { static: false }) fileUpload: FileUpload;
+  @ViewChild("imageSelectionTab", { static: false }) imageSelectionTab: AccordionTab;
   headers: HttpHeaders;
   @Input() method: "POST" | "PUT" = "POST";
   imageSrc: any;
   timeStamp?: number;
   fileUploaded = false;
-  images: any[];
+  images: File[];
+  selectedImage?: File;
+  @Output() selectedImageHandler = new EventEmitter<File>();
 
   constructor(private $auth: AuthService, private $fileUpload: FileUploadService, private $fileClient: FileClient, private $cdRef: ChangeDetectorRef) {
 
@@ -40,6 +44,12 @@ export class ImageAttachmentComponent implements OnInit {
     });
 
     this.loadImage();
+    this.$fileClient.getAll().subscribe(files => {
+      this.images = files;
+      this.images.map(image => {
+        this.getSrc(image);
+      });
+    });
   }
 
   private loadImage() {
@@ -66,8 +76,16 @@ export class ImageAttachmentComponent implements OnInit {
   }
 
   onOked() {
-    this.dialogOpened = false;
-    location.reload();
+    if (!this.imageSelectionTab.selected) {
+      this.dialogOpened = false;
+      location.reload();
+      return;
+    }
+
+    if (!this.selectedImage)
+      return;
+
+    this.selectedImageHandler.emit(this.selectedImage);
   }
 
   upload(event: any) {
@@ -79,7 +97,7 @@ export class ImageAttachmentComponent implements OnInit {
           this.fileUpload.onUpload.emit(file);
         }
       }
-    })
+    });
   }
 
   progressReport($event: any) {
@@ -89,5 +107,30 @@ export class ImageAttachmentComponent implements OnInit {
     }
 
     this.fileUpload.progress = $event.loaded / $event.total * 100;
+  }
+
+  getSrc(image: File) {
+    if (!image.filePath)
+      return;
+
+    this.$fileClient.load(image.filePath).subscribe(res => {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        (<any>image).src = reader.result;
+      }, false);
+
+      if (res) {
+        reader.readAsDataURL(res.data);
+      }
+    });
+  }
+
+  selectImage(image: File) {
+    this.selectedImage = image;
+    this.fileUploaded = true;
+  }
+
+  onAccordionTabChange() {
+    this.fileUploaded = false;
   }
 }

@@ -24,4 +24,10 @@ public class RestaurantController {
     ) {
         restaurantService.updateAvatar(id, imageFile);
     }
+
+    @PutMapping("update")
+    public void update(@RequestBody Restaurant restaurant)
+    {
+        restaurantService.update(restaurant);
+    }
 }

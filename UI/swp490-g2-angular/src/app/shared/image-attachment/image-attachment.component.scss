@@ -1,4 +1,4 @@
-img {
+img#mainImage {
   object-fit: cover;
   border-radius: 50%;
 }
@@ -24,4 +24,8 @@ img {
 }
 .round-button:hover {
   background: var(--primary-500);
+}
+
+img.selected {
+  border: 5px solid var(--green-500);
 }

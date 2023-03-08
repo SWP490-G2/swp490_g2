@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { FileUploadService } from "src/app/global/file-upload.service";
-import { Restaurant, RestaurantClient } from "src/app/ngswag/client";
+import { File, Restaurant, RestaurantClient } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-restaurant",
@@ -39,5 +39,13 @@ export class RestaurantComponent implements OnInit {
     this.$restaurantClient
       .getById(this.restaurantId)
       .subscribe((restaurant) => (this.restaurant = restaurant));
+  }
+
+  updateAvatar(image: File) {
+    if (!this.restaurant)
+      return;
+
+    this.restaurant.avatarFile = image;
+    this.$restaurantClient.update(this.restaurant).subscribe(() => location.reload());
   }
 }

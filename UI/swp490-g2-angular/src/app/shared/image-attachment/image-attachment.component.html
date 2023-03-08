@@ -1,5 +1,6 @@
 <ng-container *ngIf="imageStyle">
   <img
+    id="mainImage"
     *ngIf="url"
     [src]="imageSrc"
     [ngStyle]="imageStyle"
@@ -21,9 +22,10 @@
   [modal]="true"
   [draggable]="true"
   [resizable]="false"
+  [style]="{ 'max-width': '50vw' }"
   contentStyleClass="py-2"
 >
-  <p-accordion>
+  <p-accordion (onOpen)="onAccordionTabChange()">
     <p-accordionTab header="Upload an image" [selected]="true">
       <p-fileUpload
         #fileUpload
@@ -38,17 +40,18 @@
       >
       </p-fileUpload>
     </p-accordionTab>
-    <p-accordionTab header="Choose from library">
-      <div *ngIf="images" class="grid" style="max-width: 400px">
+    <p-accordionTab header="Choose from uploaded images" #imageSelectionTab>
+      <div *ngIf="images" class="grid">
         <div
           *ngFor="let image of images; let index = index"
           class="col-3"
           key="index"
         >
           <img
-            [src]="image.thumbnailImageSrc"
-            [alt]="image.alt"
-            style="cursor: pointer"
+            [src]="image?.['src']"
+            style="cursor: pointer; max-width: 100%"
+            [ngClass]="selectedImage === image ? 'selected' : ''"
+            (click)="selectImage(image)"
           />
         </div>
       </div>

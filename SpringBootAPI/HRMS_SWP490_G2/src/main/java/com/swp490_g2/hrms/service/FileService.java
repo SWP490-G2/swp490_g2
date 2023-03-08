@@ -1,5 +1,8 @@
 package com.swp490_g2.hrms.service;
 
+import com.swp490_g2.hrms.entity.File;
+import com.swp490_g2.hrms.repositories.FileRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -7,19 +10,22 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
+@RequiredArgsConstructor
 public class FileService {
 
     private final String UPLOAD_ROOT = "uploads";
     private final Path root = Paths.get(UPLOAD_ROOT);
+    private final FileRepository fileRepository;
+    private final UserService userService;
 
     public void init() {
         try {
@@ -45,10 +51,6 @@ public class FileService {
             Files.copy(file.getInputStream(), filePath);
             return filePath.toString();
         } catch (Exception e) {
-            if (e instanceof FileAlreadyExistsException) {
-                throw new RuntimeException("A file of that name already exists.");
-            }
-
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -79,5 +81,10 @@ public class FileService {
         } catch (IOException e) {
             throw new RuntimeException("Could not load the files!");
         }
+    }
+
+    public Set<File> getAll() {
+        Long currentUserId = this.userService.getCurrentUser().getId();
+        return this.fileRepository.findAllByCurrentUserId(currentUserId);
     }
 }

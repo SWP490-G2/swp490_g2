@@ -31,6 +31,6 @@ public class Restaurant extends BaseEntity{
     @JsonManagedReference
     private Set<ProductCategory> productCategories;
 
-    @Column
-    private String avatarPath;
+    @OneToOne(cascade=CascadeType.ALL)
+    private File avatarFile;
 }

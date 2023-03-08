@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.service;
 
+import com.swp490_g2.hrms.entity.File;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.repositories.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final FileService fileService;
+    private final UserService userService;
 
     public Restaurant insert(Restaurant restaurant) {
         return restaurantRepository.save(restaurant);
@@ -26,7 +28,19 @@ public class RestaurantService {
             return;
 
         String path = fileService.save(imageFile, "restaurant", "avatar");
-        restaurant.setAvatarPath(path);
+        File avatarImage = File.builder()
+                .filePath(path)
+                .build();
+
+        Long currentUserId = this.userService.getCurrentUser().getId();
+        avatarImage.setCreatedBy(currentUserId);
+        avatarImage.setModifiedBy(currentUserId);
+        restaurant.setAvatarFile(avatarImage);
+
+        restaurantRepository.save(restaurant);
+    }
+
+    public void update(Restaurant restaurant) {
         restaurantRepository.save(restaurant);
     }
 }
