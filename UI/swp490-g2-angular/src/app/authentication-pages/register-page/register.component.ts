@@ -10,7 +10,11 @@ import {
 import { Title } from "@angular/platform-browser";
 import { MessageService } from "primeng/api";
 import { finalize } from "rxjs";
-import { AuthenticationResponse, Client, User } from "src/app/ngswag/client";
+import {
+  AuthenticationResponse,
+  User,
+  UserClient,
+} from "src/app/ngswag/client";
 import { CustomValidators } from "src/app/utils";
 
 @Component({
@@ -28,7 +32,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     private $title: Title,
     private $fb: FormBuilder,
     private $message: MessageService,
-    private $client: Client
+    private $client: UserClient
   ) {
     $title.setTitle("Register");
   }
@@ -103,13 +107,13 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   register(): void {
     this._registerButtonDisabled = true;
 
     this.$client
-      .registerNewUserAccount(this.form.value)
+      .register(this.form.value)
       .pipe(
         finalize(() => {
           this._registerButtonDisabled = false;
