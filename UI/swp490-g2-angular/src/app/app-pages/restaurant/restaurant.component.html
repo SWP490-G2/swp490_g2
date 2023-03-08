@@ -9,11 +9,13 @@
             class="flex align-items-start flex-column lg:flex-row lg:justify-content-between"
           >
             <div class="flex align-items-start flex-column md:flex-row">
-              <img
-                src="assets/images/blocks/avatars/circle/avatar-f-1@2x.png"
+              <app-image-attachment
+                [uploadUrl]="uploadUrl"
+                [url]="restaurant.avatarFile?.filePath"
+                (selectedImageHandler)="updateAvatar($event)"
+                method="PUT"
                 class="mr-5 mb-3 lg:mb-0"
-                style="width: 90px; height: 90px"
-              />
+              ></app-image-attachment>
               <div>
                 <span class="text-900 font-medium text-3xl">
                   {{ restaurant.restaurantName }}
@@ -88,3 +90,4 @@
     </div>
   </div>
 </ng-container>
+<p-toast></p-toast>

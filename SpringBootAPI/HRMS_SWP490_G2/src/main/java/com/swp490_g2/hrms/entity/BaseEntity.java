@@ -11,6 +11,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -35,14 +36,14 @@ public class BaseEntity {
 
     @Column(insertable = false, updatable = false, nullable = false, columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATETIME_FORMAT_CUSTOM)
-    private Date createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    private Instant createdAt;
 
     @Column
     private Long modifiedBy;
 
     @Column(insertable = false, updatable = false, nullable = false, columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.DATETIME_FORMAT_CUSTOM)
-    private Date modifiedAt;
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    private Instant modifiedAt;
 }

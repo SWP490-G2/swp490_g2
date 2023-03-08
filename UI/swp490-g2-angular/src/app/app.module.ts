@@ -13,6 +13,7 @@ import { MessageService, ConfirmationService } from "primeng/api";
 import { AuthGuard } from "./global/auth.guard";
 import { AuthService } from "./global/auth.service";
 import { TokenInterceptor } from "./global/token.interceptor";
+import { ImageAttachmentModule } from "./shared/image-attachment/image-attachment.module";
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { TokenInterceptor } from "./global/token.interceptor";
     HttpClientModule,
     AuthenticationPagesModule,
     ToastModule,
+    ImageAttachmentModule,
   ],
   providers: [
     MessageService,
