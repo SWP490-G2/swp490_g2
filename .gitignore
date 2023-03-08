@@ -83,5 +83,5 @@ MySQLDB/mysql.cnf
 
 # Generated API Layer for Angular
 UI/swp490-g2-angular/src/app/ngswag/client.ts
-SpringBootAPI/HRMS_SWP490_G2/uploads/*
-UI/swp490-g2-angular/.vscode/*
+SpringBootAPI/HRMS_SWP490_G2/uploads
+UI/swp490-g2-angular/.vscode
