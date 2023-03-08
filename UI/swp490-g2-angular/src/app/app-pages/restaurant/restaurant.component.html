@@ -1,44 +1,44 @@
 <ng-container *ngIf="restaurant">
-  <div class="p-5">
-    <h1 *ngIf="!restaurant.id">The restaurant does not exist!</h1>
+  <div class="p-5" *ngIf="!restaurant.id">
+    <h1>The restaurant does not exist!</h1>
   </div>
 
-  <ng-container *ngIf="restaurant.id">
-    <div class="flex relative lg:static surface-ground">
-      <div class="flex flex-column relative flex-auto">
-        <div class="flex flex-column flex-auto">
-          <div class="surface-section p-5">
-            <div
-              class="flex align-items-start flex-column lg:flex-row lg:justify-content-between"
-            >
-              <div class="flex align-items-start flex-column md:flex-row">
-                <img
-                  src="assets/images/blocks/avatars/circle/avatar-f-1@2x.png"
-                  class="mr-5 mb-3 lg:mb-0"
-                  style="width: 90px; height: 90px"
-                />
-                <div>
-                  <span class="text-900 font-medium text-3xl">
-                    {{ restaurant.restaurantName }}
-                  </span>
-                  <i class="pi pi-star text-2xl ml-4 text-yellow-500"></i>
-                  <div class="flex align-items-center flex-wrap text-sm">
-                    <div class="mr-5 mt-3">
-                      <span class="font-medium text-500">FOLLOWERS</span>
-                      <div class="text-700 mt-2">333</div>
-                    </div>
-                    <div class="mr-5 mt-3">
-                      <span class="font-medium text-500">PROJECTS</span>
-                      <div class="text-700 mt-2">26</div>
-                    </div>
-                    <div class="mr-5 mt-3">
-                      <span class="font-medium text-500">COLLECTIONS</span>
-                      <div class="text-700 mt-2">17</div>
-                    </div>
-                    <div class="mt-3">
-                      <span class="font-medium text-500">SHOTS</span>
-                      <div class="text-700 mt-2">130</div>
-                    </div>
+  <div class="flex relative lg:static surface-ground" *ngIf="restaurant.id">
+    <div class="flex flex-column relative flex-auto">
+      <div class="flex flex-column flex-auto">
+        <div class="surface-section p-5">
+          <div
+            class="flex align-items-start flex-column lg:flex-row lg:justify-content-between"
+          >
+            <div class="flex align-items-start flex-column md:flex-row">
+              <app-image-attachment
+                [uploadUrl]="uploadUrl"
+                [url]="restaurant.avatarFile?.filePath"
+                (selectedImageHandler)="updateAvatar($event)"
+                method="PUT"
+                class="mr-5 mb-3 lg:mb-0"
+              ></app-image-attachment>
+              <div>
+                <span class="text-900 font-medium text-3xl">
+                  {{ restaurant.restaurantName }}
+                </span>
+                <i class="pi pi-star text-2xl ml-4 text-yellow-500"></i>
+                <div class="flex align-items-center flex-wrap text-sm">
+                  <div class="mr-5 mt-3">
+                    <span class="font-medium text-500">FOLLOWERS</span>
+                    <div class="text-700 mt-2">333</div>
+                  </div>
+                  <div class="mr-5 mt-3">
+                    <span class="font-medium text-500">PROJECTS</span>
+                    <div class="text-700 mt-2">26</div>
+                  </div>
+                  <div class="mr-5 mt-3">
+                    <span class="font-medium text-500">COLLECTIONS</span>
+                    <div class="text-700 mt-2">17</div>
+                  </div>
+                  <div class="mt-3">
+                    <span class="font-medium text-500">SHOTS</span>
+                    <div class="text-700 mt-2">130</div>
                   </div>
                 </div>
               </div>
@@ -90,5 +90,6 @@
         ></div>
       </div>
     </div>
-  </ng-container>
+  </div>
 </ng-container>
+<p-toast></p-toast>
