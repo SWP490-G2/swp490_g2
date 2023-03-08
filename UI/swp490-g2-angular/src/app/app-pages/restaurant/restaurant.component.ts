@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
+import { FileUploadService } from "src/app/global/file-upload.service";
 import { Restaurant, RestaurantClient } from "src/app/ngswag/client";
 
 @Component({
@@ -11,18 +12,20 @@ import { Restaurant, RestaurantClient } from "src/app/ngswag/client";
 export class RestaurantComponent implements OnInit {
   items: MenuItem[];
   restaurant?: Restaurant;
+  restaurantId: number;
+  uploadUrl: string;
 
   constructor(
-    private $router: Router,
     private $route: ActivatedRoute,
-    private $restaurantClient: RestaurantClient
-  ) {
+    private $restaurantClient: RestaurantClient,
+    private $fileUpload: FileUploadService) {
     const id: number = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("id")
     );
-    $restaurantClient
-      .getById(id)
-      .subscribe((restaurant) => (this.restaurant = restaurant));
+
+    this.uploadUrl = "restaurant/update-avatar/" + id;
+    this.restaurantId = id;
+    this.refresh();
   }
 
   ngOnInit() {
@@ -30,5 +33,11 @@ export class RestaurantComponent implements OnInit {
       { label: "Add New", icon: "pi pi-fw pi-plus" },
       { label: "Remove", icon: "pi pi-fw pi-minus" },
     ];
+  }
+
+  refresh() {
+    this.$restaurantClient
+      .getById(this.restaurantId)
+      .subscribe((restaurant) => (this.restaurant = restaurant));
   }
 }

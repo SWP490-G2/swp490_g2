@@ -20,6 +20,8 @@ import { AccordionModule } from "primeng/accordion";
 import { InputNumberModule } from "primeng/inputnumber";
 import { ChipModule } from "primeng/chip";
 import { GalleriaModule } from "primeng/galleria";
+import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
+import { ToastModule } from "primeng/toast";
 
 @NgModule({
   declarations: [RestaurantComponent],
@@ -43,6 +45,8 @@ import { GalleriaModule } from "primeng/galleria";
     InputNumberModule,
     MultiSelectModule,
     GalleriaModule,
+    ImageAttachmentModule,
+    ToastModule
   ],
 })
-export class RestaurantModule {}
+export class RestaurantModule { }

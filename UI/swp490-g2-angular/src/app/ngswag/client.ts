@@ -18,6 +18,129 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 @Injectable({
     providedIn: 'root'
 })
+export class RestaurantClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:8080";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    updateAvatar(id: number, body: Body | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/restaurant/update-avatar/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateAvatar(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateAvatar(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdateAvatar(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getById(id: number): Observable<Restaurant> {
+        let url_ = this.baseUrl + "/restaurant/get-by-id/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "*/*"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetById(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Restaurant>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Restaurant>;
+        }));
+    }
+
+    protected processGetById(response: HttpResponseBase): Observable<Restaurant> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Restaurant.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class UserClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -306,6 +429,79 @@ export class UserClient {
 @Injectable({
     providedIn: 'root'
 })
+export class FileClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:8080";
+    }
+
+    /**
+     * @return OK
+     */
+    load(body: string): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/file/load";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "*/*"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLoad(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLoad(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileResponse>;
+        }));
+    }
+
+    protected processLoad(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class BuyerClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -425,74 +621,6 @@ export class Client {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = User.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class RestaurantClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:8080";
-    }
-
-    /**
-     * @return OK
-     */
-    getById(id: number): Observable<Restaurant> {
-        let url_ = this.baseUrl + "/restaurant/get-by-id/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "*/*"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetById(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetById(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Restaurant>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Restaurant>;
-        }));
-    }
-
-    protected processGetById(response: HttpResponseBase): Observable<Restaurant> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Restaurant.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -840,6 +968,7 @@ export class Restaurant implements IRestaurant {
     modifiedAt?: Date;
     restaurantName?: string;
     productCategories?: ProductCategory[];
+    avatarPath?: string;
     active?: boolean;
 
     [key: string]: any;
@@ -870,6 +999,7 @@ export class Restaurant implements IRestaurant {
                 for (let item of _data["productCategories"])
                     this.productCategories!.push(ProductCategory.fromJS(item));
             }
+            this.avatarPath = _data["avatarPath"];
             this.active = _data["active"];
         }
     }
@@ -898,6 +1028,7 @@ export class Restaurant implements IRestaurant {
             for (let item of this.productCategories)
                 data["productCategories"].push(item.toJSON());
         }
+        data["avatarPath"] = this.avatarPath;
         data["active"] = this.active;
         return data;
     }
@@ -918,6 +1049,7 @@ export interface IRestaurant {
     modifiedAt?: Date;
     restaurantName?: string;
     productCategories?: ProductCategory[];
+    avatarPath?: string;
     active?: boolean;
 
     [key: string]: any;
@@ -993,9 +1125,9 @@ export class User implements IUser {
     enabled?: boolean;
     authorities?: GrantedAuthority[];
     username?: string;
+    accountNonLocked?: boolean;
     accountNonExpired?: boolean;
     credentialsNonExpired?: boolean;
-    accountNonLocked?: boolean;
 
     [key: string]: any;
 
@@ -1032,9 +1164,9 @@ export class User implements IUser {
                     this.authorities!.push(GrantedAuthority.fromJS(item));
             }
             this.username = _data["username"];
+            this.accountNonLocked = _data["accountNonLocked"];
             this.accountNonExpired = _data["accountNonExpired"];
             this.credentialsNonExpired = _data["credentialsNonExpired"];
-            this.accountNonLocked = _data["accountNonLocked"];
         }
     }
 
@@ -1069,9 +1201,9 @@ export class User implements IUser {
                 data["authorities"].push(item.toJSON());
         }
         data["username"] = this.username;
+        data["accountNonLocked"] = this.accountNonLocked;
         data["accountNonExpired"] = this.accountNonExpired;
         data["credentialsNonExpired"] = this.credentialsNonExpired;
-        data["accountNonLocked"] = this.accountNonLocked;
         return data;
     }
 
@@ -1098,14 +1230,81 @@ export interface IUser {
     enabled?: boolean;
     authorities?: GrantedAuthority[];
     username?: string;
+    accountNonLocked?: boolean;
     accountNonExpired?: boolean;
     credentialsNonExpired?: boolean;
-    accountNonLocked?: boolean;
+
+    [key: string]: any;
+}
+
+export class Body implements IBody {
+    file!: string;
+
+    [key: string]: any;
+
+    constructor(data?: IBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.file = _data["file"];
+        }
+    }
+
+    static fromJS(data: any): Body {
+        data = typeof data === 'object' ? data : {};
+        let result = new Body();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["file"] = this.file;
+        return data;
+    }
+
+    clone(): Body {
+        const json = this.toJSON();
+        let result = new Body();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IBody {
+    file: string;
 
     [key: string]: any;
 }
 
 export type UserRole = "USER" | "ADMIN" | "BUYER" | "SELLER";
+
+export interface FileParameter {
+    data: any;
+    fileName: string;
+}
+
+export interface FileResponse {
+    data: Blob;
+    status: number;
+    fileName?: string;
+    headers?: { [name: string]: any };
+}
 
 export class BusinessException extends Error {
     override message: string;

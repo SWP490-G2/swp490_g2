@@ -1,0 +1,67 @@
+<ng-container *ngIf="imageStyle">
+  <img
+    *ngIf="url"
+    [src]="imageSrc"
+    [ngStyle]="imageStyle"
+    (click)="openDialog()"
+  />
+  <div
+    *ngIf="!url"
+    class="round-button"
+    [ngStyle]="imageStyle"
+    (click)="openDialog()"
+  >
+    <i class="pi pi-paperclip"></i>
+  </div>
+</ng-container>
+
+<p-dialog
+  header="Image Attachment"
+  [(visible)]="dialogOpened"
+  [modal]="true"
+  [draggable]="true"
+  [resizable]="false"
+  contentStyleClass="py-2"
+>
+  <p-accordion>
+    <p-accordionTab header="Upload an image" [selected]="true">
+      <p-fileUpload
+        #fileUpload
+        accept="image/*"
+        [maxFileSize]="1000000"
+        method="put"
+        [previewWidth]="100"
+        [customUpload]="true"
+        (onUpload)="onUpload()"
+        (uploadHandler)="upload($event)"
+        (onProgress)="progressReport($event)"
+      >
+      </p-fileUpload>
+    </p-accordionTab>
+    <p-accordionTab header="Choose from library">
+      <div *ngIf="images" class="grid" style="max-width: 400px">
+        <div
+          *ngFor="let image of images; let index = index"
+          class="col-3"
+          key="index"
+        >
+          <img
+            [src]="image.thumbnailImageSrc"
+            [alt]="image.alt"
+            style="cursor: pointer"
+          />
+        </div>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      *ngIf="this.fileUploaded"
+      icon="pi pi-check"
+      (click)="onOked()"
+      label="Ok"
+      styleClass="p-button-text"
+    ></p-button>
+  </ng-template>
+</p-dialog>

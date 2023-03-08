@@ -1,14 +1,11 @@
 package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.Restaurant;
-import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,5 +16,12 @@ public class RestaurantController {
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<Restaurant> getById(@PathVariable Long id) {
         return ResponseEntity.ok(restaurantService.getById(id));
+    }
+
+    @PutMapping(value = "/update-avatar/{id}")
+    public void updateAvatar(@PathVariable Long id,
+                             @RequestParam("file") MultipartFile imageFile
+    ) {
+        restaurantService.updateAvatar(id, imageFile);
     }
 }
