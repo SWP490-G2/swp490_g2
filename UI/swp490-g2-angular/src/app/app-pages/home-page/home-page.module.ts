@@ -13,8 +13,6 @@ import { MenuModule } from "primeng/menu";
 import { DividerModule } from "primeng/divider";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { FormsModule } from "@angular/forms";
-import { NavbarModule } from "../../shared/navbar/navbar.module";
-import { FooterModule } from "../../shared/footer/footer.module";
 
 @NgModule({
   declarations: [HomePageComponent],
@@ -32,8 +30,6 @@ import { FooterModule } from "../../shared/footer/footer.module";
     MultiSelectModule,
     ToggleButtonModule,
     FormsModule,
-    NavbarModule,
-    FooterModule
   ],
 })
 export class HomePageModule {}

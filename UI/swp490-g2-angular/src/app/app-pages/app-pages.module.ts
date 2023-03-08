@@ -9,11 +9,8 @@ import { HomePageModule } from "./home-page/home-page.module";
 import { RestaurantFeedModule } from "./restaurant-feed/restaurant-feed.module";
 import { AccountInformationModule } from "./account-information/account-information.module";
 
-
 @NgModule({
-  declarations: [
-    AppPagesComponent
-  ],
+  declarations: [AppPagesComponent],
   imports: [
     CommonModule,
     AppPagesRoutingModule,
@@ -21,8 +18,8 @@ import { AccountInformationModule } from "./account-information/account-informat
     FooterModule,
     HomePageModule,
     RestaurantFeedModule,
-    AccountInformationModule
+    AccountInformationModule,
   ],
-  bootstrap: [AppPagesComponent]
+  bootstrap: [AppPagesComponent],
 })
-export class AppPagesModule { }
+export class AppPagesModule {}

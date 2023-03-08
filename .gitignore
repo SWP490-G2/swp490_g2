@@ -83,3 +83,6 @@ MySQLDB/mysql.cnf
 
 # Generated API Layer for Angular
 UI/swp490-g2-angular/src/app/ngswag/client.ts
+
+# VSCode Settings for Angular project
+UI/swp490-g2-angular/.vscode
