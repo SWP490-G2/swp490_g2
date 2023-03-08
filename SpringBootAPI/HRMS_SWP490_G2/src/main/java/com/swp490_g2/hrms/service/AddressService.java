@@ -1,45 +1,34 @@
 package com.swp490_g2.hrms.service;
 
-import com.swp490_g2.hrms.entity.Address;
-import com.swp490_g2.hrms.entity.City;
-import com.swp490_g2.hrms.entity.District;
-import com.swp490_g2.hrms.entity.Ward;
+import com.swp490_g2.hrms.common.constants.ErrorStatusConstants;
+import com.swp490_g2.hrms.common.exception.BusinessException;
+import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.repositories.AddressRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class AddressService {
 
-    private AddressRepository addressRepository;
+    private final AddressRepository addressRepository;
 
-    public Set<Ward> getWardsByDistrictId(Long districtId){
-        return addressRepository.getWardsByDistrictId(districtId);
-    }
-
+    private final UserService userService;
     public Set<District> getDistrictsByCityId(Long cityId){
-        return addressRepository.getDistrictsByCityId(cityId);
-    }
-
-    public void addAddress(Address address){
-        Set<City> cities = addressRepository.getAllCities();
-        for(City city: cities){
-            Set<District> districts = addressRepository.getDistrictsByCityId(city.getId());
-            city.setDistricts(districts);
-            for (District district: districts) {
-                Set<Ward> wards = addressRepository.getWardsByDistrictId(district.getId());
-            }
+        Set<District> districts = new HashSet<>();
+        User user = userService.getCurrentUser();
+        if (user == null) {
+            throw new BusinessException(ErrorStatusConstants.NOT_EXISTED_USER);
         }
-        address.setDetailsAddress(address.getDetailsAddress());
-
-
+        if(user.getRole() == Role.BUYER){
+            districts = addressRepository.getDistrictsByCityId(cityId);
+        }
+        return districts;
     }
-
-
-
 }

@@ -1,10 +1,14 @@
 package com.swp490_g2.hrms.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.Set;
 
 @Entity
 @Getter
@@ -23,7 +27,11 @@ public class Ward extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "districtId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+    @JsonBackReference
     private District district;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ward")
+    @JsonManagedReference
+    private Set<Address> addresses;
 
 }

@@ -1,5 +1,8 @@
 package com.swp490_g2.hrms.service;
 
+import com.swp490_g2.hrms.common.constants.ErrorStatusConstants;
+import com.swp490_g2.hrms.common.exception.BusinessException;
+import com.swp490_g2.hrms.common.utils.DateUtils;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.config.JwtService;
 import com.swp490_g2.hrms.entity.Role;
@@ -10,6 +13,7 @@ import com.swp490_g2.hrms.repositories.BuyerRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.RegisterRequest;
+import com.swp490_g2.hrms.requests.UserInformationRequest;
 import com.swp490_g2.hrms.security.AuthenticationRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 
@@ -34,6 +40,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
 
 
     @Autowired
@@ -169,4 +176,21 @@ public class UserService {
         String email = authentication.getName();
         return getByEmail(email);
     }
+
+
+    public void addNewUserInformation(UserInformationRequest userInformationRequest){
+        User user = getCurrentUser();
+        if (user == null) {
+            throw new BusinessException(ErrorStatusConstants.NOT_EXISTED_USER);
+        }
+        if(user.getRole() == Role.BUYER){
+            user.setFirstName(userInformationRequest.getFirstName());
+            user.setMiddleName(userInformationRequest.getMiddleName());
+            user.setLastName(userInformationRequest.getLastName());
+            user.setDateOfBirth(userInformationRequest.getDateOfBirth());
+        }
+        userRepository.save(user);
+    }
+
+
 }
