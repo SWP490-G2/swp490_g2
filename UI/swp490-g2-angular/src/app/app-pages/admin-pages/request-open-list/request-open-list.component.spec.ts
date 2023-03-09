@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { RequestOpenListComponent } from './request-open-list.component';
+import { RequestOpenListComponent } from "./request-open-list.component";
 
-describe('RequestOpenListComponent', () => {
+describe("RequestOpenListComponent", () => {
   let component: RequestOpenListComponent;
   let fixture: ComponentFixture<RequestOpenListComponent>;
 
@@ -17,7 +17,7 @@ describe('RequestOpenListComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
-import { AdminPagesRoutingModule } from './admin-pages-routing.module';
-import { AdminPagesComponent } from './admin-pages.component';
+import { AdminPagesRoutingModule } from "./admin-pages-routing.module";
+import { AdminPagesComponent } from "./admin-pages.component";
 
 
 @NgModule({
