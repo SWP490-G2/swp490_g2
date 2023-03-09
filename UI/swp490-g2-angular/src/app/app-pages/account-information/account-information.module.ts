@@ -15,6 +15,9 @@ import { DialogModule } from "primeng/dialog";
 import { ConfirmPopupModule } from "primeng/confirmpopup";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ToastModule } from "primeng/toast";
+import { AccordionModule } from 'primeng/accordion';
+import { TableModule } from 'primeng/table';
+
 
 
 @NgModule({
@@ -37,6 +40,8 @@ import { ToastModule } from "primeng/toast";
     ConfirmPopupModule,
     ConfirmDialogModule,
     ToastModule,
+    AccordionModule,
+    TableModule,
   ],
   providers: [
     MessageService,

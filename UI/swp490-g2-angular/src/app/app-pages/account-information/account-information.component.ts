@@ -1,14 +1,11 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, Input } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
-import { User } from "src/app/ngswag/client";
+import { Restaurant, User } from "src/app/ngswag/client";
+import { Title } from "@angular/platform-browser";
 
-interface City {
-  name: string,
-  code: string
-}
 
 @Component({
   selector: "app-account-information",
@@ -18,39 +15,25 @@ interface City {
 
 export class AccountInformationComponent implements OnInit {
   @ViewChild("form", { static: false }) form!: NgForm;
-
-  cities: City[];
-  selectedCity: City;
-  uploadedFiles: any[] = [];
+  @Input()
 
   display = false;
   user?: User;
+  restaurants: Restaurant[];
 
   constructor(private messageService: MessageService,
     private $router: Router,
     private $route: ActivatedRoute,
     private $auth: AuthService,
+    private $title: Title,
   ) {
-    this.cities = [
-      { name: "Hà Nội", code: "NY" },
-      { name: "Rome", code: "RM" },
-      { name: "London", code: "LDN" },
-      { name: "Istanbul", code: "IST" },
-      { name: "Paris", code: "PRS" }
-    ];
+    $title.setTitle("Account Information");
   }
 
   ngOnInit() {
     this.$auth.getCurrentUser(true).subscribe(user => {
       this.user = user;
     });
-  }
-
-  onUpload(event: any) {
-    for (const file of event.files) {
-      this.uploadedFiles.push(file);
-    }
-    this.messageService.add({ severity: "info", summary: "File Uploaded", detail: "" });
   }
 
   showDialog() {
@@ -67,5 +50,28 @@ export class AccountInformationComponent implements OnInit {
 
   get isBuyer(): boolean {
     return this.user?.role === "BUYER";
+  }
+
+  getRestaurantName(): string {
+    return (<any>this.user).requestingRestaurant.restaurantName;
+  }
+
+  getCreatedDate(): any {
+    return (<any>this.user).requestingRestaurant.createdAt;
+  }
+
+  // get requestingRestaurantJson(): any {
+  //   return (<any>this.user)?.requestingRestaurant;
+  // }
+
+  getUserDisplay(): string {
+    if (this.userExisted()) {
+      return <string>this.user?.email;
+    }
+    return "Account";
+  }
+
+  userExisted(): boolean {
+    return !!(this.user && this.user.email);
   }
 }

@@ -14,7 +14,8 @@
         pInputText
         class="w-full mb-1"
         name="email"
-        placeholder="khanhnqhe141470@fpt.edu.vn"
+        value="{{ getUserDisplay() }}"
+        readonly
         ngModel
       />
       <div
@@ -26,7 +27,7 @@
         >First Name*</label
       >
       <input
-        id="first_name"
+        id="firstName"
         type="text"
         pInputText
         class="w-full mb-1"
@@ -46,7 +47,7 @@
         >Middle Name*</label
       >
       <input
-        id="middle_name"
+        id="middleName"
         type="text"
         pInputText
         class="w-full mb-1"
@@ -66,7 +67,7 @@
         >Last Name*</label
       >
       <input
-        id="last_name"
+        id="lastName"
         type="text"
         pInputText
         class="w-full mb-1"
@@ -91,16 +92,16 @@
         <label for="city" class="block text-900 font-medium my-2">City*</label>
       </div>
 
-      <!-- <div class="p-fluid grid">
-                <div class="field col-8 md:col-3">
-                    <span class="flex align-items-center gap-1">
-                        <p-calendar inputId="calendar" placeholder="mm/dd/yyyy"></p-calendar>
-                    </span>
-                </div>
-                <div class="field col-12 md:col-3">
-                    <p-dropdown optionLabel="name" [options]="cities" [(ngModel)]="selectedCity"></p-dropdown>
-                </div>
-            </div> -->
+      <div class="p-fluid grid">
+        <div class="field col-8 md:col-3">
+          <span class="flex align-items-center gap-1">
+              <p-calendar inputId="calendar" placeholder="mm/dd/yyyy"></p-calendar>
+          </span>
+        </div> 
+        <div class="field col-12 md:col-3">
+          <p-dropdown optionLabel="name"></p-dropdown>
+        </div>        
+      </div>
 
       <div class="p-fluid grid">
         <label
@@ -186,9 +187,22 @@
       <ng-container *ngIf="isBuyer">
         <div class="surface-border border-top-1 opacity-50 mt-3 col-12"></div>
         <p>You are a <strong>buyer</strong>.</p>
-        <p *ngIf="user?.['requestingRestaurant']">
-          Your request to become a seller is being reviewed.
-        </p>
+        
+        <div class="grid" *ngIf="user?.['requestingRestaurant']" class="col">
+          <p >
+            Your request to become a seller is being reviewed.
+          </p>
+          <div class="col">
+            <p-accordion>
+              <p-accordionTab header="Requesting Restaurant Information">
+                <span class="font-medium inline"> Restaurant Name: <strong>{{ getRestaurantName() }}</strong></span>
+                -
+                <span class="font-medium inline"> Created Date: <strong>{{ getCreatedDate() }}</strong></span>                
+             </p-accordionTab>
+          </p-accordion>
+          </div>         
+        </div>
+       
         <button
           *ngIf="!user?.['requestingRestaurant']"
           pButton
