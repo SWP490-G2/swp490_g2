@@ -7,159 +7,17 @@
   </div>
 </div>
 <div class="surface-ground">
-  <div class="grid">
-    <div class="col-12 lg:col-4 p-3">
-      <a routerLink="request-open-list">
+  <div class="grid m-0">
+    <div class="col-12 lg:col-4 p-3" *ngFor="let buttonContent of buttonContents">
+      <a [routerLink]="buttonContent.routerLink">
         <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
           <div style="width:48px;height:48px;border-radius:10px"
-            class="bg-teal-100 inline-flex align-items-center justify-content-center mr-3">
-            <i class="pi pi-list text-teal-600 text-3xl"></i>
+            class="inline-flex align-items-center justify-content-center mr-3"
+            [ngClass]="'bg-' + buttonContent.color + '-100'">
+            <i class="text-3xl pi" [ngClass]="buttonContent.iconClass + ' text-' + buttonContent.color + '-600'"></i>
           </div>
           <div>
-            <span class="text-900 text-xl font-medium mb-2">View Restaurant Opening Request</span>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-12 lg:col-4 p-3">
-      <a routerLink="">
-        <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="width:48px;height:48px;border-radius:10px"
-            class="bg-pink-100 inline-flex align-items-center justify-content-center mr-3">
-            <i class="pi pi-users text-pink-600 text-3xl"></i>
-          </div>
-          <div>
-            <span class="text-900 text-xl font-medium mb-2">View All Users</span>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-12 lg:col-4 p-3">
-      <a routerLink="">
-        <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="width:48px;height:48px;border-radius:10px"
-            class="bg-orange-100 inline-flex align-items-center justify-content-center mr-3">
-            <i class="pi pi-bars text-orange-600 text-3xl"></i>
-          </div>
-          <div>
-            <span class="text-900 text-xl font-medium mb-2">View All Restaurants</span>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-12 lg:col-4 p-3">
-      <a routerLink="request-open-list">
-        <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="width:48px;height:48px;border-radius:10px"
-            class="bg-teal-100 inline-flex align-items-center justify-content-center mr-3">
-            <i class="pi pi-user-minus text-teal-600 text-3xl"></i>
-          </div>
-          <div>
-            <span class="text-900 text-xl font-medium mb-2">Ban An User</span>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-12 lg:col-4 p-3">
-      <a routerLink="">
-        <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="width:48px;height:48px;border-radius:10px"
-            class="bg-pink-100 inline-flex align-items-center justify-content-center mr-3">
-            <i class="pi pi-ban text-pink-600 text-3xl"></i>
-          </div>
-          <div>
-            <span class="text-900 text-xl font-medium mb-2">Ban An Restaurant</span>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-12 lg:col-4 p-3">
-      <a routerLink="">
-        <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="width:48px;height:48px;border-radius:10px"
-            class="bg-orange-100 inline-flex align-items-center justify-content-center mr-3">
-            <i class="pi pi-user-edit text-orange-600 text-3xl"></i>
-          </div>
-          <div>
-            <span class="text-900 text-xl font-medium mb-2">Update User Information</span>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-12 lg:col-4 p-3">
-      <a routerLink="request-open-list">
-        <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="width:48px;height:48px;border-radius:10px"
-            class="bg-teal-100 inline-flex align-items-center justify-content-center mr-3">
-            <i class="pi pi-user-edit text-teal-600 text-3xl"></i>
-          </div>
-          <div>
-            <span class="text-900 text-xl font-medium mb-2">Update User Role</span>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-12 lg:col-4 p-3">
-      <a routerLink="">
-        <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="width:48px;height:48px;border-radius:10px"
-            class="bg-pink-100 inline-flex align-items-center justify-content-center mr-3">
-            <i class="pi pi-image text-pink-600 text-3xl"></i>
-          </div>
-          <div>
-            <span class="text-900 text-xl font-medium mb-2">Update Restaurant Avatar and Cover</span>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-12 lg:col-4 p-3">
-      <a routerLink="">
-        <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="width:48px;height:48px;border-radius:10px"
-            class="bg-orange-100 inline-flex align-items-center justify-content-center mr-3">
-            <i class="pi pi-pencil text-orange-600 text-3xl"></i>
-          </div>
-          <div>
-            <span class="text-900 text-xl font-medium mb-2">Update Restaurant Information</span>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-12 lg:col-4 p-3">
-      <a routerLink="request-open-list">
-        <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="width:48px;height:48px;border-radius:10px"
-            class="bg-teal-100 inline-flex align-items-center justify-content-center mr-3">
-            <i class="pi pi-plus-circle text-teal-600 text-3xl"></i>
-          </div>
-          <div>
-            <span class="text-900 text-xl font-medium mb-2">Create New Restaurant Promotion Campaign</span>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-12 lg:col-4 p-3">
-      <a routerLink="">
-        <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="width:48px;height:48px;border-radius:10px"
-            class="bg-pink-100 inline-flex align-items-center justify-content-center mr-3">
-            <i class="pi pi-ticket text-pink-600 text-3xl"></i>
-          </div>
-          <div>
-            <span class="text-900 text-xl font-medium mb-2">View All Restaurant Promotion Campaign</span>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-12 lg:col-4 p-3">
-      <a routerLink="">
-        <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="width:48px;height:48px;border-radius:10px"
-            class="bg-orange-100 inline-flex align-items-center justify-content-center mr-3">
-            <i class="pi pi-pencil text-orange-600 text-3xl"></i>
-          </div>
-          <div>
-            <span class="text-900 text-xl font-medium mb-2">Update Restaurant Promotion Campaign</span>
+            <span class="text-900 text-xl font-medium mb-2"> {{buttonContent.title}}</span>
           </div>
         </div>
       </a>
