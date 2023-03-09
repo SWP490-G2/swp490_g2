@@ -26,6 +26,13 @@ const routes: Routes = [
             (m) => m.AccountInformationModule
           ),
       },
+      {
+        path: "admin-pages",
+        loadChildren: () =>
+          import("./admin-pages/admin-pages.module").then(
+            (m) => m.AdminPagesModule
+          ),
+      },
     ],
   },
 ];

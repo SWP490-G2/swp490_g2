@@ -25,24 +25,7 @@ export class NavbarComponent implements OnInit {
     items!: MenuItem[];
 
     ngOnInit() {
-        this.items = [
-            {
-                label: "Categories",
-                icon: "pi pi-fw pi-book",
-            },
-            {
-                label: "My Order",
-                icon: "pi pi-fw pi-shopping-bag",
-            },
-            {
-                label: "Cart",
-                icon: "pi pi-fw pi-shopping-cart",
-            },
-            {
-                label: "Notifications",
-                icon: "pi pi-fw pi-bell",
-            },
-        ];
+        this.items = [];
     }
 
     navToHome() {
