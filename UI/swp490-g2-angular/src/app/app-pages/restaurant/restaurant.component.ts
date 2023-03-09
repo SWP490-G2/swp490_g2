@@ -2,14 +2,11 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
-import { FileUploadService } from "src/app/global/file-upload.service";
 import {
   File,
   Restaurant,
   RestaurantClient,
-  Seller,
   User,
-  UserRole,
 } from "src/app/ngswag/client";
 
 @Component({
