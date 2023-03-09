@@ -7,11 +7,13 @@ import com.swp490_g2.hrms.entity.Token;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.shallowEntities.TokenType;
 import com.swp490_g2.hrms.repositories.BuyerRepository;
+import com.swp490_g2.hrms.repositories.SellerRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.RegisterRequest;
 import com.swp490_g2.hrms.security.AuthenticationRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,19 +27,71 @@ import java.util.Random;
 
 
 @Service
-@RequiredArgsConstructor
+@Getter
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final BuyerRepository buyerRepository;
-    private final TokenRepository tokenRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
-
+    private UserRepository userRepository;
 
     @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    private BuyerRepository buyerRepository;
+
+    @Autowired
+    public void setBuyerRepository(BuyerRepository buyerRepository) {
+        this.buyerRepository = buyerRepository;
+    }
+
+    private TokenRepository tokenRepository;
+
+    @Autowired
+    public void setTokenRepository(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
+
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    private JwtService jwtService;
+
+    @Autowired
+    public void setJwtService(JwtService jwtService) {
+        this.jwtService = jwtService;
+    }
+
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    private BuyerService buyerService;
+
+    @Autowired
+    public void setBuyerService(BuyerService buyerService) {
+        this.buyerService = buyerService;
+    }
+
+    private SellerService sellerService;
+
+    @Autowired
+    public void setSellerService(SellerService sellerService) {
+        this.sellerService = sellerService;
+    }
+
     private AuthenticationFacade authenticationFacade;
+
+    @Autowired
+    public void setAuthenticationFacade(AuthenticationFacade authenticationFacade) {
+        this.authenticationFacade = authenticationFacade;
+    }
 
     private static String generateVerificationCode() {
         // It will generate 6 digit random Number.
@@ -48,10 +102,12 @@ public class UserService {
         // this will convert any number sequence into 6 character.
         return String.format("%06d", number);
     }
-    private boolean isPhoneNumberExisted(String phoneNumber){
+
+    private boolean isPhoneNumberExisted(String phoneNumber) {
         User user = userRepository.findByPhoneNumber(phoneNumber).orElse(null);
         return user != null && user.isActive();
     }
+
     public AuthenticationResponse registerNewUserAccount(RegisterRequest registerRequest) {
         User user = userRepository.findByEmail(registerRequest.getEmail()).orElse(null);
         if (user != null && user.isActive()) {
@@ -60,7 +116,7 @@ public class UserService {
                     .build();
         }
 
-        if(isPhoneNumberExisted(registerRequest.getPhoneNumber()))
+        if (isPhoneNumberExisted(registerRequest.getPhoneNumber()))
             return AuthenticationResponse.builder()
                     .errorMessage("Phone number existed")
                     .build();
@@ -163,10 +219,20 @@ public class UserService {
 
     public User getCurrentUser() {
         Authentication authentication = authenticationFacade.getAuthentication();
-        if(authentication == null)
+        if (authentication == null)
             return null;
 
         String email = authentication.getName();
-        return getByEmail(email);
+        User user = getByEmail(email);
+        if (user == null)
+            return null;
+
+        if (user.getRole() == Role.BUYER)
+            return buyerService.getById(user.getId());
+
+        if (user.getRole() == Role.SELLER)
+            return sellerService.getById(user.getId());
+
+        return null;
     }
 }
