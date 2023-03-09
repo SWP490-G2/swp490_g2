@@ -812,9 +812,9 @@ export class ProductCategoryClient {
 export class File implements IFile {
     id?: number;
     createdBy?: number;
-    createdAt?: Date;
+    createdAt?: string;
     modifiedBy?: number;
-    modifiedAt?: Date;
+    modifiedAt?: string;
     filePath?: string;
 
     [key: string]: any;
@@ -836,9 +836,9 @@ export class File implements IFile {
             }
             this.id = _data["id"];
             this.createdBy = _data["createdBy"];
-            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.createdAt = _data["createdAt"];
             this.modifiedBy = _data["modifiedBy"];
-            this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
+            this.modifiedAt = _data["modifiedAt"];
             this.filePath = _data["filePath"];
         }
     }
@@ -858,9 +858,9 @@ export class File implements IFile {
         }
         data["id"] = this.id;
         data["createdBy"] = this.createdBy;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["createdAt"] = this.createdAt;
         data["modifiedBy"] = this.modifiedBy;
-        data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
+        data["modifiedAt"] = this.modifiedAt;
         data["filePath"] = this.filePath;
         return data;
     }
@@ -876,9 +876,9 @@ export class File implements IFile {
 export interface IFile {
     id?: number;
     createdBy?: number;
-    createdAt?: Date;
+    createdAt?: string;
     modifiedBy?: number;
-    modifiedAt?: Date;
+    modifiedAt?: string;
     filePath?: string;
 
     [key: string]: any;
@@ -942,9 +942,9 @@ export interface IGrantedAuthority {
 export class ProductCategory implements IProductCategory {
     id?: number;
     createdBy?: number;
-    createdAt?: Date;
+    createdAt?: string;
     modifiedBy?: number;
-    modifiedAt?: Date;
+    modifiedAt?: string;
     productCategoryName?: string;
     restaurant?: Restaurant;
 
@@ -967,9 +967,9 @@ export class ProductCategory implements IProductCategory {
             }
             this.id = _data["id"];
             this.createdBy = _data["createdBy"];
-            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.createdAt = _data["createdAt"];
             this.modifiedBy = _data["modifiedBy"];
-            this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
+            this.modifiedAt = _data["modifiedAt"];
             this.productCategoryName = _data["productCategoryName"];
             this.restaurant = _data["restaurant"] ? Restaurant.fromJS(_data["restaurant"]) : <any>undefined;
         }
@@ -990,9 +990,9 @@ export class ProductCategory implements IProductCategory {
         }
         data["id"] = this.id;
         data["createdBy"] = this.createdBy;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["createdAt"] = this.createdAt;
         data["modifiedBy"] = this.modifiedBy;
-        data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
+        data["modifiedAt"] = this.modifiedAt;
         data["productCategoryName"] = this.productCategoryName;
         data["restaurant"] = this.restaurant ? this.restaurant.toJSON() : <any>undefined;
         return data;
@@ -1009,9 +1009,9 @@ export class ProductCategory implements IProductCategory {
 export interface IProductCategory {
     id?: number;
     createdBy?: number;
-    createdAt?: Date;
+    createdAt?: string;
     modifiedBy?: number;
-    modifiedAt?: Date;
+    modifiedAt?: string;
     productCategoryName?: string;
     restaurant?: Restaurant;
 
@@ -1021,9 +1021,9 @@ export interface IProductCategory {
 export class Restaurant implements IRestaurant {
     id?: number;
     createdBy?: number;
-    createdAt?: Date;
+    createdAt?: string;
     modifiedBy?: number;
-    modifiedAt?: Date;
+    modifiedAt?: string;
     restaurantName?: string;
     productCategories?: ProductCategory[];
     avatarFile?: File;
@@ -1049,9 +1049,9 @@ export class Restaurant implements IRestaurant {
             }
             this.id = _data["id"];
             this.createdBy = _data["createdBy"];
-            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.createdAt = _data["createdAt"];
             this.modifiedBy = _data["modifiedBy"];
-            this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
+            this.modifiedAt = _data["modifiedAt"];
             this.restaurantName = _data["restaurantName"];
             if (Array.isArray(_data["productCategories"])) {
                 this.productCategories = [] as any;
@@ -1083,9 +1083,9 @@ export class Restaurant implements IRestaurant {
         }
         data["id"] = this.id;
         data["createdBy"] = this.createdBy;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["createdAt"] = this.createdAt;
         data["modifiedBy"] = this.modifiedBy;
-        data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
+        data["modifiedAt"] = this.modifiedAt;
         data["restaurantName"] = this.restaurantName;
         if (Array.isArray(this.productCategories)) {
             data["productCategories"] = [];
@@ -1113,9 +1113,9 @@ export class Restaurant implements IRestaurant {
 export interface IRestaurant {
     id?: number;
     createdBy?: number;
-    createdAt?: Date;
+    createdAt?: string;
     modifiedBy?: number;
-    modifiedAt?: Date;
+    modifiedAt?: string;
     restaurantName?: string;
     productCategories?: ProductCategory[];
     avatarFile?: File;
@@ -1128,9 +1128,9 @@ export interface IRestaurant {
 export class Seller implements ISeller {
     id?: number;
     createdBy?: number;
-    createdAt?: Date;
+    createdAt?: string;
     modifiedBy?: number;
-    modifiedAt?: Date;
+    modifiedAt?: string;
     email?: string;
     password?: string;
     phoneNumber?: string;
@@ -1139,10 +1139,10 @@ export class Seller implements ISeller {
     restaurants?: Restaurant[];
     active?: boolean;
     enabled?: boolean;
-    username?: string;
-    authorities?: GrantedAuthority[];
-    accountNonExpired?: boolean;
     credentialsNonExpired?: boolean;
+    accountNonExpired?: boolean;
+    authorities?: GrantedAuthority[];
+    username?: string;
     accountNonLocked?: boolean;
 
     [key: string]: any;
@@ -1164,9 +1164,9 @@ export class Seller implements ISeller {
             }
             this.id = _data["id"];
             this.createdBy = _data["createdBy"];
-            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.createdAt = _data["createdAt"];
             this.modifiedBy = _data["modifiedBy"];
-            this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
+            this.modifiedAt = _data["modifiedAt"];
             this.email = _data["email"];
             this.password = _data["password"];
             this.phoneNumber = _data["phoneNumber"];
@@ -1179,14 +1179,14 @@ export class Seller implements ISeller {
             }
             this.active = _data["active"];
             this.enabled = _data["enabled"];
-            this.username = _data["username"];
+            this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.accountNonExpired = _data["accountNonExpired"];
             if (Array.isArray(_data["authorities"])) {
                 this.authorities = [] as any;
                 for (let item of _data["authorities"])
                     this.authorities!.push(GrantedAuthority.fromJS(item));
             }
-            this.accountNonExpired = _data["accountNonExpired"];
-            this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.username = _data["username"];
             this.accountNonLocked = _data["accountNonLocked"];
         }
     }
@@ -1206,9 +1206,9 @@ export class Seller implements ISeller {
         }
         data["id"] = this.id;
         data["createdBy"] = this.createdBy;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["createdAt"] = this.createdAt;
         data["modifiedBy"] = this.modifiedBy;
-        data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
+        data["modifiedAt"] = this.modifiedAt;
         data["email"] = this.email;
         data["password"] = this.password;
         data["phoneNumber"] = this.phoneNumber;
@@ -1221,14 +1221,14 @@ export class Seller implements ISeller {
         }
         data["active"] = this.active;
         data["enabled"] = this.enabled;
-        data["username"] = this.username;
+        data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["accountNonExpired"] = this.accountNonExpired;
         if (Array.isArray(this.authorities)) {
             data["authorities"] = [];
             for (let item of this.authorities)
                 data["authorities"].push(item.toJSON());
         }
-        data["accountNonExpired"] = this.accountNonExpired;
-        data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["username"] = this.username;
         data["accountNonLocked"] = this.accountNonLocked;
         return data;
     }
@@ -1244,9 +1244,9 @@ export class Seller implements ISeller {
 export interface ISeller {
     id?: number;
     createdBy?: number;
-    createdAt?: Date;
+    createdAt?: string;
     modifiedBy?: number;
-    modifiedAt?: Date;
+    modifiedAt?: string;
     email?: string;
     password?: string;
     phoneNumber?: string;
@@ -1255,10 +1255,10 @@ export interface ISeller {
     restaurants?: Restaurant[];
     active?: boolean;
     enabled?: boolean;
-    username?: string;
-    authorities?: GrantedAuthority[];
-    accountNonExpired?: boolean;
     credentialsNonExpired?: boolean;
+    accountNonExpired?: boolean;
+    authorities?: GrantedAuthority[];
+    username?: string;
     accountNonLocked?: boolean;
 
     [key: string]: any;
@@ -1448,9 +1448,9 @@ export interface IAuthenticationRequest {
 export class User implements IUser {
     id?: number;
     createdBy?: number;
-    createdAt?: Date;
+    createdAt?: string;
     modifiedBy?: number;
-    modifiedAt?: Date;
+    modifiedAt?: string;
     email?: string;
     password?: string;
     phoneNumber?: string;
@@ -1458,10 +1458,10 @@ export class User implements IUser {
     role?: UserRole;
     active?: boolean;
     enabled?: boolean;
-    username?: string;
-    authorities?: GrantedAuthority[];
-    accountNonExpired?: boolean;
     credentialsNonExpired?: boolean;
+    accountNonExpired?: boolean;
+    authorities?: GrantedAuthority[];
+    username?: string;
     accountNonLocked?: boolean;
 
     [key: string]: any;
@@ -1483,9 +1483,9 @@ export class User implements IUser {
             }
             this.id = _data["id"];
             this.createdBy = _data["createdBy"];
-            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.createdAt = _data["createdAt"];
             this.modifiedBy = _data["modifiedBy"];
-            this.modifiedAt = _data["modifiedAt"] ? new Date(_data["modifiedAt"].toString()) : <any>undefined;
+            this.modifiedAt = _data["modifiedAt"];
             this.email = _data["email"];
             this.password = _data["password"];
             this.phoneNumber = _data["phoneNumber"];
@@ -1493,14 +1493,14 @@ export class User implements IUser {
             this.role = _data["role"];
             this.active = _data["active"];
             this.enabled = _data["enabled"];
-            this.username = _data["username"];
+            this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.accountNonExpired = _data["accountNonExpired"];
             if (Array.isArray(_data["authorities"])) {
                 this.authorities = [] as any;
                 for (let item of _data["authorities"])
                     this.authorities!.push(GrantedAuthority.fromJS(item));
             }
-            this.accountNonExpired = _data["accountNonExpired"];
-            this.credentialsNonExpired = _data["credentialsNonExpired"];
+            this.username = _data["username"];
             this.accountNonLocked = _data["accountNonLocked"];
         }
     }
@@ -1520,9 +1520,9 @@ export class User implements IUser {
         }
         data["id"] = this.id;
         data["createdBy"] = this.createdBy;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["createdAt"] = this.createdAt;
         data["modifiedBy"] = this.modifiedBy;
-        data["modifiedAt"] = this.modifiedAt ? this.modifiedAt.toISOString() : <any>undefined;
+        data["modifiedAt"] = this.modifiedAt;
         data["email"] = this.email;
         data["password"] = this.password;
         data["phoneNumber"] = this.phoneNumber;
@@ -1530,14 +1530,14 @@ export class User implements IUser {
         data["role"] = this.role;
         data["active"] = this.active;
         data["enabled"] = this.enabled;
-        data["username"] = this.username;
+        data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["accountNonExpired"] = this.accountNonExpired;
         if (Array.isArray(this.authorities)) {
             data["authorities"] = [];
             for (let item of this.authorities)
                 data["authorities"].push(item.toJSON());
         }
-        data["accountNonExpired"] = this.accountNonExpired;
-        data["credentialsNonExpired"] = this.credentialsNonExpired;
+        data["username"] = this.username;
         data["accountNonLocked"] = this.accountNonLocked;
         return data;
     }
@@ -1553,9 +1553,9 @@ export class User implements IUser {
 export interface IUser {
     id?: number;
     createdBy?: number;
-    createdAt?: Date;
+    createdAt?: string;
     modifiedBy?: number;
-    modifiedAt?: Date;
+    modifiedAt?: string;
     email?: string;
     password?: string;
     phoneNumber?: string;
@@ -1563,10 +1563,10 @@ export interface IUser {
     role?: UserRole;
     active?: boolean;
     enabled?: boolean;
-    username?: string;
-    authorities?: GrantedAuthority[];
-    accountNonExpired?: boolean;
     credentialsNonExpired?: boolean;
+    accountNonExpired?: boolean;
+    authorities?: GrantedAuthority[];
+    username?: string;
     accountNonLocked?: boolean;
 
     [key: string]: any;

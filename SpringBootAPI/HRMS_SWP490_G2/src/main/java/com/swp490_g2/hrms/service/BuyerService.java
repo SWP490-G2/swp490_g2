@@ -5,17 +5,35 @@ import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.repositories.BuyerRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+@Getter
 public class BuyerService {
-    private final BuyerRepository buyerRepository;
+    private BuyerRepository buyerRepository;
 
-    private final RestaurantService restaurantService;
-    private final AuthenticationFacade authenticationFacade;
+    @Autowired
+    public void setBuyerRepository(BuyerRepository buyerRepository) {
+        this.buyerRepository = buyerRepository;
+    }
+
+    private RestaurantService restaurantService;
+
+    @Autowired
+    public void setRestaurantService(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+    }
+
+    private AuthenticationFacade authenticationFacade;
+
+    @Autowired
+    public void setAuthenticationFacade(AuthenticationFacade authenticationFacade) {
+        this.authenticationFacade = authenticationFacade;
+    }
 
     public void requestOpeningNewRestaurant(Restaurant restaurant) {
         Buyer buyer = getCurrentBuyer();
