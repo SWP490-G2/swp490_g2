@@ -21,7 +21,4 @@ public class City extends BaseEntity{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
     private Set<District> districts;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
-    private Set<Address> addresses;
-
 }

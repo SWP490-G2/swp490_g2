@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,10 +24,10 @@ public class Address extends BaseEntity{
     private String detailsAddress;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cityId", nullable = false)
+    @JoinColumn(name = "wardId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private City city;
+    @JsonBackReference
+    private Ward ward;
 
 
 }
