@@ -34,9 +34,9 @@ public class UserController {
         return ResponseEntity.ok(userServiceImpl.getByEmail(email));
     }
 
-    @PostMapping("/verify-code/{email}")
-    public ResponseEntity<String> verifyCode(@PathVariable String email, @RequestBody String code) {
-        return ResponseEntity.ok(userServiceImpl.verifyCode(email, code));
+    @PostMapping("/verify-code/{email}/")
+    public ResponseEntity<String> verifyCode(@PathVariable String email, @RequestBody String code, @RequestParam(required = false) boolean verifyCodeOnly) {
+        return ResponseEntity.ok(userServiceImpl.verifyCode(email, code, verifyCodeOnly));
     }
 
     @PostMapping(value = "/login")

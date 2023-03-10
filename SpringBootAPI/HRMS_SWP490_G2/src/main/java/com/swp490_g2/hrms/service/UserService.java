@@ -158,7 +158,7 @@ public class UserService {
     }
 
     @Transactional
-    public String verifyCode(String email, String code) {
+    public String verifyCode(String email, String code, boolean verifyCodeOnly) {
         code = code.substring(1, 7);
         if (!code.matches("[0-9]{6}"))
             return "\"Invalid code\"";
@@ -170,11 +170,18 @@ public class UserService {
         if (!user.getVerificationCode().equals(code))
             return "\"Invalid code\"";
 
-        user.setActive(true);
-        user.setRole(Role.BUYER);
+        if(!verifyCodeOnly) {
+            user.setActive(true);
+            user.setRole(Role.BUYER);
+        }
 
+        user.setVerificationCode(generateVerificationCode());
         userRepository.save(user);
-        buyerRepository.addFromUser(user.getId());
+
+        if(!verifyCodeOnly) {
+            buyerRepository.addFromUser(user.getId());
+        }
+
         return null;
     }
 
