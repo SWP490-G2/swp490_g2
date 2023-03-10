@@ -1,13 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
-import { Router, ActivatedRoute } from '@angular/router';
-import { User } from 'src/app/ngswag/client';
+import { Component, ViewChild } from "@angular/core";
+import { NgForm } from "@angular/forms";
+import { Title } from "@angular/platform-browser";
+import { Router, ActivatedRoute } from "@angular/router";
+import { User } from "src/app/ngswag/client";
 
 @Component({
-  selector: 'app-forgot-pass-page',
-  templateUrl: './forgot-pass-page.component.html',
-  styleUrls: ['./forgot-pass-page.component.scss'],
+  selector: "app-forgot-pass-page",
+  templateUrl: "./forgot-pass-page.component.html",
+  styleUrls: ["./forgot-pass-page.component.scss"],
 })
 export class ForgotPassPageComponent {
   @ViewChild("form", { static: false }) form!: NgForm;
@@ -20,7 +20,7 @@ export class ForgotPassPageComponent {
     private $router: Router,
     private $route: ActivatedRoute,
   ) {
-    $title.setTitle('Forgot Password');
+    $title.setTitle("Forgot Password");
   }
 
   async forgotPassword(): Promise<void> {}
@@ -40,10 +40,10 @@ export class ForgotPassPageComponent {
   }
 
   navToLogin() {
-    this.$router.navigate(['..', 'login'], { relativeTo: this.$route });
+    this.$router.navigate(["..", "login"], { relativeTo: this.$route });
   }
 
   navToRegister() {
-    this.$router.navigate(['..', 'register'], { relativeTo: this.$route });
+    this.$router.navigate(["..", "register"], { relativeTo: this.$route });
   }
 }

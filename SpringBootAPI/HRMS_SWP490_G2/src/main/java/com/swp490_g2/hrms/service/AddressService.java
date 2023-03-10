@@ -5,7 +5,9 @@ import com.swp490_g2.hrms.entity.City;
 import com.swp490_g2.hrms.entity.District;
 import com.swp490_g2.hrms.entity.Ward;
 import com.swp490_g2.hrms.repositories.AddressRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,13 +15,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
+@Getter
 public class AddressService {
 
     private AddressRepository addressRepository;
 
+    @Autowired
+    public void setAddressRepository(AddressRepository addressRepository) {
+        this.addressRepository = addressRepository;
+    }
+
     public Set<Ward> getWardsByDistrictId(Long districtId){
-        return addressRepository.getWardsByDistrictId(districtId);
+        return getAddressRepository().getWardsByDistrictId(districtId);
     }
 
     public Set<District> getDistrictsByCityId(Long cityId){

@@ -1,0 +1,81 @@
+<ng-container *ngIf="imageStyle">
+  <div
+    *ngIf="url"
+    class="relative"
+    [ngClass]="{ hover: editable, 'cursor-pointer': editable }"
+    (click)="openDialog()"
+  >
+    <img id="mainImage" [src]="imageSrc" [ngStyle]="imageStyle" />
+    <div class="absolute w-full h-full top-0" *ngIf="editable">
+      <i
+        class="absolute top-50 left-50 pi pi-paperclip transform-middle text-white"
+      ></i>
+    </div>
+  </div>
+
+  <div
+    *ngIf="!url"
+    class="round-button"
+    [ngStyle]="imageStyle"
+    [ngClass]="{
+      'cursor-pointer': editable,
+      hover: editable
+    }"
+    (click)="openDialog()"
+  >
+    <i *ngIf="editable" class="pi pi-paperclip"></i>
+  </div>
+</ng-container>
+
+<p-dialog
+  header="Image Attachment"
+  [(visible)]="dialogOpened"
+  [modal]="true"
+  [draggable]="true"
+  [resizable]="false"
+  [style]="{ 'max-width': '50vw' }"
+  contentStyleClass="py-2"
+>
+  <p-accordion (onOpen)="onAccordionTabChange()">
+    <p-accordionTab header="Upload an image" [selected]="true">
+      <p-fileUpload
+        #fileUpload
+        accept="image/*"
+        [maxFileSize]="1000000"
+        method="put"
+        [previewWidth]="100"
+        [customUpload]="true"
+        (onUpload)="onUpload()"
+        (uploadHandler)="upload($event)"
+        (onProgress)="progressReport($event)"
+      >
+      </p-fileUpload>
+    </p-accordionTab>
+    <p-accordionTab header="Choose from uploaded images" #imageSelectionTab>
+      <div *ngIf="images" class="grid">
+        <div
+          *ngFor="let image of images; let index = index"
+          class="col-3"
+          key="index"
+        >
+          <img
+            [src]="image?.['src']"
+            style="cursor: pointer; max-width: 100%"
+            [ngClass]="selectedImage === image ? 'selected' : ''"
+            (click)="selectImage(image)"
+          />
+        </div>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      *ngIf="this.fileUploaded"
+      icon="pi pi-check"
+      (click)="onOked()"
+      label="Ok"
+      styleClass="p-button-text"
+    ></p-button>
+  </ng-template>
+</p-dialog>

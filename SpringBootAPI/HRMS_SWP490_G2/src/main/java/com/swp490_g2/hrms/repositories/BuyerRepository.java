@@ -13,6 +13,14 @@ public interface BuyerRepository extends  JpaRepository<Buyer, Long>  {
     @Query(value = "insert into buyer (userId) values (:userId)", nativeQuery = true)
     void addFromUser(Long userId);
 
+    @Query(value = """
+        select *\s
+        from buyer b\s
+            inner join user u on b.userId = u.userId
+        where u.email = (:email)\s
+            """, nativeQuery = true)
+    Optional<Buyer> findByEmail(String email);
+
 //    Optional<BuyerRequest> addNewBuyerInformation(BuyerRequest buyerRequest);
 
 

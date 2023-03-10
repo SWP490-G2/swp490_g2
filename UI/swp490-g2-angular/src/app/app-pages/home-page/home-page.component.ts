@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MenuItem } from 'primeng/api';
-import { AuthService } from 'src/app/global/auth.service';
-import { User } from 'src/app/ngswag/client';
+import { Component, OnInit } from "@angular/core";
+import { Title } from "@angular/platform-browser";
+import { Router, ActivatedRoute } from "@angular/router";
+import { MenuItem } from "primeng/api";
+import { AuthService } from "src/app/global/auth.service";
+import { User } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-home-page",
   templateUrl: "./home-page.component.html",
   styleUrls: ["./home-page.component.scss"],
 })
-export class HomePageComponent implements OnInit{
+export class HomePageComponent implements OnInit {
   user?: User;
 
   constructor(
@@ -22,29 +22,7 @@ export class HomePageComponent implements OnInit{
     $title.setTitle("Home");
   }
   items!: MenuItem[];
-  ngOnInit() {
-    this.$auth.getCurrentUser().subscribe((user) => this.user = user);
-    this.items = [
-      {
-        label: "Categories",
-        icon: "pi pi-fw pi-book",
-      },
-      {
-        label: "My Order",
-        icon: "pi pi-fw pi-shopping-bag",
-      },
-      {
-        label: "Cart",
-        icon: "pi pi-fw pi-shopping-cart",
-      },
-      {
-        label: "Notifications",
-        icon: "pi pi-fw pi-bell",
-      },
-    ];
-
-
-  }
+  ngOnInit(): void {}
 
   navToLogin() {
     this.$router.navigate(["auth", "login"], { relativeTo: this.$route });
@@ -61,7 +39,7 @@ export class HomePageComponent implements OnInit{
   }
 
   navToFeed() {
-    //this.$router.navigate(['feed-page'], { relativeTo: this.$route });
+    this.$router.navigate(["restaurant-feed"], { relativeTo: this.$route });
   }
 
   userExisted(): boolean {
