@@ -44,7 +44,7 @@ export class ImageAttachmentComponent implements OnInit {
     private $fileUpload: FileUploadService,
     private $fileClient: FileClient,
     private $cdRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.imageStyle = {

@@ -1,11 +1,18 @@
 <ng-container *ngIf="imageStyle">
-  <img
-    id="mainImage"
+  <div
     *ngIf="url"
-    [src]="imageSrc"
-    [ngStyle]="imageStyle"
+    class="relative"
+    [ngClass]="{ hover: editable, 'cursor-pointer': editable }"
     (click)="openDialog()"
-  />
+  >
+    <img id="mainImage" [src]="imageSrc" [ngStyle]="imageStyle" />
+    <div class="absolute w-full h-full top-0" *ngIf="editable">
+      <i
+        class="absolute top-50 left-50 pi pi-paperclip transform-middle text-white"
+      ></i>
+    </div>
+  </div>
+
   <div
     *ngIf="!url"
     class="round-button"
