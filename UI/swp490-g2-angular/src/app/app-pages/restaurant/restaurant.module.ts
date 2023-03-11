@@ -22,9 +22,10 @@ import { ChipModule } from "primeng/chip";
 import { GalleriaModule } from "primeng/galleria";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 import { ToastModule } from "primeng/toast";
+import { ProductListComponent } from "./product-list/product-list.component";
 
 @NgModule({
-  declarations: [RestaurantComponent],
+  declarations: [RestaurantComponent, ProductListComponent],
   imports: [
     CommonModule,
     RestaurantRoutingModule,

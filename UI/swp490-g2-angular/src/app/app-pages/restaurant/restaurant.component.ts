@@ -4,6 +4,7 @@ import { MenuItem } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
   File,
+  ProductCategory,
   Restaurant,
   RestaurantClient,
   User,
@@ -20,6 +21,7 @@ export class RestaurantComponent implements OnInit {
   restaurantId: number;
   uploadUrl: string;
   user?: User;
+  categories: ProductCategory[] = [];
 
   constructor(
     private $route: ActivatedRoute,
@@ -45,7 +47,30 @@ export class RestaurantComponent implements OnInit {
   refresh() {
     this.$restaurantClient
       .getById(this.restaurantId)
-      .subscribe((restaurant) => (this.restaurant = restaurant));
+      .subscribe((restaurant) => {
+        this.restaurant = restaurant;
+        if (this.restaurant.products) {
+          let categories: ProductCategory[] = [];
+          this.restaurant.products.map((product) => {
+            if (product.categories) {
+              categories = categories.concat(product.categories);
+            }
+          });
+
+          this.categories = categories
+            .filter(
+              (value, index, self) =>
+                index === self.findIndex((t) => t.id === value.id)
+            )
+            .sort((a, b) => {
+              if (!a.productCategoryName || !b.productCategoryName) return 0;
+
+              return a.productCategoryName?.localeCompare(
+                b.productCategoryName
+              );
+            });
+        }
+      });
 
     this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
   }

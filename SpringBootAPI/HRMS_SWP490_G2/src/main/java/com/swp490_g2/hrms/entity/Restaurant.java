@@ -28,14 +28,14 @@ public class Restaurant extends BaseEntity{
     @JsonIgnore
     private Buyer requestingRestaurantBuyer;
 
-    @OneToMany(mappedBy="restaurant")
-    @JsonManagedReference
-    private Set<ProductCategory> productCategories;
-
     @OneToOne(cascade=CascadeType.ALL)
     private File avatarFile;
 
     @ManyToMany(mappedBy = "restaurants")
     @JsonIgnore
     private Set<Seller> sellers;
+
+    @OneToMany(mappedBy="restaurant")
+    @JsonManagedReference
+    private Set<Product> products;
 }
