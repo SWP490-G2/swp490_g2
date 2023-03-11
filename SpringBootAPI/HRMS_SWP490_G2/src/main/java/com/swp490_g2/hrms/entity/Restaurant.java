@@ -1,6 +1,5 @@
 package com.swp490_g2.hrms.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -28,14 +27,15 @@ public class Restaurant extends BaseEntity{
     @JsonIgnore
     private Buyer requestingRestaurantBuyer;
 
-    @OneToMany(mappedBy="restaurant")
-    @JsonManagedReference
-    private Set<ProductCategory> productCategories;
-
     @OneToOne(cascade=CascadeType.ALL)
     private File avatarFile;
 
     @ManyToMany(mappedBy = "restaurants")
     @JsonIgnore
     private Set<Seller> sellers;
+
+    @OneToMany(mappedBy="restaurant")
+    @JsonManagedReference
+    @Transient
+    private Set<Product> products;
 }

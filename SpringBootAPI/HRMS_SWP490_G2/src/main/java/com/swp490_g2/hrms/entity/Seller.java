@@ -16,7 +16,7 @@ import java.util.Set;
 public class Seller extends User {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "seller_restaurant",
+    @JoinTable(name = "seller__restaurant",
             joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "restaurantId"))
     private Set<Restaurant> restaurants;
 
