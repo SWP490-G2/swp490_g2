@@ -2,14 +2,11 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
-import { FileUploadService } from "src/app/global/file-upload.service";
 import {
   File,
   Restaurant,
   RestaurantClient,
-  Seller,
   User,
-  UserRole,
 } from "src/app/ngswag/client";
 
 @Component({
@@ -63,18 +60,20 @@ export class RestaurantComponent implements OnInit {
   }
 
   canEditImage(): boolean {
-    if (!this.user || !this.user.id) return false;
-    if (this.user.role === "ADMIN") return true;
-    if (
-      this.user.role === "SELLER" &&
-      (<Seller>this.user).restaurants?.some(
-        (restaurant) => restaurant.id === this.restaurant?.id
-      )
-    ) {
-      return true;
-    }
+    return true;
 
-    return false;
+    // if (!this.user || !this.user.id) return false;
+    // if (this.user.role === "ADMIN") return true;
+    // if (
+    //   this.user.role === "SELLER" &&
+    //   (<Seller>this.user).restaurants?.some(
+    //     (restaurant) => restaurant.id === this.restaurant?.id
+    //   )
+    // ) {
+    //   return true;
+    // }
+
+    // return false;
   }
 }
 

@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.service;
 
+import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.config.JwtService;
 import com.swp490_g2.hrms.entity.Role;
@@ -10,6 +11,7 @@ import com.swp490_g2.hrms.repositories.BuyerRepository;
 import com.swp490_g2.hrms.repositories.SellerRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
+import com.swp490_g2.hrms.requests.ChangePasswordRequest;
 import com.swp490_g2.hrms.requests.RegisterRequest;
 import com.swp490_g2.hrms.security.AuthenticationRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
@@ -156,8 +158,7 @@ public class UserService {
     }
 
     @Transactional
-    public String verifyCode(String email, String code) {
-        code = code.substring(1, 7);
+    public String verifyCode(String email, String code, boolean verifyCodeOnly) {
         if (!code.matches("[0-9]{6}"))
             return "\"Invalid code\"";
 
@@ -168,11 +169,18 @@ public class UserService {
         if (!user.getVerificationCode().equals(code))
             return "\"Invalid code\"";
 
-        user.setActive(true);
-        user.setRole(Role.BUYER);
+        if(!verifyCodeOnly) {
+            user.setActive(true);
+            user.setRole(Role.BUYER);
+        }
 
+        user.setVerificationCode(generateVerificationCode());
         userRepository.save(user);
-        buyerRepository.addFromUser(user.getId());
+
+        if(!verifyCodeOnly) {
+            buyerRepository.addFromUser(user.getId());
+        }
+
         return null;
     }
 
@@ -234,5 +242,22 @@ public class UserService {
             return sellerService.getById(user.getId());
 
         return null;
+    }
+
+    public AuthenticationResponse changePassword(ChangePasswordRequest request) {
+        User user = userRepository.findByEmail(request.getEmail()).orElse(null);
+        if (user == null) {
+            return AuthenticationResponse.builder()
+                    .errorMessage("\"User not existed\"")
+                    .build();
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        var savedUser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        saveUserToken(savedUser, jwtToken);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
     }
 }

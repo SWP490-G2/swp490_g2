@@ -15,7 +15,6 @@ const routes: Routes = [
     loadChildren: () =>
       import("./app-pages/app-pages.module").then((m) => m.AppPagesModule),
   },
-  { path: "request-open-page", loadChildren: () => import("./app-pages/admin-pages/request-open-page/request-open-page.module").then(m => m.RequestOpenPageModule) },
 ];
 
 @NgModule({

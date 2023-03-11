@@ -36,6 +36,6 @@ public class Restaurant extends BaseEntity{
     private File avatarFile;
 
     @ManyToMany(mappedBy = "restaurants")
-    @JsonBackReference
+    @JsonIgnore
     private Set<Seller> sellers;
 }

@@ -46,7 +46,7 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
   async submit() {
     this._buttonDisabled = true;
     this.$client
-      .verifyCode(this.email, this.form.controls["code"].value)
+      .verifyCode(this.email, this.form.controls["code"].value, false)
       .pipe(
         finalize(() => {
           this._buttonDisabled = false;

@@ -14,7 +14,7 @@ public interface BuyerRepository extends  JpaRepository<Buyer, Long>  {
     void addFromUser(Long userId);
 
     @Query(value = """
-        select b.*\s
+        select *\s
         from buyer b\s
             inner join user u on b.userId = u.userId
         where u.email = (:email)\s

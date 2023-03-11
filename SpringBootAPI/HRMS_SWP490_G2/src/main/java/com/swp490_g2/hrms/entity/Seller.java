@@ -18,7 +18,6 @@ public class Seller extends User {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "seller_restaurant",
             joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "restaurantId"))
-    @JsonManagedReference
     private Set<Restaurant> restaurants;
 
 

@@ -3,6 +3,24 @@ img#mainImage {
   border-radius: 50%;
 }
 
+div.hover:hover {
+  img {
+    /* Add the blur effect */
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+  }
+
+  i {
+    opacity: 1;
+  }
+}
+
+div.hover {
+  i {
+    opacity: 0;
+  }
+}
+
 .round-button {
   display: flex;
   justify-content: center;
@@ -16,15 +34,21 @@ img#mainImage {
   box-shadow: 0 0 3px gray;
   font-size: 20px;
   font-weight: bold;
-
-  i {
-    font-size: 1.5em;
-  }
 }
+
+i.pi-paperclip {
+  font-size: 1.5em;
+}
+
 .round-button.hover:hover {
   background: var(--primary-500);
 }
 
 img.selected {
   border: 5px solid var(--green-500);
+}
+
+.transform-middle {
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
 }
