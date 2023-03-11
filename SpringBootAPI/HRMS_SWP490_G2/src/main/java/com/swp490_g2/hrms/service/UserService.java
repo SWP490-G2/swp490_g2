@@ -159,7 +159,6 @@ public class UserService {
 
     @Transactional
     public String verifyCode(String email, String code, boolean verifyCodeOnly) {
-        code = code.substring(1, 7);
         if (!code.matches("[0-9]{6}"))
             return "\"Invalid code\"";
 

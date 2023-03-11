@@ -18,6 +18,7 @@ import { RegisterComponent } from "./register-page/register.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CodeValidatorComponent } from "./register-page/code-validator/code-validator.component";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { PasswordFieldsComponent } from "./register-page/password-fields/password-fields.component";
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
     LoginComponent,
     RegisterComponent,
     ForgotPassPageComponent,
-    CodeValidatorComponent
+    CodeValidatorComponent,
+    PasswordFieldsComponent,
   ],
   imports: [
     CommonModule,

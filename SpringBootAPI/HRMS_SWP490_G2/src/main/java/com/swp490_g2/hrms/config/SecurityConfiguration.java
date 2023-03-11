@@ -33,7 +33,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/user/register",
                         "/user/login",
-                        "/user/verify-code/*",
+                        "/user/verify-code",
                         "/v3/api-docs",
                         "/user/get-current-user",
                         "/user/change-password")
