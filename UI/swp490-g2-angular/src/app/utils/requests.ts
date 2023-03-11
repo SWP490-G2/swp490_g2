@@ -5,3 +5,4 @@ export interface Requests {
   resName?: string;
   status?: string;
 }
+

@@ -7,7 +7,7 @@ import { Requests } from "src/app/utils/requests";
   styleUrls: ["./request-open-list.component.scss"],
 })
 export class RequestOpenListComponent implements OnInit {
-  resOpening: Requests[];
+  resList: Requests[];
   statuses: any[];
   loading = true;
   activityValues: number[] = [0, 100];

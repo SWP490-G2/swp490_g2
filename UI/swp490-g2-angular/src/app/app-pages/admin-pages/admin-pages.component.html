@@ -11,7 +11,7 @@
     <div class="col-12 lg:col-4 p-3" *ngFor="let buttonContent of buttonContents">
       <a [routerLink]="buttonContent.routerLink">
         <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="width:48px;height:48px;border-radius:10px"
+          <div style="min-width:48px;height:48px;border-radius:10px"
             class="inline-flex align-items-center justify-content-center mr-3"
             [ngClass]="'bg-' + buttonContent.color + '-100'">
             <i class="text-3xl pi" [ngClass]="buttonContent.iconClass + ' text-' + buttonContent.color + '-600'"></i>
