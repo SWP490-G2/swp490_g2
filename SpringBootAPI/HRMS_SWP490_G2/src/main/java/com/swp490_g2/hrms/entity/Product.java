@@ -22,7 +22,7 @@ public class Product extends BaseEntity {
     private Double price;
 
     @ManyToOne
-    @JoinColumn(name="restaurantId", nullable=false)
+    @JoinColumn(name = "restaurantId", nullable = false)
     @JsonBackReference
     private Restaurant restaurant;
 

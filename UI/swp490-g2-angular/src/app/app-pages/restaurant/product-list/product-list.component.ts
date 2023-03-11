@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { Product, Restaurant, RestaurantClient } from "src/app/ngswag/client";
+import { Product, RestaurantClient } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-product-list",
@@ -7,9 +7,9 @@ import { Product, Restaurant, RestaurantClient } from "src/app/ngswag/client";
   styleUrls: ["./product-list.component.scss"],
 })
 export class ProductListComponent {
-  @Input() restaurant: Restaurant;
+  @Input() products: Product[] = [];
 
-  constructor(private $restaurantClient: RestaurantClient) {}
+  constructor() {}
 
   get initialized(): boolean {
     return true;

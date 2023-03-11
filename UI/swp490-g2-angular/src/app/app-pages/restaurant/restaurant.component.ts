@@ -1,12 +1,19 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
+import { forkJoin, merge, mergeMap, Observable, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import {
   File,
+  FilterRequest,
+  PageProduct,
+  Product,
   ProductCategory,
+  ProductCategoryClient,
+  ProductClient,
   Restaurant,
   RestaurantClient,
+  SearchRequest,
   User,
 } from "src/app/ngswag/client";
 
@@ -22,11 +29,18 @@ export class RestaurantComponent implements OnInit {
   uploadUrl: string;
   user?: User;
   categories: ProductCategory[] = [];
+  selectedCategoryIds: number[] = [];
+  originalSelectedCategoryIds: number[] = [];
+  products: Product[] = [];
+  priceRange: number[] = [0, 0];
+  selectedPriceRange: number[] = [0, 0];
 
   constructor(
     private $route: ActivatedRoute,
     private $restaurantClient: RestaurantClient,
-    private $auth: AuthService
+    private $auth: AuthService,
+    private $productCategoryClient: ProductCategoryClient,
+    private $productClient: ProductClient
   ) {
     const id: number = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("id")
@@ -49,30 +63,61 @@ export class RestaurantComponent implements OnInit {
       .getById(this.restaurantId)
       .subscribe((restaurant) => {
         this.restaurant = restaurant;
-        if (this.restaurant.products) {
-          let categories: ProductCategory[] = [];
-          this.restaurant.products.map((product) => {
-            if (product.categories) {
-              categories = categories.concat(product.categories);
-            }
-          });
+      });
 
-          this.categories = categories
-            .filter(
-              (value, index, self) =>
-                index === self.findIndex((t) => t.id === value.id)
-            )
-            .sort((a, b) => {
-              if (!a.productCategoryName || !b.productCategoryName) return 0;
+    forkJoin([
+      this.$productCategoryClient.getAllByRestaurantId(this.restaurantId),
+      this.$productClient.getProductPriceRangesByRestaurantId(
+        this.restaurantId
+      ),
+    ])
+      .pipe(
+        switchMap(([categories, priceRange]) => {
+          this.categories = categories;
+          this.selectedCategoryIds = this.categories.map((c) => c.id!);
+          this.originalSelectedCategoryIds = [...this.selectedCategoryIds];
 
-              return a.productCategoryName?.localeCompare(
-                b.productCategoryName
-              );
-            });
-        }
+          this.priceRange = priceRange;
+          this.selectedPriceRange = [...this.priceRange];
+
+          return this.productSearch();
+        })
+      )
+      .subscribe((productPage) => {
+        this.products = productPage.content!;
       });
 
     this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
+  }
+
+  private productSearch(): Observable<PageProduct> {
+    return this.$productClient.search(
+      new SearchRequest({
+        filters: [
+          new FilterRequest({
+            key1: "restaurant",
+            key2: "id",
+            operator: "EQUAL",
+            fieldType: "LONG",
+            value: this.restaurantId,
+          }),
+          new FilterRequest({
+            key1: "categories",
+            key2: "id",
+            operator: "IN",
+            fieldType: "LONG",
+            values: this.selectedCategoryIds,
+          }),
+          new FilterRequest({
+            key1: "price",
+            operator: "BETWEEN",
+            fieldType: "DOUBLE",
+            value: this.selectedPriceRange[0],
+            valueTo: this.selectedPriceRange[1],
+          }),
+        ],
+      })
+    );
   }
 
   updateAvatar(image: File) {
@@ -99,6 +144,24 @@ export class RestaurantComponent implements OnInit {
     // }
 
     // return false;
+  }
+
+  toggleAllCategories(selected: boolean) {
+    if (selected) {
+      this.selectedCategoryIds = [...this.originalSelectedCategoryIds];
+      this.productSearch().subscribe((productPage) => {
+        this.products = productPage.content!;
+      });
+    } else {
+      this.selectedCategoryIds = [];
+      this.products = [];
+    }
+  }
+
+  changeFilter() {
+    this.productSearch().subscribe((productPage) => {
+      this.products = productPage.content!;
+    });
   }
 }
 
