@@ -33,6 +33,14 @@ const routes: Routes = [
             (m) => m.AdminPagesModule
           ),
       },
+
+      {
+        path: "feed-page",
+        loadChildren: () =>
+          import("./feed-page/feed-page.module").then(
+            (m) => m.FeedPageModule
+          ),
+      },
     ],
   },
 ];

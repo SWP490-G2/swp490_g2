@@ -20,6 +20,7 @@ export class HomePageComponent implements OnInit {
     private $auth: AuthService
   ) {
     $title.setTitle("Home");
+    $auth.getCurrentUser().subscribe(user => this.user = user);
   }
   items!: MenuItem[];
   ngOnInit(): void {}
@@ -39,11 +40,11 @@ export class HomePageComponent implements OnInit {
   }
 
   navToFeed() {
-    this.$router.navigate(["restaurant-feed"], { relativeTo: this.$route });
+    this.$router.navigate(["feed-page"], { relativeTo: this.$route });
   }
 
   userExisted(): boolean {
     // !! giup ep kieu sang boolean
-    return !!this.user?.email;
-  }
+    return !!(this.user && this.user.email);
+}
 }

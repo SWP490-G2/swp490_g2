@@ -51,23 +51,24 @@
       <!-- {{ form.controls["password"].errors | json }} -->
       <div class="flex align-items-center gap-1"></div>
     </div>
-
-    <button
-      pButton
-      pRipple
-      label="Sign In"
-      icon="pi pi-user"
-      class="w-full mt-4"
-      [disabled]="loginButtonDisabled"
-    ></button>
-    <button
-      pButton
-      pRipple
-      label="Forgot Password"
-      icon="pi pi-user"
-      class="w-full mt-4"
-      (click)="navToForgotPassword()"
-    ></button>
+    <div class=" border-top-1 surface-border pt-3 flex">
+      <button
+        pButton
+        pRipple
+        label="Sign In"
+        icon="pi pi-user"
+        class="w-full mt-4 mr-4"
+        [disabled]="loginButtonDisabled"
+      ></button>
+      <button
+        pButton
+        pRipple
+        label="Forgot Password"
+        icon="pi pi-user"
+        class="w-full mt-4"
+        (click)="navToForgotPassword()"
+      ></button>
+    </div>
     <button
       pButton
       pRipple

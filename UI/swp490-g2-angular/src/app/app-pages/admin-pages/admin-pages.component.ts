@@ -22,17 +22,17 @@ export class AdminPagesComponent {
       },
       {
         title: "View All Users",
-        routerLink: "",
+        routerLink: "view-all-user",
         iconClass: "pi-users"
       },
       {
         title: "View All Restaurants",
-        routerLink: "",
+        routerLink: "view-all-restaurant",
         iconClass: "pi-bars"
       },
       {
         title: "Ban An User",
-        routerLink: "",
+        routerLink: "ban-user",
         iconClass: "pi-user-minus"
       },
       {
