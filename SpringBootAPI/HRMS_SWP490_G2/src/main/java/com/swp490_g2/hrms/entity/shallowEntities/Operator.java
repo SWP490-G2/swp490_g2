@@ -73,7 +73,8 @@ public enum Operator {
             log.info("Can not use between for {} field type.", request.getFieldType());
             return predicate;
         }
-    };
+    }
+    ;
 
     public abstract <T> Predicate build(Root<T> root, CriteriaBuilder cb, FilterRequest request, Predicate predicate);
 

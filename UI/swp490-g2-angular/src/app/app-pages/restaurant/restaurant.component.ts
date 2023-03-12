@@ -34,6 +34,9 @@ export class RestaurantComponent implements OnInit {
   products: Product[] = [];
   priceRange: number[] = [0, 0];
   selectedPriceRange: number[] = [0, 0];
+  currentPage = 0;
+  private pageSize = 8;
+  totalPages = 0;
 
   constructor(
     private $route: ActivatedRoute,
@@ -85,6 +88,7 @@ export class RestaurantComponent implements OnInit {
       )
       .subscribe((productPage) => {
         this.products = productPage.content!;
+        this.totalPages = productPage.totalPages!;
       });
 
     this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
@@ -116,6 +120,8 @@ export class RestaurantComponent implements OnInit {
             valueTo: this.selectedPriceRange[1],
           }),
         ],
+        page: this.currentPage,
+        size: this.pageSize,
       })
     );
   }
@@ -159,8 +165,17 @@ export class RestaurantComponent implements OnInit {
   }
 
   changeFilter() {
+    this.currentPage = 0;
     this.productSearch().subscribe((productPage) => {
       this.products = productPage.content!;
+      this.totalPages = productPage.totalPages!;
+    });
+  }
+
+  loadMore() {
+    this.currentPage++;
+    this.productSearch().subscribe((productPage) => {
+      this.products = this.products.concat(productPage.content!);
     });
   }
 }

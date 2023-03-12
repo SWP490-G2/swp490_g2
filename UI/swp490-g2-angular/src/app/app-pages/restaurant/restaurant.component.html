@@ -79,6 +79,19 @@
           </div>
 
           <p-accordion [multiple]="true" styleClass="mb-5">
+            <p-accordionTab [selected]="true" header="Food name">
+              <div>
+                <span class="p-input-icon-right w-full">
+                  <i class="pi pi-search"></i>
+                  <input
+                    type="text"
+                    pInputText
+                    placeholder="Search"
+                    class="w-full"
+                  />
+                </span>
+              </div>
+            </p-accordionTab>
             <p-accordionTab [selected]="true" header="Category">
               <div
                 class="transition-all transition-duration-400 transition-ease-in-out"
@@ -128,7 +141,7 @@
                   [min]="priceRange[0]"
                   [max]="priceRange[1]"
                   [step]="500"
-                  (onChange)="changeFilter()"
+                  (onSlideEnd)="changeFilter()"
                 ></p-slider>
                 <div class="flex my-4">
                   <p-inputNumber
@@ -150,10 +163,15 @@
         class="w-full border-2 border-dashed surface-border surface-section mt-3 lg:mt-0"
         style="min-height: 25rem"
       ></div> -->
-        <app-product-list
-          class="flex-grow-1"
-          [products]="products"
-        ></app-product-list>
+        <div class="flex flex-column flex-grow-1">
+          <app-product-list [products]="products"></app-product-list>
+          <p-button
+            label="Load more"
+            class="align-self-center"
+            (onClick)="loadMore()"
+            *ngIf="currentPage < totalPages - 1"
+          ></p-button>
+        </div>
       </div>
     </div>
   </ng-container>
