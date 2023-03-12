@@ -76,10 +76,10 @@ public class FileService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("Could not read the file!");
+                return null;
             }
         } catch (Exception e) {
-            throw new RuntimeException("Error: " + e.getMessage());
+            return null;
         }
     }
 
