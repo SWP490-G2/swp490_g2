@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 @Getter
 public class ProductService {
@@ -31,5 +33,9 @@ public class ProductService {
         result[0] = productRepository.getMinPriceByRestaurantId(restaurantId);
         result[1] = productRepository.getMaxPriceByRestaurantId(restaurantId);
         return result;
+    }
+
+    public Set<Product> fulltextSearch(String text) {
+        return productRepository.fulltextSearch(text);
     }
 }

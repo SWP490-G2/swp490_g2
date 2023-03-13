@@ -88,6 +88,8 @@
                     pInputText
                     placeholder="Search"
                     class="w-full"
+                    (keyup)="fulltextSearch()"
+                    [(ngModel)]="fulltext"
                   />
                 </span>
               </div>
@@ -169,7 +171,7 @@
             label="Load more"
             class="align-self-center"
             (onClick)="loadMore()"
-            *ngIf="currentPage < totalPages - 1"
+            *ngIf="loadMoreShown"
           ></p-button>
         </div>
       </div>

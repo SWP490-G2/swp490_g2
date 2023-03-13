@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { forkJoin, merge, mergeMap, Observable, switchMap } from "rxjs";
@@ -37,6 +37,9 @@ export class RestaurantComponent implements OnInit {
   currentPage = 0;
   private pageSize = 8;
   totalPages = 0;
+  private timeout?: number;
+  private isFulltextSearching = false;
+  fulltext = "";
 
   constructor(
     private $route: ActivatedRoute,
@@ -165,6 +168,8 @@ export class RestaurantComponent implements OnInit {
   }
 
   changeFilter() {
+    this.fulltext = "";
+    this.isFulltextSearching = false;
     this.currentPage = 0;
     this.productSearch().subscribe((productPage) => {
       this.products = productPage.content!;
@@ -177,6 +182,30 @@ export class RestaurantComponent implements OnInit {
     this.productSearch().subscribe((productPage) => {
       this.products = this.products.concat(productPage.content!);
     });
+  }
+
+  fulltextSearch() {
+    window.clearTimeout(this.timeout);
+
+    this.timeout = window.setTimeout(() => {
+      const text = this.fulltext;
+      if (text.trim().length === 0) {
+        this.changeFilter();
+        return;
+      }
+
+      this.isFulltextSearching = true;
+      this.selectedCategoryIds = [...this.originalSelectedCategoryIds];
+      this.selectedPriceRange = [...this.priceRange];
+      this.$productClient.fulltextSearch(text).subscribe((products) => {
+        this.products = products;
+      });
+    }, 300);
+  }
+
+  get loadMoreShown(): boolean {
+    if (this.isFulltextSearching) return false;
+    return this.currentPage < this.totalPages - 1;
   }
 }
 
