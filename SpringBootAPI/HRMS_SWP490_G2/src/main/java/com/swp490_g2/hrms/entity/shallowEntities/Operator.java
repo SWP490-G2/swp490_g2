@@ -73,6 +73,13 @@ public enum Operator {
             log.info("Can not use between for {} field type.", request.getFieldType());
             return predicate;
         }
+
+    }
+    ,IS_NOT_NULL {
+        public <T> Predicate build(Root<T> root, CriteriaBuilder cb, FilterRequest request, Predicate predicate) {
+            Expression<String> key = root.get(request.getKey1());
+            return cb.and(cb.isNotNull(key), predicate);
+        }
     }
 
 //    ,MATCH {

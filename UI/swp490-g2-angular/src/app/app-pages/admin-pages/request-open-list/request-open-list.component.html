@@ -1,6 +1,6 @@
 <div class="surface-section px-4 py-5 md:px-6 lg:px-8">
   <div
-    class="flex align-items-start bg-gray-200 flex-column lg:flex-row lg:justify-content-between px-5 py-5"
+    class="flex align-items-start bg-gray-200 flex-column lg:flex-row lg:justify-content-between"
   >
     <div class="flex align-items-start flex-column md:flex-row">
       <div class="p-5">
@@ -43,10 +43,8 @@
     [filterDelay]="0"
   >
     <ng-template pTemplate="caption">
-      <div
-        class="table-header flex align-items-center justify-content-between p-5"
-      >
-        Request Open Restaurant List
+      <div class="table-header flex align-items-center justify-content-between">
+        <p></p>
         <input
           id="search"
           type="text"
@@ -80,7 +78,7 @@
         </th>
         <th pSortableColumn="requester" style="min-width: 16rem">
           <div class="flex justify-content-between align-items-center">
-            Requester
+            Requester Name
             <p-sortIcon field="requester"></p-sortIcon>
             <p-columnFilter
               type="text"
@@ -147,7 +145,7 @@
         </th>
         <th pSortableColumn="activity" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
-            Activity
+            Action
             <p-sortIcon field="activity"></p-sortIcon>
             <p-columnFilter
               field="activity"

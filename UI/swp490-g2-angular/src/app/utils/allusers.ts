@@ -3,4 +3,5 @@ export interface AllUsers {
   email?: string;
   name?: string;
   roles?: string;
+  status?: boolean;
 }

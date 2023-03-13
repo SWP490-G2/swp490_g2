@@ -8,7 +8,6 @@ import { User } from "src/app/ngswag/client";
 @Component({
   selector: "app-home-page",
   templateUrl: "./home-page.component.html",
-  styleUrls: ["./home-page.component.scss"],
 })
 export class HomePageComponent implements OnInit {
   user?: User;
@@ -20,7 +19,7 @@ export class HomePageComponent implements OnInit {
     private $auth: AuthService
   ) {
     $title.setTitle("Home");
-    $auth.getCurrentUser().subscribe(user => this.user = user);
+    $auth.getCurrentUser().subscribe((user) => (this.user = user));
   }
   items!: MenuItem[];
   ngOnInit(): void {}
@@ -46,5 +45,5 @@ export class HomePageComponent implements OnInit {
   userExisted(): boolean {
     // !! giup ep kieu sang boolean
     return !!(this.user && this.user.email);
-}
+  }
 }

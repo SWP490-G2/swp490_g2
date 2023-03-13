@@ -1,9 +1,10 @@
 <div class="surface-section px-4 py-5 md:px-6 lg:px-8">
-  <div class="flex align-items-start bg-gray-200 flex-column lg:flex-row lg:justify-content-between px-5 py-5">
+  <div
+    class="flex align-items-start bg-gray-200 flex-column lg:flex-row lg:justify-content-between"
+  >
     <div class="flex align-items-start flex-column md:flex-row">
-      <div>
-        <span class="text-900 font-medium text-3xl">
-          View Restaurant List</span>
+      <div class="p-5">
+        <span class="text-900 font-medium text-3xl"> View Restaurant List</span>
         <div class="flex align-items-center flex-wrap text-sm">
           <div class="mr-5 mt-3">
             <span class="font-medium text-500">TOTAL USER</span>
@@ -23,14 +24,30 @@
   </div>
 </div>
 <div class="surface-section px-4 py-8 md:px-6 lg:px-8">
-  <p-table #dt [value]="resOpening" dataKey="id" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10,25,50]" [paginator]="true"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0">
+  <p-table
+    #dt
+    [value]="resOpening"
+    dataKey="id"
+    [rowHover]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [filterDelay]="0"
+  >
     <ng-template pTemplate="caption">
       <div class="table-header flex align-items-center justify-content-between">
-        Request Open Restaurant List
-        <input id="search" type="text" pInputText class="w-full mb-1 surface-card p-2 shadow-2 border-round lg:w-3"
-          name="search" ngModel placeholder="Search" />
+        <p></p>
+        <input
+          id="search"
+          type="text"
+          pInputText
+          class="w-full mb-1 surface-card p-2 shadow-2 border-round lg:w-3"
+          name="search"
+          ngModel
+          placeholder="Search"
+        />
       </div>
     </ng-template>
     <ng-template pTemplate="header">
@@ -45,32 +62,63 @@
           <div class="flex justify-content-between align-items-center">
             Restaurant Name
             <p-sortIcon field="res.name"></p-sortIcon>
-            <p-columnFilter type="text" field="res.name" display="menu" class="ml-auto"></p-columnFilter>
+            <p-columnFilter
+              type="text"
+              field="res.name"
+              display="menu"
+              class="ml-auto"
+            ></p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="res.owner" style="min-width: 16rem">
           <div class="flex justify-content-between align-items-center">
             Restaurant Owner
             <p-sortIcon field="res.owner"></p-sortIcon>
-            <p-columnFilter type="text" field="res.owner" display="menu" class="ml-auto"></p-columnFilter>
+            <p-columnFilter
+              type="text"
+              field="res.owner"
+              display="menu"
+              class="ml-auto"
+            ></p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="cre.date" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
-              Created Date
-              <p-sortIcon field="cre.date"></p-sortIcon>
-              <p-columnFilter type="date" field="cre.date" display="menu" class="ml-auto"></p-columnFilter>
+            Created Date
+            <p-sortIcon field="cre.date"></p-sortIcon>
+            <p-columnFilter
+              type="date"
+              field="cre.date"
+              display="menu"
+              class="ml-auto"
+            ></p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="status" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
             Status
             <p-sortIcon field="status"></p-sortIcon>
-            <p-columnFilter field="status" matchMode="equals" display="menu" class="ml-auto">
-              <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Any">
+            <p-columnFilter
+              field="status"
+              matchMode="equals"
+              display="menu"
+              class="ml-auto"
+            >
+              <ng-template
+                pTemplate="filter"
+                let-value
+                let-filter="filterCallback"
+              >
+                <p-dropdown
+                  [ngModel]="value"
+                  [options]="statuses"
+                  (onChange)="filter($event.value)"
+                  placeholder="Any"
+                >
                   <ng-template let-option pTemplate="item">
-                    <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                    <span [class]="'customer-badge status-' + option.value">{{
+                      option.label
+                    }}</span>
                   </ng-template>
                 </p-dropdown>
               </ng-template>
@@ -81,12 +129,21 @@
           <div class="flex justify-content-between align-items-center">
             Action
             <p-sortIcon field="activity"></p-sortIcon>
-            <p-columnFilter field="activity" matchMode="between" display="menu" [showMatchModes]="false"
-              [showOperator]="false" [showAddButton]="false" class="ml-auto">
+            <p-columnFilter
+              field="activity"
+              matchMode="between"
+              display="menu"
+              [showMatchModes]="false"
+              [showOperator]="false"
+              [showAddButton]="false"
+              class="ml-auto"
+            >
               <ng-template pTemplate="filter" let-filter="filterCallback">
-                <div class="flex align-items-center justify-content-between px-2">
-                  <span>{{activityValues[0]}}</span>
-                  <span>{{activityValues[1]}}</span>
+                <div
+                  class="flex align-items-center justify-content-between px-2"
+                >
+                  <span>{{ activityValues[0] }}</span>
+                  <span>{{ activityValues[1] }}</span>
                 </div>
               </ng-template>
             </p-columnFilter>
