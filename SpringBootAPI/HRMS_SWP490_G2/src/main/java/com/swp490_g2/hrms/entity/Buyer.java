@@ -18,4 +18,7 @@ public class Buyer extends User{
     @OneToOne
     @JoinColumn(name = "requestingRestaurantId", referencedColumnName = "restaurantId")
     private Restaurant requestingRestaurant;
+
+    @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)
+    private boolean requestingRestaurantRejected;
 }

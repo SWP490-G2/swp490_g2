@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { forkJoin, merge, mergeMap, Observable, switchMap } from "rxjs";
@@ -34,6 +34,12 @@ export class RestaurantComponent implements OnInit {
   products: Product[] = [];
   priceRange: number[] = [0, 0];
   selectedPriceRange: number[] = [0, 0];
+  currentPage = 0;
+  private pageSize = 8;
+  totalPages = 0;
+  private timeout?: number;
+  private isFulltextSearching = false;
+  fulltext = "";
 
   constructor(
     private $route: ActivatedRoute,
@@ -85,6 +91,7 @@ export class RestaurantComponent implements OnInit {
       )
       .subscribe((productPage) => {
         this.products = productPage.content!;
+        this.totalPages = productPage.totalPages!;
       });
 
     this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
@@ -116,6 +123,8 @@ export class RestaurantComponent implements OnInit {
             valueTo: this.selectedPriceRange[1],
           }),
         ],
+        page: this.currentPage,
+        size: this.pageSize,
       })
     );
   }
@@ -159,9 +168,46 @@ export class RestaurantComponent implements OnInit {
   }
 
   changeFilter() {
+    this.fulltext = "";
+    this.isFulltextSearching = false;
+    this.currentPage = 0;
     this.productSearch().subscribe((productPage) => {
       this.products = productPage.content!;
+      this.totalPages = productPage.totalPages!;
     });
+  }
+
+  loadMore() {
+    this.currentPage++;
+    this.productSearch().subscribe((productPage) => {
+      this.products = this.products.concat(productPage.content!);
+    });
+  }
+
+  fulltextSearch() {
+    window.clearTimeout(this.timeout);
+
+    this.timeout = window.setTimeout(() => {
+      const text = this.fulltext;
+      if (text.trim().length === 0) {
+        this.changeFilter();
+        return;
+      }
+
+      this.isFulltextSearching = true;
+      this.selectedCategoryIds = [...this.originalSelectedCategoryIds];
+      this.selectedPriceRange = [...this.priceRange];
+      this.$productClient
+        .fulltextSearch(text, this.restaurantId)
+        .subscribe((products) => {
+          this.products = products;
+        });
+    }, 300);
+  }
+
+  get loadMoreShown(): boolean {
+    if (this.isFulltextSearching) return false;
+    return this.currentPage < this.totalPages - 1;
   }
 }
 

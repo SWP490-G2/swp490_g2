@@ -3,5 +3,5 @@ export interface Requests {
   email?: string;
   requester?: string;
   resName?: string;
-  status?: string;
+  status?: boolean;
 }

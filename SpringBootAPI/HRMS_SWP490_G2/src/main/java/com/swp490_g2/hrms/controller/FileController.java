@@ -20,6 +20,9 @@ public class FileController {
     @ResponseBody
     public ResponseEntity<Resource> load(@RequestBody String filePath) {
         Resource file = fileService.load(filePath);
+        if(file == null)
+            return ResponseEntity.ok(null);
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }

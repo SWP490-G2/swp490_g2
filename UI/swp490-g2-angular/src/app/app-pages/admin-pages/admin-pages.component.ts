@@ -3,7 +3,6 @@ import { Component } from "@angular/core";
 @Component({
   selector: "app-admin-pages",
   templateUrl: "./admin-pages.component.html",
-  styleUrls: ["./admin-pages.component.scss"],
 })
 export class AdminPagesComponent {
   buttonContents: ButtonContent[] = [];
@@ -18,62 +17,62 @@ export class AdminPagesComponent {
       {
         title: "View Restaurant Opening Request",
         routerLink: "request-open-list",
-        iconClass: "pi-list"
+        iconClass: "pi-list",
       },
       {
         title: "View All Users",
-        routerLink: "",
-        iconClass: "pi-users"
+        routerLink: "view-all-user",
+        iconClass: "pi-users",
       },
       {
         title: "View All Restaurants",
-        routerLink: "",
-        iconClass: "pi-bars"
+        routerLink: "view-all-restaurant",
+        iconClass: "pi-bars",
       },
       {
         title: "Ban An User",
-        routerLink: "",
-        iconClass: "pi-user-minus"
+        routerLink: "ban-user",
+        iconClass: "pi-user-minus",
       },
       {
         title: "Ban An Restaurant",
-        routerLink: "",
-        iconClass: "pi-ban"
+        routerLink: "ban-restaurant",
+        iconClass: "pi-ban",
       },
       {
-        title: "Update User Information",
-        routerLink: "",
-        iconClass: "pi-user-edit"
+        title: "Update Seller Information",
+        routerLink: "update-user-info",
+        iconClass: "pi-user-edit",
       },
       {
         title: "Update User Role",
-        routerLink: "",
-        iconClass: "pi-user-edit"
+        routerLink: "update-user-role",
+        iconClass: "pi-user-edit",
       },
       {
         title: "Update Restaurant Avatar and Cover",
-        routerLink: "",
-        iconClass: "pi-image"
+        routerLink: "change-avatar-cover",
+        iconClass: "pi-image",
       },
       {
         title: "Update Restaurant Information",
-        routerLink: "",
-        iconClass: "pi-pencil"
+        routerLink: "update-restaurant-info",
+        iconClass: "pi-pencil",
       },
       {
         title: "Create New Restaurant Promotion Campaign",
-        routerLink: "",
-        iconClass: "pi-plus-circle"
+        routerLink: "create-promo",
+        iconClass: "pi-plus-circle",
       },
       {
         title: "View All Restaurant Promotion Campaign",
-        routerLink: "",
-        iconClass: "pi-ticket"
+        routerLink: "view-all-promo",
+        iconClass: "pi-ticket",
       },
       {
         title: "Update Restaurant Promotion Campaign",
-        routerLink: "",
-        iconClass: "pi-pencil"
+        routerLink: "update-promo",
+        iconClass: "pi-pencil",
       },
     ];
 

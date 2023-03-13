@@ -53,18 +53,16 @@
     </p-accordionTab>
     <p-accordionTab header="Choose from uploaded images" #imageSelectionTab>
       <div *ngIf="images" class="grid">
-        <div
-          *ngFor="let image of images; let index = index"
-          class="col-3"
-          key="index"
-        >
-          <img
-            [src]="image?.['src']"
-            style="cursor: pointer; max-width: 100%"
-            [ngClass]="selectedImage === image ? 'selected' : ''"
-            (click)="selectImage(image)"
-          />
-        </div>
+        <ng-container *ngFor="let image of images; let index = index">
+          <div class="col-3" key="index" *ngIf="image?.['src'] !== 'data:'">
+            <img
+              [src]="image?.['src']"
+              style="cursor: pointer; max-width: 100%"
+              [ngClass]="selectedImage === image ? 'selected' : ''"
+              (click)="selectImage(image)"
+            />
+          </div>
+        </ng-container>
       </div>
     </p-accordionTab>
   </p-accordion>

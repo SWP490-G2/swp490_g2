@@ -83,10 +83,19 @@ public class UserService {
 
     private SellerService sellerService;
 
+
     @Autowired
     public void setSellerService(SellerService sellerService) {
         this.sellerService = sellerService;
     }
+
+    private AdminService adminService;
+
+    @Autowired
+    public void setSellerService(AdminService adminService) {
+        this.adminService = adminService;
+    }
+
 
     private AuthenticationFacade authenticationFacade;
 
@@ -169,7 +178,7 @@ public class UserService {
         if (!user.getVerificationCode().equals(code))
             return "\"Invalid code\"";
 
-        if(!verifyCodeOnly) {
+        if (!verifyCodeOnly) {
             user.setActive(true);
             user.setRole(Role.BUYER);
         }
@@ -177,7 +186,7 @@ public class UserService {
         user.setVerificationCode(generateVerificationCode());
         userRepository.save(user);
 
-        if(!verifyCodeOnly) {
+        if (!verifyCodeOnly) {
             buyerRepository.addFromUser(user.getId());
         }
 
@@ -240,6 +249,9 @@ public class UserService {
 
         if (user.getRole() == Role.SELLER)
             return sellerService.getById(user.getId());
+
+        if (user.getRole() == Role.ADMIN)
+            return adminService.getById(user.getId());
 
         return null;
     }

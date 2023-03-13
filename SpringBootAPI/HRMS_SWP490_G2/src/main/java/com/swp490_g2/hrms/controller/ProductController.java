@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/product")
@@ -20,9 +22,13 @@ public class ProductController {
     }
 
 
-    @GetMapping("get-product-price-ranges-by-restaurant-id/{restaurantId}")
-    public ResponseEntity<Double[]> getProductPriceRanges(@PathVariable Long restaurantId)
-    {
+    @GetMapping("/get-product-price-ranges-by-restaurant-id/{restaurantId}")
+    public ResponseEntity<Double[]> getProductPriceRanges(@PathVariable Long restaurantId) {
         return ResponseEntity.ok(productService.getProductPriceRanges(restaurantId));
+    }
+
+    @GetMapping("/fulltext-search")
+    public ResponseEntity<Set<Product>> fulltextSearch(@RequestParam String text, @RequestParam Long restaurantId) {
+        return ResponseEntity.ok(productService.fulltextSearch(restaurantId, text));
     }
 }
