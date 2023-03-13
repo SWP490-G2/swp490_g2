@@ -28,7 +28,7 @@ public class ProductController {
     }
 
     @GetMapping("/fulltext-search")
-    public ResponseEntity<Set<Product>> fulltextSearch(@RequestParam String text) {
-        return ResponseEntity.ok(productService.fulltextSearch(text));
+    public ResponseEntity<Set<Product>> fulltextSearch(@RequestParam String text, @RequestParam Long restaurantId) {
+        return ResponseEntity.ok(productService.fulltextSearch(restaurantId, text));
     }
 }

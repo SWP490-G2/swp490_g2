@@ -197,9 +197,11 @@ export class RestaurantComponent implements OnInit {
       this.isFulltextSearching = true;
       this.selectedCategoryIds = [...this.originalSelectedCategoryIds];
       this.selectedPriceRange = [...this.priceRange];
-      this.$productClient.fulltextSearch(text).subscribe((products) => {
-        this.products = products;
-      });
+      this.$productClient
+        .fulltextSearch(text, this.restaurantId)
+        .subscribe((products) => {
+          this.products = products;
+        });
     }, 300);
   }
 

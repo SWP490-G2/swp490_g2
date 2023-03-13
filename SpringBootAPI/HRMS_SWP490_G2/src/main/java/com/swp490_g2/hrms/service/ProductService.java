@@ -35,7 +35,7 @@ public class ProductService {
         return result;
     }
 
-    public Set<Product> fulltextSearch(String text) {
-        return productRepository.fulltextSearch(text);
+    public Set<Product> fulltextSearch(Long restaurantId, String text) {
+        return productRepository.fulltextSearch(restaurantId, text);
     }
 }
