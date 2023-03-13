@@ -1,0 +1,39 @@
+<div class="surface-section" *ngIf="initialized">
+  <div class="grid -mt-3 -ml-3 -mr-3">
+    <div class="col-6 lg:col-3 mb-5 md:mb-0" *ngFor="let product of products">
+      <div class="p-2">
+        <div class="relative mb-3">
+          <img
+            src="assets/images/blocks/ecommerce/productlist/product-list-5-1.png"
+            class="w-full"
+          />
+        </div>
+        <span class="text-900 font-medium text-xl">
+          {{ product.productName }}
+        </span>
+        <div class="my-3">
+          <span class="mr-3">
+            <i class="pi pi-star-fill text-yellow-500 mr-1"></i>
+            <i class="pi pi-star-fill text-yellow-500 mr-1"></i>
+            <i class="pi pi-star-fill text-yellow-500 mr-1"></i>
+            <i class="pi pi-star-fill text-yellow-500 mr-1"></i>
+            <i class="pi pi-star-fill text-yellow-500"></i>
+          </span>
+          <span class="text-500">12 reviews</span>
+        </div>
+        <div class="mb-4">
+          <span class="font-bold text-900">
+            {{ product.price | currency: "VND" }}
+          </span>
+        </div>
+        <button
+          pButton
+          pRipple
+          label="Add to Cart"
+          icon="pi pi-shopping-cart"
+          class="w-full"
+        ></button>
+      </div>
+    </div>
+  </div>
+</div>

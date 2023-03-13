@@ -1,23 +1,44 @@
-<div class="bg-gray-900 p-8 flex justify-content-center md:justify-content-end bg-no-repeat bg-cover md:bg-contain"
-  style="background-image: url('assets/images/admin.jpg')">
+<div
+  class="bg-gray-900 p-8 flex justify-content-center md:justify-content-end bg-no-repeat bg-cover md:bg-contain"
+  style="background-image: url('assets/images/admin.jpg')"
+>
   <div class="px-6">
     <div class="text-white font-bold text-6xl">Administrator Page</div>
-    <div class="mt-3 mb-5 text-gray-200 font-medium line-height-3">Vestibulum sed arcu non odio euismod lacinia at quis
-      risus. Massa massa ultricies mi quis. </div>
+    <div class="mt-3 mb-5 text-gray-200 font-medium line-height-3">
+      Vestibulum sed arcu non odio euismod lacinia at quis risus. Massa massa
+      ultricies mi quis.
+    </div>
   </div>
 </div>
 <div class="surface-ground">
   <div class="grid m-0">
-    <div class="col-12 lg:col-4 p-3" *ngFor="let buttonContent of buttonContents">
+    <div
+      class="col-12 lg:col-4 p-3"
+      *ngFor="let buttonContent of buttonContents"
+    >
       <a [routerLink]="buttonContent.routerLink">
-        <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
-          <div style="min-width:48px;height:48px;border-radius:10px"
+        <div
+          class="p-3 border-round shadow-2 flex align-items-center surface-card"
+        >
+          <div
+            style="min-width: 48px; height: 48px; border-radius: 10px"
             class="inline-flex align-items-center justify-content-center mr-3"
-            [ngClass]="'bg-' + buttonContent.color + '-100'">
-            <i class="text-3xl pi" [ngClass]="buttonContent.iconClass + ' text-' + buttonContent.color + '-600'"></i>
+            [ngClass]="'bg-' + buttonContent.color + '-100'"
+          >
+            <i
+              class="text-3xl pi"
+              [ngClass]="
+                buttonContent.iconClass +
+                ' text-' +
+                buttonContent.color +
+                '-600'
+              "
+            ></i>
           </div>
           <div>
-            <span class="text-900 text-xl font-medium mb-2"> {{buttonContent.title}}</span>
+            <span class="text-900 text-xl font-medium mb-2">
+              {{ buttonContent.title }}</span
+            >
           </div>
         </div>
       </a>

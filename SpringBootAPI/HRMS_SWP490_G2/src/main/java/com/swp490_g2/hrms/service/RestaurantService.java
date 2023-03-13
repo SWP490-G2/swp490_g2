@@ -3,16 +3,35 @@ package com.swp490_g2.hrms.service;
 import com.swp490_g2.hrms.entity.File;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.repositories.RestaurantRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-@RequiredArgsConstructor
+@Getter
 public class RestaurantService {
-    private final RestaurantRepository restaurantRepository;
-    private final FileService fileService;
-    private final UserService userService;
+    private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    public void setRestaurantRepository(RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
+    }
+
+    private FileService fileService;
+
+    @Autowired
+    public void setFileService(FileService fileService) {
+        this.fileService = fileService;
+    }
+
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     public Restaurant insert(Restaurant restaurant) {
         return restaurantRepository.save(restaurant);

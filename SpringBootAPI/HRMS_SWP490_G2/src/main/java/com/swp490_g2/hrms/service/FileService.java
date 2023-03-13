@@ -2,7 +2,9 @@ package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.entity.File;
 import com.swp490_g2.hrms.repositories.FileRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -19,13 +21,24 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
-@RequiredArgsConstructor
+@Getter
 public class FileService {
 
     private final String UPLOAD_ROOT = "uploads";
     private final Path root = Paths.get(UPLOAD_ROOT);
-    private final FileRepository fileRepository;
-    private final UserService userService;
+    private FileRepository fileRepository;
+
+    @Autowired
+    public void setFileRepository(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
+
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     public void init() {
         try {
@@ -63,10 +76,10 @@ public class FileService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("Could not read the file!");
+                return null;
             }
         } catch (Exception e) {
-            throw new RuntimeException("Error: " + e.getMessage());
+            return null;
         }
     }
 

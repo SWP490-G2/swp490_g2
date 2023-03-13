@@ -1,18 +1,29 @@
 <ng-container *ngIf="imageStyle">
-  <img
-    id="mainImage"
+  <div
     *ngIf="url"
-    [src]="imageSrc"
-    [ngStyle]="imageStyle"
+    class="relative"
+    [ngClass]="{ hover: editable, 'cursor-pointer': editable }"
     (click)="openDialog()"
-  />
+  >
+    <img id="mainImage" [src]="imageSrc" [ngStyle]="imageStyle" />
+    <div class="absolute w-full h-full top-0" *ngIf="editable">
+      <i
+        class="absolute top-50 left-50 pi pi-paperclip transform-middle text-white"
+      ></i>
+    </div>
+  </div>
+
   <div
     *ngIf="!url"
     class="round-button"
     [ngStyle]="imageStyle"
+    [ngClass]="{
+      'cursor-pointer': editable,
+      hover: editable
+    }"
     (click)="openDialog()"
   >
-    <i class="pi pi-paperclip"></i>
+    <i *ngIf="editable" class="pi pi-paperclip"></i>
   </div>
 </ng-container>
 
@@ -42,18 +53,16 @@
     </p-accordionTab>
     <p-accordionTab header="Choose from uploaded images" #imageSelectionTab>
       <div *ngIf="images" class="grid">
-        <div
-          *ngFor="let image of images; let index = index"
-          class="col-3"
-          key="index"
-        >
-          <img
-            [src]="image?.['src']"
-            style="cursor: pointer; max-width: 100%"
-            [ngClass]="selectedImage === image ? 'selected' : ''"
-            (click)="selectImage(image)"
-          />
-        </div>
+        <ng-container *ngFor="let image of images; let index = index">
+          <div class="col-3" key="index" *ngIf="image?.['src'] !== 'data:'">
+            <img
+              [src]="image?.['src']"
+              style="cursor: pointer; max-width: 100%"
+              [ngClass]="selectedImage === image ? 'selected' : ''"
+              (click)="selectImage(image)"
+            />
+          </div>
+        </ng-container>
       </div>
     </p-accordionTab>
   </p-accordion>

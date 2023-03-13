@@ -1,9 +1,11 @@
 package com.swp490_g2.hrms.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.codehaus.jackson.annotate.JsonIgnore;
+
+import java.util.Set;
 
 @Entity
 @Getter
@@ -11,14 +13,13 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "productCategory")
+@Table(name = "product_category")
 @AttributeOverride(name = "id", column = @Column(name = "productCategoryId"))
 public class ProductCategory extends BaseEntity {
     @Column(nullable = false)
     private String productCategoryName;
 
-    @ManyToOne
-    @JoinColumn(name="restaurantId", nullable=false)
-    @JsonBackReference
-    private Restaurant restaurant;
+    @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
+    private Set<Product> Product;
 }
