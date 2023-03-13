@@ -3,5 +3,5 @@ export interface AllRes {
   resName?: string;
   resOwner?: string;
   creDate?: Date;
-  status?: string;
+  status?: boolean;
 }
