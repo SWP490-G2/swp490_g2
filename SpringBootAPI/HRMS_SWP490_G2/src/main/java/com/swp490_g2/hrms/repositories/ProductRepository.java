@@ -17,7 +17,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query(value = """
         select *\s
         from product\s
-            where match (productName) against (:text)
+            where match (productName) against (:text)\s
+            or productName like %:text%
             """, nativeQuery = true)
     public Set<Product> fulltextSearch(String text);
 }
