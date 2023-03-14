@@ -57,91 +57,30 @@
           <div class="flex justify-content-between align-items-center">
             Restaurant Name
             <p-sortIcon field="res.name"></p-sortIcon>
-            <p-columnFilter
-              type="text"
-              field="res.name"
-              display="menu"
-              class="ml-auto"
-            ></p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="res.owner" style="min-width: 16rem">
           <div class="flex justify-content-between align-items-center">
             Restaurant Owner
             <p-sortIcon field="res.owner"></p-sortIcon>
-            <p-columnFilter
-              type="text"
-              field="res.owner"
-              display="menu"
-              class="ml-auto"
-            ></p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="cre.date" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
             Created Date
             <p-sortIcon field="cre.date"></p-sortIcon>
-            <p-columnFilter
-              type="date"
-              field="cre.date"
-              display="menu"
-              class="ml-auto"
-            ></p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="status" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
             Status
             <p-sortIcon field="status"></p-sortIcon>
-            <p-columnFilter
-              field="status"
-              matchMode="equals"
-              display="menu"
-              class="ml-auto"
-            >
-              <ng-template
-                pTemplate="filter"
-                let-value
-                let-filter="filterCallback"
-              >
-                <p-dropdown
-                  [ngModel]="value"
-                  [options]="statuses"
-                  (onChange)="filter($event.value)"
-                  placeholder="Any"
-                >
-                  <ng-template let-option pTemplate="item">
-                    <span [class]="'customer-badge status-' + option.value">{{
-                      option.label
-                    }}</span>
-                  </ng-template>
-                </p-dropdown>
-              </ng-template>
-            </p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="activity" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
             Action
             <p-sortIcon field="activity"></p-sortIcon>
-            <p-columnFilter
-              field="activity"
-              matchMode="between"
-              display="menu"
-              [showMatchModes]="false"
-              [showOperator]="false"
-              [showAddButton]="false"
-              class="ml-auto"
-            >
-              <ng-template pTemplate="filter" let-filter="filterCallback">
-                <div
-                  class="flex align-items-center justify-content-between px-2"
-                >
-                  <span>{{ activityValues[0] }}</span>
-                  <span>{{ activityValues[1] }}</span>
-                </div>
-              </ng-template>
-            </p-columnFilter>
           </div>
         </th>
         <th style="width: 5rem"></th>

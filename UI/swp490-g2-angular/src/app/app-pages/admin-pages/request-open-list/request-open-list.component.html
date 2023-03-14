@@ -32,7 +32,6 @@
 <div class="surface-section px-4 py-8 md:px-6 lg:px-8">
   <p-table
     #dt
-    [value]="resList"
     dataKey="id"
     [rowHover]="true"
     [rows]="10"
@@ -41,6 +40,7 @@
     [paginator]="true"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [filterDelay]="0"
+    [value]="requestingUsers"
   >
     <ng-template pTemplate="caption">
       <div class="table-header flex align-items-center justify-content-between">
@@ -58,116 +58,94 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th pSortableColumn="no" style="min-width: 5.5rem">
+        <th pSortableColumn="id" style="min-width: 5.5rem">
           <div class="flex justify-content-between align-items-center">
             #
-            <p-sortIcon field="name"></p-sortIcon>
+            <p-sortIcon field="id"></p-sortIcon>
           </div>
         </th>
         <th pSortableColumn="email" style="min-width: 16rem">
           <div class="flex justify-content-between align-items-center">
             Email
             <p-sortIcon field="email"></p-sortIcon>
-            <p-columnFilter
-              type="text"
-              field="email"
-              display="menu"
-              class="ml-auto"
-            ></p-columnFilter>
           </div>
         </th>
-        <th pSortableColumn="requester" style="min-width: 16rem">
+        <th pSortableColumn="reqName" style="min-width: 16rem">
           <div class="flex justify-content-between align-items-center">
             Requester Name
-            <p-sortIcon field="requester"></p-sortIcon>
-            <p-columnFilter
-              type="text"
-              field="requester"
-              display="menu"
-              class="ml-auto"
-            ></p-columnFilter>
+            <p-sortIcon field="reqName"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="res.name" style="min-width: 16rem">
+        <th pSortableColumn="restaurantName" style="min-width: 16rem">
           <div class="flex justify-content-between align-items-center">
             Restaurant Name
-            <p-sortIcon field="res.name"></p-sortIcon>
-            <p-columnFilter
-              type="text"
-              field="res.name"
-              display="menu"
-              class="ml-auto"
-            ></p-columnFilter>
+            <p-sortIcon field="restaurantName"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="cre.date" style="min-width: 10rem">
+        <th pSortableColumn="creDate" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
             Created Date
-            <p-sortIcon field="cre.date"></p-sortIcon>
-            <p-columnFilter
-              type="date"
-              field="cre.date"
-              display="menu"
-              class="ml-auto"
-            ></p-columnFilter>
+            <p-sortIcon field="creDate"></p-sortIcon>
           </div>
         </th>
         <th pSortableColumn="status" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
             Status
             <p-sortIcon field="status"></p-sortIcon>
-            <p-columnFilter
-              field="status"
-              matchMode="equals"
-              display="menu"
-              class="ml-auto"
-            >
-              <ng-template
-                pTemplate="filter"
-                let-value
-                let-filter="filterCallback"
-              >
-                <p-dropdown
-                  [ngModel]="value"
-                  [options]="statuses"
-                  (onChange)="filter($event.value)"
-                  placeholder="Any"
-                >
-                  <ng-template let-option pTemplate="item">
-                    <span [class]="'customer-badge status-' + option.value">{{
-                      option.label
-                    }}</span>
-                  </ng-template>
-                </p-dropdown>
-              </ng-template>
-            </p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="activity" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
             Action
             <p-sortIcon field="activity"></p-sortIcon>
-            <p-columnFilter
-              field="activity"
-              matchMode="between"
-              display="menu"
-              [showMatchModes]="false"
-              [showOperator]="false"
-              [showAddButton]="false"
-              class="ml-auto"
-            >
-              <ng-template pTemplate="filter" let-filter="filterCallback">
-                <div
-                  class="flex align-items-center justify-content-between px-2"
-                >
-                  <span>{{ activityValues[0] }}</span>
-                  <span>{{ activityValues[1] }}</span>
-                </div>
-              </ng-template>
-            </p-columnFilter>
           </div>
         </th>
         <th style="width: 5rem"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-resList>
+      <tr class="p-selectable-row">
+        <td>
+          <span class="p-column-title">#</span>
+          {{ resList.id }}
+        </td>
+        <td>
+          <span class="p-column-title">Email</span>
+          {{ resList.email }}
+        </td>
+        <td>
+          <span class="p-column-title">Requester Name</span>
+          {{ resList.createdBy }}
+        </td>
+        <td>
+          <span class="p-column-title">Restaurant Name</span>
+          {{ resList.requestingRestaurant.restaurantName }}
+        </td>
+        <td>
+          <span class="p-column-title">Created Date</span>
+          {{ resList.createdAt | date : "MM/dd/yyyy" }}
+        </td>
+        <td>
+          <span class="p-column-title">Status</span>
+          <span [class]="'customer-badge status-' + resList.status">{{
+            resList.requestingRestaurant.active
+          }}</span>
+        </td>
+        <td style="text-align: center">
+          <button
+            pButton
+            type="button"
+            label="View Details"
+            class="p-button-secondary"
+            icon="pi pi-list"
+            routerLink="request-open-details"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8">No Request Found.</td>
       </tr>
     </ng-template>
   </p-table>

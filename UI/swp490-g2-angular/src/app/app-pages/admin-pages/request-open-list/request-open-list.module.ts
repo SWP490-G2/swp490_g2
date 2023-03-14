@@ -6,6 +6,7 @@ import { RequestOpenListComponent } from "./request-open-list.component";
 import { TableModule } from "primeng/table";
 import { DropdownModule } from "primeng/dropdown";
 import { FormsModule } from "@angular/forms";
+import { ButtonModule } from "primeng/button";
 
 @NgModule({
   declarations: [RequestOpenListComponent],
@@ -15,6 +16,7 @@ import { FormsModule } from "@angular/forms";
     TableModule,
     DropdownModule,
     FormsModule,
+    ButtonModule,
   ],
 })
 export class RequestOpenListModule {}

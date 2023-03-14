@@ -1,20 +1,20 @@
 import { Component, OnInit } from "@angular/core";
-import { AdminClient } from "src/app/ngswag/client";
-import { Requests } from "src/app/utils/requests";
+import { AdminClient, Buyer } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-request-open-list",
   templateUrl: "./request-open-list.component.html",
 })
 export class RequestOpenListComponent implements OnInit {
-  resList: Requests[];
   statuses: any[];
   loading = true;
   activityValues: number[] = [0, 100];
+  requestingUsers: Buyer[] = [];
 
   constructor(private $adminClient: AdminClient) {
-    this.$adminClient.getAllOpeningRestaurantRequests().subscribe((buyer) => {
-      console.log(buyer);
+    this.$adminClient.getAllOpeningRestaurantRequests().subscribe((buyers) => {
+      this.requestingUsers = buyers;
+      console.log(buyers);
     });
   }
 

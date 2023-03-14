@@ -68,103 +68,36 @@
           <div class="flex justify-content-between align-items-center">
             Restaurant Name
             <p-sortIcon field="res.name"></p-sortIcon>
-            <p-columnFilter
-              type="text"
-              field="res.name"
-              display="menu"
-              class="ml-auto"
-            ></p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="start.date" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
             Start Date
             <p-sortIcon field="start.date"></p-sortIcon>
-            <p-columnFilter
-              type="date"
-              field="start.date"
-              display="menu"
-              class="ml-auto"
-            ></p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="end.date" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
             End Date
             <p-sortIcon field="end.date"></p-sortIcon>
-            <p-columnFilter
-              type="date"
-              field="end.date"
-              display="menu"
-              class="ml-auto"
-            ></p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="promo.type" style="min-width: 11rem">
           <div class="flex justify-content-between align-items-center">
             Promotion Type
             <p-sortIcon field="promo.type"></p-sortIcon>
-            <p-columnFilter
-              type="text"
-              field="promo.type"
-              display="menu"
-              class="ml-auto"
-            ></p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="status" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
             Status
             <p-sortIcon field="status"></p-sortIcon>
-            <p-columnFilter
-              field="status"
-              matchMode="equals"
-              display="menu"
-              class="ml-auto"
-            >
-              <ng-template
-                pTemplate="filter"
-                let-value
-                let-filter="filterCallback"
-              >
-                <p-dropdown
-                  [ngModel]="value"
-                  [options]="statuses"
-                  (onChange)="filter($event.value)"
-                  placeholder="Any"
-                >
-                  <ng-template let-option pTemplate="item">
-                    <span [class]="'customer-badge status-' + option.value">{{
-                      option.label
-                    }}</span>
-                  </ng-template>
-                </p-dropdown>
-              </ng-template>
-            </p-columnFilter>
           </div>
         </th>
         <th pSortableColumn="activity" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
             Action
             <p-sortIcon field="activity"></p-sortIcon>
-            <p-columnFilter
-              field="activity"
-              matchMode="between"
-              display="menu"
-              [showMatchModes]="false"
-              [showOperator]="false"
-              [showAddButton]="false"
-              class="ml-auto"
-            >
-              <ng-template pTemplate="filter" let-filter="filterCallback">
-                <div
-                  class="flex align-items-center justify-content-between px-2"
-                >
-                  <span>{{ activityValues[0] }}</span>
-                  <span>{{ activityValues[1] }}</span>
-                </div>
-              </ng-template>
-            </p-columnFilter>
           </div>
         </th>
         <th style="width: 5rem"></th>
