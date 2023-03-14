@@ -34,7 +34,7 @@ public class UserController {
 
     @PostMapping("/verify-code")
     public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String code, @RequestParam(required = false) boolean verifyCodeOnly) {
-        return ResponseEntity.ok(userServiceImpl.verifyCode(email, code, verifyCodeOnly));
+        return ResponseEntity.ok(userService.verifyCode(email, code, verifyCodeOnly));
     }
 
     @PostMapping(value = "/login")
@@ -47,14 +47,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getCurrentUser());
     }
 
-    @PostMapping("/add-new-information")
-    public void addNewInformation(@Valid @RequestBody UserInformationRequest userInformationRequest){
-        userService.addNewUserInformation(userInformationRequest);
-    }
+//    @PostMapping("/add-new-information")
+//    public void addNewInformation(@Valid @RequestBody UserInformationRequest userInformationRequest){
+//        userService.addNewUserInformation(userInformationRequest);
+//    }
 
     @PutMapping("/change-password")
     public ResponseEntity<AuthenticationResponse> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
-        return ResponseEntity.ok(userServiceImpl.changePassword(request));
+        return ResponseEntity.ok(userService.changePassword(request));
     }
 }
 

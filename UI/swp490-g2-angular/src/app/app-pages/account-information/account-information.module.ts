@@ -17,6 +17,7 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ToastModule } from "primeng/toast";
 import { AccordionModule } from 'primeng/accordion';
 import { TableModule } from 'primeng/table';
+import { AddressFieldsComponent } from './address-fields/address-fields.component';
 
 
 
@@ -24,6 +25,7 @@ import { TableModule } from 'primeng/table';
   declarations: [
     AccountInformationComponent,
     OpenRestaurantRequestComponent,
+    AddressFieldsComponent,
     // ListOfRestaurantsComponent,
   ],
   imports: [

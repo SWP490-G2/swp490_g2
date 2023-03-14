@@ -3,7 +3,7 @@ import { Title } from "@angular/platform-browser";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
-import { User } from "src/app/ngswag/client";
+import { User, AddressClient } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-home-page",

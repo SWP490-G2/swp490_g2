@@ -15,36 +15,26 @@
         class="w-full mb-1"
         name="email"
         value="{{ getUserDisplay() }}"
-        readonly
+        disabled
         ngModel
       />
-      <div
-        class="flex align-items-center gap-1"
-        *ngIf="form.controls['email']?.dirty && form.controls['email']?.errors"
-      ></div>
 
-      <label for="first_name" class="block text-900 font-medium my-2"
+      <label for="firstName" class="block text-900 font-medium my-2"
         >First Name*</label
       >
       <input
         id="firstName"
         type="text"
         pInputText
-        class="w-full mb-1"
+        class="w-full mb-1 capitalize"
         name="firstName"
         placeholder="Enter your first name"
         ngModel
+        required
       />
-      <div
-        class="flex align-items-center gap-1"
-        *ngIf="
-          form.controls['firstName']?.dirty &&
-          form.controls['firstName']?.errors
-        "
-      ></div>
 
-      <label for="middle_name" class="block text-900 font-medium my-2"
-        >Middle Name*</label
+      <label for="middleName" class="block text-900 font-medium my-2"
+        >Middle Name</label
       >
       <input
         id="middleName"
@@ -55,15 +45,8 @@
         placeholder="Enter your middle name"
         ngModel
       />
-      <div
-        class="flex align-items-center gap-1"
-        *ngIf="
-          form.controls['middleName']?.dirty &&
-          form.controls['middleName']?.errors
-        "
-      ></div>
 
-      <label for="last_name" class="block text-900 font-medium my-2"
+      <label for="lastName" class="block text-900 font-medium my-2"
         >Last Name*</label
       >
       <input
@@ -74,53 +57,23 @@
         name="lastName"
         placeholder="Enter your last name"
         ngModel
+        required
       />
-      <div
-        class="flex align-items-center gap-1"
-        *ngIf="
-          form.controls['lastName']?.dirty && form.controls['lastName']?.errors
-        "
-      ></div>
 
-      <div class="p-fluid grid">
-        <label
-          for="date_of_birth"
-          class="block text-900 font-medium my-2"
-          style="margin-right: 130px; margin-left: 10px"
-          >Date of Birth*</label
-        >
-        <label for="city" class="block text-900 font-medium my-2">City*</label>
-      </div>
+      <label for="dateOfBirth" class="block text-900 font-medium my-2"
+        >Date of birth*</label
+      >
 
-      <div class="p-fluid grid">
-        <div class="field col-8 md:col-3">
-          <span class="flex align-items-center gap-1">
-              <p-calendar inputId="calendar" placeholder="mm/dd/yyyy"></p-calendar>
-          </span>
-        </div> 
-        <div class="field col-12 md:col-3">
-          <p-dropdown optionLabel="name"></p-dropdown>
-        </div>        
-      </div>
+      <p-calendar
+        inputId="dateOfBirth"
+        placeholder="dd/mm/yyyy"
+        dateFormat="dd/mm/yy"
+        class="w-full mb-1"
+        name="dateOfBirth"
+        ngModel
+      ></p-calendar>
 
-      <div class="p-fluid grid">
-        <label
-          for="district"
-          class="block text-900 font-medium my-2"
-          style="margin-right: 170px; margin-left: 10px"
-          >District*</label
-        >
-        <label for="ward" class="block text-900 font-medium my-2">Ward*</label>
-      </div>
-
-      <div class="p-fluid grid">
-        <div class="field col-12 md:col-3">
-          <p-dropdown optionLabel="name"></p-dropdown>
-        </div>
-        <div class="field col-12 md:col-3">
-          <p-dropdown optionLabel="name"></p-dropdown>
-        </div>
-      </div>
+      <app-address-fields></app-address-fields>
 
       <label for="specific_address" class="block text-900 font-medium mb-2"
         >Specific Address*</label
@@ -187,22 +140,25 @@
       <ng-container *ngIf="isBuyer">
         <div class="surface-border border-top-1 opacity-50 mt-3 col-12"></div>
         <p>You are a <strong>buyer</strong>.</p>
-        
+
         <div class="grid" *ngIf="user?.['requestingRestaurant']" class="col">
-          <p >
-            Your request to become a seller is being reviewed.
-          </p>
+          <p>Your request to become a seller is being reviewed.</p>
           <div class="col">
             <p-accordion>
               <p-accordionTab header="Requesting Restaurant Information">
-                <span class="font-medium inline"> Restaurant Name: <strong>{{ getRestaurantName() }}</strong></span>
+                <span class="font-medium inline">
+                  Restaurant Name:
+                  <strong>{{ getRestaurantName() }}</strong></span
+                >
                 -
-                <span class="font-medium inline"> Created Date: <strong>{{ getCreatedDate() }}</strong></span>                
-             </p-accordionTab>
-          </p-accordion>
-          </div>         
+                <span class="font-medium inline">
+                  Created Date: <strong>{{ getCreatedDate() }}</strong></span
+                >
+              </p-accordionTab>
+            </p-accordion>
+          </div>
         </div>
-       
+
         <button
           *ngIf="!user?.['requestingRestaurant']"
           pButton

@@ -1,0 +1,21 @@
+<label for="province" class="block text-900 font-medium my-2">Province</label>
+<p-dropdown
+  [options]="provinces"
+  [(ngModel)]="selectedProvince"
+  optionLabel="name"
+  [filter]="true"
+  filterBy="name"
+  [showClear]="true"
+  placeholder="Select a province"
+>
+  <ng-template pTemplate="selectedItem">
+    <div class="country-item country-item-value" *ngIf="selectedProvince">
+      <div>{{ selectedProvince.name }}</div>
+    </div>
+  </ng-template>
+  <ng-template let-country pTemplate="item">
+    <div class="country-item">
+      <div>{{ country.name }}</div>
+    </div>
+  </ng-template>
+</p-dropdown>
