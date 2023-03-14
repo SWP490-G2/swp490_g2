@@ -78,4 +78,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
       relativeTo: this.$route,
     });
   }
+
+  navToHome() {
+    this.$router.navigate(["../.."], {
+      relativeTo: this.$route,
+    });
+  }
 }

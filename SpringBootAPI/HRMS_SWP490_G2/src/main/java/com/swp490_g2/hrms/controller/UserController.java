@@ -1,14 +1,15 @@
 package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.requests.ChangePasswordRequest;
 import com.swp490_g2.hrms.requests.RegisterRequest;
-import com.swp490_g2.hrms.requests.UserInformationRequest;
-import com.swp490_g2.hrms.security.*;
+import com.swp490_g2.hrms.security.AuthenticationRequest;
+import com.swp490_g2.hrms.security.AuthenticationResponse;
+import com.swp490_g2.hrms.service.UserService;
 import jakarta.validation.Valid;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.swp490_g2.hrms.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,9 +32,9 @@ public class UserController {
         return ResponseEntity.ok(userService.getByEmail(email));
     }
 
-    @PostMapping("/verify-code/{email}")
-    public ResponseEntity<String> verifyCode(@PathVariable String email, @RequestBody String code) {
-        return ResponseEntity.ok(userService.verifyCode(email, code));
+    @PostMapping("/verify-code")
+    public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String code, @RequestParam(required = false) boolean verifyCodeOnly) {
+        return ResponseEntity.ok(userServiceImpl.verifyCode(email, code, verifyCodeOnly));
     }
 
     @PostMapping(value = "/login")
@@ -50,4 +51,10 @@ public class UserController {
     public void addNewInformation(@Valid @RequestBody UserInformationRequest userInformationRequest){
         userService.addNewUserInformation(userInformationRequest);
     }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<AuthenticationResponse> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        return ResponseEntity.ok(userServiceImpl.changePassword(request));
+    }
 }
+

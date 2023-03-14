@@ -1,17 +1,17 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import {
-  AbstractControl,
   FormBuilder,
   NgForm,
-  ValidationErrors,
-  ValidatorFn,
   Validators,
 } from "@angular/forms";
 import { Title } from "@angular/platform-browser";
 import { MessageService } from "primeng/api";
 import { finalize } from "rxjs";
-import { AuthenticationResponse, Client, User } from "src/app/ngswag/client";
-import { CustomValidators } from "src/app/utils";
+import {
+  AuthenticationResponse,
+  User,
+  UserClient,
+} from "src/app/ngswag/client";
 
 @Component({
   selector: "app-register",
@@ -28,41 +28,9 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     private $title: Title,
     private $fb: FormBuilder,
     private $message: MessageService,
-    private $client: Client
+    private $client: UserClient
   ) {
     $title.setTitle("Register");
-  }
-
-  private initConfirmPasswordValidator(): void {
-    /**
-    Template for validator
-      const validator = (): ValidatorFn => {
-      return (control: AbstractControl<any, any>): ValidationErrors | null => {
-
-        }
-      }
-
-     */
-
-    const validator = (): ValidatorFn => {
-      return (control: AbstractControl<any, any>): ValidationErrors | null => {
-        const password = this.form.controls["password"].value;
-        if (password !== control.value) {
-          return {
-            message:
-              "Confirm password must be the same as the entered password",
-          };
-        }
-
-        return null;
-      };
-    };
-
-    this.form.controls["confirmPassword"].addValidators([
-      Validators.required,
-      validator(),
-    ]);
-    this.form.controls["confirmPassword"].updateValueAndValidity();
   }
 
   ngAfterViewInit(): void {
@@ -73,43 +41,21 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       ]);
       this.form.controls["email"].updateValueAndValidity(); // !Important: this line must be added after validators created
 
-      this.form.controls["password"].addValidators([
-        Validators.required,
-        // 2. check whether the entered password has a number
-        CustomValidators.patternValidator(/\d/, { hasNumber: true }),
-        // 3. check whether the entered password has upper case letter
-        CustomValidators.patternValidator(/[A-Z]/, { hasCapitalCase: true }),
-        // 4. check whether the entered password has a lower-case letter
-        CustomValidators.patternValidator(/[a-z]/, { hasSmallCase: true }),
-        // 5. check whether the entered password has a special character
-        CustomValidators.patternValidator(
-          /[ !"#$%&'()*+,-./:;<=>?@\[\\\]^_`{|}~]/,
-          { hasSpecialCharacters: true }
-        ),
-        // 6. Has a minimum length of 8 characters
-        Validators.minLength(8),
-        // 7. Has a maximum length of 25 characters
-        Validators.maxLength(25),
-      ]);
-      this.form.controls["password"].updateValueAndValidity();
-
       this.form.controls["phoneNumber"].addValidators([
         Validators.required,
         Validators.pattern("^(0[3|5|7|8|9])+([0-9]{8})$"),
       ]);
       this.form.controls["phoneNumber"].updateValueAndValidity();
-
-      this.initConfirmPasswordValidator();
     }, 0);
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   register(): void {
     this._registerButtonDisabled = true;
 
     this.$client
-      .registerNewUserAccount(this.form.value)
+      .register(this.form.value)
       .pipe(
         finalize(() => {
           this._registerButtonDisabled = false;
@@ -123,16 +69,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
           this.codeValidatorDialogVisible = true;
         },
       });
-  }
-
-  validatePasswordStyle(field: string): boolean {
-    if (!this.form || !this.form.controls["password"]) return true;
-
-    return (
-      this.form.controls["password"].errors &&
-      (this.form.controls["password"].errors["required"] ||
-        this.form.controls["password"].errors[field])
-    );
   }
 
   private _registerButtonDisabled = false;

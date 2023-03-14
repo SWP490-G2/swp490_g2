@@ -17,45 +17,44 @@
     class="hidden lg:flex absolute lg:static w-full surface-overlay left-0 top-100 z-1 shadow-2 lg:shadow-none"
   >
     <ul class="flex list-none p-0 m-0 flex-column lg:flex-row">
-      <li class="h-full">
-        <a
-          pRipple
-          class="cursor-pointer h-full inline-flex align-items-center text-600 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 hover:border-500 transition-colors transition-duration-150 py-3 lg:py-0 px-3"
-          routerLink=""
-          routerLinkActive="lg:border-bottom-2 border-blue-500"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
-          <span class="pi pi-home mr-2"></span>
-          <span class="font-medium">Home</span>
-        </a>
-      </li>
-      <li class="h-full">
-        <a
-          pRipple
-          class="cursor-pointer h-full inline-flex align-items-center text-600 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 transition-colors transition-duration-150 py-3 lg:py-0 px-3"
-        >
-          <span class="pi pi-users mr-2"></span>
-          <span class="font-medium">Customers</span>
-        </a>
-      </li>
-      <li class="h-full">
-        <a
-          pRipple
-          class="cursor-pointer h-full inline-flex align-items-center text-600 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 transition-colors transition-duration-150 py-3 lg:py-0 px-3"
-        >
-          <span class="pi pi-calendar mr-2"></span>
-          <span class="font-medium">Calendar</span>
-        </a>
-      </li>
-      <li class="h-full">
-        <a
-          pRipple
-          class="cursor-pointer h-full inline-flex align-items-center text-600 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 transition-colors transition-duration-150 py-3 lg:py-0 px-3"
-        >
-          <span class="pi pi-home mr-2"></span>
-          <span class="font-medium">Stats</span>
-        </a>
-      </li>
+      <ng-container *ngIf="userExisted()">
+        <li class="h-full">
+          <a
+            pRipple
+            class="cursor-pointer h-full inline-flex align-items-center text-600 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 hover:border-500 transition-colors transition-duration-150 py-3 lg:py-0 px-3"
+            routerLink=""
+            routerLinkActive="lg:border-bottom-2 border-blue-500"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <span class="pi pi-home mr-2"></span>
+            <span class="font-medium">Home</span>
+          </a>
+        </li>
+        <li class="h-full">
+          <a
+            pRipple
+            class="cursor-pointer h-full inline-flex align-items-center text-600 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 hover:border-500 transition-colors transition-duration-150 py-3 lg:py-0 px-3"
+            routerLink="feed-page"
+            routerLinkActive="lg:border-bottom-2 border-blue-500"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <span class="pi pi-bookmark mr-2"></span>
+            <span class="font-medium">Feed</span>
+          </a>
+        </li>
+        <li class="h-full">
+          <a
+            pRipple
+            class="cursor-pointer h-full inline-flex align-items-center text-600 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 hover:border-500 transition-colors transition-duration-150 py-3 lg:py-0 px-3"
+            routerLink="admin-pages"
+            routerLinkActive="lg:border-bottom-2 border-blue-500"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <span class="pi pi-shield mr-2"></span>
+            <span class="font-medium">Admin Management</span>
+          </a>
+        </li>
+      </ng-container>
     </ul>
   </div>
 

@@ -25,24 +25,7 @@ export class NavbarComponent implements OnInit {
     items!: MenuItem[];
 
     ngOnInit() {
-        this.items = [
-            {
-                label: "Categories",
-                icon: "pi pi-fw pi-book",
-            },
-            {
-                label: "My Order",
-                icon: "pi pi-fw pi-shopping-bag",
-            },
-            {
-                label: "Cart",
-                icon: "pi pi-fw pi-shopping-cart",
-            },
-            {
-                label: "Notifications",
-                icon: "pi pi-fw pi-bell",
-            },
-        ];
+        this.items = [];
     }
 
     navToHome() {
@@ -53,6 +36,9 @@ export class NavbarComponent implements OnInit {
         this.$router.navigate(["auth", "login"], { relativeTo: this.$route });
     }
 
+  navToFeed() {
+    this.$router.navigate(["feed-page"], { relativeTo: this.$route });
+  }
     navToRegister() {
         this.$router.navigate(["auth", "register"], { relativeTo: this.$route });
     }

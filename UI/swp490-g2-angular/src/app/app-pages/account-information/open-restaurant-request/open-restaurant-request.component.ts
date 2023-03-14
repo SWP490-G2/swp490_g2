@@ -4,12 +4,12 @@ import { Title } from "@angular/platform-browser";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { finalize } from "rxjs";
-import { Client } from "src/app/ngswag/client";
+import { BuyerClient } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-open-restaurant-request",
   templateUrl: "./open-restaurant-request.component.html",
-  styleUrls: ["./open-restaurant-request.component.scss"]
+  styleUrls: ["./open-restaurant-request.component.scss"],
 })
 export class OpenRestaurantRequestComponent implements OnInit, AfterViewInit {
   @ViewChild("form", { static: false }) form!: NgForm;
@@ -21,27 +21,26 @@ export class OpenRestaurantRequestComponent implements OnInit, AfterViewInit {
   constructor(
     private $title: Title,
     private $message: MessageService,
-    private $client: Client,
+    private $buyerClient: BuyerClient,
     private $confirmation: ConfirmationService,
     private $router: Router,
-    private $route: ActivatedRoute,
+    private $route: ActivatedRoute
   ) {
     $title.setTitle("Open Restaurant Request");
   }
 
-  ngOnInit(): void {
-  }
-  ngAfterViewInit(): void {
-  }
+  ngOnInit(): void {}
+  ngAfterViewInit(): void {}
 
   submit(): void {
     this.$confirmation.confirm({
-      message: "Request to open a new restaurant cannot be reverted. Are you sure that you want to perform this action?",
+      message:
+        "Request to open a new restaurant cannot be reverted. Are you sure that you want to perform this action?",
       accept: () => {
         let success = false;
         this._submitButtonDisabled = true;
 
-        this.$client
+        this.$buyerClient
           .requestOpeningNewRestaurant(this.form.value)
           .pipe(
             finalize(() => {
@@ -62,7 +61,7 @@ export class OpenRestaurantRequestComponent implements OnInit, AfterViewInit {
               });
             },
           });
-      }
+      },
     });
   }
 

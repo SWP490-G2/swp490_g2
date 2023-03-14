@@ -1,0 +1,49 @@
+<div
+  class="surface-section h-30rem bg-no-repeat bg-cover bg-center flex align-items-center"
+  style="
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+      url(assets/images/admin.png);
+  "
+>
+  <div class="px-4 mx-4 lg:px-6 lg:mx-6">
+    <span class="block text-3xl text-white mb-4">Administrator Page</span>
+    <span class="block text-4xl font-medium text-white mb-4"
+      >Administrator for System Management</span
+    >
+  </div>
+</div>
+<div class="surface-ground">
+  <div class="grid m-0">
+    <div
+      class="col-12 lg:col-4 p-3"
+      *ngFor="let buttonContent of buttonContents"
+    >
+      <a [routerLink]="buttonContent.routerLink">
+        <div
+          class="p-3 border-round shadow-2 flex align-items-center surface-card"
+        >
+          <div
+            style="min-width: 48px; height: 48px; border-radius: 10px"
+            class="inline-flex align-items-center justify-content-center mr-3"
+            [ngClass]="'bg-' + buttonContent.color + '-100'"
+          >
+            <i
+              class="text-3xl pi"
+              [ngClass]="
+                buttonContent.iconClass +
+                ' text-' +
+                buttonContent.color +
+                '-600'
+              "
+            ></i>
+          </div>
+          <div>
+            <span class="text-900 text-xl font-medium mb-2">
+              {{ buttonContent.title }}</span
+            >
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { AuthGuard } from "../global/auth.guard";
 import { AppPagesComponent } from "./app-pages.component";
 
 const routes: Routes = [
@@ -13,10 +14,10 @@ const routes: Routes = [
           import("./home-page/home-page.module").then((m) => m.HomePageModule),
       },
       {
-        path: "restaurant-feed",
+        path: "restaurant",
         loadChildren: () =>
-          import("./restaurant-feed/restaurant-feed.module").then(
-            (m) => m.RestaurantFeedModule
+          import("./restaurant/restaurant.module").then(
+            (m) => m.RestaurantModule
           ),
       },
       {
@@ -26,6 +27,23 @@ const routes: Routes = [
             (m) => m.AccountInformationModule
           ),
       },
+      {
+        path: "admin-pages",
+        loadChildren: () =>
+          import("./admin-pages/admin-pages.module").then(
+            (m) => m.AdminPagesModule
+          ),
+        canActivate: [AuthGuard],
+        data: {
+          roles: ["ADMIN"],
+        },
+      },
+
+      {
+        path: "feed-page",
+        loadChildren: () =>
+          import("./feed-page/feed-page.module").then((m) => m.FeedPageModule),
+      },
     ],
   },
 ];
@@ -34,4 +52,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AppPagesRoutingModule { }
+export class AppPagesRoutingModule {}

@@ -16,7 +16,7 @@ export class HttpErrorHandler implements ErrorHandler {
     if (!error)
       return;
 
-    let message: string;
+    let message: string | undefined;
     if (BusinessException.isBusinessException(error)) {
       switch (error.status) {
         case HttpStatusCode.InternalServerError:
@@ -43,6 +43,7 @@ export class HttpErrorHandler implements ErrorHandler {
       }
     }
 
+    console.error(message || error.message || "Undefined client error");
     this.$zone.run(() =>
       this.$message.add(
         {

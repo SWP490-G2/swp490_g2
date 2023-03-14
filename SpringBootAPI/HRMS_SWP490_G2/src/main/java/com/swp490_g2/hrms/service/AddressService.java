@@ -4,7 +4,9 @@ import com.swp490_g2.hrms.common.constants.ErrorStatusConstants;
 import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.repositories.AddressRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
+@Getter
 public class AddressService {
 
     private final AddressRepository addressRepository;

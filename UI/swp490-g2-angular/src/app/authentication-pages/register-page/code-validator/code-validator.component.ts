@@ -9,7 +9,7 @@ import { NgForm, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { finalize } from "rxjs";
-import { Client } from "src/app/ngswag/client";
+import { UserClient } from "src/app/ngswag/client";
 import { CustomValidators } from "src/app/utils";
 
 @Component({
@@ -22,11 +22,12 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
   visible = true;
   @Input() email = "longlunglay5@gmail.com";
 
-  constructor(private confirmationService: ConfirmationService,
-    private $client: Client,
+  constructor(
+    private confirmationService: ConfirmationService,
+    private $client: UserClient,
     private $router: Router,
-    private $route: ActivatedRoute,
-    ) { }
+    private $route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     // console.log(this.email);
@@ -44,10 +45,13 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
 
   async submit() {
     this._buttonDisabled = true;
-    this.$client.verifyCode(this.email, this.form.controls["code"].value)
-      .pipe(finalize(() => {
-        this._buttonDisabled = false;
-      }))
+    this.$client
+      .verifyCode(this.email, this.form.controls["code"].value, false)
+      .pipe(
+        finalize(() => {
+          this._buttonDisabled = false;
+        })
+      )
       .subscribe({
         next: (errorMessage) => {
           if (!errorMessage) {
@@ -55,14 +59,16 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
               message: "Register successfully! Click “YES” to back to login.",
               header: "Confirmation",
               accept: () => {
-                this.$router.navigate(["..", "login"], { relativeTo: this.$route });
+                this.$router.navigate(["..", "login"], {
+                  relativeTo: this.$route,
+                });
               },
-              reject: () => { },
+              reject: () => {},
             });
           }
 
           throw new Error(errorMessage);
-        }
+        },
       });
   }
 
