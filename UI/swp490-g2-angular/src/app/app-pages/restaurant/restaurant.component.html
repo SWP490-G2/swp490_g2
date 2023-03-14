@@ -79,6 +79,9 @@
           </div>
 
           <p-accordion [multiple]="true" styleClass="mb-5">
+            <p-accordionTab [selected]="true" header="Sort by">
+              <app-sort-by></app-sort-by>
+            </p-accordionTab>
             <p-accordionTab [selected]="true" header="Food name">
               <div>
                 <span class="p-input-icon-right w-full">
