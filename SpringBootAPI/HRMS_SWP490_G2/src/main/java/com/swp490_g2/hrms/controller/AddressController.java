@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.controller;
 
+import com.swp490_g2.hrms.entity.Address;
 import com.swp490_g2.hrms.entity.City;
 import com.swp490_g2.hrms.entity.District;
 import com.swp490_g2.hrms.entity.Ward;
@@ -34,5 +35,10 @@ public class AddressController {
     @GetMapping("/get-wards-by-district-id/{districtId}")
     public ResponseEntity<List<Ward>> getWardsByDistrictId(@PathVariable Long districtId){
         return ResponseEntity.ok(addressService.getWardsByDistrictId(districtId));
+    }
+
+    @GetMapping("/get-by-id/{id}")
+    public ResponseEntity<Address> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(addressService.getById(id));
     }
 }

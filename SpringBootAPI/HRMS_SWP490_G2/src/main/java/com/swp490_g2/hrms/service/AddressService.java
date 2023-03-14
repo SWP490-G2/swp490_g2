@@ -3,6 +3,7 @@ package com.swp490_g2.hrms.service;
 import com.swp490_g2.hrms.common.constants.ErrorStatusConstants;
 import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.entity.*;
+import com.swp490_g2.hrms.entity.shallowEntities.FieldType;
 import com.swp490_g2.hrms.entity.shallowEntities.Operator;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import com.swp490_g2.hrms.repositories.AddressRepository;
@@ -22,6 +23,13 @@ import java.util.*;
 @Service
 @Getter
 public class AddressService {
+    private AddressRepository addressRepository;
+
+    @Autowired
+    public void setAddressRepository(AddressRepository addressRepository) {
+        this.addressRepository = addressRepository;
+    }
+
     private CityRepository cityRepository;
 
     @Autowired
@@ -52,6 +60,7 @@ public class AddressService {
                 .key1("city")
                 .key2("id")
                 .operator(Operator.EQUAL)
+                .fieldType(FieldType.LONG)
                 .value(cityId)
                 .build();
 
@@ -69,6 +78,7 @@ public class AddressService {
                 .key1("district")
                 .key2("id")
                 .operator(Operator.EQUAL)
+                .fieldType(FieldType.LONG)
                 .value(districtId)
                 .build();
 
@@ -79,5 +89,9 @@ public class AddressService {
 
         SearchSpecification<Ward> specification = new SearchSpecification<>(request);
         return wardRepository.findAll(specification);
+    }
+
+    public Address getById(Long id) {
+        return addressRepository.findById(id).orElse(null);
     }
 }

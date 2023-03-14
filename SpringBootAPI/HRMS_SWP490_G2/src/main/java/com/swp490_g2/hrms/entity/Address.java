@@ -29,5 +29,9 @@ public class Address extends BaseEntity{
     @JsonBackReference
     private Ward ward;
 
+    @Column
+    private Double latitude;
 
+    @Column
+    private Double longitude;
 }

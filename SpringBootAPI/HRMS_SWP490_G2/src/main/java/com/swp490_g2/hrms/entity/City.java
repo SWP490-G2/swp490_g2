@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Set;
@@ -19,6 +20,7 @@ public class City extends BaseEntity{
     private String cityName;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
+    @JsonIgnore
     private Set<District> districts;
 
 }

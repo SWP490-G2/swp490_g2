@@ -1,21 +1,82 @@
-<label for="province" class="block text-900 font-medium my-2">Province</label>
-<p-dropdown
-  [options]="provinces"
-  [(ngModel)]="selectedProvince"
-  optionLabel="name"
-  [filter]="true"
-  filterBy="name"
-  [showClear]="true"
-  placeholder="Select a province"
+<div class="grid p-fluid">
+  <div class="col-12 md:col-4">
+    <label for="city" class="block text-900 font-medium my-2">Province*</label>
+    <p-dropdown
+      inputId="city"
+      [options]="cities"
+      [(ngModel)]="selectedCity"
+      optionLabel="cityName"
+      [filter]="true"
+      filterBy="cityName"
+      placeholder="Select a province"
+      (onChange)="changeProvince()"
+      [required]="true"
+    >
+      <ng-template pTemplate="selectedItem">
+        <div>{{ selectedCity?.cityName }}</div>
+      </ng-template>
+      <ng-template let-city pTemplate="item">
+        <div>{{ city.cityName }}</div>
+      </ng-template>
+    </p-dropdown>
+  </div>
+
+  <div class="col-12 md:col-4">
+    <label for="district" class="block text-900 font-medium my-2"
+      >District*</label
+    >
+    <p-dropdown
+      inputId="district"
+      [options]="districts"
+      [(ngModel)]="selectedDistrict"
+      optionLabel="districtName"
+      [filter]="true"
+      filterBy="districtName"
+      placeholder="Select a district"
+      (onChange)="changeDistrict()"
+      [required]="true"
+    >
+      <ng-template pTemplate="selectedItem">
+        <div>{{ selectedDistrict?.districtName }}</div>
+      </ng-template>
+      <ng-template let-district pTemplate="item">
+        <div>{{ district.districtName }}</div>
+      </ng-template>
+    </p-dropdown>
+  </div>
+
+  <div class="col-12 md:col-4">
+    <label for="ward" class="block text-900 font-medium my-2">Ward*</label>
+    <p-dropdown
+      inputId="ward"
+      [options]="wards"
+      [(ngModel)]="selectedWard"
+      optionLabel="wardName"
+      [filter]="true"
+      filterBy="wardName"
+      placeholder="Select a ward"
+      [required]="true"
+    >
+      <ng-template pTemplate="selectedItem">
+        <div>{{ selectedWard?.wardName }}</div>
+      </ng-template>
+      <ng-template let-ward pTemplate="item">
+        <div>{{ ward.wardName }}</div>
+      </ng-template>
+    </p-dropdown>
+  </div>
+</div>
+
+<label for="specificAddress" class="block text-900 font-medium mb-2"
+  >Specific Address*</label
 >
-  <ng-template pTemplate="selectedItem">
-    <div class="country-item country-item-value" *ngIf="selectedProvince">
-      <div>{{ selectedProvince.name }}</div>
-    </div>
-  </ng-template>
-  <ng-template let-country pTemplate="item">
-    <div class="country-item">
-      <div>{{ country.name }}</div>
-    </div>
-  </ng-template>
-</p-dropdown>
+<input
+  id="specificAddress"
+  type="text"
+  pInputText
+  class="w-full mb-1"
+  name="specificAddress"
+  placeholder="House Number,..."
+  [(ngModel)]="specificAddress"
+  (keyup)="onSpecificAddressKeyUp()"
+/>

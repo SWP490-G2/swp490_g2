@@ -32,6 +32,7 @@ public class Ward extends BaseEntity{
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ward")
     @JsonManagedReference
+    @JsonIgnore
     private Set<Address> addresses;
 
 }

@@ -24,9 +24,10 @@ public class District extends BaseEntity{
     private String districtName;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "district")
+    @JsonIgnore
     private Set<Ward> wards;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "cityId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
