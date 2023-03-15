@@ -23,10 +23,6 @@ public class Restaurant extends BaseEntity{
     @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)
     private boolean isActive;
 
-    @OneToOne(mappedBy = "requestingRestaurant")
-    @JsonIgnore
-    private Buyer requestingRestaurantBuyer;
-
     @OneToOne(cascade=CascadeType.ALL)
     private File avatarFile;
 

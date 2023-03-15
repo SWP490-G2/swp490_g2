@@ -1,9 +1,9 @@
 package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.entity.File;
+import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.repositories.FileRepository;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -97,7 +97,11 @@ public class FileService {
     }
 
     public Set<File> getAll() {
-        Long currentUserId = this.userService.getCurrentUser().getId();
-        return this.fileRepository.findAllByCurrentUserId(currentUserId);
+        User user = this.userService.getCurrentUser();
+        if(user == null)
+            return null;
+
+        Long currentUserId = user.getId();
+        return this.fileRepository.findByCreatedBy(currentUserId);
     }
 }

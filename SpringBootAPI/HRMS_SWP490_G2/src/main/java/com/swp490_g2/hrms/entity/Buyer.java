@@ -15,8 +15,8 @@ import java.util.Date;
 @AttributeOverride(name = "id", column = @Column(name = "userId"))
 @PrimaryKeyJoinColumn(name = "userId")
 public class Buyer extends User{
-    @OneToOne
-    @JoinColumn(name = "requestingRestaurantId", referencedColumnName = "restaurantId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "requestingRestaurantId")
     private Restaurant requestingRestaurant;
 
     @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)

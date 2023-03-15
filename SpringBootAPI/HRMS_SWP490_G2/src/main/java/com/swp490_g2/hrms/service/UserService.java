@@ -240,18 +240,18 @@ public class UserService {
             return null;
 
         String email = authentication.getName();
-        User user = getByEmail(email);
-        if (user == null)
+        if (!authentication.isAuthenticated() || email == null)
             return null;
 
-        if (user.getRole() == Role.BUYER)
-            return buyerService.getById(user.getId());
+        String role = authentication.getAuthorities().stream().findFirst().get().getAuthority();
+        if (role.equals("BUYER"))
+            return buyerService.getByEmail(email);
 
-        if (user.getRole() == Role.SELLER)
-            return sellerService.getById(user.getId());
+        if (role.equals("SELLER"))
+            return sellerService.getByEmail(email);
 
-        if (user.getRole() == Role.ADMIN)
-            return adminService.getById(user.getId());
+        if (role.equals("ADMIN"))
+            return adminService.getByEmail(email);
 
         return null;
     }
