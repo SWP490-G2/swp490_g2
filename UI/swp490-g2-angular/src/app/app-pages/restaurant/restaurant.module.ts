@@ -23,9 +23,10 @@ import { GalleriaModule } from "primeng/galleria";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 import { ToastModule } from "primeng/toast";
 import { ProductListComponent } from "./product-list/product-list.component";
+import { RestaurantNameComponent } from './restaurant-name/restaurant-name.component';
 
 @NgModule({
-  declarations: [RestaurantComponent, ProductListComponent],
+  declarations: [RestaurantComponent, ProductListComponent, RestaurantNameComponent],
   imports: [
     CommonModule,
     RestaurantRoutingModule,

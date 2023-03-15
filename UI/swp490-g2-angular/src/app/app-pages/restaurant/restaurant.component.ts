@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
-import { forkJoin, merge, mergeMap, Observable, switchMap } from "rxjs";
+import { forkJoin, Observable, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import {
   File,
@@ -14,6 +14,7 @@ import {
   Restaurant,
   RestaurantClient,
   SearchRequest,
+  Seller,
   User,
 } from "src/app/ngswag/client";
 
@@ -138,21 +139,19 @@ export class RestaurantComponent implements OnInit {
       .subscribe(() => location.reload());
   }
 
-  canEditImage(): boolean {
-    return true;
+  get editable(): boolean {
+    if (!this.user || !this.user.id) return false;
+    if (this.user.role === "ADMIN") return true;
+    if (
+      this.user.role === "SELLER" &&
+      (<Seller>this.user).restaurants?.some(
+        (restaurant) => restaurant.id === this.restaurant?.id
+      )
+    ) {
+      return true;
+    }
 
-    // if (!this.user || !this.user.id) return false;
-    // if (this.user.role === "ADMIN") return true;
-    // if (
-    //   this.user.role === "SELLER" &&
-    //   (<Seller>this.user).restaurants?.some(
-    //     (restaurant) => restaurant.id === this.restaurant?.id
-    //   )
-    // ) {
-    //   return true;
-    // }
-
-    // return false;
+    return false;
   }
 
   toggleAllCategories(selected: boolean) {

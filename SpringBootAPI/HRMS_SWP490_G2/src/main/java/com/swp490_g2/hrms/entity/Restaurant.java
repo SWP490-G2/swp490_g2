@@ -34,4 +34,7 @@ public class Restaurant extends BaseEntity{
     @JsonManagedReference
     @Transient
     private Set<Product> products;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Address address;
 }
