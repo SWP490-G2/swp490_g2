@@ -1,11 +1,11 @@
-import { Component } from "@angular/core";
-import { MessageService, PrimeNGConfig } from "primeng/api";
+import { Component, OnInit } from "@angular/core";
+import { MessageService } from "primeng/api";
 
 @Component({
   selector: "app-update-restaurant-info",
   templateUrl: "./update-restaurant-info.component.html",
 })
-export class UpdateRestaurantInfoComponent {
+export class UpdateRestaurantInfoComponent implements OnInit {
   selectedDelivery: any = null;
   time1: Date;
   time2: Date;

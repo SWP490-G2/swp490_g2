@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { Product, RestaurantClient } from "src/app/ngswag/client";
+import { Product } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-product-list",

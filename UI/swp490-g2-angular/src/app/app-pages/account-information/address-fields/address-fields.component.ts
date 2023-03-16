@@ -1,7 +1,13 @@
-import { Component } from "@angular/core";
+import { AfterViewInit, Component, Input, OnInit } from "@angular/core";
 import { ControlContainer, NgForm } from "@angular/forms";
 import { GoogleMapService } from "src/app/global/google-map.service";
-import { AddressClient, City, District, Ward } from "src/app/ngswag/client";
+import {
+  Address,
+  AddressClient,
+  City,
+  District,
+  Ward,
+} from "src/app/ngswag/client";
 
 @Component({
   selector: "app-address-fields",
@@ -14,22 +20,64 @@ import { AddressClient, City, District, Ward } from "src/app/ngswag/client";
     },
   ],
 })
-export class AddressFieldsComponent {
+export class AddressFieldsComponent implements OnInit, AfterViewInit {
   cities: City[] = [];
-
   districts: District[] = [];
-
   wards: Ward[] = [];
-
   timeout: any;
+  @Input() address?: Address;
 
   constructor(
     private $addressClient: AddressClient,
     private $googleMap: GoogleMapService,
     public form: NgForm
-  ) {
-    $addressClient.getCities().subscribe((cities) => {
-      this.cities = cities;
+  ) {}
+
+  ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (this.address?.specificAddress) {
+        this.$addressClient.getCities().subscribe((cities) => {
+          this.cities = cities.sort(
+            (a, b) => <number>a.cityName?.localeCompare(b.cityName!)
+          );
+
+          this.form.controls["city"].setValue(
+            this.address?.ward?.district?.city
+          );
+        });
+
+        if (this.address?.ward?.district?.city?.id) {
+          this.$addressClient
+            .getDistrictsByCityId(this.address?.ward?.district?.city?.id)
+            .subscribe((districts) => {
+              this.districts = districts.sort(
+                (a, b) => <number>a.districtName?.localeCompare(b.districtName!)
+              );
+
+              this.form.controls["district"].setValue(
+                this.address?.ward?.district
+              );
+            });
+        }
+
+        if (this.address?.ward?.district?.id) {
+          this.$addressClient
+            .getWardsByDistrictId(this.address?.ward?.district?.id)
+            .subscribe((wards) => {
+              this.wards = wards.sort(
+                (a, b) => <number>a.wardName?.localeCompare(b.wardName!)
+              );
+
+              this.form.controls["ward"].setValue(this.address?.ward);
+            });
+        }
+
+        this.form.controls["specificAddress"].setValue(
+          this.address?.specificAddress
+        );
+      }
     });
   }
 
@@ -39,6 +87,7 @@ export class AddressFieldsComponent {
 
     this.wards.length = 0;
     this.form.controls["ward"].setValue(undefined);
+    this.form.controls["specificAddress"].setValue("");
 
     this.$addressClient
       .getDistrictsByCityId(selectedCity.id)
@@ -49,6 +98,9 @@ export class AddressFieldsComponent {
     const selectedDistrict = <District | undefined>(
       this.form.controls["district"]?.value
     );
+
+    this.form.controls["specificAddress"].setValue("");
+
     if (!selectedDistrict || !selectedDistrict.id) return;
 
     this.$addressClient
@@ -56,20 +108,7 @@ export class AddressFieldsComponent {
       .subscribe((wards) => (this.wards = wards));
   }
 
-  onSpecificAddressKeyUp() {
-    window.clearTimeout(this.timeout);
-
-    this.timeout = window.setTimeout(() => {
-      const selectedCity = <City | undefined>this.form.controls["city"]?.value;
-      const selectedDistrict = <District | undefined>(
-        this.form.controls["district"]?.value
-      );
-      const selectedWard = <Ward | undefined>this.form.controls["ward"]?.value;
-      this.$googleMap
-        .getAddressDetails(
-          `${this.form.controls["specificAddress"].value}, ${selectedWard?.wardName}, ${selectedDistrict?.districtName}, ${selectedCity?.cityName}`
-        )
-        .subscribe((res) => console.log(res));
-    }, 300);
+  changeWard() {
+    this.form.controls["specificAddress"].setValue("");
   }
 }

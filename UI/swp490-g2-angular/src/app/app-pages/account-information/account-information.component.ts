@@ -14,8 +14,14 @@ import {
 import { Router, ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
-import { Restaurant, User } from "src/app/ngswag/client";
+import {
+  Restaurant,
+  User,
+  UserClient,
+  UserInformationRequest,
+} from "src/app/ngswag/client";
 import { Title } from "@angular/platform-browser";
+import { DateUtils } from "src/app/utils";
 
 @Component({
   selector: "app-account-information",
@@ -34,7 +40,9 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
     private $router: Router,
     private $route: ActivatedRoute,
     private $auth: AuthService,
-    private $title: Title
+    private $title: Title,
+    private $userClient: UserClient,
+    private $message: MessageService
   ) {
     $title.setTitle("Account Information");
   }
@@ -42,6 +50,14 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.$auth.getCurrentUser(true).subscribe((user) => {
       this.user = user;
+      if (!this.user) return;
+
+      this.form.controls["firstName"].setValue(this.user.firstName);
+      this.form.controls["middleName"].setValue(this.user.middleName);
+      this.form.controls["lastName"].setValue(this.user.lastName);
+      this.form.controls["dateOfBirth"].setValue(
+        DateUtils.fromDB(this.user.dateOfBirth)
+      );
     });
   }
 
@@ -116,13 +132,26 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   }
 
   save() {
-    console.log(this.form.value);
+    this._submitButtonDisabled = true;
     const formValue = this.form.value;
-    // this.$userClient.updateInfo({
-    //   firstName: formValue.firstName,
-    //   // middleName, lastName tuong tu
-    //   wardId: formValue.ward.id,
-    //   specificAddress: formValue.specificAddress
-    // });
+    this.$userClient
+      .update(
+        new UserInformationRequest({
+          firstName: formValue.firstName,
+          middleName: formValue.middleName,
+          lastName: formValue.lastName,
+          dateOfBirth: DateUtils.toDB(formValue.dateOfBirth),
+          wardId: formValue.ward.id,
+          specificAddress: formValue.specificAddress,
+        })
+      )
+      .subscribe(() => {
+        this._submitButtonDisabled = false;
+        this.$message.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Account information updated successfully!",
+        });
+      });
   }
 }

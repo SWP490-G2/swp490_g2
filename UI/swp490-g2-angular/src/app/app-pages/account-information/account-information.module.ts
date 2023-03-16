@@ -15,9 +15,9 @@ import { DialogModule } from "primeng/dialog";
 import { ConfirmPopupModule } from "primeng/confirmpopup";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ToastModule } from "primeng/toast";
-import { AccordionModule } from 'primeng/accordion';
-import { TableModule } from 'primeng/table';
-import { AddressFieldsComponent } from './address-fields/address-fields.component';
+import { AccordionModule } from "primeng/accordion";
+import { TableModule } from "primeng/table";
+import { AddressFieldsComponent } from "./address-fields/address-fields.component";
 
 
 

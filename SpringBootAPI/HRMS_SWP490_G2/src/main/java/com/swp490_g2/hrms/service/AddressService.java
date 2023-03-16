@@ -1,8 +1,9 @@
 package com.swp490_g2.hrms.service;
 
-import com.swp490_g2.hrms.common.constants.ErrorStatusConstants;
-import com.swp490_g2.hrms.common.exception.BusinessException;
-import com.swp490_g2.hrms.entity.*;
+import com.swp490_g2.hrms.entity.Address;
+import com.swp490_g2.hrms.entity.City;
+import com.swp490_g2.hrms.entity.District;
+import com.swp490_g2.hrms.entity.Ward;
 import com.swp490_g2.hrms.entity.shallowEntities.FieldType;
 import com.swp490_g2.hrms.entity.shallowEntities.Operator;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
@@ -10,16 +11,15 @@ import com.swp490_g2.hrms.repositories.AddressRepository;
 import com.swp490_g2.hrms.repositories.CityRepository;
 import com.swp490_g2.hrms.repositories.DistrictRepository;
 import com.swp490_g2.hrms.repositories.WardRepository;
-import com.swp490_g2.hrms.requests.AddressRequest;
 import com.swp490_g2.hrms.requests.FilterRequest;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @Getter
@@ -94,14 +94,5 @@ public class AddressService {
 
     public Address getById(Long id) {
         return addressRepository.findById(id).orElse(null);
-    }
-
-    public Address insertNewAddress(AddressRequest addressRequest){
-        Address address = new Address();
-        // can not get ward id?
-        Ward ward = wardRepository.getWardById(addressRequest.getWard().getId());
-        address.setDetailsAddress(addressRequest.getDetailsAddress());
-        address.setWard(ward);
-        return address;
     }
 }

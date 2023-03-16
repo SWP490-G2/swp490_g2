@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AddressFieldsComponent } from './address-fields.component';
+import { AddressFieldsComponent } from "./address-fields.component";
 
-describe('AddressFieldsComponent', () => {
+describe("AddressFieldsComponent", () => {
   let component: AddressFieldsComponent;
   let fixture: ComponentFixture<AddressFieldsComponent>;
 
@@ -17,7 +17,7 @@ describe('AddressFieldsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

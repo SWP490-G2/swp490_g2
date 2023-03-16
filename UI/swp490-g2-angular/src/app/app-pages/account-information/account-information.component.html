@@ -80,7 +80,10 @@
         ngModel
       ></p-calendar>
 
-      <app-address-fields></app-address-fields>
+      <app-address-fields
+        *ngIf="this.user?.id"
+        [address]="this.user?.address"
+      ></app-address-fields>
 
       <!--
             <div class="d-inline-flex p-2">
@@ -173,3 +176,4 @@
     </div>
   </form>
 </div>
+<p-toast></p-toast>
