@@ -10,5 +10,4 @@ export class ViewAllRestaurantComponent implements OnInit {
   statuses: any[];
   loading = true;
   activityValues: number[] = [0, 100];
-  ngOnInit(): void {}
 }
