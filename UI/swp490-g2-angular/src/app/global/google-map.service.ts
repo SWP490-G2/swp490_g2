@@ -24,7 +24,9 @@ export class GoogleMapService {
     this.geocoder = new google.maps.Geocoder();
   }
 
-  getAddressDetails(address: string): Observable<Address | undefined> {
+  getAddressDetails(
+    address: string
+  ): Observable<google.maps.GeocoderResult | undefined> {
     if (!this.geocoder) return of(undefined);
 
     return from(this.geocoder.geocode({ address: address })).pipe(
@@ -36,14 +38,7 @@ export class GoogleMapService {
           return of(undefined);
         }
 
-        const result = res.results[0];
-
-        return of(
-          new Address({
-            longitude: result.geometry.location.lng(),
-            latitude: result.geometry.location.lat(),
-          })
-        );
+        return of(res.results[0]);
       })
     );
   }

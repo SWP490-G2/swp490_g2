@@ -4,7 +4,8 @@
     <p-dropdown
       inputId="city"
       [options]="cities"
-      [(ngModel)]="selectedCity"
+      ngModel
+      name="city"
       optionLabel="cityName"
       [filter]="true"
       filterBy="cityName"
@@ -13,7 +14,7 @@
       [required]="true"
     >
       <ng-template pTemplate="selectedItem">
-        <div>{{ selectedCity?.cityName }}</div>
+        <div>{{ form.controls["city"].value.cityName }}</div>
       </ng-template>
       <ng-template let-city pTemplate="item">
         <div>{{ city.cityName }}</div>
@@ -28,8 +29,8 @@
     <p-dropdown
       inputId="district"
       [options]="districts"
-      [(ngModel)]="selectedDistrict"
-      optionLabel="districtName"
+      ngModel
+      name="district"
       [filter]="true"
       filterBy="districtName"
       placeholder="Select a district"
@@ -37,7 +38,7 @@
       [required]="true"
     >
       <ng-template pTemplate="selectedItem">
-        <div>{{ selectedDistrict?.districtName }}</div>
+        <div>{{ form.controls["district"].value.districtName }}</div>
       </ng-template>
       <ng-template let-district pTemplate="item">
         <div>{{ district.districtName }}</div>
@@ -50,7 +51,8 @@
     <p-dropdown
       inputId="ward"
       [options]="wards"
-      [(ngModel)]="selectedWard"
+      ngModel
+      name="ward"
       optionLabel="wardName"
       [filter]="true"
       filterBy="wardName"
@@ -58,7 +60,7 @@
       [required]="true"
     >
       <ng-template pTemplate="selectedItem">
-        <div>{{ selectedWard?.wardName }}</div>
+        <div>{{ form.controls["ward"].value.wardName }}</div>
       </ng-template>
       <ng-template let-ward pTemplate="item">
         <div>{{ ward.wardName }}</div>
@@ -67,16 +69,24 @@
   </div>
 </div>
 
-<label for="specificAddress" class="block text-900 font-medium mb-2"
-  >Specific Address*</label
+<ng-container
+  *ngIf="
+    form.controls['city']?.value &&
+    form.controls['district']?.value &&
+    form.controls['ward']?.value
+  "
 >
-<input
-  id="specificAddress"
-  type="text"
-  pInputText
-  class="w-full mb-1"
-  name="specificAddress"
-  placeholder="House Number,..."
-  [(ngModel)]="specificAddress"
-  (keyup)="onSpecificAddressKeyUp()"
-/>
+  <label for="specificAddress" class="block text-900 font-medium mb-2"
+    >Specific Address*</label
+  >
+  <input
+    id="specificAddress"
+    type="text"
+    pInputText
+    class="w-full mb-1"
+    name="specificAddress"
+    placeholder="House Number,..."
+    ngModel
+    (keyup)="onSpecificAddressKeyUp()"
+  />
+</ng-container>

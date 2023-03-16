@@ -1,8 +1,10 @@
 package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.requests.AddressRequest;
 import com.swp490_g2.hrms.requests.ChangePasswordRequest;
 import com.swp490_g2.hrms.requests.RegisterRequest;
+import com.swp490_g2.hrms.requests.UserInformationRequest;
 import com.swp490_g2.hrms.security.AuthenticationRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
 import com.swp490_g2.hrms.service.UserService;
@@ -47,14 +49,17 @@ public class UserController {
         return ResponseEntity.ok(userService.getCurrentUser());
     }
 
-//    @PostMapping("/add-new-information")
-//    public void addNewInformation(@Valid @RequestBody UserInformationRequest userInformationRequest){
-//        userService.addNewUserInformation(userInformationRequest);
-//    }
 
     @PutMapping("/change-password")
     public ResponseEntity<AuthenticationResponse> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
         return ResponseEntity.ok(userService.changePassword(request));
     }
+
+    @PostMapping("/add-new-information")
+    public void addNewInformation(@Valid @RequestBody UserInformationRequest userInformationRequest){
+        userService.addNewUserInformation(userInformationRequest);
+    }
+
+
 }
 

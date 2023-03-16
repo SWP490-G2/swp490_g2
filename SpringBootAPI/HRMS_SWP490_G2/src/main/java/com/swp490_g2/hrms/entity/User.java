@@ -51,6 +51,12 @@ public class User extends BaseEntity implements UserDetails {
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
+    @OneToOne(cascade=CascadeType.ALL)
+    private File avatarFile;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Address address;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

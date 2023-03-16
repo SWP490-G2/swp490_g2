@@ -105,4 +105,24 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   userExisted(): boolean {
     return !!(this.user && this.user.email);
   }
+
+  private _submitButtonDisabled = false;
+  get submitButtonDisabled(): boolean {
+    return !!this.form?.invalid || this._submitButtonDisabled;
+  }
+
+  set submitButtonDisabled(value: boolean) {
+    this._submitButtonDisabled = value;
+  }
+
+  save() {
+    console.log(this.form.value);
+    const formValue = this.form.value;
+    // this.$userClient.updateInfo({
+    //   firstName: formValue.firstName,
+    //   // middleName, lastName tuong tu
+    //   wardId: formValue.ward.id,
+    //   specificAddress: formValue.specificAddress
+    // });
+  }
 }

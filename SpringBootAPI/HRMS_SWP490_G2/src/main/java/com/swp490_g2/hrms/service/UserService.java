@@ -4,14 +4,13 @@ import com.swp490_g2.hrms.common.constants.ErrorStatusConstants;
 import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.config.JwtService;
-import com.swp490_g2.hrms.entity.Role;
-import com.swp490_g2.hrms.entity.Token;
-import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.shallowEntities.TokenType;
 import com.swp490_g2.hrms.repositories.BuyerRepository;
 import com.swp490_g2.hrms.repositories.SellerRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
+import com.swp490_g2.hrms.requests.AddressRequest;
 import com.swp490_g2.hrms.requests.ChangePasswordRequest;
 import com.swp490_g2.hrms.requests.RegisterRequest;
 import com.swp490_g2.hrms.requests.UserInformationRequest;
@@ -26,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -56,6 +56,8 @@ public class UserService {
     public void setTokenRepository(TokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
+
+    private FileService fileService;
 
     private PasswordEncoder passwordEncoder;
 
@@ -103,6 +105,8 @@ public class UserService {
 
 
     private AuthenticationFacade authenticationFacade;
+
+    private AddressService addressService;
 
     @Autowired
     public void setAuthenticationFacade(AuthenticationFacade authenticationFacade) {
@@ -278,18 +282,15 @@ public class UserService {
                 .build();
     }
 
-
     public void addNewUserInformation(UserInformationRequest userInformationRequest){
         User user = getCurrentUser();
         if (user == null) {
             throw new BusinessException(ErrorStatusConstants.NOT_EXISTED_USER);
         }
-        if(user.getRole() == Role.BUYER){
-            user.setFirstName(userInformationRequest.getFirstName());
-            user.setMiddleName(userInformationRequest.getMiddleName());
-            user.setLastName(userInformationRequest.getLastName());
-            user.setDateOfBirth(userInformationRequest.getDateOfBirth());
-        }
+        user.setFirstName(userInformationRequest.getFirstName());
+        user.setMiddleName(userInformationRequest.getMiddleName());
+        user.setLastName(userInformationRequest.getLastName());
+        user.setDateOfBirth(userInformationRequest.getDateOfBirth());
         userRepository.save(user);
     }
 

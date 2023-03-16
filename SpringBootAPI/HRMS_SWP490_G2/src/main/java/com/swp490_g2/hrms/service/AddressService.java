@@ -10,6 +10,7 @@ import com.swp490_g2.hrms.repositories.AddressRepository;
 import com.swp490_g2.hrms.repositories.CityRepository;
 import com.swp490_g2.hrms.repositories.DistrictRepository;
 import com.swp490_g2.hrms.repositories.WardRepository;
+import com.swp490_g2.hrms.requests.AddressRequest;
 import com.swp490_g2.hrms.requests.FilterRequest;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import lombok.Getter;
@@ -93,5 +94,14 @@ public class AddressService {
 
     public Address getById(Long id) {
         return addressRepository.findById(id).orElse(null);
+    }
+
+    public Address insertNewAddress(AddressRequest addressRequest){
+        Address address = new Address();
+        // can not get ward id?
+        Ward ward = wardRepository.getWardById(addressRequest.getWard().getId());
+        address.setDetailsAddress(addressRequest.getDetailsAddress());
+        address.setWard(ward);
+        return address;
     }
 }

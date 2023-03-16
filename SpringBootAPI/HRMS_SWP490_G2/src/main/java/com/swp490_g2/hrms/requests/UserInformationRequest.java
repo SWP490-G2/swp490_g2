@@ -31,11 +31,10 @@ public class UserInformationRequest {
     @Pattern(regexp = "^[A-Za-z ]{1,32}$", flags = Pattern.Flag.UNICODE_CASE)
     private String lastName;
 
-//    @Pattern(regexp = "^(0[1-9]|1\\d|2\\d|3[01])\\-(0[1-9]|1[0-2])\\-(19|20)\\d{2}$", flags = Pattern.Flag.UNICODE_CASE)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateOfBirth;
 
 //    private String avatar;
-//    private Address address;
+    private Address address;
 
 }
