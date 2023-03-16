@@ -1,8 +1,8 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
-import { ViewRestaurantDetailsRoutingModule } from "./view-restaurant-details-routing.module";
-import { ViewRestaurantDetailsComponent } from "./view-restaurant-details.component";
+import { ViewUserDetailsRoutingModule } from "./view-user-details-routing.module";
+import { ViewUserDetailsComponent } from "./view-user-details.component";
 import { FormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
 import { DropdownModule } from "primeng/dropdown";
@@ -11,10 +11,10 @@ import { TabMenuModule } from "primeng/tabmenu";
 import { TagModule } from "primeng/tag";
 
 @NgModule({
-  declarations: [ViewRestaurantDetailsComponent],
+  declarations: [ViewUserDetailsComponent],
   imports: [
     CommonModule,
-    ViewRestaurantDetailsRoutingModule,
+    ViewUserDetailsRoutingModule,
     TableModule,
     DropdownModule,
     FormsModule,
@@ -25,4 +25,4 @@ import { TagModule } from "primeng/tag";
     ButtonModule,
   ],
 })
-export class ViewRestaurantDetailsModule {}
+export class ViewUserDetailsModule {}

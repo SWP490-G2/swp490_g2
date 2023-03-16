@@ -8,6 +8,7 @@ import { ButtonModule } from "primeng/button";
 import { CalendarModule } from "primeng/calendar";
 import { InputTextModule } from "primeng/inputtext";
 import { ToastModule } from "primeng/toast";
+import { DropdownModule } from "primeng/dropdown";
 
 @NgModule({
   declarations: [UpdatePromoApplyComponent],
@@ -19,6 +20,7 @@ import { ToastModule } from "primeng/toast";
     ButtonModule,
     CalendarModule,
     ToastModule,
+    DropdownModule,
   ],
 })
 export class UpdatePromoApplyModule {}

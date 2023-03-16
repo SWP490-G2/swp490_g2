@@ -18,9 +18,6 @@
     </div>
   </div>
 </div>
-<div class="surface-section px-6 pt-5">
-  <div class="text-3xl font-medium text-900 mb-4 py-5">Application</div>
-</div>
 <div class="surface-section px-6 py-5">
   <div
     class="flex align-items-start flex-column lg:flex-row lg:justify-content-between"
@@ -33,7 +30,6 @@
       />
       <div>
         <span class="text-900 font-medium text-3xl">Ăn Vặt 1997</span>
-        <i class="pi pi-star text-2xl ml-4 text-yellow-500"></i>
       </div>
     </div>
     <div class="mt-3 lg:mt-0">
@@ -43,107 +39,148 @@
         icon="pi pi-check"
         label="Approve"
         class="p-button-rounded p-button-success mr-2"
+        (click)="showModalDialog()"
       ></button>
+      <p-dialog
+        header="Confirm to Approve?"
+        [(visible)]="displayModal"
+        [modal]="true"
+        [style]="{ width: '50vw' }"
+        [draggable]="false"
+        [resizable]="false"
+      >
+        <p class="m-0">
+          Are you sure to Approved this Restaurant Opening Request?
+        </p>
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            icon="pi pi-check"
+            label="Yes"
+            class="p-button-rounded p-button-success mr-2"
+            (click)="displayModal = false"
+          ></button>
+          <button
+            pButton
+            pRipple
+            icon="pi pi-ban"
+            label="No"
+            class="p-button-rounded p-button-danger"
+            (click)="displayModal = false"
+          ></button>
+        </ng-template>
+      </p-dialog>
       <button
         pButton
         pRipple
         icon="pi pi-ban"
         label="Reject"
         class="p-button-rounded p-button-danger"
+        (click)="showMaximizableDialog()"
       ></button>
+      <p-dialog
+        header="Select Reason to Reject this Restaurant Opening Request"
+        [(visible)]="displayMaximizable"
+        [modal]="true"
+        [style]="{ width: '50vw' }"
+        [maximizable]="true"
+        [draggable]="false"
+        [resizable]="false"
+      >
+        <div class="field-checkbox">
+          <p-checkbox
+            name="group1"
+            value="1"
+            [(ngModel)]="selectedReason"
+            inputId="1"
+          ></p-checkbox>
+          <label for="1">This request sent not enough information</label>
+        </div>
+        <div class="field-checkbox">
+          <p-checkbox
+            name="group1"
+            value="2"
+            [(ngModel)]="selectedReason"
+            inputId="2"
+          ></p-checkbox>
+          <label for="2"
+            >This request does not sent food safety certifications</label
+          >
+        </div>
+        <div class="field-checkbox">
+          <p-checkbox
+            name="group1"
+            value="3"
+            [(ngModel)]="selectedReason"
+            inputId="3"
+          ></p-checkbox>
+          <label for="3">This restaurant had banned in the past</label>
+        </div>
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            icon="pi pi-check"
+            label="Confirm"
+            class="p-button-rounded p-button-success mr-2"
+            (click)="displayMaximizable = false"
+          ></button>
+          <button
+            pButton
+            pRipple
+            icon="pi pi-chevron-circle-left"
+            label="Back"
+            class="p-button-rounded p-button-danger"
+            (click)="displayMaximizable = false"
+          ></button>
+        </ng-template>
+      </p-dialog>
     </div>
   </div>
 </div>
 <div class="px-6 py-5">
   <div class="surface-card p-4 shadow-2 border-round">
-    <div class="font-medium text-3xl text-900 mb-3">Applicant Profile</div>
-    <div class="text-500 mb-5">
-      Egestas sed tempus urna et pharetra pharetra massa massa ultricies.
+    <div class="font-medium text-3xl text-900 mb-3">
+      New Restaurant Opening Request
     </div>
     <ul class="list-none p-0 m-0 border-top-1 border-300">
       <li class="flex align-items-center py-3 px-2 flex-wrap surface-50">
-        <div class="text-500 w-full md:w-2 font-medium">Name</div>
-        <div class="text-900 w-full md:w-10">Elliot Alderson</div>
+        <div class="text-500 w-full md:w-2 font-medium">Restaurant Name</div>
+        <div class="text-900 w-full md:w-10"></div>
       </li>
       <li class="flex align-items-center py-3 px-2 flex-wrap">
-        <div class="text-500 w-full md:w-2 font-medium">Bio</div>
-        <div class="text-900 w-full md:w-10 line-height-3">
-          Faucibus pulvinar elementum integer enim neque volutpat ac tincidunt
-          vitae. Commodo odio aenean sed adipiscing diam donec adipiscing
-          tristique. Eget felis eget nunc lobortis mattis aliquam faucibus purus
-          in.
-        </div>
+        <div class="text-500 w-full md:w-2 font-medium">Requester Name</div>
+        <div class="text-900 w-full md:w-10 line-height-3"></div>
       </li>
       <li class="flex align-items-center py-3 px-2 flex-wrap surface-50">
-        <div class="text-500 w-full md:w-2 font-medium">Salary Expectation</div>
-        <div class="text-900 w-full md:w-10">$150,000</div>
+        <div class="text-500 w-full md:w-2 font-medium">Email</div>
+        <div class="text-900 w-full md:w-10"></div>
+      </li>
+      <li class="flex align-items-center py-3 px-2 flex-wrap surface-50">
+        <div class="text-500 w-full md:w-2 font-medium">Created Date</div>
+        <div class="text-900 w-full md:w-10"></div>
+      </li>
+      <li class="flex align-items-center py-3 px-2 flex-wrap surface-50">
+        <div class="text-500 w-full md:w-2 font-medium">Phone Number</div>
+        <div class="text-900 w-full md:w-10"></div>
       </li>
       <li class="flex align-items-center py-3 px-2 flex-wrap">
-        <div class="text-500 w-full md:w-2 font-medium">Skills</div>
+        <div class="text-500 w-full md:w-2 font-medium">Status</div>
         <div class="text-900 w-full md:w-10">
-          <p-tag styleClass="mr-2" value="Algorithms" [rounded]="true"></p-tag>
-          <p-tag
+          <p-tag styleClass="mr-2" value="Pending" [rounded]="true"></p-tag>
+          <!-- <p-tag
             styleClass="mr-2"
             severity="success"
-            value="Javascript"
+            value="Approved"
             [rounded]="true"
           ></p-tag>
           <p-tag
             styleClass="mr-2"
             severity="danger"
-            value="Python"
+            value="Rejected"
             [rounded]="true"
-          ></p-tag>
-          <p-tag severity="warning" value="SQL" [rounded]="true"></p-tag>
-        </div>
-      </li>
-      <li class="flex align-items-center py-3 px-2 flex-wrap surface-50">
-        <div class="text-500 w-full md:w-2 font-medium">Repositories</div>
-        <div class="text-900 w-full md:w-10">
-          <div class="grid mt-0 mr-0">
-            <div class="col-12 md:col-6">
-              <div class="p-3 border-1 border-300 border-round surface-0">
-                <div class="text-900 mb-2">
-                  <i class="pi pi-github mr-2"></i>
-                  <span class="font-medium">PrimeFaces</span>
-                </div>
-                <div class="text-700">
-                  Ultimate UI Component Suite for JavaServer Faces
-                </div>
-              </div>
-            </div>
-            <div class="col-12 md:col-6">
-              <div class="p-3 border-1 border-300 border-round surface-0">
-                <div class="text-900 mb-2">
-                  <i class="pi pi-github mr-2"></i>
-                  <span class="font-medium">PrimeNG</span>
-                </div>
-                <div class="text-700">
-                  The Most Complete Angular UI Component Library
-                </div>
-              </div>
-            </div>
-            <div class="col-12 md:col-6">
-              <div class="p-3 border-1 border-300 border-round surface-0">
-                <div class="text-900 mb-2">
-                  <i class="pi pi-github mr-2"></i>
-                  <span class="font-medium">PrimeReact</span>
-                </div>
-                <div class="text-700">Advanced UI Components for ReactJS</div>
-              </div>
-            </div>
-            <div class="col-12 md:col-6">
-              <div class="p-3 border-1 border-300 border-round surface-0">
-                <div class="text-900 mb-2">
-                  <i class="pi pi-github mr-2"></i>
-                  <span class="font-medium">PrimeVue</span>
-                </div>
-                <div class="text-700">
-                  The Most Powerful Vue UI Component Library
-                </div>
-              </div>
-            </div>
-          </div>
+          ></p-tag> -->
         </div>
       </li>
     </ul>

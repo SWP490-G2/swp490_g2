@@ -54,6 +54,27 @@
     </div>
   </div>
 
+  <label for="res.name" class="block text-900 font-medium my-3"
+    >Promotion Type</label
+  >
+  <div class="grid">
+    <div class="col-12">
+      <p-dropdown
+        [options]="groupedPromo"
+        [(ngModel)]="selectedPromo"
+        placeholder="Select Type of Promotion"
+        [group]="true"
+        [style]="{ minWidth: '100%' }"
+      >
+        <ng-template let-group pTemplate="group">
+          <div class="flex align-items-center">
+            <span>{{ group.label }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+  </div>
+
   <button
     pButton
     pRipple

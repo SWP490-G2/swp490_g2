@@ -3,21 +3,27 @@ package com.swp490_g2.hrms.service;
 import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.config.JwtService;
+import com.swp490_g2.hrms.entity.Admin;
 import com.swp490_g2.hrms.entity.Role;
 import com.swp490_g2.hrms.entity.Token;
 import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.entity.shallowEntities.Operator;
+import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import com.swp490_g2.hrms.entity.shallowEntities.TokenType;
 import com.swp490_g2.hrms.repositories.BuyerRepository;
 import com.swp490_g2.hrms.repositories.SellerRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.ChangePasswordRequest;
+import com.swp490_g2.hrms.requests.FilterRequest;
 import com.swp490_g2.hrms.requests.RegisterRequest;
+import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.security.AuthenticationRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
+import java.util.*;
 
 
 @Service
@@ -271,5 +278,19 @@ public class UserService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public List<User> getAllUsers() {
+        Admin currentAdmin = this.adminService.getCurrentAdmin();
+        if (currentAdmin == null)
+            throw new AccessDeniedException("This request allows admin only!");
+
+        FilterRequest filterRequest = FilterRequest.builder().key1("id").operator(Operator.IS_NOT_NULL).build();
+
+        List<FilterRequest> filters = new ArrayList<>(Collections.singletonList(filterRequest));
+        SearchRequest request = SearchRequest.builder().filters(filters).build();
+
+        SearchSpecification<User> specification = new SearchSpecification<>(request);
+        return userRepository.findAll();
     }
 }
