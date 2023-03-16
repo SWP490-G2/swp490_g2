@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { AdminClient, Buyer } from "src/app/ngswag/client";
+import { DateUtils } from "src/app/utils";
 
 @Component({
   selector: "app-request-open-list",
@@ -13,8 +14,15 @@ export class RequestOpenListComponent implements OnInit {
 
   constructor(private $adminClient: AdminClient) {
     this.$adminClient.getAllOpeningRestaurantRequests().subscribe((buyers) => {
-      this.requestingUsers = buyers;
-      console.log(buyers);
+      this.requestingUsers = buyers.map((buyer) => {
+        if (buyer.requestingOpeningRestaurantDate) {
+          buyer.requestingOpeningRestaurantDate = DateUtils.fromDB(
+            buyer.requestingOpeningRestaurantDate
+          );
+        }
+
+        return buyer;
+      });
     });
   }
 

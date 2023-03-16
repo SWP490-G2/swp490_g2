@@ -1,9 +1,13 @@
 package com.swp490_g2.hrms.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.Instant;
 import java.util.Date;
 
 @Entity
@@ -19,6 +23,13 @@ public class Buyer extends User{
     @JoinColumn(name = "requestingRestaurantId", referencedColumnName = "restaurantId")
     private Restaurant requestingRestaurant;
 
-    @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)
-    private boolean requestingRestaurantRejected;
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    private Instant requestingOpeningRestaurantDate;
+
+
+    @Column(columnDefinition = "nvarchar(16) default 'PENDING'")
+    @Enumerated(EnumType.STRING)
+    private RequestingRestaurantStatus requestingRestaurantStatus;
 }

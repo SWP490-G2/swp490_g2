@@ -129,7 +129,7 @@
         </td>
         <td>
           <span class="p-column-title">Created Date</span>
-          {{ resList.createdAt | date : "dd/MM/yyyy" }}
+          {{ resList.requestingOpeningRestaurantDate | date : "dd/MM/yyyy" }}
         </td>
         <td>
           <span class="p-column-title">Phone Number</span>
@@ -137,9 +137,7 @@
         </td>
         <td>
           <span class="p-column-title">Status</span>
-          <span [class]="'customer-badge status-' + resList.status">{{
-            resList.requestingRestaurant.active
-          }}</span>
+          <app-requesting-status [requester]="resList"></app-requesting-status>
         </td>
         <td style="text-align: center">
           <button
@@ -148,7 +146,7 @@
             label="View Details"
             class="p-button-secondary"
             icon="pi pi-list"
-            routerLink="request-open-details"
+            [routerLink]="'request-open-details/' + resList.id"
           ></button>
         </td>
       </tr>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
-import { Buyer, AdminClient } from "src/app/ngswag/client";
+import { Buyer, AdminClient, BuyerClient } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-request-open-details",
@@ -15,11 +16,19 @@ export class RequestOpenDetailsComponent implements OnInit {
   requestingUsers: Buyer[] = [];
   displayModal: boolean;
   displayMaximizable: boolean;
+  requester?: Buyer;
 
-  constructor(private $adminClient: AdminClient) {
-    this.$adminClient.getAllOpeningRestaurantRequests().subscribe((buyers) => {
-      this.requestingUsers = buyers;
-      console.log(buyers);
+  constructor(
+    private $adminClient: AdminClient,
+    private $route: ActivatedRoute,
+    private $buyerClient: BuyerClient
+  ) {
+    const id: number = Number.parseInt(
+      <string>this.$route.snapshot.paramMap.get("id")
+    );
+
+    $buyerClient.getById(id).subscribe((requester) => {
+      this.requester = requester;
     });
   }
   ngOnInit(): void {}

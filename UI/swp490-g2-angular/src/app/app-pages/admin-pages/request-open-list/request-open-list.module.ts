@@ -7,9 +7,11 @@ import { TableModule } from "primeng/table";
 import { DropdownModule } from "primeng/dropdown";
 import { FormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
+import { RequestingStatusComponent } from "./requesting-status/requesting-status.component";
+import { TagModule } from "primeng/tag";
 
 @NgModule({
-  declarations: [RequestOpenListComponent],
+  declarations: [RequestOpenListComponent, RequestingStatusComponent],
   imports: [
     CommonModule,
     RequestOpenListRoutingModule,
@@ -17,6 +19,8 @@ import { ButtonModule } from "primeng/button";
     DropdownModule,
     FormsModule,
     ButtonModule,
+    TagModule,
   ],
+  exports: [RequestingStatusComponent],
 })
 export class RequestOpenListModule {}
