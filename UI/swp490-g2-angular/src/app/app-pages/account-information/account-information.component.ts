@@ -22,6 +22,7 @@ import {
 } from "src/app/ngswag/client";
 import { Title } from "@angular/platform-browser";
 import { DateUtils } from "src/app/utils";
+import { finalize } from "rxjs";
 
 @Component({
   selector: "app-account-information",
@@ -145,8 +146,12 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
           specificAddress: formValue.specificAddress,
         })
       )
+      .pipe(
+        finalize(() => {
+          this._submitButtonDisabled = false;
+        })
+      )
       .subscribe(() => {
-        this._submitButtonDisabled = false;
         this.$message.add({
           severity: "success",
           summary: "Success",

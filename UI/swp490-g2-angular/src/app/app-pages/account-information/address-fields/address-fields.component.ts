@@ -37,43 +37,41 @@ export class AddressFieldsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     setTimeout(() => {
+      this.$addressClient.getCities().subscribe((cities) => {
+        this.cities = cities.sort(
+          (a, b) => <number>a.cityName?.localeCompare(b.cityName!)
+        );
+
+        this.form.controls["city"].setValue(this.address?.ward?.district?.city);
+      });
+
+      if (this.address?.ward?.district?.city?.id) {
+        this.$addressClient
+          .getDistrictsByCityId(this.address?.ward?.district?.city?.id)
+          .subscribe((districts) => {
+            this.districts = districts.sort(
+              (a, b) => <number>a.districtName?.localeCompare(b.districtName!)
+            );
+
+            this.form.controls["district"].setValue(
+              this.address?.ward?.district
+            );
+          });
+      }
+
+      if (this.address?.ward?.district?.id) {
+        this.$addressClient
+          .getWardsByDistrictId(this.address?.ward?.district?.id)
+          .subscribe((wards) => {
+            this.wards = wards.sort(
+              (a, b) => <number>a.wardName?.localeCompare(b.wardName!)
+            );
+
+            this.form.controls["ward"].setValue(this.address?.ward);
+          });
+      }
+
       if (this.address?.specificAddress) {
-        this.$addressClient.getCities().subscribe((cities) => {
-          this.cities = cities.sort(
-            (a, b) => <number>a.cityName?.localeCompare(b.cityName!)
-          );
-
-          this.form.controls["city"].setValue(
-            this.address?.ward?.district?.city
-          );
-        });
-
-        if (this.address?.ward?.district?.city?.id) {
-          this.$addressClient
-            .getDistrictsByCityId(this.address?.ward?.district?.city?.id)
-            .subscribe((districts) => {
-              this.districts = districts.sort(
-                (a, b) => <number>a.districtName?.localeCompare(b.districtName!)
-              );
-
-              this.form.controls["district"].setValue(
-                this.address?.ward?.district
-              );
-            });
-        }
-
-        if (this.address?.ward?.district?.id) {
-          this.$addressClient
-            .getWardsByDistrictId(this.address?.ward?.district?.id)
-            .subscribe((wards) => {
-              this.wards = wards.sort(
-                (a, b) => <number>a.wardName?.localeCompare(b.wardName!)
-              );
-
-              this.form.controls["ward"].setValue(this.address?.ward);
-            });
-        }
-
         this.form.controls["specificAddress"].setValue(
           this.address?.specificAddress
         );
@@ -87,7 +85,7 @@ export class AddressFieldsComponent implements OnInit, AfterViewInit {
 
     this.wards.length = 0;
     this.form.controls["ward"].setValue(undefined);
-    this.form.controls["specificAddress"].setValue("");
+    this.form.controls["specificAddress"]?.setValue("");
 
     this.$addressClient
       .getDistrictsByCityId(selectedCity.id)
@@ -99,7 +97,7 @@ export class AddressFieldsComponent implements OnInit, AfterViewInit {
       this.form.controls["district"]?.value
     );
 
-    this.form.controls["specificAddress"].setValue("");
+    this.form.controls["specificAddress"]?.setValue("");
 
     if (!selectedDistrict || !selectedDistrict.id) return;
 
@@ -109,6 +107,6 @@ export class AddressFieldsComponent implements OnInit, AfterViewInit {
   }
 
   changeWard() {
-    this.form.controls["specificAddress"].setValue("");
+    this.form.controls["specificAddress"]?.setValue("");
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { Buyer, AdminClient, BuyerClient } from "src/app/ngswag/client";
+import { DateUtils } from "src/app/utils";
 
 @Component({
   selector: "app-request-open-details",
@@ -29,6 +30,19 @@ export class RequestOpenDetailsComponent implements OnInit {
 
     $buyerClient.getById(id).subscribe((requester) => {
       this.requester = requester;
+      console.log(requester);
+    });
+
+    this.$adminClient.getAllOpeningRestaurantRequests().subscribe((buyers) => {
+      this.requestingUsers = buyers.map((buyer) => {
+        if (buyer.requestingOpeningRestaurantDate) {
+          buyer.requestingOpeningRestaurantDate = DateUtils.fromDB(
+            buyer.requestingOpeningRestaurantDate
+          );
+        }
+
+        return buyer;
+      });
     });
   }
   ngOnInit(): void {}
@@ -40,5 +54,9 @@ export class RequestOpenDetailsComponent implements OnInit {
 
   showMaximizableDialog() {
     this.displayMaximizable = true;
+  }
+
+  getStatus() {
+    return this.requester?.requestingRestaurantStatus;
   }
 }
