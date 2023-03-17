@@ -70,19 +70,67 @@
             <p-sortIcon field="name"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="roles" style="min-width: 16rem">
+        <th pSortableColumn="roles" style="min-width: 8rem">
           <div class="flex justify-content-between align-items-center">
             Roles
             <p-sortIcon field="roles"></p-sortIcon>
           </div>
         </th>
+        <th pSortableColumn="status" style="min-width: 8rem">
+          <div class="flex justify-content-between align-items-center">
+            Status
+            <p-sortIcon field="status"></p-sortIcon>
+          </div>
+        </th>
         <th pSortableColumn="activity" style="min-width: 10rem">
           <div class="flex justify-content-between align-items-center">
             Action
-            <p-sortIcon field="activity"></p-sortIcon>
           </div>
         </th>
         <th style="width: 5rem"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-userList>
+      <tr class="p-selectable-row">
+        <td>
+          <span class="p-column-title">#</span>
+          {{ userList.id }}
+        </td>
+        <td>
+          <span class="p-column-title">Email</span>
+          {{ userList.email }}
+        </td>
+        <td>
+          <span class="p-column-title">Full Name</span>
+          {{ userList.firstName }} {{ userList.middleName }}
+          {{ userList.lastName }}
+        </td>
+        <td>
+          <span class="p-column-title">Phone Number</span>
+          {{ userList.phoneNumber }}
+        </td>
+        <td>
+          <span class="p-column-title">Roles</span>
+          {{ userList.roles }}
+        </td>
+        <td>
+          <span class="p-column-title">Status</span>
+        </td>
+        <td style="text-align: center">
+          <button
+            pButton
+            type="button"
+            label="View Details"
+            class="p-button-secondary"
+            icon="pi pi-list"
+            [routerLink]="'view-user-details/' + userList.id"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="9">No Request Found.</td>
       </tr>
     </ng-template>
   </p-table>
