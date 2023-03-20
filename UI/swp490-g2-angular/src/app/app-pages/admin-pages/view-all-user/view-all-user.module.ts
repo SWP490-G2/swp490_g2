@@ -6,18 +6,17 @@ import { ViewAllUserComponent } from "./view-all-user.component";
 import { TableModule } from "primeng/table";
 import { DropdownModule } from "primeng/dropdown";
 import { FormsModule } from "@angular/forms";
-
+import { ButtonModule } from "primeng/button";
 
 @NgModule({
-  declarations: [
-    ViewAllUserComponent
-  ],
+  declarations: [ViewAllUserComponent],
   imports: [
     CommonModule,
     ViewAllUserRoutingModule,
     TableModule,
     DropdownModule,
-    FormsModule
-  ]
+    FormsModule,
+    ButtonModule,
+  ],
 })
-export class ViewAllUserModule { }
+export class ViewAllUserModule {}
