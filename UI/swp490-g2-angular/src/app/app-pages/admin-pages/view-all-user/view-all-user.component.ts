@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { AdminClient } from "src/app/ngswag/client";
 import { AllUsers } from "src/app/utils/allusers";
 
 @Component({

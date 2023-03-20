@@ -15,9 +15,11 @@ export class RequestOpenDetailsComponent implements OnInit {
   loading = true;
   activityValues: number[] = [0, 100];
   requestingUsers: Buyer[] = [];
+  acceptRes: Buyer[] = [];
   displayModal: boolean;
   displayMaximizable: boolean;
   requester?: Buyer;
+  buyerId: number;
 
   constructor(
     private $adminClient: AdminClient,
@@ -44,6 +46,9 @@ export class RequestOpenDetailsComponent implements OnInit {
         return buyer;
       });
     });
+
+    this.$adminClient.approveBecomeSeller(id).subscribe();
+    this.$adminClient.rejectBecomeSeller(id).subscribe();
   }
   ngOnInit(): void {}
   items: MenuItem[];

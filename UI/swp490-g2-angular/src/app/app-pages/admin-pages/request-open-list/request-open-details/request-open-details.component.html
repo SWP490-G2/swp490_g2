@@ -10,7 +10,11 @@
         <div class="flex align-items-center flex-wrap text-sm">
           <div class="mr-5 mt-3">
             <span class="font-medium text-500"
-              >Review Request to Approve or Reject for () Restaurant</span
+              >Review Request to Approve or Reject for
+              {{
+                requester?.requestingRestaurant?.restaurantName
+              }}
+              Restaurant</span
             >
           </div>
         </div>
