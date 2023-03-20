@@ -6,6 +6,7 @@ import { UpdateRestaurantInfoComponent } from "./update-restaurant-info.componen
 import { FormsModule } from "@angular/forms";
 import { DropdownModule } from "primeng/dropdown";
 import { TableModule } from "primeng/table";
+import { ButtonModule } from "primeng/button";
 
 @NgModule({
   declarations: [UpdateRestaurantInfoComponent],
@@ -15,6 +16,7 @@ import { TableModule } from "primeng/table";
     TableModule,
     DropdownModule,
     FormsModule,
+    ButtonModule,
   ],
 })
 export class UpdateRestaurantInfoModule {}

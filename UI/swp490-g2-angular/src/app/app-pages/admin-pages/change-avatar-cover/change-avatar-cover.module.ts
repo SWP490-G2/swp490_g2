@@ -6,6 +6,7 @@ import { ChangeAvatarCoverComponent } from "./change-avatar-cover.component";
 import { FormsModule } from "@angular/forms";
 import { DropdownModule } from "primeng/dropdown";
 import { TableModule } from "primeng/table";
+import { ButtonModule } from "primeng/button";
 
 @NgModule({
   declarations: [ChangeAvatarCoverComponent],
@@ -15,6 +16,7 @@ import { TableModule } from "primeng/table";
     TableModule,
     DropdownModule,
     FormsModule,
+    ButtonModule,
   ],
 })
 export class ChangeAvatarCoverModule {}

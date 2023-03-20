@@ -8,6 +8,7 @@ import { MessageService, ConfirmationService } from "primeng/api";
 import { FileUploadModule } from "primeng/fileupload";
 import { ToastModule } from "primeng/toast";
 import { HttpErrorHandler } from "src/app/global/http-error-handler";
+import { ButtonModule } from "primeng/button";
 
 @NgModule({
   declarations: [ChangeAvatarCoverApplyComponent],
@@ -17,6 +18,7 @@ import { HttpErrorHandler } from "src/app/global/http-error-handler";
     FileUploadModule,
     HttpClientModule,
     ToastModule,
+    ButtonModule,
   ],
   providers: [
     MessageService,
