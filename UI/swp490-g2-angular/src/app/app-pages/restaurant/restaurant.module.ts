@@ -6,6 +6,7 @@ import { RestaurantComponent } from "./restaurant.component";
 import { BadgeModule } from "primeng/badge";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MenuModule } from "primeng/menu";
 import { RippleModule } from "primeng/ripple";
 import { StyleClassModule } from "primeng/styleclass";
@@ -24,13 +25,16 @@ import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-att
 import { ToastModule } from "primeng/toast";
 import { ProductListComponent } from "./product-list/product-list.component";
 import { RestaurantNameComponent } from './restaurant-name/restaurant-name.component';
+import { DialogModule } from "primeng/dialog";
+import { RestaurantUpdateInformationComponent } from './restaurant-update-information/restaurant-update-information.component';
 
 @NgModule({
-  declarations: [RestaurantComponent, ProductListComponent, RestaurantNameComponent],
+  declarations: [RestaurantComponent, ProductListComponent, RestaurantNameComponent, RestaurantUpdateInformationComponent],
   imports: [
     CommonModule,
     RestaurantRoutingModule,
     InputTextModule,
+    InputTextareaModule,
     BadgeModule,
     StyleClassModule,
     ButtonModule,
@@ -48,7 +52,8 @@ import { RestaurantNameComponent } from './restaurant-name/restaurant-name.compo
     MultiSelectModule,
     GalleriaModule,
     ImageAttachmentModule,
-    ToastModule
+    ToastModule,
+    DialogModule
   ],
 })
 export class RestaurantModule { }

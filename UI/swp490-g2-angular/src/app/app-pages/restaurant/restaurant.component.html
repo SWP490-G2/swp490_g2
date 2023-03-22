@@ -26,7 +26,7 @@
                       [restaurant]="restaurant"
                       [editable]="editable"
                     ></app-restaurant-name>
-                    <i class="pi pi-star text-2xl ml-4 text-yellow-500"></i>
+                  <i class="pi pi-star text-2xl ml-4 text-yellow-500"></i>
                   </div>
                   <div class="flex align-items-center flex-wrap text-sm">
                     <div class="mr-5 mt-3">
@@ -61,12 +61,10 @@
                   icon="pi pi-heart"
                   class="p-button-rounded p-button-success mr-2"
                 ></button>
-                <a
-                  pButton
-                  pRipple
-                  icon="pi pi-list"
-                  class="p-button-rounded p-button-help"
-                ></a>
+                <app-restaurant-update-information
+                [restaurant]="restaurant"
+                [editable]="editable"
+                ></app-restaurant-update-information>
               </div>
             </div>
           </div>
