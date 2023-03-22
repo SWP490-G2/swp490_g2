@@ -1,4 +1,14 @@
-<p-toast></p-toast>
+<div class="surface-section px-6 py-5">
+  <button
+    pButton
+    pRipple
+    type="button"
+    label="Back"
+    icon="pi pi-arrow-left"
+    class="p-button-rounded p-button-info"
+    routerLink=".."
+  ></button>
+</div>
 <div class="surface-section px-4 py-5 md:px-6 lg:px-8">
   <div
     class="flex align-items-start bg-gray-200 flex-column lg:flex-row lg:justify-content-between"
@@ -12,200 +22,66 @@
     </div>
   </div>
 </div>
-<form #form="ngForm" (ngSubmit)="register()">
-  <div class="surface-section px-2 py-4 md:px-6 lg:px-8">
-    <label for="Email" class="block text-900 font-medium my-3">Email</label>
-    <div class="grid">
-      <div class="col-12">
-        <div class="p-inputgroup">
-          <input type="text" pInputText placeholder="Email" />
-        </div>
+<div class="surface-section px-4 py-8 md:px-6 lg:px-8">
+  <p-table
+    #dt
+    dataKey="id"
+    [rowHover]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [filterDelay]="0"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-header flex align-items-center justify-content-between">
+        <p></p>
+        <input
+          id="search"
+          type="text"
+          pInputText
+          class="w-full mb-1 surface-card p-2 shadow-2 border-round lg:w-3"
+          name="search"
+          ngModel
+          placeholder="Search"
+        />
       </div>
-    </div>
-    <div
-      class="flex align-items-center gap-1"
-      *ngIf="form.controls['email']?.dirty && form.controls['email']?.errors"
-    >
-      <i class="pi pi-times-circle text-danger"></i>
-      <small class="text-danger"> Enter a valid email address! </small>
-    </div>
-
-    <label for="name" class="block text-900 font-medium my-3">Name</label>
-    <div class="grid p-fluid my-2">
-      <div class="col-12 md:col-4">
-        <div class="p-inputgroup">
-          <input type="text" pInputText placeholder="First Name" />
-        </div>
-      </div>
-      <div class="col-12 md:col-4">
-        <div class="p-inputgroup">
-          <input type="text" pInputText placeholder="Middle Name" />
-        </div>
-      </div>
-      <div class="col-12 md:col-4">
-        <div class="p-inputgroup">
-          <input type="text" pInputText placeholder="Last Name" />
-        </div>
-      </div>
-    </div>
-
-    <label for="avatar" class="block text-900 font-medium my-3">Avatar</label>
-    <div class="grid">
-      <div class="col-12">
-        <p-fileUpload
-          name="demo[]"
-          url="./upload.php"
-          (onUpload)="onUpload($event)"
-          accept="image/*"
-        >
-          <ng-template pTemplate="content">
-            <ul *ngIf="uploadedFiles.length">
-              <li *ngFor="let file of uploadedFiles">
-                {{ file.name }} - {{ file.size }} bytes
-              </li>
-            </ul>
-          </ng-template>
-        </p-fileUpload>
-      </div>
-    </div>
-
-    <label for="address" class="block text-900 font-medium my-3">Address</label>
-    <div class="grid">
-      <div class="col-12">
-        <div class="p-inputgroup">
-          <input type="text" pInputText placeholder="Address No." />
-        </div>
-      </div>
-    </div>
-    <div class="grid p-fluid my-2">
-      <div class="col-12 md:col-4">
-        <div class="p-inputgroup">
-          <input type="text" pInputText placeholder="City" />
-        </div>
-      </div>
-      <div class="col-12 md:col-4">
-        <div class="p-inputgroup">
-          <input type="text" pInputText placeholder="District" />
-        </div>
-      </div>
-      <div class="col-12 md:col-4">
-        <div class="p-inputgroup">
-          <input type="text" pInputText placeholder="Ward" />
-        </div>
-      </div>
-    </div>
-
-    <label for="gender" class="block text-900 font-medium my-3">Gender</label>
-    <div class="flex">
-      <div *ngFor="let gender of genders" class="field-checkbox mr-4">
-        <p-radioButton
-          [inputId]="gender.key"
-          name="delivery"
-          [value]="gender"
-          [(ngModel)]="selectedGender"
-          [disabled]="gender.key === 'R'"
-        ></p-radioButton>
-        <label [for]="gender.key">{{ gender.name }}</label>
-      </div>
-    </div>
-
-    <label for="dob" class="block text-900 font-medium my-3"
-      >Date of Birth</label
-    >
-    <div class="grid">
-      <div class="col-12">
-        <div class="flex">
-          <p-calendar
-            [(ngModel)]="dob"
-            [showIcon]="true"
-            inputId="icon"
-          ></p-calendar>
-        </div>
-      </div>
-    </div>
-
-    <label for="IDcard" class="block text-900 font-medium my-3"
-      >Citizen Identification (Please capture 2 face of your Identification
-      Card)</label
-    >
-    <label for="FrontIDcard" class="block text-500 font-small my-3"
-      >Front Face</label
-    >
-    <div class="grid">
-      <div class="col-12">
-        <p-fileUpload
-          name="demo[]"
-          url="./upload.php"
-          (onUpload)="onUpload($event)"
-          accept="image/*"
-        >
-          <ng-template pTemplate="content">
-            <ul *ngIf="uploadedFiles.length">
-              <li *ngFor="let file of uploadedFiles">
-                {{ file.name }} - {{ file.size }} bytes
-              </li>
-            </ul>
-          </ng-template>
-        </p-fileUpload>
-      </div>
-    </div>
-    <label for="BackIDcard" class="block text-500 font-small my-3"
-      >Back Face</label
-    >
-    <div class="grid">
-      <div class="col-12">
-        <p-fileUpload
-          name="demo[]"
-          url="./upload.php"
-          (onUpload)="onUpload($event)"
-          accept="image/*"
-        >
-          <ng-template pTemplate="content">
-            <ul *ngIf="uploadedFiles.length">
-              <li *ngFor="let file of uploadedFiles">
-                {{ file.name }} - {{ file.size }} bytes
-              </li>
-            </ul>
-          </ng-template>
-        </p-fileUpload>
-      </div>
-    </div>
-
-    <label for="phoneNo" class="block text-900 font-medium my-3"
-      >Phone Number</label
-    >
-    <div class="grid">
-      <div class="col-12">
-        <div class="p-inputgroup">
-          <input
-            id="phoneNumber"
-            type="text"
-            pInputText
-            class="w-full mb-1"
-            name="phoneNumber"
-            ngModel
-            placeholder="Phone Number"
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      class="flex align-items-center gap-1"
-      *ngIf="
-        form.controls['phoneNumber']?.dirty &&
-        form.controls['phoneNumber']?.errors
-      "
-    >
-      <i class="pi pi-times-circle text-danger"></i>
-      <small class="text-danger"> Enter a valid phone number! </small>
-    </div>
-
-    <button
-      pButton
-      pRipple
-      label="Save Changes"
-      icon="pi pi-check"
-      class="w-full mt-4"
-    ></button>
-  </div>
-</form>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="no" style="min-width: 5.5rem">
+          <div class="flex justify-content-between align-items-center">
+            #
+            <p-sortIcon field="name"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="email" style="min-width: 16rem">
+          <div class="flex justify-content-between align-items-center">
+            Email
+            <p-sortIcon field="email"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="name" style="min-width: 16rem">
+          <div class="flex justify-content-between align-items-center">
+            Full Name
+            <p-sortIcon field="name"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="roles" style="min-width: 16rem">
+          <div class="flex justify-content-between align-items-center">
+            Roles
+            <p-sortIcon field="roles"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="activity" style="min-width: 10rem">
+          <div class="flex justify-content-between align-items-center">
+            Action
+            <p-sortIcon field="activity"></p-sortIcon>
+          </div>
+        </th>
+        <th style="width: 5rem"></th>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

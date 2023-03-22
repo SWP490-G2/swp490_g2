@@ -1,5 +1,5 @@
 export class DateUtils {
-  static fromDB(input: any): Date {
+  static fromDB(input: any): any {
     return new Date(input * 1000);
   }
 

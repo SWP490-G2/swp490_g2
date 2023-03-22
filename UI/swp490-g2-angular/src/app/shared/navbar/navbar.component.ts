@@ -3,75 +3,60 @@ import { Title } from "@angular/platform-browser";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
-import { User } from "src/app/ngswag/client";
+import { Client, User } from "src/app/ngswag/client";
 
 @Component({
-    selector: "app-navbar",
-    templateUrl: "./navbar.component.html",
-    styleUrls: ["./navbar.component.scss"],
+  selector: "app-navbar",
+  templateUrl: "./navbar.component.html",
+  styleUrls: ["./navbar.component.scss"],
 })
 export class NavbarComponent implements OnInit {
-    // @Input: duoc truyen vao tu parent
-    @Input() user?: User;
+  // @Input: duoc truyen vao tu parent
+  @Input() user?: User;
 
-    constructor(
-        private $router: Router,
-        private $route: ActivatedRoute,
-        private $title: Title,
-        private $auth: AuthService
-    ) {
-        $title.setTitle("Home");
-    }
-    items!: MenuItem[];
-
-    ngOnInit() {
-        this.items = [];
-    }
-
-    navToHome() {
-        this.$router.navigate([""], { relativeTo: this.$route });
-    }
-
-    navToLogin() {
-        this.$router.navigate(["auth", "login"], { relativeTo: this.$route });
-    }
-
-  navToFeed() {
-    this.$router.navigate(["feed-page"], { relativeTo: this.$route });
+  constructor(
+    private $router: Router,
+    private $route: ActivatedRoute,
+    private $title: Title,
+    private $auth: AuthService,
+    private $client: Client
+  ) {
+    $title.setTitle("Home");
   }
-    navToRegister() {
-        this.$router.navigate(["auth", "register"], { relativeTo: this.$route });
+  items!: MenuItem[];
+
+  ngOnInit() {
+    this.items = [];
+  }
+
+  getUserDisplay(): string {
+    // Thoa man 2 dieu kien:
+    // 1. this.user ton tai
+    // 2. this.user.email ton tai
+    if (this.userExisted()) {
+      // if(this.user?.email)
+      // this.user.email: string | undefined
+      return <string>this.user?.email;
     }
 
-    navToForgotPassword() {
-        this.$router.navigate(["auth", "forgot-password"], {
-            relativeTo: this.$route,
-        });
-    }
+    return "Account";
+  }
 
-    getUserDisplay(): string {
-        // Thoa man 2 dieu kien:
-        // 1. this.user ton tai
-        // 2. this.user.email ton tai
-        if (this.userExisted()) {
-            // if(this.user?.email)
-            // this.user.email: string | undefined
-            return <string>this.user?.email;
-        }
+  userExisted(): boolean {
+    // !! giup ep kieu sang boolean
+    return !!(this.user && this.user.email);
+  }
 
-        return "Account";
-    }
+  logOut(): void {
+    this.$auth.logout();
+  }
 
-    userExisted(): boolean {
-        // !! giup ep kieu sang boolean
-        return !!(this.user && this.user.email);
-    }
+  navToBuyerInformationSetting() {
+    this.$router.navigate(["account-information"], { relativeTo: this.$route });
+  }
 
-    logOut(): void {
-        this.$auth.logout();
-    }
-
-    navToBuyerInformationSetting() {
-        this.$router.navigate(["account-information"], { relativeTo: this.$route });
-    }
+  userExistedAdmin(): boolean {
+    // !! giup ep kieu sang boolean
+    return !!(this.user && this.user.email && this.user.role);
+  }
 }

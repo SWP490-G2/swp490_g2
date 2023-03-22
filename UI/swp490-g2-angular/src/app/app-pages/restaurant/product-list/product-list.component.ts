@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { Product } from "src/app/ngswag/client";
 
 @Component({
@@ -6,10 +6,11 @@ import { Product } from "src/app/ngswag/client";
   templateUrl: "./product-list.component.html",
   styleUrls: ["./product-list.component.scss"],
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit {
   @Input() products: Product[] = [];
 
   constructor() {}
+  ngOnInit(): void {}
 
   get initialized(): boolean {
     return true;

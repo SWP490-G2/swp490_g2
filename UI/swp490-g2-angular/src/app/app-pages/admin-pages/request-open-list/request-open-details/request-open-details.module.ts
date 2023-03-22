@@ -7,6 +7,9 @@ import { TagModule } from "primeng/tag";
 import { TabMenuModule } from "primeng/tabmenu";
 import { FormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
+import { DialogModule } from "primeng/dialog";
+import { CheckboxModule } from "primeng/checkbox";
+import { RequestOpenListModule } from "../request-open-list.module";
 
 @NgModule({
   declarations: [RequestOpenDetailsComponent],
@@ -17,6 +20,9 @@ import { ButtonModule } from "primeng/button";
     TabMenuModule,
     FormsModule,
     ButtonModule,
+    DialogModule,
+    CheckboxModule,
+    RequestOpenListModule,
   ],
 })
 export class RequestOpenDetailsModule {}
