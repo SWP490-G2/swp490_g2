@@ -3,6 +3,8 @@ package com.swp490_g2.hrms.service;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.Admin;
 import com.swp490_g2.hrms.entity.Buyer;
+import com.swp490_g2.hrms.entity.Restaurant;
+import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import com.swp490_g2.hrms.repositories.AdminRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,13 @@ public class AdminService {
         this.buyerService = buyerService;
     }
 
+    private RestaurantService restaurantService;
+
+    @Autowired
+    public void setRestaurantService(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+    }
+
     public Admin getByEmail(String email) {
         return adminRepository.findByEmail(email).orElse(null);
     }
@@ -63,5 +72,40 @@ public class AdminService {
 
     public List<Buyer> getAllOpeningRestaurantRequests() {
         return this.buyerService.getAllOpeningRestaurantRequests();
+    }
+
+    public void approveBecomeSeller(Long buyerId) {
+        Admin admin = getCurrentAdmin();
+        if (admin == null)
+            return;
+
+        Buyer requester = buyerService.getById(buyerId);
+        if (requester == null)
+            return;
+
+        requester.setRequestingRestaurantStatus(RequestingRestaurantStatus.APPROVED);
+        buyerService.update(requester);
+
+        if (!requester.getRequestingRestaurant().isActive()) {
+            Restaurant restaurant = restaurantService.getById(requester.getRequestingRestaurant().getId());
+            if(restaurant != null)
+            {
+                restaurant.setActive(true);
+                restaurantService.update(restaurant);
+            }
+        }
+    }
+
+    public void rejectBecomeSeller(Long buyerId) {
+        Admin admin = getCurrentAdmin();
+        if (admin == null)
+            return;
+
+        Buyer requester = buyerService.getById(buyerId);
+        if (requester == null)
+            return;
+
+        requester.setRequestingRestaurantStatus(RequestingRestaurantStatus.REJECTED);
+        buyerService.update(requester);
     }
 }

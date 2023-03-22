@@ -168,7 +168,8 @@
         class="w-full border-2 border-dashed surface-border surface-section mt-3 lg:mt-0"
         style="min-height: 25rem"
       ></div> -->
-        <div class="flex flex-column flex-grow-1">
+        <div class="flex flex-column flex-grow-1 gap-5">
+          <app-sort-by (sortedBy)="onSortByChange($event)"></app-sort-by>
           <app-product-list [products]="products"></app-product-list>
           <p-button
             label="Load more"

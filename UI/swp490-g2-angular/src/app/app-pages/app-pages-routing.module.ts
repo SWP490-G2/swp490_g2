@@ -44,6 +44,13 @@ const routes: Routes = [
         loadChildren: () =>
           import("./feed-page/feed-page.module").then((m) => m.FeedPageModule),
       },
+      {
+        path: "restaurants",
+        loadChildren: () =>
+          import("./restaurants/restaurants.module").then(
+            (m) => m.RestaurantsModule
+          ),
+      },
     ],
   },
 ];

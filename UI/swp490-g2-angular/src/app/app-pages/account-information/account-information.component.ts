@@ -1,56 +1,85 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { NgForm } from "@angular/forms";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Input,
+  AfterViewInit,
+} from "@angular/core";
+import {
+  AbstractControl,
+  NgForm,
+  ValidatorFn,
+  Validators,
+} from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
-import { User } from "src/app/ngswag/client";
-
-interface City {
-  name: string,
-  code: string
-}
+import {
+  Restaurant,
+  User,
+  UserClient,
+  UserInformationRequest,
+} from "src/app/ngswag/client";
+import { Title } from "@angular/platform-browser";
+import { DateUtils } from "src/app/utils";
+import { finalize } from "rxjs";
 
 @Component({
   selector: "app-account-information",
   templateUrl: "./account-information.component.html",
-  styleUrls: ["./account-information.component.scss"]
+  styleUrls: ["./account-information.component.scss"],
 })
-
-export class AccountInformationComponent implements OnInit {
+export class AccountInformationComponent implements OnInit, AfterViewInit {
   @ViewChild("form", { static: false }) form!: NgForm;
-
-  cities: City[];
-  selectedCity: City;
-  uploadedFiles: any[] = [];
-
+  @Input()
   display = false;
   user?: User;
+  restaurants: Restaurant[];
 
-  constructor(private messageService: MessageService,
+  constructor(
+    private messageService: MessageService,
     private $router: Router,
     private $route: ActivatedRoute,
     private $auth: AuthService,
+    private $title: Title,
+    private $userClient: UserClient,
+    private $message: MessageService
   ) {
-    this.cities = [
-      { name: "Hà Nội", code: "NY" },
-      { name: "Rome", code: "RM" },
-      { name: "London", code: "LDN" },
-      { name: "Istanbul", code: "IST" },
-      { name: "Paris", code: "PRS" }
-    ];
+    $title.setTitle("Account Information");
   }
 
   ngOnInit() {
-    this.$auth.getCurrentUser(true).subscribe(user => {
+    this.$auth.getCurrentUser(true).subscribe((user) => {
       this.user = user;
+      if (!this.user) return;
+
+      this.form.controls["firstName"].setValue(this.user.firstName);
+      this.form.controls["middleName"].setValue(this.user.middleName);
+      this.form.controls["lastName"].setValue(this.user.lastName);
+      this.form.controls["dateOfBirth"].setValue(
+        DateUtils.fromDB(this.user.dateOfBirth)
+      );
     });
   }
 
-  onUpload(event: any) {
-    for (const file of event.files) {
-      this.uploadedFiles.push(file);
-    }
-    this.messageService.add({ severity: "info", summary: "File Uploaded", detail: "" });
+  ngAfterViewInit(): void {
+    const dateOfBirthValidator = (): ValidatorFn => {
+      return (control: AbstractControl): { [key: string]: any } | null => {
+        if (control.value >= new Date()) {
+          return { dateOfBirth: true };
+        }
+
+        return null;
+      };
+    };
+
+    setTimeout(() => {
+      this.form.controls["dateOfBirth"].addValidators([
+        Validators.required,
+        dateOfBirthValidator(),
+      ]);
+      this.form.controls["dateOfBirth"].updateValueAndValidity(); // !Important: this line must be added after validators created
+    }, 0);
   }
 
   showDialog() {
@@ -58,7 +87,9 @@ export class AccountInformationComponent implements OnInit {
   }
 
   navToOpenNewRestaurant() {
-    this.$router.navigate(["open-restaurant-request"], { relativeTo: this.$route });
+    this.$router.navigate(["open-restaurant-request"], {
+      relativeTo: this.$route,
+    });
   }
 
   navToListOfRestaurants() {
@@ -67,5 +98,65 @@ export class AccountInformationComponent implements OnInit {
 
   get isBuyer(): boolean {
     return this.user?.role === "BUYER";
+  }
+
+  getRestaurantName(): string {
+    return (<any>this.user).requestingRestaurant.restaurantName;
+  }
+
+  getCreatedDate(): any {
+    return (<any>this.user).requestingRestaurant.createdAt;
+  }
+
+  // get requestingRestaurantJson(): any {
+  //   return (<any>this.user)?.requestingRestaurant;
+  // }
+
+  getUserDisplay(): string {
+    if (this.userExisted()) {
+      return <string>this.user?.email;
+    }
+    return "Account";
+  }
+
+  userExisted(): boolean {
+    return !!(this.user && this.user.email);
+  }
+
+  private _submitButtonDisabled = false;
+  get submitButtonDisabled(): boolean {
+    return !!this.form?.invalid || this._submitButtonDisabled;
+  }
+
+  set submitButtonDisabled(value: boolean) {
+    this._submitButtonDisabled = value;
+  }
+
+  save() {
+    this._submitButtonDisabled = true;
+    const formValue = this.form.value;
+    this.$userClient
+      .update(
+        new UserInformationRequest({
+          firstName: formValue.firstName,
+          middleName: formValue.middleName,
+          lastName: formValue.lastName,
+          dateOfBirth: DateUtils.toDB(formValue.dateOfBirth),
+          wardId: formValue.ward.id,
+          specificAddress: formValue.specificAddress,
+        })
+      )
+      .pipe(
+        finalize(() => {
+          this._submitButtonDisabled = false;
+        })
+      )
+      .subscribe(() => {
+        this.$message.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Account information updated successfully!",
+        });
+      });
   }
 }

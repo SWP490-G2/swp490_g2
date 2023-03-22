@@ -1,23 +1,21 @@
 package com.swp490_g2.hrms.service;
 
-import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.config.JwtService;
-import com.swp490_g2.hrms.entity.Role;
-import com.swp490_g2.hrms.entity.Token;
-import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.shallowEntities.TokenType;
 import com.swp490_g2.hrms.repositories.BuyerRepository;
-import com.swp490_g2.hrms.repositories.SellerRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.ChangePasswordRequest;
+import com.swp490_g2.hrms.requests.FilterRequest;
 import com.swp490_g2.hrms.requests.RegisterRequest;
+import com.swp490_g2.hrms.requests.UserInformationRequest;
 import com.swp490_g2.hrms.security.AuthenticationRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
+import java.util.*;
 
 
 @Service
@@ -52,6 +51,8 @@ public class UserService {
     public void setTokenRepository(TokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
+
+    private FileService fileService;
 
     private PasswordEncoder passwordEncoder;
 
@@ -98,6 +99,8 @@ public class UserService {
 
 
     private AuthenticationFacade authenticationFacade;
+
+    private AddressService addressService;
 
     @Autowired
     public void setAuthenticationFacade(AuthenticationFacade authenticationFacade) {
@@ -272,4 +275,26 @@ public class UserService {
                 .token(jwtToken)
                 .build();
     }
+
+    public void update(UserInformationRequest userInformationRequest) {
+        User user = getCurrentUser();
+        if (user == null) {
+            return;
+        }
+
+        user.setFirstName(userInformationRequest.getFirstName());
+        user.setMiddleName(userInformationRequest.getMiddleName());
+        user.setLastName(userInformationRequest.getLastName());
+        user.setDateOfBirth(userInformationRequest.getDateOfBirth());
+
+        Ward ward = new Ward();
+        ward.setId(userInformationRequest.getWardId());
+        user.setAddress(Address.builder()
+                .specificAddress(userInformationRequest.getSpecificAddress())
+                .ward(ward)
+                .build());
+        userRepository.save(user);
+    }
+
+
 }

@@ -24,9 +24,11 @@ import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-att
 import { ToastModule } from "primeng/toast";
 import { ProductListComponent } from "./product-list/product-list.component";
 import { RestaurantNameComponent } from './restaurant-name/restaurant-name.component';
+import { SortByComponent } from "./sort-by/sort-by.component";
+import { RadioButtonModule } from "primeng/radiobutton";
 
 @NgModule({
-  declarations: [RestaurantComponent, ProductListComponent, RestaurantNameComponent],
+  declarations: [RestaurantComponent, ProductListComponent, RestaurantNameComponent, SortByComponent],
   imports: [
     CommonModule,
     RestaurantRoutingModule,
@@ -48,7 +50,8 @@ import { RestaurantNameComponent } from './restaurant-name/restaurant-name.compo
     MultiSelectModule,
     GalleriaModule,
     ImageAttachmentModule,
-    ToastModule
+    ToastModule,
+    RadioButtonModule,
   ],
 })
-export class RestaurantModule { }
+export class RestaurantModule {}

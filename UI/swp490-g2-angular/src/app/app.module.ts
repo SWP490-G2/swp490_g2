@@ -14,11 +14,11 @@ import { AuthGuard } from "./global/auth.guard";
 import { AuthService } from "./global/auth.service";
 import { TokenInterceptor } from "./global/token.interceptor";
 import { ImageAttachmentModule } from "./shared/image-attachment/image-attachment.module";
+import { GoogleMapsModule } from "@angular/google-maps";
+import { GoogleMapService } from "./global/google-map.service";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -28,6 +28,7 @@ import { ImageAttachmentModule } from "./shared/image-attachment/image-attachmen
     AuthenticationPagesModule,
     ToastModule,
     ImageAttachmentModule,
+    GoogleMapsModule,
   ],
   providers: [
     MessageService,
@@ -45,7 +46,9 @@ import { ImageAttachmentModule } from "./shared/image-attachment/image-attachmen
       useClass: TokenInterceptor,
       multi: true,
     },
+    // Google Map
+    GoogleMapService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

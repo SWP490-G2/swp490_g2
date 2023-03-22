@@ -14,7 +14,7 @@ const routes: Routes = [
     path: "",
     loadChildren: () =>
       import("./app-pages/app-pages.module").then((m) => m.AppPagesModule),
-  },
+  }
 ];
 
 @NgModule({
