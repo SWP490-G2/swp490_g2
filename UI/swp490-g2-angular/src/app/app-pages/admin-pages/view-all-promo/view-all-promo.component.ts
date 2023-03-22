@@ -10,5 +10,4 @@ export class ViewAllPromoComponent {
   statuses: any[];
   loading = true;
   activityValues: number[] = [0, 100];
-  ngOnInit(): void {}
 }
