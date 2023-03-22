@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
+import { finalize } from "rxjs";
 import { Buyer, AdminClient, BuyerClient } from "src/app/ngswag/client";
 import { DateUtils } from "src/app/utils";
 
@@ -30,26 +31,19 @@ export class RequestOpenDetailsComponent implements OnInit {
       <string>this.$route.snapshot.paramMap.get("id")
     );
 
-    $buyerClient.getById(id).subscribe((requester) => {
-      this.requester = requester;
-      console.log(requester);
-    });
-
-    this.$adminClient.getAllOpeningRestaurantRequests().subscribe((buyers) => {
-      this.requestingUsers = buyers.map((buyer) => {
-        if (buyer.requestingOpeningRestaurantDate) {
-          buyer.requestingOpeningRestaurantDate = DateUtils.fromDB(
-            buyer.requestingOpeningRestaurantDate
-          );
-        }
-
-        return buyer;
-      });
-    });
-
-    this.$adminClient.approveBecomeSeller(id).subscribe();
-    this.$adminClient.rejectBecomeSeller(id).subscribe();
+    this.buyerId = id;
+    this.refresh();
   }
+
+  refresh() {
+    this.$buyerClient.getById(this.buyerId).subscribe((requester) => {
+      this.requester = requester;
+      this.requester.requestingOpeningRestaurantDate = DateUtils.fromDB(
+        this.requester.requestingOpeningRestaurantDate
+      );
+    });
+  }
+
   ngOnInit(): void {}
   items: MenuItem[];
 
@@ -62,6 +56,32 @@ export class RequestOpenDetailsComponent implements OnInit {
   }
 
   getStatus() {
-    return this.requester?.requestingRestaurantStatus;
+    return this.requester?.requestingRestaurantStatus == "PENDING";
+  }
+
+  approve() {
+    this.$adminClient
+      .approveBecomeSeller(this.buyerId)
+      .pipe(
+        finalize(() => {
+          this.displayModal = false;
+        })
+      )
+      .subscribe(() => {
+        this.refresh();
+      });
+  }
+
+  rejected() {
+    this.$adminClient
+      .rejectBecomeSeller(this.buyerId)
+      .pipe(
+        finalize(() => {
+          this.displayModal = false;
+        })
+      )
+      .subscribe(() => {
+        this.refresh();
+      });
   }
 }

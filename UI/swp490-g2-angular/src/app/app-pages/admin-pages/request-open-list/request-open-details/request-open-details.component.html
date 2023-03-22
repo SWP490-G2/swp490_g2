@@ -6,7 +6,7 @@
     label="Back"
     icon="pi pi-arrow-left"
     class="p-button-rounded p-button-info"
-    routerLink=".."
+    routerLink="../.."
   ></button>
 </div>
 <div class="surface-section px-4 py-5 md:px-6 lg:px-8">
@@ -74,7 +74,7 @@
             icon="pi pi-check"
             label="Yes"
             class="p-button-rounded p-button-success mr-2"
-            (click)="displayModal = false"
+            (click)="approve()"
           ></button>
           <button
             pButton
@@ -82,7 +82,7 @@
             icon="pi pi-ban"
             label="No"
             class="p-button-rounded p-button-danger"
-            (click)="displayModal = false"
+            (click)="rejected()"
           ></button>
         </ng-template>
       </p-dialog>
