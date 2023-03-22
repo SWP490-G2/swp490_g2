@@ -79,9 +79,6 @@
           </div>
 
           <p-accordion [multiple]="true" styleClass="mb-5">
-            <p-accordionTab [selected]="true" header="Sort by">
-              <app-sort-by></app-sort-by>
-            </p-accordionTab>
             <p-accordionTab [selected]="true" header="Food name">
               <div>
                 <span class="p-input-icon-right w-full">
@@ -168,7 +165,8 @@
         class="w-full border-2 border-dashed surface-border surface-section mt-3 lg:mt-0"
         style="min-height: 25rem"
       ></div> -->
-        <div class="flex flex-column flex-grow-1">
+        <div class="flex flex-column flex-grow-1 gap-5">
+          <app-sort-by (sortedBy)="onSortByChange($event)"></app-sort-by>
           <app-product-list [products]="products"></app-product-list>
           <p-button
             label="Load more"
