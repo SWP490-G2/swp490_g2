@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
-import { forkJoin, merge, mergeMap, Observable, switchMap } from "rxjs";
+import { forkJoin, Observable, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import {
   File,

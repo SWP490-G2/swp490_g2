@@ -1,6 +1,5 @@
 package com.swp490_g2.hrms.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -20,10 +19,8 @@ public class Ward extends BaseEntity{
     @Column(nullable = false)
     private String wardName;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "districtId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private District district;
-
 }

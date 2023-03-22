@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MessageService, PrimeNGConfig } from "primeng/api";
+import { MessageService } from "primeng/api";
 
 @Component({
   selector: "app-change-avatar-cover",

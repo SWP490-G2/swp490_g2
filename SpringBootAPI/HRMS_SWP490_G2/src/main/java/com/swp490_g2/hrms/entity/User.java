@@ -1,13 +1,16 @@
 package com.swp490_g2.hrms.entity;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -33,6 +36,29 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(columnDefinition = "VARCHAR(6)")
     private String verificationCode;
+
+    @Column(length = 50)
+    @Length(max = 50)
+    private String firstName;
+
+    @Column(length = 50)
+    @Length(max = 50)
+    private String middleName;
+
+    @Column(length = 50)
+    @Length(max = 50)
+    private String lastName;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    private Instant dateOfBirth;
+
+    @OneToOne(cascade=CascadeType.ALL)
+    private File avatarFile;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Address address;
 
     @Enumerated(EnumType.STRING)
     private Role role;
