@@ -1,50 +1,73 @@
-import { Component } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { MenuItem } from "primeng/api";
+import { of, switchMap } from "rxjs";
+import { GoogleMapService } from "src/app/global/google-map.service";
+import { User, UserClient } from "src/app/ngswag/client";
+import { getFullAddress } from "src/app/utils";
 
 @Component({
   selector: "app-restaurants",
   templateUrl: "./restaurants.component.html",
   styleUrls: ["./restaurants.component.scss"],
 })
-export class RestaurantsComponent {
-  color = "";
+export class RestaurantsComponent implements OnInit, AfterViewInit {
+  mapOptions: google.maps.MapOptions = {
+    // 21.009751,105.5329757
+    center: {
+      lat: 21.009751,
+      lng: 105.5329757,
+    },
+    zoom: 15,
+  };
 
-  brands: any[] = [
-    { name: "Alfred" },
-    { name: "Hyper" },
-    { name: "Peak" },
-    { name: "Bastion" },
-  ];
+  currentUser?: User;
+  @ViewChild("mapContainer", { static: false }) mapContainer!: ElementRef;
+  map?: google.maps.Map;
 
-  colors: any[] = [
-    { name: "Black", class: "bg-gray-500" },
-    { name: "Orange", class: "bg-orange-500" },
-    { name: "Indigo", class: "bg-indigo-500" },
-    { name: "Pink", class: "bg-pink-500" },
-  ];
+  constructor(
+    private $userClient: UserClient,
+    private $map: GoogleMapService
+  ) {}
 
-  prices: any[] = [
-    { range: "$10 - $100" },
-    { range: "$101 - $200" },
-    { range: "$201 - $300" },
-    { range: "$301 - $400" },
-  ];
+  ngAfterViewInit(): void {
+    this.map = new google.maps.Map(
+      this.mapContainer.nativeElement,
+      this.mapOptions
+    );
 
-  selectedBrands: any[] = [{ name: "Alfred" }, { name: "Hyper" }];
+    this.$userClient
+      .getCurrentUser()
+      .pipe(
+        switchMap((user) => {
+          this.currentUser = user;
+          if (!this.currentUser?.address) return of(undefined);
+          return this.$map.getAddressDetails(
+            getFullAddress(this.currentUser.address)
+          );
+        }),
+        switchMap((result) => {
+          const loc = result?.geometry.location;
+          if (!loc) return of(undefined);
 
-  selectedPrice: any;
+          const pos = new google.maps.LatLng(loc.lat(), loc.lng());
+          this.map?.panTo(pos);
 
-  selectedColors: any[] = [{ name: "Black", class: "bg-gray-500" }];
+          const marker = new google.maps.Marker({
+            position: pos,
+            map: this.map,
+          });
 
-  rangeValues = [20, 80];
+          return of(undefined);
+        })
+      )
+      .subscribe();
+  }
 
-  checked1 = true;
-
-  checked2 = false;
-
-  items: MenuItem[] = [
-    { label: "Color" },
-    { label: "Size" },
-    { label: "Price" },
-  ];
+  ngOnInit(): void {}
 }

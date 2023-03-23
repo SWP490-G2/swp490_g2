@@ -17,13 +17,10 @@ import java.time.Instant;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 public class UserInformationRequest {
-    @Pattern(regexp = "^[A-Za-z ]{1,32}$", flags = Pattern.Flag.UNICODE_CASE)
     private String firstName;
 
-    @Pattern(regexp = "^[A-Za-z ]{1,32}$", flags = Pattern.Flag.UNICODE_CASE)
     private String middleName;
 
-    @Pattern(regexp = "^[A-Za-z ]{1,32}$", flags = Pattern.Flag.UNICODE_CASE)
     private String lastName;
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
