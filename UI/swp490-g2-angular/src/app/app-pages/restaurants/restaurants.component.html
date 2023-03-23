@@ -31,31 +31,54 @@
     <div class="col-12 lg:col-6 py-4 lg:pr-4 flex-order-2 lg:flex-order-1">
       <div class="surface-0 p-4 shadow-2 border-round">
         <ul class="list-none p-0 m-0">
-          <li class="pb-4 border-bottom-1 border-300">
+          <li class="my-2" *ngFor="let restaurant of restaurants">
             <div
               class="border-2 border-dashed border-300 border-round surface-0 p-4"
-            ></div>
-          </li>
-          <li class="py-4 border-bottom-1 border-300">
-            <div
-              class="border-2 border-dashed border-300 border-round surface-0 p-4"
-            ></div>
-          </li>
-          <li class="pt-4">
-            <div
-              class="border-2 border-dashed border-300 border-round surface-0 p-4"
-            ></div>
+            >
+              <div
+                class="flex flex-wrap align-items-start sm:align-items-center sm:flex-row sm:justify-content-between surface-border"
+              >
+                <img
+                  src="assets/images/blocks/ecommerce/shoppingcart/shopping-cart-2-1.png"
+                  class="w-12rem flex-shrink-0 mx-auto md:mx-0"
+                />
+                <div class="flex-auto md:pl-5">
+                  <div
+                    class="flex flex-wrap align-items-start sm:align-items-center sm:flex-row sm:justify-content-between surface-border"
+                  >
+                    <div class="w-full sm:w-6 flex flex-column">
+                      <span class="text-900 text-xl font-medium mb-3">
+                        {{ restaurant.restaurantName }}
+                      </span>
+                      <span class="text-600">Medium</span>
+                    </div>
+                  </div>
+                  <div class="flex flex-column">
+                    <span class="inline-flex align-items-center mb-3">
+                      <i class="pi pi-envelope text-600 mr-2"></i>
+                      <span class="text-600 mr-2">Order today.</span>
+                    </span>
+                    <span class="inline-flex align-items-center mb-3">
+                      <i class="pi pi-send text-600 mr-2"></i>
+                      <span class="text-600 mr-2"
+                        >Delivery by
+                        <span class="font-bold">Dec 23.</span></span
+                      >
+                    </span>
+                    <span class="flex align-items-center">
+                      <i class="pi pi-exclamation-triangle text-600 mr-2"></i>
+                      <span class="text-600">Only 8 Available.</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
     </div>
     <div class="col-12 lg:col-6 flex-order-1 lg:flex-order-2">
-      <!-- <img
-        src="assets/images/blocks/ecommerce/productfeature/product-features-1-1.png"
-        class="border-round w-full"
-        alt="product"
-      /> -->
-      <div #mapContainer class="border-round w-full h-30rem"></div>
+      <div #mapContainer class="border-round w-full h-30rem sticky top-0"></div>
     </div>
   </div>
 </div>

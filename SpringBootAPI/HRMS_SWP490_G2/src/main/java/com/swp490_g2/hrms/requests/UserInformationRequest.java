@@ -18,16 +18,15 @@ import java.time.Instant;
 @JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 public class UserInformationRequest {
     private String firstName;
-
     private String middleName;
-
     private String lastName;
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Instant dateOfBirth;
 
     private Long wardId;
-
     private String specificAddress;
-
+    private Double addressLat;
+    private Double addressLng;
+    private Long addressId;
 }

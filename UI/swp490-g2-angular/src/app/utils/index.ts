@@ -13,7 +13,7 @@ export function getBusinessExceptionErrorCode(
 }
 
 export function getFullAddress(address?: Address): string {
-  if (!address?.id) return "";
+  if (!address) return "";
 
   return `${address.specificAddress}, ${address.ward?.wardName}, ${address.ward?.district?.districtName}, ${address.ward?.district?.city?.cityName}`;
 }
