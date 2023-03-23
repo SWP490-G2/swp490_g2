@@ -15,8 +15,10 @@ import {
   RestaurantClient,
   SearchRequest,
   Seller,
+  SortRequest,
   User,
 } from "src/app/ngswag/client";
+import { getFullAddress } from "src/app/utils";
 
 @Component({
   selector: "app-restaurant",
@@ -41,6 +43,12 @@ export class RestaurantComponent implements OnInit {
   private timeout?: number;
   private isFulltextSearching = false;
   fulltext = "";
+  sorts: SortRequest[] = [
+    new SortRequest({
+      key: "productName",
+      direction: "ASC",
+    }),
+  ];
 
   constructor(
     private $route: ActivatedRoute,
@@ -124,6 +132,7 @@ export class RestaurantComponent implements OnInit {
             valueTo: this.selectedPriceRange[1],
           }),
         ],
+        sorts: this.sorts,
         page: this.currentPage,
         size: this.pageSize,
       })
@@ -207,6 +216,15 @@ export class RestaurantComponent implements OnInit {
   get loadMoreShown(): boolean {
     if (this.isFulltextSearching) return false;
     return this.currentPage < this.totalPages - 1;
+  }
+
+  onSortByChange(sortRequest: SortRequest) {
+    this.sorts = [sortRequest];
+    this.changeFilter();
+  }
+
+  get fullAddress(): string {
+    return getFullAddress(this.restaurant?.address);
   }
 }
 

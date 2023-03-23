@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ViewChild } from "@angular/core";
-import { FormBuilder, NgForm, Validators } from "@angular/forms";
-import { MessageService, PrimeNGConfig } from "primeng/api";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { NgForm, Validators } from "@angular/forms";
+import { MessageService } from "primeng/api";
 import { finalize } from "rxjs";
 import { AuthenticationResponse } from "src/app/ngswag/client";
 
@@ -8,7 +8,7 @@ import { AuthenticationResponse } from "src/app/ngswag/client";
   selector: "app-update-user-info",
   templateUrl: "./update-user-info.component.html",
 })
-export class UpdateUserInfoComponent implements AfterViewInit {
+export class UpdateUserInfoComponent implements OnInit, AfterViewInit {
   @ViewChild("form", { static: false }) form!: NgForm;
   selectedGender: any = null;
   dob: Date;

@@ -23,6 +23,7 @@ export class AuthGuard implements CanActivate {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canActivate(
     route: ActivatedRouteSnapshot,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     state: RouterStateSnapshot
   ):
     | boolean

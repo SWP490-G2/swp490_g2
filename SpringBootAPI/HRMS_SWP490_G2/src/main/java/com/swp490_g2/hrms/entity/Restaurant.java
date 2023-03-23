@@ -41,6 +41,6 @@ public class Restaurant extends BaseEntity{
     @Transient
     private Set<Product> products;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 }

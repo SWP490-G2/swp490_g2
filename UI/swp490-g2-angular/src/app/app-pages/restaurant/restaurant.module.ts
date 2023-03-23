@@ -27,9 +27,11 @@ import { ProductListComponent } from "./product-list/product-list.component";
 import { RestaurantNameComponent } from './restaurant-name/restaurant-name.component';
 import { DialogModule } from "primeng/dialog";
 import { RestaurantUpdateInformationComponent } from './restaurant-update-information/restaurant-update-information.component';
+import { SortByComponent } from "./sort-by/sort-by.component";
+import { RadioButtonModule } from "primeng/radiobutton";
 
 @NgModule({
-  declarations: [RestaurantComponent, ProductListComponent, RestaurantNameComponent, RestaurantUpdateInformationComponent],
+  declarations: [RestaurantComponent, ProductListComponent, RestaurantNameComponent, RestaurantUpdateInformationComponent, SortByComponent],
   imports: [
     CommonModule,
     RestaurantRoutingModule,
@@ -53,7 +55,8 @@ import { RestaurantUpdateInformationComponent } from './restaurant-update-inform
     GalleriaModule,
     ImageAttachmentModule,
     ToastModule,
-    DialogModule
+    DialogModule,
+    RadioButtonModule
   ],
 })
-export class RestaurantModule { }
+export class RestaurantModule {}

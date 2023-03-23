@@ -1,12 +1,9 @@
 package com.swp490_g2.hrms.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.util.Set;
 
 @Entity
 @Getter
@@ -20,13 +17,10 @@ import java.util.Set;
 public class Address extends BaseEntity{
 
     @Column(nullable = false)
-    private String detailsAddress;
+    private String specificAddress;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cityId", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "wardId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private City city;
-
-
+    private Ward ward;
 }

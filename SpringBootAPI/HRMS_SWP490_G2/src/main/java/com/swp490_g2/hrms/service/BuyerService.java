@@ -17,6 +17,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -58,6 +59,7 @@ public class BuyerService {
 
         Restaurant createdRestaurant = restaurantService.insert(restaurant);
         buyer.setRequestingRestaurant(createdRestaurant);
+        buyer.setRequestingOpeningRestaurantDate(Instant.now());
         createdRestaurant.setCreatedBy(buyer.getId());
         buyerRepository.save(buyer);
         restaurantService.update(createdRestaurant);
@@ -98,5 +100,9 @@ public class BuyerService {
 
         SearchSpecification<Buyer> specification = new SearchSpecification<>(request);
         return buyerRepository.findAll(specification);
+    }
+
+    public void update(Buyer requester) {
+        buyerRepository.save(requester);
     }
 }
