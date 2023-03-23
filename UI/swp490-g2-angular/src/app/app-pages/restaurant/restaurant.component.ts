@@ -17,6 +17,7 @@ import {
   SortRequest,
   User,
 } from "src/app/ngswag/client";
+import { getFullAddress } from "src/app/utils";
 
 @Component({
   selector: "app-restaurant",
@@ -221,6 +222,10 @@ export class RestaurantComponent implements OnInit {
   onSortByChange(sortRequest: SortRequest) {
     this.sorts = [sortRequest];
     this.changeFilter();
+  }
+
+  get fullAddress(): string {
+    return getFullAddress(this.restaurant?.address);
   }
 }
 

@@ -25,6 +25,13 @@
                     {{ restaurant.restaurantName }}
                   </span>
                   <i class="pi pi-star text-2xl ml-4 text-yellow-500"></i>
+
+                  <div class="flex align-items-center flex-wrap text-sm" *ngIf="fullAddress">
+                    <div class="mr-5 mt-3">
+                      <span class="font-medium text-500"> {{fullAddress}} </span>
+                    </div>
+                  </div>
+
                   <div class="flex align-items-center flex-wrap text-sm">
                     <div class="mr-5 mt-3">
                       <span class="font-medium text-500">FOLLOWERS</span>
