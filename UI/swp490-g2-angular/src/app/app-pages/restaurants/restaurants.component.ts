@@ -41,16 +41,16 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   restaurants: Restaurant[] = [];
   distances = [
     {
+      name: "2 km",
+      value: 2,
+    },
+    {
       name: "5 km",
       value: 5,
     },
     {
       name: "10 km",
       value: 10,
-    },
-    {
-      name: "15 km",
-      value: 15,
     },
   ];
 
