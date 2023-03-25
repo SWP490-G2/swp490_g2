@@ -5,9 +5,13 @@ import {
   OnInit,
   ViewChild,
 } from "@angular/core";
+import { Title } from "@angular/platform-browser";
+import { Router } from "@angular/router";
 import { of, switchMap } from "rxjs";
 import { GoogleMapService } from "src/app/global/google-map.service";
 import {
+  Address,
+  FilterRequest,
   Restaurant,
   RestaurantClient,
   SearchRequest,
@@ -35,12 +39,33 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   @ViewChild("mapContainer", { static: false }) mapContainer!: ElementRef;
   map?: google.maps.Map;
   restaurants: Restaurant[] = [];
+  distances = [
+    {
+      name: "5 km",
+      value: 5,
+    },
+    {
+      name: "10 km",
+      value: 10,
+    },
+    {
+      name: "15 km",
+      value: 15,
+    },
+  ];
+
+  distance = this.distances[0];
+  restaurantMarkers: google.maps.Marker[] = [];
 
   constructor(
     private $userClient: UserClient,
     private $map: GoogleMapService,
-    private $restaurantClient: RestaurantClient
-  ) {}
+    private $restaurantClient: RestaurantClient,
+    private $title: Title,
+    private $router: Router
+  ) {
+    $title.setTitle("Restaurants");
+  }
 
   ngAfterViewInit(): void {
     this.map = new google.maps.Map(
@@ -53,42 +78,94 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       .pipe(
         switchMap((user) => {
           this.currentUser = user;
-          if (!this.currentUser?.address) return of(undefined);
-          return this.$map.getAddressDetails(
-            getFullAddress(this.currentUser.address)
-          );
-        }),
-        switchMap((result) => {
-          const loc = result?.geometry.location;
-          if (!loc) return of(undefined);
-
-          // Di chuyen map toi vi tri cua user
-          const pos = new google.maps.LatLng(loc.lat(), loc.lng());
-          this.map?.panTo(pos);
-
-          // Them cham do vao map
-          new google.maps.Marker({
-            position: pos,
-            map: this.map,
-          });
-
-          return of(undefined);
+          if (!this.currentUser?.id || !this.currentUser?.address) return of();
+          this.searchRestaurants();
+          return this.getAddressAndMark(this.currentUser.address);
         })
       )
       .subscribe();
+  }
+
+  searchRestaurants() {
+    this.restaurantMarkers.map((marker) => {
+      marker.setMap(null);
+    });
+
+    this.restaurantMarkers = [];
 
     this.$restaurantClient
-      .search(new SearchRequest())
+      .search(
+        this.distance.value,
+        <number>this.currentUser?.id,
+        new SearchRequest()
+      )
       .pipe(
-        switchMap((page) => {
-          if (!page.content) return of(undefined);
+        switchMap((restaurants) => {
+          this.restaurants = restaurants;
 
-          this.restaurants = page.content;
-          return of(undefined);
+          this.restaurants.map((restaurant) => {
+            this.getAddressAndMark(restaurant.address, restaurant).subscribe();
+          });
+
+          return of();
         })
       )
       .subscribe();
   }
 
   ngOnInit(): void {}
+
+  private getAddressAndMark(address?: Address, restaurant?: Restaurant) {
+    if (!address?.id) return of();
+
+    return this.$map.getAddressDetails(getFullAddress(address)).pipe(
+      switchMap((result) => {
+        const loc = result?.geometry.location;
+        if (!loc) return of();
+
+        // Di chuyen map toi vi tri cua user
+        const pos = new google.maps.LatLng(loc.lat(), loc.lng());
+        if (!restaurant) this.map?.panTo(pos);
+
+        // Them cham do vao map
+        const marker = new google.maps.Marker({
+          position: pos,
+          map: this.map,
+          icon: !restaurant ? "assets/images/user-marker.png" : null,
+          label: restaurant
+            ? {
+                fontWeight: "bold",
+                fontSize: "14px",
+                text: restaurant.restaurantName!,
+              }
+            : null,
+        });
+
+        marker.addListener("click", () => {
+          this.$router.navigate(["restaurant", restaurant?.id]);
+        });
+
+        if (restaurant) {
+          this.restaurantMarkers.push(marker);
+          (restaurant as any).marker = marker;
+        }
+
+        return of();
+      })
+    );
+  }
+
+  getRestaurantFullAddress(restaurant: Restaurant): string {
+    return getFullAddress(restaurant.address);
+  }
+
+  changeRadius() {
+    this.searchRestaurants();
+  }
+
+  onRestaurantListItemClick(restaurant: Restaurant) {
+    this.map?.setCenter(
+      (restaurant as any).marker.getPosition() as google.maps.LatLng
+    );
+  }
 }
