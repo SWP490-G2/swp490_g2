@@ -2,9 +2,13 @@ package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.entity.File;
 import com.swp490_g2.hrms.entity.Restaurant;
+import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import com.swp490_g2.hrms.repositories.RestaurantRepository;
+import com.swp490_g2.hrms.requests.SearchRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,8 +32,6 @@ public class RestaurantService {
     }
 
     private UserService userService;
-
-    private AdminService adminService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -64,6 +66,12 @@ public class RestaurantService {
 
     public void update(Restaurant restaurant) {
         restaurantRepository.save(restaurant);
+    }
+
+    public Page<Restaurant> search(SearchRequest request) {
+        SearchSpecification<Restaurant> specification = new SearchSpecification<>(request);
+        Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
+        return restaurantRepository.findAll(specification, pageable);
     }
 
     public List<Restaurant> getAllRestaurant() {

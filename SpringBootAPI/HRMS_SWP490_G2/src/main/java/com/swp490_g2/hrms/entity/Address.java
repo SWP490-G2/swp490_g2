@@ -23,4 +23,10 @@ public class Address extends BaseEntity{
     @JoinColumn(name = "wardId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Ward ward;
+
+    @Column(nullable = false)
+    private Double lat;
+
+    @Column(nullable = false)
+    private Double lng;
 }
