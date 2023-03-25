@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -32,13 +33,12 @@ public class RestaurantController {
     }
 
     @PutMapping("update")
-    public void update(@RequestBody Restaurant restaurant)
-    {
+    public void update(@RequestBody Restaurant restaurant) {
         restaurantService.update(restaurant);
     }
 
     @PostMapping(value = "/search")
-    public ResponseEntity<Page<Restaurant>> search(@RequestBody SearchRequest request) {
-        return ResponseEntity.ok(restaurantService.search(request));
+    public ResponseEntity<List<Restaurant>> search(@RequestBody SearchRequest request, @RequestParam("distance") Double distance, @RequestParam("user-id") Long userId) {
+        return ResponseEntity.ok(restaurantService.search(request, distance, userId));
     }
 }

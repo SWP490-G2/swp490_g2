@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.service;
 
+import com.swp490_g2.hrms.common.utils.CommonUtils;
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import com.swp490_g2.hrms.repositories.RestaurantRepository;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @Getter
@@ -66,9 +69,20 @@ public class RestaurantService {
         restaurantRepository.save(restaurant);
     }
 
-    public Page<Restaurant> search(SearchRequest request) {
+    public List<Restaurant> search(SearchRequest request, Double distance, Long userId) {
         SearchSpecification<Restaurant> specification = new SearchSpecification<>(request);
         Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
-        return restaurantRepository.findAll(specification, pageable);
+        List<Restaurant> restaurants = restaurantRepository.findAll(specification, pageable).getContent();
+        User user = userService.getById(userId);
+        if (user == null || user.getAddress() == null)
+            return List.of();
+
+        return restaurants.stream().filter(restaurant -> {
+            if (restaurant.getAddress() == null)
+                return false;
+
+            return CommonUtils.haversine_distance(restaurant.getAddress().getLat(), restaurant.getAddress().getLng(),
+                    user.getAddress().getLat(), user.getAddress().getLng()) < distance;
+        }).toList();
     }
 }

@@ -15,6 +15,8 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { ToastModule } from "primeng/toast";
 import { HttpErrorHandler } from "src/app/global/http-error-handler";
+import { DropdownModule } from "primeng/dropdown";
+import { AccountInformationModule } from "src/app/app-pages/account-information/account-information.module";
 
 @NgModule({
   declarations: [UpdateRestaurantInfoApplyComponent],
@@ -31,6 +33,8 @@ import { HttpErrorHandler } from "src/app/global/http-error-handler";
     FileUploadModule,
     HttpClientModule,
     ToastModule,
+    DropdownModule,
+    AccountInformationModule,
   ],
   providers: [
     MessageService,

@@ -16,15 +16,19 @@
   >
     <div class="flex align-items-start flex-column md:flex-row">
       <div class="p-5">
-        <span class="text-900 font-medium text-3xl"
-          >Update Restaurant Information</span
-        >
+        <span class="text-900 font-medium text-3xl">
+          Update Restaurant Information
+        </span>
       </div>
     </div>
   </div>
 </div>
 
-<div class="surface-section px-2 py-4 md:px-6 lg:px-8">
+<form
+  #form="ngForm"
+  class="surface-section px-2 py-4 md:px-6 lg:px-8"
+  (ngSubmit)="updateResInfo()"
+>
   <label for="owner" class="block text-900 font-medium my-3">Owner</label>
   <div class="grid">
     <div class="col-12">
@@ -45,41 +49,35 @@
     </div>
   </div>
 
-  <label for="address" class="block text-900 font-medium my-3">Address</label>
-  <div class="grid">
-    <div class="col-12">
-      <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="Address No." />
-      </div>
-    </div>
-  </div>
-  <div class="grid p-fluid my-2">
-    <div class="col-12 md:col-4">
-      <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="City" />
-      </div>
-    </div>
-    <div class="col-12 md:col-4">
-      <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="District" />
-      </div>
-    </div>
-    <div class="col-12 md:col-4">
-      <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="Ward" />
-      </div>
-    </div>
-  </div>
+  <app-address-fields></app-address-fields>
 
-  <label for="phoneNo" class="block text-900 font-medium my-3"
+  <label for="phoneNumber" class="block text-900 font-medium my-3"
     >Phone Number</label
   >
   <div class="grid">
     <div class="col-12">
       <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="Phone Number" />
+        <input
+          id="phoneNumber"
+          type="text"
+          pInputText
+          class="w-full mb-1"
+          name="phoneNumber"
+          ngModel
+          placeholder="Phone Number"
+        />
       </div>
     </div>
+  </div>
+  <div
+    class="flex align-items-center gap-1"
+    *ngIf="
+      form.controls['phoneNumber']?.dirty &&
+      form.controls['phoneNumber']?.errors
+    "
+  >
+    <i class="pi pi-times-circle text-danger"></i>
+    <small class="text-danger"> Enter a valid phone number! </small>
   </div>
 
   <label for="descr" class="block text-900 font-medium my-3">Description</label>
@@ -248,4 +246,4 @@
     icon="pi pi-check"
     class="w-full mt-4"
   ></button>
-</div>
+</form>

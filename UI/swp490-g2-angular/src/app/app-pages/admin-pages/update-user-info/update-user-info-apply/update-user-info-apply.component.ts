@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { finalize } from "rxjs";
-import { AuthenticationResponse } from "src/app/ngswag/client";
+import { AuthenticationResponse, City, District } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-update-user-info-apply",
@@ -21,6 +21,11 @@ export class UpdateUserInfoApplyComponent implements AfterViewInit, OnInit {
   $client: any;
   private _registerButtonDisabled: boolean;
   codeValidatorDialogVisible: boolean;
+  $addressClient: any;
+  cities: any;
+  address: any;
+  districts: any;
+  wards: any;
 
   constructor(private messageService: MessageService) {}
 
@@ -37,6 +42,46 @@ export class UpdateUserInfoApplyComponent implements AfterViewInit, OnInit {
         Validators.pattern("^(0[3|5|7|8|9])+([0-9]{8})$"),
       ]);
       this.form.controls["phoneNumber"].updateValueAndValidity();
+
+      this.$addressClient.getCities().subscribe((cities) => {
+        this.cities = cities.sort(
+          (a, b) => <number>a.cityName?.localeCompare(b.cityName!)
+        );
+
+        this.form.controls["city"].setValue(this.address?.ward?.district?.city);
+      });
+
+      if (this.address?.ward?.district?.city?.id) {
+        this.$addressClient
+          .getDistrictsByCityId(this.address?.ward?.district?.city?.id)
+          .subscribe((districts) => {
+            this.districts = districts.sort(
+              (a, b) => <number>a.districtName?.localeCompare(b.districtName!)
+            );
+
+            this.form.controls["district"].setValue(
+              this.address?.ward?.district
+            );
+          });
+      }
+
+      if (this.address?.ward?.district?.id) {
+        this.$addressClient
+          .getWardsByDistrictId(this.address?.ward?.district?.id)
+          .subscribe((wards) => {
+            this.wards = wards.sort(
+              (a, b) => <number>a.wardName?.localeCompare(b.wardName!)
+            );
+
+            this.form.controls["ward"].setValue(this.address?.ward);
+          });
+      }
+
+      if (this.address?.specificAddress) {
+        this.form.controls["specificAddress"].setValue(
+          this.address?.specificAddress
+        );
+      }
     }, 0);
   }
 
@@ -73,5 +118,35 @@ export class UpdateUserInfoApplyComponent implements AfterViewInit, OnInit {
   ngOnInit() {
     this.selectedGender = this.genders[1];
   }
-}
 
+  changeProvince() {
+    const selectedCity = <City | undefined>this.form.controls["city"]?.value;
+    if (!selectedCity || !selectedCity.id) return;
+
+    this.wards.length = 0;
+    this.form.controls["ward"].setValue(undefined);
+    this.form.controls["specificAddress"]?.setValue("");
+
+    this.$addressClient
+      .getDistrictsByCityId(selectedCity.id)
+      .subscribe((districts) => (this.districts = districts));
+  }
+
+  changeDistrict() {
+    const selectedDistrict = <District | undefined>(
+      this.form.controls["district"]?.value
+    );
+
+    this.form.controls["specificAddress"]?.setValue("");
+
+    if (!selectedDistrict || !selectedDistrict.id) return;
+
+    this.$addressClient
+      .getWardsByDistrictId(selectedDistrict.id)
+      .subscribe((wards) => (this.wards = wards));
+  }
+
+  changeWard() {
+    this.form.controls["specificAddress"]?.setValue("");
+  }
+}
