@@ -19,4 +19,8 @@ public class File extends BaseEntity{
     @OneToOne(mappedBy = "avatarFile")
     @JsonIgnore
     private Restaurant avatarFileRestaurant;
+
+    @OneToOne(mappedBy = "avatarFile")
+    @JsonIgnore
+    private User user;
 }

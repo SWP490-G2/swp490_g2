@@ -24,9 +24,9 @@ public class Address extends BaseEntity{
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Ward ward;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Double lat;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Double lng;
 }

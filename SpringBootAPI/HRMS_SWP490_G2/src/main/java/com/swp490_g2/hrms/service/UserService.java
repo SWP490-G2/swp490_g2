@@ -22,7 +22,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Instant;
 import java.util.Random;
 import java.util.*;
 
@@ -53,6 +55,11 @@ public class UserService {
     }
 
     private FileService fileService;
+
+    @Autowired
+    public void setFileService(FileService fileService) {
+        this.fileService = fileService;
+    }
 
     private PasswordEncoder passwordEncoder;
 
@@ -276,17 +283,27 @@ public class UserService {
                 .build();
     }
 
-    public void update(UserInformationRequest userInformationRequest) {
+    public File updateUserAvatar(User user, MultipartFile imageFile){
+        String path = fileService.save(imageFile, "user", "avatar");
+        File avatarImage = File.builder()
+                .filePath(path)
+                .build();
+        avatarImage.setCreatedBy(user.getId());
+        avatarImage.setModifiedBy(user.getId());
+        return avatarImage;
+    }
+
+    public void update(UserInformationRequest userInformationRequest, MultipartFile imageFile) {
         User user = getCurrentUser();
         if (user == null) {
             return;
         }
-
         user.setFirstName(userInformationRequest.getFirstName());
         user.setMiddleName(userInformationRequest.getMiddleName());
         user.setLastName(userInformationRequest.getLastName());
-        user.setDateOfBirth(userInformationRequest.getDateOfBirth());
-
+        String dateOfBirth = userInformationRequest.getDateOfBirth();
+        Instant timestampFromString =  Instant.parse(dateOfBirth);
+        user.setDateOfBirth(timestampFromString);
         Ward ward = new Ward();
         ward.setId(userInformationRequest.getWardId());
         Address address = Address.builder()
@@ -295,9 +312,12 @@ public class UserService {
                 .lat(userInformationRequest.getAddressLat())
                 .lng(userInformationRequest.getAddressLng())
                 .build();
-
         address.setId(userInformationRequest.getAddressId());
         user.setAddress(address);
+        if (imageFile.getContentType().equalsIgnoreCase("image/png")) {
+            File avatarFile = updateUserAvatar(user, imageFile);
+            user.setAvatarFile(avatarFile);
+        }
 
         userRepository.save(user);
     }

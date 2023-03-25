@@ -9,8 +9,12 @@ import com.swp490_g2.hrms.security.AuthenticationResponse;
 import com.swp490_g2.hrms.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,9 +58,11 @@ public class UserController {
         return ResponseEntity.ok(userService.changePassword(request));
     }
 
-    @PutMapping("/update")
-    public void update(@Valid @RequestBody UserInformationRequest userInformationRequest){
-        userService.update(userInformationRequest);
+    @PutMapping(value = "/update")
+    public void update(@RequestPart("file") MultipartFile imageFile,
+                       @Valid UserInformationRequest userInformationRequest
+                       ){
+        userService.update(userInformationRequest, imageFile);
     }
 
 
