@@ -51,6 +51,8 @@ const routes: Routes = [
             (m) => m.RestaurantsModule
           ),
       },
+
+  { path: 'item-action', loadChildren: () => import('./item-action/item-action.module').then(m => m.ItemActionModule) }
     ],
   },
 ];
