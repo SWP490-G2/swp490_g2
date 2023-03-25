@@ -1,0 +1,21 @@
+<div class="flex align-items-center">
+  <span class="text-900 font-medium text-3xl" *ngIf="!isEditing">
+    {{ restaurant.restaurantName }}
+  </span>
+  <input
+    type="text"
+    pInputText
+    [(ngModel)]="restaurant.restaurantName"
+    *ngIf="isEditing"
+    required
+  />
+  <button
+    *ngIf="editable"
+    pButton
+    pRipple
+    type="button"
+    [icon]="isEditing ? 'pi pi-check' : 'pi pi-pencil'"
+    class="ml-2 p-button-rounded"
+    (click)="onButtonClick()"
+  ></button>
+</div>

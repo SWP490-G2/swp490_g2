@@ -7,10 +7,5 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Set;
 
 public interface FileRepository extends JpaRepository<File, Long> {
-    @Query(value = """
-                  select f.* from file f inner join user u\s
-                        on f.createdBy = u.userId\s
-                        where u.userId = :id
-            """, nativeQuery = true)
-    Set<File> findAllByCurrentUserId(Long id);
+    Set<File> findByCreatedBy(Long id);
 }

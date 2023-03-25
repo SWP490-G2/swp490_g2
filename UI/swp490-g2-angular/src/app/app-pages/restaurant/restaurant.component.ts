@@ -14,6 +14,7 @@ import {
   Restaurant,
   RestaurantClient,
   SearchRequest,
+  Seller,
   SortRequest,
   User,
 } from "src/app/ngswag/client";
@@ -147,21 +148,19 @@ export class RestaurantComponent implements OnInit {
       .subscribe(() => location.reload());
   }
 
-  canEditImage(): boolean {
-    return true;
+  get editable(): boolean {
+    if (!this.user || !this.user.id) return false;
+    if (this.user.role === "ADMIN") return true;
+    if (
+      this.user.role === "SELLER" &&
+      (<Seller>this.user).restaurants?.some(
+        (restaurant) => restaurant.id === this.restaurant?.id
+      )
+    ) {
+      return true;
+    }
 
-    // if (!this.user || !this.user.id) return false;
-    // if (this.user.role === "ADMIN") return true;
-    // if (
-    //   this.user.role === "SELLER" &&
-    //   (<Seller>this.user).restaurants?.some(
-    //     (restaurant) => restaurant.id === this.restaurant?.id
-    //   )
-    // ) {
-    //   return true;
-    // }
-
-    // return false;
+    return false;
   }
 
   toggleAllCategories(selected: boolean) {

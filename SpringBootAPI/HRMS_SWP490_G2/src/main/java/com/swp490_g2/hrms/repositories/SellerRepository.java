@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-public interface SellerRepository extends  JpaRepository<Seller, Long>  {
+import java.util.Optional;
 
+public interface SellerRepository extends  JpaRepository<Seller, Long>  {
+    Optional<Seller> findByEmail(String email);
 }

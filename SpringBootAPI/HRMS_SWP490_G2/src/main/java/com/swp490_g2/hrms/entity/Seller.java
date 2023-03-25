@@ -13,9 +13,10 @@ import java.util.Set;
 @Table(name = "seller")
 @Inheritance(strategy = InheritanceType.JOINED)
 @AttributeOverride(name = "id", column = @Column(name = "userId"))
+@PrimaryKeyJoinColumn(name = "userId")
 public class Seller extends User {
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "seller__restaurant",
             joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "restaurantId"))
     private Set<Restaurant> restaurants;

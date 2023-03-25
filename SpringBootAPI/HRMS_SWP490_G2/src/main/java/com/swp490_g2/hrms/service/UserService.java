@@ -243,7 +243,20 @@ public class UserService {
             return null;
 
         String email = authentication.getName();
-        return getByEmail(email);
+        if (!authentication.isAuthenticated() || email == null)
+            return null;
+
+        String role = authentication.getAuthorities().stream().findFirst().get().getAuthority();
+        if (role.equals("BUYER"))
+            return buyerService.getByEmail(email);
+
+        if (role.equals("SELLER"))
+            return sellerService.getByEmail(email);
+
+        if (role.equals("ADMIN"))
+            return adminService.getByEmail(email);
+
+        return null;
     }
 
     public AuthenticationResponse changePassword(ChangePasswordRequest request) {
