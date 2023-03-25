@@ -36,6 +36,10 @@ export class NavbarComponent implements OnInit {
     if (this.userExisted()) {
       // if(this.user?.email)
       // this.user.email: string | undefined
+      if (this.user?.role === "ADMIN") {
+        return "Admin Account";
+      }
+
       return <string>this.user?.email;
     }
 
@@ -55,8 +59,14 @@ export class NavbarComponent implements OnInit {
     this.$router.navigate(["account-information"], { relativeTo: this.$route });
   }
 
-  userExistedAdmin(): boolean {
+  userExistedAdmin(): string {
     // !! giup ep kieu sang boolean
-    return !!(this.user && this.user.email && this.user.role);
+    // if(this.user?.email)
+    // this.user.email: string | undefined
+    if (this.user?.role === "ADMIN") {
+      return "Admin Account";
+    }
+
+    return "";
   }
 }

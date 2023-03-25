@@ -23,6 +23,7 @@
     </div>
   </div>
 </div>
+
 <form #form="ngForm" (ngSubmit)="register()">
   <div class="surface-section px-2 py-4 md:px-6 lg:px-8">
     <label for="Email" class="block text-900 font-medium my-3">Email</label>
@@ -80,28 +81,85 @@
       </div>
     </div>
 
+    <div class="grid p-fluid">
+      <div class="col-12 md:col-4">
+        <label for="city" class="block text-900 font-medium my-2"
+          >Province*</label
+        >
+        <p-dropdown
+          inputId="city"
+          [options]="cities"
+          ngModel
+          name="city"
+          optionLabel="cityName"
+          [filter]="true"
+          filterBy="cityName"
+          placeholder="Select a province"
+          (onChange)="changeProvince()"
+          [required]="true"
+        >
+          <ng-template pTemplate="selectedItem">
+            <div>{{ form.controls["city"].value.cityName }}</div>
+          </ng-template>
+          <ng-template let-city pTemplate="item">
+            <div>{{ city.cityName }}</div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <label for="district" class="block text-900 font-medium my-2"
+          >District*</label
+        >
+        <p-dropdown
+          inputId="district"
+          [options]="districts"
+          ngModel
+          name="district"
+          [filter]="true"
+          filterBy="districtName"
+          placeholder="Select a district"
+          (onChange)="changeDistrict()"
+          [required]="true"
+        >
+          <ng-template pTemplate="selectedItem">
+            <div>{{ form.controls["district"].value.districtName }}</div>
+          </ng-template>
+          <ng-template let-district pTemplate="item">
+            <div>{{ district.districtName }}</div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <label for="ward" class="block text-900 font-medium my-2">Ward*</label>
+        <p-dropdown
+          inputId="ward"
+          [options]="wards"
+          ngModel
+          name="ward"
+          optionLabel="wardName"
+          [filter]="true"
+          filterBy="wardName"
+          placeholder="Select a ward"
+          (onChange)="changeWard()"
+          [required]="true"
+        >
+          <ng-template pTemplate="selectedItem">
+            <div>{{ form.controls["ward"].value.wardName }}</div>
+          </ng-template>
+          <ng-template let-ward pTemplate="item">
+            <div>{{ ward.wardName }}</div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+    </div>
+
     <label for="address" class="block text-900 font-medium my-3">Address</label>
     <div class="grid">
       <div class="col-12">
         <div class="p-inputgroup">
           <input type="text" pInputText placeholder="Address No." />
-        </div>
-      </div>
-    </div>
-    <div class="grid p-fluid my-2">
-      <div class="col-12 md:col-4">
-        <div class="p-inputgroup">
-          <input type="text" pInputText placeholder="City" />
-        </div>
-      </div>
-      <div class="col-12 md:col-4">
-        <div class="p-inputgroup">
-          <input type="text" pInputText placeholder="District" />
-        </div>
-      </div>
-      <div class="col-12 md:col-4">
-        <div class="p-inputgroup">
-          <input type="text" pInputText placeholder="Ward" />
         </div>
       </div>
     </div>
@@ -182,7 +240,7 @@
       </div>
     </div>
 
-    <label for="phoneNo" class="block text-900 font-medium my-3"
+    <label for="phoneNumber" class="block text-900 font-medium my-3"
       >Phone Number</label
     >
     <div class="grid">
