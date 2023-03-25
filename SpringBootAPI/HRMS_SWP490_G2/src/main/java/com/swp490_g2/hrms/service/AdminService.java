@@ -108,4 +108,32 @@ public class AdminService {
         requester.setRequestingRestaurantStatus(RequestingRestaurantStatus.REJECTED);
         buyerService.update(requester);
     }
+
+    public List<Restaurant> getAllRestaurant() {
+        Admin currentAdmin = getCurrentAdmin();
+        if (currentAdmin == null)
+            throw new AccessDeniedException("This request allows admin only!");
+        return restaurantService.getAllRestaurant();
+    }
+
+    public Restaurant getRestaurantById(Long restaurantId) {
+        Admin currentAdmin = getCurrentAdmin();
+        if (currentAdmin == null)
+            throw new AccessDeniedException("This request allows admin only!");
+        return restaurantService.getById(restaurantId);
+    }
+
+    public void insertNewRestaurant(Restaurant restaurant) {
+        Admin currentAdmin = getCurrentAdmin();
+        if (currentAdmin == null)
+            throw new AccessDeniedException("This request allows admin only!");
+        restaurantService.insert(restaurant);
+    }
+
+    public void updateRestaurant(Restaurant restaurant) {
+        Admin currentAdmin = getCurrentAdmin();
+        if (currentAdmin == null)
+            throw new AccessDeniedException("This request allows admin only!");
+        restaurantService.update(restaurant);
+    }
 }

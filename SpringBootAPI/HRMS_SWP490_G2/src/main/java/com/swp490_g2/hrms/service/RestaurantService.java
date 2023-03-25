@@ -2,14 +2,13 @@ package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.entity.File;
 import com.swp490_g2.hrms.entity.Restaurant;
-import com.swp490_g2.hrms.entity.Role;
-import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.repositories.RestaurantRepository;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @Getter
@@ -29,6 +28,8 @@ public class RestaurantService {
     }
 
     private UserService userService;
+
+    private AdminService adminService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -63,5 +64,9 @@ public class RestaurantService {
 
     public void update(Restaurant restaurant) {
         restaurantRepository.save(restaurant);
+    }
+
+    public List<Restaurant> getAllRestaurant() {
+        return restaurantRepository.findAll();
     }
 }

@@ -19,7 +19,7 @@ import java.util.Date;
 @AttributeOverride(name = "id", column = @Column(name = "userId"))
 @PrimaryKeyJoinColumn(name = "userId")
 public class Buyer extends User{
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "requestingRestaurantId")
     private Restaurant requestingRestaurant;
 
