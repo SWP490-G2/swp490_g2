@@ -153,12 +153,54 @@
       </div>
     </div>
 
-    <button
-      pButton
-      pRipple
-      label="Save Changes"
-      icon="pi pi-check"
-      class="w-full mt-4"
-    ></button>
+    <div class="grid p-fluid">
+      <div class="col-12 md:col-6">
+        <button
+          pButton
+          pRipple
+          label="Save Changes"
+          icon="pi pi-check"
+          class="w-full mt-4"
+        ></button>
+      </div>
+      <div class="col-12 md:col-6">
+        <button
+          pButton
+          pRipple
+          label="Delete Item"
+          icon="pi pi-trash"
+          class="w-full mt-4 p-button-danger"
+          (click)="showModalDialog()"
+        ></button>
+        <p-dialog
+          header="Confirm to Delete Item?"
+          [(visible)]="displayModal"
+          [modal]="true"
+          [style]="{ width: '50vw' }"
+          [draggable]="false"
+          [resizable]="false"
+        >
+          <p class="m-0">Are you sure want to Delete this Item?</p>
+          <ng-template pTemplate="footer">
+            <button
+              pButton
+              pRipple
+              icon="pi pi-check"
+              label="Yes"
+              class="p-button-rounded p-button-success mr-2"
+              (click)="this.displayModal = false"
+            ></button>
+            <button
+              pButton
+              pRipple
+              icon="pi pi-ban"
+              label="No"
+              class="p-button-rounded p-button-danger"
+              (click)="this.displayModal = false"
+            ></button>
+          </ng-template>
+        </p-dialog>
+      </div>
+    </div>
   </form>
 </div>

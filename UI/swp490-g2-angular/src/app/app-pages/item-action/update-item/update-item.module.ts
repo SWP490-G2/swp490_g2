@@ -13,6 +13,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
+import { DialogModule } from 'primeng/dialog';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { DropdownModule } from 'primeng/dropdown';
     FileUploadModule,
     HttpClientModule,
     ToastModule,
-    DropdownModule
+    DropdownModule,
+    DialogModule,
   ]
 })
 export class UpdateItemModule { }

@@ -45,6 +45,9 @@ import { AddressFieldsComponent } from "./address-fields/address-fields.componen
     AccordionModule,
     TableModule,
   ],
+  exports: [
+    AddressFieldsComponent
+  ],
   providers: [
     MessageService,
     ConfirmationService,

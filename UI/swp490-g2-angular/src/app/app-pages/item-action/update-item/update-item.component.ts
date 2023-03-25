@@ -14,12 +14,18 @@ export class UpdateItemComponent implements OnInit, AfterViewInit{
   selectedCategory: string;
   groupedCategory: SelectItemGroup[];
   @ViewChild("form", { static: true }) form!: NgForm;
+  displayModal: boolean;
 
   constructor(private messageService: MessageService) {
     this.groupedCategory = [
 
     ]
   }
+
+  showModalDialog() {
+    this.displayModal = true;
+  }
+
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.form.controls["price"].addValidators([
@@ -49,3 +55,7 @@ export class UpdateItemComponent implements OnInit, AfterViewInit{
 
   }
 }
+function showModalDialog() {
+  throw new Error('Function not implemented.');
+}
+
