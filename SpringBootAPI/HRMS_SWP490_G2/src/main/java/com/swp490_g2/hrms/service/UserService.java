@@ -289,10 +289,16 @@ public class UserService {
 
         Ward ward = new Ward();
         ward.setId(userInformationRequest.getWardId());
-        user.setAddress(Address.builder()
+        Address address = Address.builder()
                 .specificAddress(userInformationRequest.getSpecificAddress())
                 .ward(ward)
-                .build());
+                .lat(userInformationRequest.getAddressLat())
+                .lng(userInformationRequest.getAddressLng())
+                .build();
+
+        address.setId(userInformationRequest.getAddressId());
+        user.setAddress(address);
+
         userRepository.save(user);
     }
 

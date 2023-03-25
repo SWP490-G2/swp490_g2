@@ -16,6 +16,7 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { RippleModule } from "primeng/ripple";
 import { StyleClassModule } from "primeng/styleclass";
 import { ToggleButtonModule } from "primeng/togglebutton";
+import { GoogleMapsModule } from "@angular/google-maps";
 
 @NgModule({
   declarations: [RestaurantsComponent],
@@ -35,6 +36,7 @@ import { ToggleButtonModule } from "primeng/togglebutton";
     CheckboxModule,
     InputNumberModule,
     DividerModule,
+    GoogleMapsModule,
   ],
 })
 export class RestaurantsModule {}

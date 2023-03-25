@@ -1,9 +1,12 @@
 package com.swp490_g2.hrms.controller;
 
+import com.swp490_g2.hrms.entity.Product;
 import com.swp490_g2.hrms.entity.ProductCategory;
 import com.swp490_g2.hrms.entity.Restaurant;
+import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,8 +37,8 @@ public class RestaurantController {
         restaurantService.update(restaurant);
     }
 
-//    @GetMapping("/get-all-by-restaurant-id/{restaurantId}")
-//    public ResponseEntity<Set<Restaurant>> getAllByRestaurantId(@PathVariable Long restaurantId) {
-//        return ResponseEntity.ok(restaurantService.getById(restaurantId));
-//    }
+    @PostMapping(value = "/search")
+    public ResponseEntity<Page<Restaurant>> search(@RequestBody SearchRequest request) {
+        return ResponseEntity.ok(restaurantService.search(request));
+    }
 }

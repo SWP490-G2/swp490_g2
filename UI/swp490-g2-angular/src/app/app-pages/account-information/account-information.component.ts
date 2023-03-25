@@ -15,14 +15,19 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
+  Address,
+  City,
+  District,
   Restaurant,
   User,
   UserClient,
   UserInformationRequest,
+  Ward,
 } from "src/app/ngswag/client";
 import { Title } from "@angular/platform-browser";
-import { DateUtils } from "src/app/utils";
-import { finalize } from "rxjs";
+import { DateUtils, getFullAddress } from "src/app/utils";
+import { finalize, of, switchMap } from "rxjs";
+import { GoogleMapService } from "src/app/global/google-map.service";
 
 @Component({
   selector: "app-account-information",
@@ -43,7 +48,8 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
     private $auth: AuthService,
     private $title: Title,
     private $userClient: UserClient,
-    private $message: MessageService
+    private $message: MessageService,
+    private $map: GoogleMapService
   ) {
     $title.setTitle("Account Information");
   }
@@ -135,28 +141,54 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   save() {
     this._submitButtonDisabled = true;
     const formValue = this.form.value;
-    this.$userClient
-      .update(
-        new UserInformationRequest({
-          firstName: formValue.firstName,
-          middleName: formValue.middleName,
-          lastName: formValue.lastName,
-          dateOfBirth: DateUtils.toDB(formValue.dateOfBirth),
-          wardId: formValue.ward.id,
-          specificAddress: formValue.specificAddress,
-        })
+
+    this.$map
+      .getAddressDetails(
+        getFullAddress(
+          new Address({
+            specificAddress: formValue.specificAddress,
+            ward: new Ward({
+              wardName: formValue.ward.wardName,
+              district: new District({
+                districtName: formValue.ward.district.districtName,
+                city: new City({
+                  cityName: formValue.ward.district.city.cityName,
+                }),
+              }),
+            }),
+          })
+        )
       )
       .pipe(
+        switchMap((res) => {
+          const loc = res?.geometry.location;
+          return this.$userClient.update(
+            new UserInformationRequest({
+              firstName: formValue.firstName,
+              middleName: formValue.middleName,
+              lastName: formValue.lastName,
+              dateOfBirth: DateUtils.toDB(formValue.dateOfBirth),
+              wardId: formValue.ward.id,
+              specificAddress: formValue.specificAddress,
+              addressLat: loc?.lat(),
+              addressLng: loc?.lng(),
+              addressId: this.user?.address?.id,
+            })
+          );
+        }),
+        switchMap(() => {
+          this.$message.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Account information updated successfully!",
+          });
+
+          return of();
+        }),
         finalize(() => {
           this._submitButtonDisabled = false;
         })
       )
-      .subscribe(() => {
-        this.$message.add({
-          severity: "success",
-          summary: "Success",
-          detail: "Account information updated successfully!",
-        });
-      });
+      .subscribe();
   }
 }
