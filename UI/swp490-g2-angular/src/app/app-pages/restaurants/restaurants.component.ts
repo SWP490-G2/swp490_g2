@@ -55,6 +55,10 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   ];
 
   distance = this.distances[0];
+
+  categories = ["All", "Cơm", "Phở", "Nước giải khát"];
+  selectedCategory = this.categories[0];
+
   restaurantMarkers: google.maps.Marker[] = [];
 
   constructor(

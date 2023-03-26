@@ -21,7 +21,7 @@
     <div class="flex align-items-center mb-4 md:mb-0">
       <div class="text-900 font-bold text-3xl">Restaurants</div>
       <p-badge
-        value="76"
+        [value]="restaurants.length.toString()"
         styleClass="ml-3 bg-gray-200 text-gray-900 p-0 border-circle"
       ></p-badge>
     </div>
@@ -29,12 +29,20 @@
       <label for="distance"> Distance radius </label>
       <p-dropdown
         inputId="distance"
-        form="distance"
         [options]="distances"
         [(ngModel)]="distance"
         optionLabel="name"
         (onChange)="changeRadius()"
       ></p-dropdown>
+    </div>
+    <div class="flex align-items-center gap-2">
+      <label for="categories"> Categories </label>
+      <p-dropdown
+        inputId="categories"
+        [options]="categories"
+        [(ngModel)]="selectedCategory"
+      >
+      </p-dropdown>
     </div>
   </div>
   <p-divider styleClass="w-full border-gray-200"></p-divider>

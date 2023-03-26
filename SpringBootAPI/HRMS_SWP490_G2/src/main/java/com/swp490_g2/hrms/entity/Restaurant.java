@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -41,4 +42,9 @@ public class Restaurant extends BaseEntity{
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     private Address address;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "restaurant__restaurant_category",
+            joinColumns = @JoinColumn(name = "restaurantId"), inverseJoinColumns = @JoinColumn(name = "restaurantCategoryId"))
+    private List<RestaurantCategory> restaurantCategories;
 }
