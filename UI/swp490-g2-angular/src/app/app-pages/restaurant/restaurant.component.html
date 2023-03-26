@@ -26,12 +26,17 @@
                       [restaurant]="restaurant"
                       [editable]="editable"
                     ></app-restaurant-name>
-                  <i class="pi pi-star text-2xl ml-4 text-yellow-500"></i>
+                    <i class="pi pi-star text-2xl ml-4 text-yellow-500"></i>
                   </div>
 
-                  <div class="flex align-items-center flex-wrap text-sm" *ngIf="fullAddress">
+                  <div
+                    class="flex align-items-center flex-wrap text-sm"
+                    *ngIf="fullAddress"
+                  >
                     <div class="mr-5 mt-3">
-                      <span class="font-medium text-500"> {{fullAddress}} </span>
+                      <span class="font-medium text-500">
+                        {{ fullAddress }}
+                      </span>
                     </div>
                   </div>
 
@@ -69,8 +74,9 @@
                   class="p-button-rounded p-button-success mr-2"
                 ></button>
                 <app-restaurant-update-information
-                [restaurant]="restaurant"
-                [editable]="editable"
+                  [restaurant]="restaurant"
+                  [editable]="editable"
+                  (onHide)="refresh()"
                 ></app-restaurant-update-information>
               </div>
             </div>
