@@ -1,6 +1,7 @@
 package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.Buyer;
+import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,10 @@ public class AdminController {
     @PutMapping("/reject-become-seller/{buyerId}")
     public void rejectBecomeSeller(@PathVariable Long buyerId) {
         adminService.rejectBecomeSeller(buyerId);
+    }
+
+    @GetMapping("/get-all-users/")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(adminService.getAllUsers());
     }
 }

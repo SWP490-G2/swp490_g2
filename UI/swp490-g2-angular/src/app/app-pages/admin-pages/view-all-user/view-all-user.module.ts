@@ -7,6 +7,7 @@ import { TableModule } from "primeng/table";
 import { DropdownModule } from "primeng/dropdown";
 import { FormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   declarations: [ViewAllUserComponent],
@@ -17,6 +18,7 @@ import { ButtonModule } from "primeng/button";
     DropdownModule,
     FormsModule,
     ButtonModule,
+    TooltipModule,
   ],
 })
 export class ViewAllUserModule {}

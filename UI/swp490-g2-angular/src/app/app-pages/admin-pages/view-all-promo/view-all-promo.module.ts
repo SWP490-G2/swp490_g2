@@ -7,6 +7,7 @@ import { FormsModule } from "@angular/forms";
 import { DropdownModule } from "primeng/dropdown";
 import { TableModule } from "primeng/table";
 import { ButtonModule } from "primeng/button";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   declarations: [ViewAllPromoComponent],
@@ -17,6 +18,7 @@ import { ButtonModule } from "primeng/button";
     DropdownModule,
     FormsModule,
     ButtonModule,
+    TooltipModule,
   ],
 })
 export class ViewAllPromoModule {}

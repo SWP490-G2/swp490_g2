@@ -4,6 +4,7 @@ import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.Admin;
 import com.swp490_g2.hrms.entity.Buyer;
 import com.swp490_g2.hrms.entity.Restaurant;
+import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import com.swp490_g2.hrms.repositories.AdminRepository;
 import lombok.Getter;
@@ -72,6 +73,10 @@ public class AdminService {
 
     public List<Buyer> getAllOpeningRestaurantRequests() {
         return this.buyerService.getAllOpeningRestaurantRequests();
+    }
+
+    public List<User> getAllUsers() {
+        return this.userService.getAllUsers();
     }
 
     public void approveBecomeSeller(Long buyerId) {

@@ -140,10 +140,29 @@
           <button
             pButton
             type="button"
-            label="View Details"
-            class="p-button-secondary"
+            class="p-button-rounded p-button-secondary"
             icon="pi pi-list"
-            routerLink="request-open-details"
+            pTooltip="View Details"
+            tooltipPosition="top"
+            [routerLink]="'view-restaurant-details'"
+          ></button>
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-danger"
+            icon="pi pi-ban"
+            pTooltip="Ban"
+            tooltipPosition="top"
+            [routerLink]="'ban-restaurant-apply'"
+          ></button>
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-success"
+            icon="pi pi-pencil"
+            pTooltip="Update Information"
+            tooltipPosition="top"
+            [routerLink]="'update-restaurant-info-apply'"
           ></button>
         </td>
       </tr>

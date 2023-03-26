@@ -30,46 +30,10 @@ const routes: Routes = [
   },
 
   {
-    path: "ban-restaurant",
-    loadChildren: () =>
-      import("./ban-restaurant/ban-restaurant.module").then(
-        (m) => m.BanRestaurantModule
-      ),
-  },
-
-  {
-    path: "change-avatar-cover",
-    loadChildren: () =>
-      import("./change-avatar-cover/change-avatar-cover.module").then(
-        (m) => m.ChangeAvatarCoverModule
-      ),
-  },
-  {
-    path: "update-restaurant-info",
-    loadChildren: () =>
-      import("./update-restaurant-info/update-restaurant-info.module").then(
-        (m) => m.UpdateRestaurantInfoModule
-      ),
-  },
-  {
-    path: "create-promo",
-    loadChildren: () =>
-      import("./create-promo/create-promo.module").then(
-        (m) => m.CreatePromoModule
-      ),
-  },
-  {
     path: "view-all-promo",
     loadChildren: () =>
       import("./view-all-promo/view-all-promo.module").then(
         (m) => m.ViewAllPromoModule
-      ),
-  },
-  {
-    path: "update-promo",
-    loadChildren: () =>
-      import("./update-promo/update-promo.module").then(
-        (m) => m.UpdatePromoModule
       ),
   },
 ];

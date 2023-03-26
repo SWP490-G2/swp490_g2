@@ -30,44 +30,9 @@ export class AdminPagesComponent {
         iconClass: "pi-bars",
       },
       {
-        title: "Ban An User",
-        routerLink: "ban-user",
-        iconClass: "pi-user-minus",
-      },
-      {
-        title: "Ban An Restaurant",
-        routerLink: "ban-restaurant",
-        iconClass: "pi-ban",
-      },
-      {
-        title: "Update User Role",
-        routerLink: "update-user-role",
-        iconClass: "pi-user-edit",
-      },
-      {
-        title: "Update Restaurant Avatar and Cover",
-        routerLink: "change-avatar-cover",
-        iconClass: "pi-image",
-      },
-      {
-        title: "Update Restaurant Information",
-        routerLink: "update-restaurant-info",
-        iconClass: "pi-pencil",
-      },
-      {
-        title: "Create New Restaurant Promotion Campaign",
-        routerLink: "create-promo",
-        iconClass: "pi-plus-circle",
-      },
-      {
         title: "View All Restaurant Promotion Campaign",
         routerLink: "view-all-promo",
         iconClass: "pi-ticket",
-      },
-      {
-        title: "Update Restaurant Promotion Campaign",
-        routerLink: "update-promo",
-        iconClass: "pi-pencil",
       },
     ];
 

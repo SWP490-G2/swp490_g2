@@ -131,18 +131,29 @@
           <button
             pButton
             type="button"
-            label="View Details"
             class="p-button-rounded p-button-secondary"
             icon="pi pi-list"
+            pTooltip="View Details"
+            tooltipPosition="top"
             [routerLink]="'view-user-details/' + userList.id"
           ></button>
           <button
             pButton
             type="button"
-            label="Ban"
             class="p-button-rounded p-button-danger"
             icon="pi pi-ban"
+            pTooltip="Ban"
+            tooltipPosition="top"
             [routerLink]="'ban-user/' + userList.id"
+          ></button>
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-success"
+            icon="pi pi-pencil"
+            pTooltip="Update Role"
+            tooltipPosition="top"
+            [routerLink]="'change-role/' + userList.id"
           ></button>
         </td>
       </tr>
