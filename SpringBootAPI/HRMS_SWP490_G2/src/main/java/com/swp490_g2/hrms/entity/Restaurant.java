@@ -31,10 +31,6 @@ public class Restaurant extends BaseEntity{
     @OneToOne(cascade=CascadeType.ALL)
     private File avatarFile;
 
-    @ManyToMany(mappedBy = "restaurants")
-    @JsonIgnore
-    private Set<Seller> sellers;
-
     @OneToMany(mappedBy="restaurant")
     @JsonManagedReference
     @Transient

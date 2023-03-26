@@ -78,7 +78,7 @@ public class RestaurantService {
             return List.of();
 
         return restaurants.stream().filter(restaurant -> {
-            if (restaurant.getAddress() == null)
+            if (!restaurant.isActive() || restaurant.getAddress() == null)
                 return false;
 
             return CommonUtils.haversine_distance(restaurant.getAddress().getLat(), restaurant.getAddress().getLng(),

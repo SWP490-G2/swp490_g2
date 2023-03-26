@@ -186,4 +186,18 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       (restaurant as any).marker.getPosition() as google.maps.LatLng
     );
   }
+
+  getRestaurantCategories(restaurant: Restaurant): string {
+    if (
+      !restaurant.restaurantCategories ||
+      restaurant.restaurantCategories.length === 0
+    ) {
+      return "No categories";
+    }
+
+    return restaurant.restaurantCategories
+      ?.map((category) => category.restaurantCategoryName)
+      .sort((a, b) => a!.localeCompare(b!))
+      .join(", ");
+  }
 }

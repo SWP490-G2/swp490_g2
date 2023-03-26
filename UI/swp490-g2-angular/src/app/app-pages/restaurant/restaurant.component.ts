@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
-import { forkJoin, Observable, switchMap } from "rxjs";
+import { forkJoin, Observable, of, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import {
   File,
@@ -14,6 +14,8 @@ import {
   Restaurant,
   RestaurantClient,
   SearchRequest,
+  Seller,
+  SellerClient,
   SortRequest,
   User,
 } from "src/app/ngswag/client";
@@ -54,7 +56,8 @@ export class RestaurantComponent implements OnInit {
     private $restaurantClient: RestaurantClient,
     private $auth: AuthService,
     private $productCategoryClient: ProductCategoryClient,
-    private $productClient: ProductClient
+    private $productClient: ProductClient,
+    private $sellerClient: SellerClient
   ) {
     const id: number = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("id")
@@ -102,7 +105,24 @@ export class RestaurantComponent implements OnInit {
         this.totalPages = productPage.totalPages!;
       });
 
-    this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
+    this.$auth
+      .getCurrentUser()
+      .pipe(
+        switchMap((user) => {
+          this.user = user;
+          if (this.user?.id && this.user?.role === "SELLER") {
+            return this.$sellerClient.getById(this.user.id).pipe(
+              switchMap((seller) => {
+                this.user = seller;
+                return of();
+              })
+            );
+          }
+
+          return of();
+        })
+      )
+      .subscribe();
   }
 
   private productSearch(): Observable<PageProduct> {
@@ -148,20 +168,18 @@ export class RestaurantComponent implements OnInit {
   }
 
   canEditImage(): boolean {
-    return true;
+    if (!this.user || !this.user.id) return false;
+    if (this.user.role === "ADMIN") return true;
+    if (
+      this.user.role === "SELLER" &&
+      (<Seller>this.user).restaurants?.some(
+        (restaurant) => restaurant.id === this.restaurant?.id
+      )
+    ) {
+      return true;
+    }
 
-    // if (!this.user || !this.user.id) return false;
-    // if (this.user.role === "ADMIN") return true;
-    // if (
-    //   this.user.role === "SELLER" &&
-    //   (<Seller>this.user).restaurants?.some(
-    //     (restaurant) => restaurant.id === this.restaurant?.id
-    //   )
-    // ) {
-    //   return true;
-    // }
-
-    // return false;
+    return false;
   }
 
   toggleAllCategories(selected: boolean) {

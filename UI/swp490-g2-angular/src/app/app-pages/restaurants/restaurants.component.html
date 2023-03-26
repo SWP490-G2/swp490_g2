@@ -63,45 +63,37 @@
               class="border-2 border-dashed border-300 border-round surface-0 p-4"
             >
               <div
-                class="flex flex-wrap align-items-start sm:align-items-center sm:flex-row sm:justify-content-between surface-border"
+                class="flex align-items-start sm:align-items-center sm:flex-row surface-border"
               >
-                <img
-                  src="assets/images/blocks/ecommerce/shoppingcart/shopping-cart-2-1.png"
-                  class="w-12rem flex-shrink-0 mx-auto md:mx-0"
-                />
-                <div class="flex-auto md:pl-5">
-                  <div
-                    class="flex flex-wrap align-items-start sm:align-items-center sm:flex-row sm:justify-content-between surface-border"
+                <app-image-attachment
+                  [url]="restaurant.avatarFile?.filePath"
+                ></app-image-attachment>
+                <div class="pl-5 flex flex-column gap-2">
+                  <a
+                    class="text-900 text-xl font-medium"
+                    [routerLink]="'/restaurant/' + restaurant.id"
                   >
-                    <div class="w-full flex flex-column">
-                      <a
-                        class="text-900 text-xl font-medium mb-3"
-                        [routerLink]="'/restaurant/' + restaurant.id"
-                      >
-                        {{ restaurant.restaurantName }}
-                      </a>
-                      <span class="text-600">
-                        {{ getRestaurantFullAddress(restaurant) }}
-                      </span>
-                    </div>
-                  </div>
-                  <div class="flex flex-column">
-                    <span class="inline-flex align-items-center mb-3">
-                      <i class="pi pi-envelope text-600 mr-2"></i>
-                      <span class="text-600 mr-2">Order today.</span>
+                    {{ restaurant.restaurantName }}
+                  </a>
+                  <span class="text-600">
+                    {{ getRestaurantFullAddress(restaurant) }}
+                  </span>
+                  <span class="inline-flex align-items-center">
+                    <span class="text-600 mr-2">
+                      Categories:
+                      <strong>{{ getRestaurantCategories(restaurant) }}</strong>
                     </span>
-                    <span class="inline-flex align-items-center mb-3">
-                      <i class="pi pi-send text-600 mr-2"></i>
-                      <span class="text-600 mr-2"
-                        >Delivery by
-                        <span class="font-bold">Dec 23.</span></span
-                      >
-                    </span>
-                    <span class="flex align-items-center">
-                      <i class="pi pi-exclamation-triangle text-600 mr-2"></i>
-                      <span class="text-600">Only 8 Available.</span>
-                    </span>
-                  </div>
+                  </span>
+                  <span class="inline-flex align-items-center">
+                    <i class="pi pi-send text-600 mr-2"></i>
+                    <span class="text-600 mr-2"
+                      >Delivery by <span class="font-bold">Dec 23.</span></span
+                    >
+                  </span>
+                  <span class="flex align-items-center">
+                    <i class="pi pi-exclamation-triangle text-600 mr-2"></i>
+                    <span class="text-600">Only 8 Available.</span>
+                  </span>
                 </div>
               </div>
             </div>
