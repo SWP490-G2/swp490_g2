@@ -132,9 +132,17 @@
             pButton
             type="button"
             label="View Details"
-            class="p-button-secondary"
+            class="p-button-rounded p-button-secondary"
             icon="pi pi-list"
             [routerLink]="'view-user-details/' + userList.id"
+          ></button>
+          <button
+            pButton
+            type="button"
+            label="Ban"
+            class="p-button-rounded p-button-danger"
+            icon="pi pi-ban"
+            [routerLink]="'ban-user/' + userList.id"
           ></button>
         </td>
       </tr>

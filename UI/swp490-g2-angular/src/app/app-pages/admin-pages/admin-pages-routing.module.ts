@@ -30,12 +30,6 @@ const routes: Routes = [
   },
 
   {
-    path: "ban-user",
-    loadChildren: () =>
-      import("./ban-user/ban-user.module").then((m) => m.BanUserModule),
-  },
-
-  {
     path: "ban-restaurant",
     loadChildren: () =>
       import("./ban-restaurant/ban-restaurant.module").then(
@@ -48,21 +42,6 @@ const routes: Routes = [
     loadChildren: () =>
       import("./change-avatar-cover/change-avatar-cover.module").then(
         (m) => m.ChangeAvatarCoverModule
-      ),
-  },
-
-  {
-    path: "update-user-info",
-    loadChildren: () =>
-      import("./update-user-info/update-user-info.module").then(
-        (m) => m.UpdateUserInfoModule
-      ),
-  },
-  {
-    path: "update-user-role",
-    loadChildren: () =>
-      import("./update-user-role/update-user-role.module").then(
-        (m) => m.UpdateUserRoleModule
       ),
   },
   {

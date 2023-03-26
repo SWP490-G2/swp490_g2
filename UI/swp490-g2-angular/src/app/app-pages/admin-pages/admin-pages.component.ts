@@ -40,11 +40,6 @@ export class AdminPagesComponent {
         iconClass: "pi-ban",
       },
       {
-        title: "Update Seller Information",
-        routerLink: "update-user-info",
-        iconClass: "pi-user-edit",
-      },
-      {
         title: "Update User Role",
         routerLink: "update-user-role",
         iconClass: "pi-user-edit",

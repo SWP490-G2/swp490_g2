@@ -4,11 +4,11 @@ import { CommonModule } from "@angular/common";
 import { BanUserRoutingModule } from "./ban-user-routing.module";
 import { BanUserComponent } from "./ban-user.component";
 import { FormsModule } from "@angular/forms";
-import { DropdownModule } from "primeng/dropdown";
-import { TableModule } from "primeng/table";
-import { CheckboxModule } from "primeng/checkbox";
 import { ButtonModule } from "primeng/button";
+import { CheckboxModule } from "primeng/checkbox";
+import { DropdownModule } from "primeng/dropdown";
 import { InputTextModule } from "primeng/inputtext";
+import { TableModule } from "primeng/table";
 
 @NgModule({
   declarations: [BanUserComponent],
@@ -20,7 +20,7 @@ import { InputTextModule } from "primeng/inputtext";
     FormsModule,
     CheckboxModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
   ],
 })
 export class BanUserModule {}

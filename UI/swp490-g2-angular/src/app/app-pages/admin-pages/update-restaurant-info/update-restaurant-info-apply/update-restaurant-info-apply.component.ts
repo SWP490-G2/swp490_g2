@@ -43,6 +43,11 @@ export class UpdateRestaurantInfoApplyComponent
         Validators.pattern("^(0[3|5|7|8|9])+([0-9]{8})$"),
       ]);
       this.form.controls["phoneNumber"].updateValueAndValidity();
+      this.form.controls["contact"].addValidators([
+        Validators.required,
+        Validators.pattern("^(0[3|5|7|8|9])+([0-9]{8})$"),
+      ]);
+      this.form.controls["contact"].updateValueAndValidity();
     }, 0);
   }
 

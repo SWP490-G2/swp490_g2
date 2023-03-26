@@ -1,11 +1,11 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { BanUserApplyComponent } from "./ban-user-apply.component";
+import { BanUserComponent } from "./ban-user.component";
 
-const routes: Routes = [{ path: "", component: BanUserApplyComponent }];
+const routes: Routes = [{ path: "", component: BanUserComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class BanUserApplyRoutingModule { }
+export class BanUserRoutingModule { }
