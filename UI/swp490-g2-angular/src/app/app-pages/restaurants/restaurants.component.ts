@@ -13,6 +13,8 @@ import {
   Address,
   FilterRequest,
   Restaurant,
+  RestaurantCategory,
+  RestaurantCategoryClient,
   RestaurantClient,
   SearchRequest,
   User,
@@ -56,8 +58,8 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
 
   distance = this.distances[0];
 
-  categories = ["All", "Cơm", "Phở", "Nước giải khát"];
-  selectedCategory = this.categories[0];
+  categories: RestaurantCategory[] = [];
+  selectedCategories: RestaurantCategory[] = [];
 
   restaurantMarkers: google.maps.Marker[] = [];
 
@@ -66,7 +68,8 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
     private $map: GoogleMapService,
     private $restaurantClient: RestaurantClient,
     private $title: Title,
-    private $router: Router
+    private $router: Router,
+    private $restaurantCategoryClient: RestaurantCategoryClient
   ) {
     $title.setTitle("Restaurants");
   }
@@ -117,7 +120,18 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.$restaurantCategoryClient
+      .getAll()
+      .pipe(
+        switchMap((categories) => {
+          this.categories = [...categories];
+          this.selectedCategories = [...this.categories];
+          return of();
+        })
+      )
+      .subscribe();
+  }
 
   private getAddressAndMark(address?: Address, restaurant?: Restaurant) {
     if (!address?.id) return of();

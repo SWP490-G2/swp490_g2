@@ -25,24 +25,28 @@
         styleClass="ml-3 bg-gray-200 text-gray-900 p-0 border-circle"
       ></p-badge>
     </div>
-    <div class="flex align-items-center gap-2">
-      <label for="distance"> Distance radius </label>
-      <p-dropdown
-        inputId="distance"
-        [options]="distances"
-        [(ngModel)]="distance"
-        optionLabel="name"
-        (onChange)="changeRadius()"
-      ></p-dropdown>
-    </div>
-    <div class="flex align-items-center gap-2">
-      <label for="categories"> Categories </label>
-      <p-dropdown
-        inputId="categories"
-        [options]="categories"
-        [(ngModel)]="selectedCategory"
-      >
-      </p-dropdown>
+    <div class="flex flex-wrap gap-5">
+      <div class="flex align-items-center gap-2">
+        <label for="distance"> Distance radius </label>
+        <p-dropdown
+          inputId="distance"
+          [options]="distances"
+          [(ngModel)]="distance"
+          optionLabel="name"
+          (onChange)="changeRadius()"
+        ></p-dropdown>
+      </div>
+      <div class="flex align-items-center gap-2">
+        <label for="categories"> Categories </label>
+        <p-multiSelect
+          inputId="categories"
+          [options]="categories"
+          [(ngModel)]="selectedCategories"
+          defaultLabel="Select a category"
+          optionLabel="restaurantCategoryName"
+          display="chip"
+        ></p-multiSelect>
+      </div>
     </div>
   </div>
   <p-divider styleClass="w-full border-gray-200"></p-divider>

@@ -20,6 +20,6 @@ public class RestaurantCategoryService {
     }
 
     public List<RestaurantCategory> getAll() {
-        return this.restaurantCategoryRepository.findAll();
+        return this.restaurantCategoryRepository.findAllByOrderByRestaurantCategoryNameAsc();
     }
 }
