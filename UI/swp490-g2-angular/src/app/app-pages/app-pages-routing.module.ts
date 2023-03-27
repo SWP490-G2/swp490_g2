@@ -58,7 +58,8 @@ const routes: Routes = [
       },
       { path: 'seller-info', loadChildren: () => import('./seller-info/seller-info.module').then(m => m.SellerInfoModule) }
       ,
-  { path: 'order-pages', loadChildren: () => import('./order-pages/order-pages.module').then(m => m.OrderPagesModule) }
+  { path: 'all-orders', loadChildren: () => import('./all-orders/all-orders.module').then(m => m.AllOrdersModule) },
+  { path: 'statistics', loadChildren: () => import('./statistics/statistics.module').then(m => m.StatisticsModule) }
     ],
   },
 ];
