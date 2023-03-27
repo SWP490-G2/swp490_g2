@@ -11,12 +11,10 @@ import { of, switchMap } from "rxjs";
 import { GoogleMapService } from "src/app/global/google-map.service";
 import {
   Address,
-  FilterRequest,
   Restaurant,
   RestaurantCategory,
   RestaurantCategoryClient,
   RestaurantClient,
-  SearchRequest,
   User,
   UserClient,
 } from "src/app/ngswag/client";
@@ -104,7 +102,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       .search(
         this.distance.value,
         <number>this.currentUser?.id,
-        new SearchRequest()
+        this.selectedCategories
       )
       .pipe(
         switchMap((restaurants) => {

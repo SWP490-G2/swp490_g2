@@ -3,6 +3,7 @@ package com.swp490_g2.hrms.controller;
 import com.swp490_g2.hrms.entity.Product;
 import com.swp490_g2.hrms.entity.ProductCategory;
 import com.swp490_g2.hrms.entity.Restaurant;
+import com.swp490_g2.hrms.entity.RestaurantCategory;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,10 @@ public class RestaurantController {
     }
 
     @PostMapping(value = "/search")
-    public ResponseEntity<List<Restaurant>> search(@RequestBody SearchRequest request, @RequestParam("distance") Double distance, @RequestParam("user-id") Long userId) {
-        return ResponseEntity.ok(restaurantService.search(request, distance, userId));
+    public ResponseEntity<List<Restaurant>> search(@RequestParam("distance") Double distance,
+                                                   @RequestParam("user-id") Long userId,
+                                                   @RequestBody List<RestaurantCategory> categories
+                                                   ) {
+        return ResponseEntity.ok(restaurantService.search(distance, userId, categories));
     }
 }
