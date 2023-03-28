@@ -1,6 +1,7 @@
 package com.swp490_g2.hrms.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,7 +29,8 @@ public class Restaurant extends BaseEntity{
     @JsonIgnore
     private Buyer requestingRestaurantBuyer;
 
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private File avatarFile;
 
     @OneToMany(mappedBy="restaurant")
@@ -36,7 +38,8 @@ public class Restaurant extends BaseEntity{
     @Transient
     private Set<Product> products;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Address address;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

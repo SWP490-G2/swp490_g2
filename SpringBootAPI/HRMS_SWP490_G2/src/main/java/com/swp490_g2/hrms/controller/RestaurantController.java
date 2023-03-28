@@ -1,13 +1,9 @@
 package com.swp490_g2.hrms.controller;
 
-import com.swp490_g2.hrms.entity.Product;
-import com.swp490_g2.hrms.entity.ProductCategory;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.entity.RestaurantCategory;
-import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,8 +37,9 @@ public class RestaurantController {
     @PostMapping(value = "/search")
     public ResponseEntity<List<Restaurant>> search(@RequestParam("distance") Double distance,
                                                    @RequestParam("user-id") Long userId,
+                                                   @RequestParam("full-text") String fullText,
                                                    @RequestBody List<RestaurantCategory> categories
-                                                   ) {
-        return ResponseEntity.ok(restaurantService.search(distance, userId, categories));
+    ) {
+        return ResponseEntity.ok(restaurantService.search(distance, userId, fullText, categories));
     }
 }

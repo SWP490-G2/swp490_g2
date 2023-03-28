@@ -11,6 +11,8 @@
         type="text"
         class="w-full"
         placeholder="Search restaurant name or food name"
+        [(ngModel)]="restaurantFullText"
+        (keyup)="onFullTextSearchChange()"
       />
     </div>
   </div>
@@ -33,7 +35,7 @@
           [options]="distances"
           [(ngModel)]="distance"
           optionLabel="name"
-          (onChange)="changeRadius()"
+          (onChange)="searchRestaurants()"
         ></p-dropdown>
       </div>
       <div class="flex align-items-center gap-2">

@@ -70,8 +70,12 @@ public class RestaurantService {
         restaurantRepository.save(restaurant);
     }
 
-    public List<Restaurant> search(Double distance, Long userId, List<RestaurantCategory> restaurantCategories) {
-        List<Restaurant> restaurants = restaurantRepository.findAll();
+    public List<Restaurant> search(Double distance, Long userId, String fullText, List<RestaurantCategory> restaurantCategories) {
+        List<Restaurant> restaurants;
+        if (fullText == null || fullText.isEmpty())
+            restaurants = restaurantRepository.findAll();
+        else restaurants = restaurantRepository.fulltextSearch(fullText);
+
         User user = userService.getById(userId);
         if (user == null || user.getAddress() == null)
             return List.of();

@@ -60,6 +60,8 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   selectedCategories: RestaurantCategory[] = [];
 
   restaurantMarkers: google.maps.Marker[] = [];
+  restaurantFullText = "";
+  timeout: any;
 
   constructor(
     private $userClient: UserClient,
@@ -102,6 +104,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       .search(
         this.distance.value,
         <number>this.currentUser?.id,
+        this.restaurantFullText,
         this.selectedCategories
       )
       .pipe(
@@ -175,10 +178,6 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
     return getFullAddress(restaurant.address);
   }
 
-  changeRadius() {
-    this.searchRestaurants();
-  }
-
   onRestaurantListItemClick(restaurant: Restaurant) {
     this.map?.setCenter(
       (restaurant as any).marker.getPosition() as google.maps.LatLng
@@ -197,5 +196,13 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       ?.map((category) => category.restaurantCategoryName)
       .sort((a, b) => a!.localeCompare(b!))
       .join(", ");
+  }
+
+  onFullTextSearchChange() {
+    window.clearTimeout(this.timeout);
+
+    this.timeout = window.setTimeout(() => {
+      this.searchRestaurants();
+    }, 300);
   }
 }
