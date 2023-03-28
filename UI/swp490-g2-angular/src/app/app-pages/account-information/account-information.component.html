@@ -132,7 +132,7 @@
         <div class="surface-border border-top-1 opacity-50 mt-3 col-12"></div>
         <p>You are a <strong>buyer</strong>.</p>
 
-        <div class="grid" *ngIf="user?.['requestingRestaurant']" class="col">
+        <div class="grid" *ngIf="user?.requestingRestaurant" class="col">
           <p>Your request to become a seller is being reviewed.</p>
           <div class="col">
             <p-accordion>

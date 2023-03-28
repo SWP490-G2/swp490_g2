@@ -1,35 +1,25 @@
 package com.swp490_g2.hrms.service;
 
-import com.swp490_g2.hrms.common.constants.ErrorStatusConstants;
-import com.swp490_g2.hrms.common.exception.BusinessException;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
-import com.swp490_g2.hrms.entity.*;
+import com.swp490_g2.hrms.entity.Restaurant;
+import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.shallowEntities.Operator;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
-import com.swp490_g2.hrms.repositories.BuyerRepository;
+import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.FilterRequest;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @Getter
 public class BuyerService {
-    private BuyerRepository buyerRepository;
-
-    @Autowired
-    public void setBuyerRepository(BuyerRepository buyerRepository) {
-        this.buyerRepository = buyerRepository;
-    }
-
     private RestaurantService restaurantService;
 
     @Autowired
@@ -51,41 +41,38 @@ public class BuyerService {
         this.adminService = adminService;
     }
 
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    private UserRepository userRepository;
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public void requestOpeningNewRestaurant(Restaurant restaurant) {
-        Buyer buyer = getCurrentBuyer();
-        if (buyer == null) {
-            throw new BusinessException(ErrorStatusConstants.NOT_EXISTED_USER);
+        User buyer = userService.getCurrentUser();
+        if (buyer == null || !buyer.isBuyer()) {
+            return;
         }
 
         Restaurant createdRestaurant = restaurantService.insert(restaurant);
         buyer.setRequestingRestaurant(createdRestaurant);
         buyer.setRequestingOpeningRestaurantDate(Instant.now());
         createdRestaurant.setCreatedBy(buyer.getId());
-        buyerRepository.save(buyer);
+        userService.update(buyer);
         restaurantService.update(createdRestaurant);
     }
 
-    public Buyer getById(Long id) {
-        return buyerRepository.findById(id).orElse(null);
-    }
-
-    public Buyer getByEmail(String email) {
-        return buyerRepository.findByEmail(email).orElse(null);
-    }
-
-    public Buyer getCurrentBuyer() {
-        Authentication authentication = authenticationFacade.getAuthentication();
-        if (authentication == null)
+    public List<User> getAllOpeningRestaurantRequests() {
+        User currentAdmin = this.userService.getCurrentUser();
+        if (currentAdmin == null || !currentAdmin.isAdmin())
             return null;
-
-        String email = authentication.getName();
-        return getByEmail(email);
-    }
-
-    public List<Buyer> getAllOpeningRestaurantRequests() {
-        Admin currentAdmin = this.adminService.getCurrentAdmin();
-        if (currentAdmin == null)
-            throw new AccessDeniedException("This request allows admin only!");
 
         FilterRequest filterRequest = FilterRequest.builder()
                 .key1("requestingRestaurant")
@@ -98,11 +85,7 @@ public class BuyerService {
                 .filters(filters)
                 .build();
 
-        SearchSpecification<Buyer> specification = new SearchSpecification<>(request);
-        return buyerRepository.findAll(specification);
-    }
-
-    public void update(Buyer requester) {
-        buyerRepository.save(requester);
+        SearchSpecification<User> specification = new SearchSpecification<>(request);
+        return userRepository.findAll(specification);
     }
 }

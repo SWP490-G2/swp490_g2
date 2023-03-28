@@ -22,18 +22,14 @@ public class Restaurant extends BaseEntity{
     @Column(nullable = false)
     private String restaurantName;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(450)")
+    @Column(columnDefinition = "VARCHAR(450)")
     private String description;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String phoneNumber;
 
     @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)
     private boolean isActive;
-
-    @OneToOne(mappedBy = "requestingRestaurant")
-    @JsonIgnore
-    private Buyer requestingRestaurantBuyer;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

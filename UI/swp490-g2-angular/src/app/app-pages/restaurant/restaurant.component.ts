@@ -14,10 +14,9 @@ import {
   Restaurant,
   RestaurantClient,
   SearchRequest,
-  Seller,
-  SellerClient,
   SortRequest,
   User,
+  UserClient,
 } from "src/app/ngswag/client";
 import { getFullAddress } from "src/app/utils";
 
@@ -57,7 +56,7 @@ export class RestaurantComponent implements OnInit {
     private $auth: AuthService,
     private $productCategoryClient: ProductCategoryClient,
     private $productClient: ProductClient,
-    private $sellerClient: SellerClient
+    private $userClient: UserClient
   ) {
     const id: number = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("id")
@@ -110,8 +109,8 @@ export class RestaurantComponent implements OnInit {
       .pipe(
         switchMap((user) => {
           this.user = user;
-          if (this.user?.id && this.user?.role === "SELLER") {
-            return this.$sellerClient.getById(this.user.id).pipe(
+          if (this.user?.id && AuthService.isSeller(this.user)) {
+            return this.$userClient.getById(this.user.id).pipe(
               switchMap((seller) => {
                 this.user = seller;
                 return of();
@@ -169,10 +168,10 @@ export class RestaurantComponent implements OnInit {
 
   get editable(): boolean {
     if (!this.user || !this.user.id) return false;
-    if (this.user.role === "ADMIN") return true;
+    if (AuthService.isAdmin(this.user)) return true;
     if (
-      this.user.role === "SELLER" &&
-      (<Seller>this.user).restaurants?.some(
+      AuthService.isSeller(this.user) &&
+      this.user.restaurants?.some(
         (restaurant) => restaurant.id === this.restaurant?.id
       )
     ) {

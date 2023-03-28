@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit {
     if (this.userExisted()) {
       // if(this.user?.email)
       // this.user.email: string | undefined
-      if (this.user?.role === "ADMIN") {
+      if (AuthService.isAdmin(this.user)) {
         return "Admin Account";
       }
 
@@ -60,10 +60,7 @@ export class NavbarComponent implements OnInit {
   }
 
   userExistedAdmin(): string {
-    // !! giup ep kieu sang boolean
-    // if(this.user?.email)
-    // this.user.email: string | undefined
-    if (this.user?.role === "ADMIN") {
+    if (AuthService.isAdmin(this.user)) {
       return "Admin Account";
     }
 

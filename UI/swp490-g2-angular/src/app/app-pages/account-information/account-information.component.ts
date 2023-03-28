@@ -103,7 +103,7 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   }
 
   get isBuyer(): boolean {
-    return this.user?.role === "BUYER";
+    return AuthService.isBuyer(this.user);
   }
 
   getRestaurantName(): string {

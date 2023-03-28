@@ -1,6 +1,6 @@
 package com.swp490_g2.hrms.controller;
 
-import com.swp490_g2.hrms.entity.Buyer;
+import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/get-all-opening-restaurant-requests")
-    public ResponseEntity<List<Buyer>> getAllOpeningRestaurantRequests() {
+    public ResponseEntity<List<User>> getAllOpeningRestaurantRequests() {
         return ResponseEntity.ok(adminService.getAllOpeningRestaurantRequests());
     }
 

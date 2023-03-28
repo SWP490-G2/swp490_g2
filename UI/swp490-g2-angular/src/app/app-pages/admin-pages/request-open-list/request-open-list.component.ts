@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { AdminClient, Buyer } from "src/app/ngswag/client";
+import { AdminClient, User } from "src/app/ngswag/client";
 import { DateUtils } from "src/app/utils";
 
 @Component({
@@ -10,7 +10,7 @@ export class RequestOpenListComponent implements OnInit {
   statuses: any[];
   loading = true;
   activityValues: number[] = [0, 100];
-  requestingUsers: Buyer[] = [];
+  requestingUsers: User[] = [];
 
   constructor(private $adminClient: AdminClient) {
     this.$adminClient.getAllOpeningRestaurantRequests().subscribe((buyers) => {
