@@ -17,6 +17,7 @@ import { RippleModule } from "primeng/ripple";
 import { StyleClassModule } from "primeng/styleclass";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { GoogleMapsModule } from "@angular/google-maps";
+import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 
 @NgModule({
   declarations: [RestaurantsComponent],
@@ -37,6 +38,7 @@ import { GoogleMapsModule } from "@angular/google-maps";
     InputNumberModule,
     DividerModule,
     GoogleMapsModule,
+    ImageAttachmentModule,
   ],
 })
 export class RestaurantsModule {}

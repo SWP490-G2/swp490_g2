@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Getter
@@ -69,20 +70,32 @@ public class RestaurantService {
         restaurantRepository.save(restaurant);
     }
 
-    public List<Restaurant> search(SearchRequest request, Double distance, Long userId) {
-        SearchSpecification<Restaurant> specification = new SearchSpecification<>(request);
-        Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
-        List<Restaurant> restaurants = restaurantRepository.findAll(specification, pageable).getContent();
+    public List<Restaurant> search(Double distance, Long userId, String fullText, List<RestaurantCategory> restaurantCategories) {
+        List<Restaurant> restaurants;
+        if (fullText == null || fullText.isEmpty())
+            restaurants = restaurantRepository.findAll();
+        else restaurants = restaurantRepository.fulltextSearch(fullText);
+
         User user = userService.getById(userId);
         if (user == null || user.getAddress() == null)
             return List.of();
 
-        return restaurants.stream().filter(restaurant -> {
-            if (restaurant.getAddress() == null)
-                return false;
+        return restaurants.stream()
+                .filter(restaurant -> {
+                    if (!restaurant.isActive() || restaurant.getAddress() == null)
+                        return false;
 
-            return CommonUtils.haversine_distance(restaurant.getAddress().getLat(), restaurant.getAddress().getLng(),
-                    user.getAddress().getLat(), user.getAddress().getLng()) < distance;
-        }).toList();
+                    return CommonUtils.haversine_distance(restaurant.getAddress().getLat(), restaurant.getAddress().getLng(),
+                            user.getAddress().getLat(), user.getAddress().getLng()) < distance;
+                })
+                .filter(restaurant -> {
+                    if (restaurantCategories == null || restaurantCategories.size() == 0)
+                        return true;
+
+                    return restaurant.getRestaurantCategories().stream()
+                            .anyMatch(restaurantCategory -> restaurantCategories.stream()
+                                    .anyMatch(comparedCategory -> Objects.equals(comparedCategory.getId(), restaurantCategory.getId())));
+                })
+                .toList();
     }
 }

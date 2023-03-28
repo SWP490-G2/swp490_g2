@@ -11,14 +11,14 @@ import { of, switchMap } from "rxjs";
 import { GoogleMapService } from "src/app/global/google-map.service";
 import {
   Address,
-  FilterRequest,
   Restaurant,
+  RestaurantCategory,
+  RestaurantCategoryClient,
   RestaurantClient,
-  SearchRequest,
   User,
   UserClient,
 } from "src/app/ngswag/client";
-import { getFullAddress } from "src/app/utils";
+import { getFullAddress, haversineDistance } from "src/app/utils";
 
 @Component({
   selector: "app-restaurants",
@@ -55,14 +55,21 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   ];
 
   distance = this.distances[0];
+
+  categories: RestaurantCategory[] = [];
+  selectedCategories: RestaurantCategory[] = [];
+
   restaurantMarkers: google.maps.Marker[] = [];
+  restaurantFullText = "";
+  timeout: any;
 
   constructor(
     private $userClient: UserClient,
     private $map: GoogleMapService,
     private $restaurantClient: RestaurantClient,
     private $title: Title,
-    private $router: Router
+    private $router: Router,
+    private $restaurantCategoryClient: RestaurantCategoryClient
   ) {
     $title.setTitle("Restaurants");
   }
@@ -97,7 +104,8 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       .search(
         this.distance.value,
         <number>this.currentUser?.id,
-        new SearchRequest()
+        this.restaurantFullText,
+        this.selectedCategories
       )
       .pipe(
         switchMap((restaurants) => {
@@ -113,7 +121,18 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.$restaurantCategoryClient
+      .getAll()
+      .pipe(
+        switchMap((categories) => {
+          this.categories = [...categories];
+          this.selectedCategories = [...this.categories];
+          return of();
+        })
+      )
+      .subscribe();
+  }
 
   private getAddressAndMark(address?: Address, restaurant?: Restaurant) {
     if (!address?.id) return of();
@@ -159,13 +178,52 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
     return getFullAddress(restaurant.address);
   }
 
-  changeRadius() {
-    this.searchRestaurants();
-  }
-
   onRestaurantListItemClick(restaurant: Restaurant) {
     this.map?.setCenter(
       (restaurant as any).marker.getPosition() as google.maps.LatLng
     );
+  }
+
+  getRestaurantCategories(restaurant: Restaurant): string {
+    if (
+      !restaurant.restaurantCategories ||
+      restaurant.restaurantCategories.length === 0
+    ) {
+      return "No categories";
+    }
+
+    return restaurant.restaurantCategories
+      ?.map((category) => category.restaurantCategoryName)
+      .sort((a, b) => a!.localeCompare(b!))
+      .join(", ");
+  }
+
+  onFullTextSearchChange() {
+    window.clearTimeout(this.timeout);
+
+    this.timeout = window.setTimeout(() => {
+      this.searchRestaurants();
+    }, 300);
+  }
+
+  getRestaurantDistance(restaurant: Restaurant): string {
+    if (
+      !restaurant.address?.lat ||
+      !restaurant.address?.lng ||
+      !this.currentUser?.address?.lat ||
+      !this.currentUser.address.lng
+    ) {
+      return "";
+    }
+
+    const distance = haversineDistance(
+      restaurant.address?.lat,
+      restaurant.address?.lng,
+      this.currentUser?.address?.lat,
+      this.currentUser?.address?.lng
+    );
+
+    if (distance >= 1) return distance.toFixed(1) + " km";
+    else return Math.round(distance * 1000) + " m";
   }
 }
