@@ -124,7 +124,7 @@ public class User extends BaseEntity implements UserDetails {
     private Restaurant requestingRestaurant;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "seller__restaurant",
+    @JoinTable(name = "user__restaurant",
             joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "restaurantId"))
     private Set<Restaurant> restaurants;
 
