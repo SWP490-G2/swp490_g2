@@ -18,7 +18,7 @@ import {
   User,
   UserClient,
 } from "src/app/ngswag/client";
-import { getFullAddress } from "src/app/utils";
+import { getFullAddress, haversineDistance } from "src/app/utils";
 
 @Component({
   selector: "app-restaurants",
@@ -204,5 +204,26 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
     this.timeout = window.setTimeout(() => {
       this.searchRestaurants();
     }, 300);
+  }
+
+  getRestaurantDistance(restaurant: Restaurant): string {
+    if (
+      !restaurant.address?.lat ||
+      !restaurant.address?.lng ||
+      !this.currentUser?.address?.lat ||
+      !this.currentUser.address.lng
+    ) {
+      return "";
+    }
+
+    const distance = haversineDistance(
+      restaurant.address?.lat,
+      restaurant.address?.lng,
+      this.currentUser?.address?.lat,
+      this.currentUser?.address?.lng
+    );
+
+    if (distance >= 1) return distance.toFixed(1) + " km";
+    else return Math.round(distance * 1000) + " m";
   }
 }
