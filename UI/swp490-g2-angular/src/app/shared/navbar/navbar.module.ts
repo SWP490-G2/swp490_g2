@@ -8,9 +8,13 @@ import { NavbarComponent } from "./navbar.component";
 import { RippleModule } from "primeng/ripple";
 import { BadgeModule } from "primeng/badge";
 import { StyleClassModule } from "primeng/styleclass";
+import { SidebarModule } from "primeng/sidebar";
+import { ButtonModule } from "primeng/button";
+import { SideBarsModule } from "../side-bars/side-bars.module";
 
 @NgModule({
   declarations: [NavbarComponent],
+  exports: [NavbarComponent],
   imports: [
     CommonModule,
     MenubarModule,
@@ -20,7 +24,9 @@ import { StyleClassModule } from "primeng/styleclass";
     RippleModule,
     BadgeModule,
     StyleClassModule,
+    SidebarModule,
+    ButtonModule,
+    SideBarsModule,
   ],
-  exports: [NavbarComponent],
 })
 export class NavbarModule {}

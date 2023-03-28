@@ -2,6 +2,16 @@
   class="surface-overlay shadow-2 flex relative lg:static justify-content-between"
   style="min-height: 42px; padding: 1rem"
 >
+  <p-sidebar [(visible)]="sidebarVisible" styleClass="w-18rem">
+    <app-side-bars></app-side-bars>
+  </p-sidebar>
+  <p-button
+    (click)="sidebarVisible = true"
+    class="p-button-rounded p-button-secondary mr-3"
+    pTooltip="Sidebar"
+    tooltipPosition="top"
+    icon="pi pi-list"
+  ></p-button>
   <a
     pRipple
     class="cursor-pointer inline-flex align-items-center px-3 lg:hidden text-700"
@@ -28,6 +38,18 @@
           >
             <span class="pi pi-home mr-2"></span>
             <span class="font-medium">Home</span>
+          </a>
+        </li>
+        <li class="h-full">
+          <a
+            pRipple
+            class="cursor-pointer h-full inline-flex align-items-center text-600 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 hover:border-500 transition-colors transition-duration-150 py-3 lg:py-0 px-3"
+            routerLink="/restaurants"
+            routerLinkActive="lg:border-bottom-2 border-blue-500"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <span class="pi pi-map mr-2"></span>
+            <span class="font-medium">Restaurants</span>
           </a>
         </li>
         <li class="h-full">
