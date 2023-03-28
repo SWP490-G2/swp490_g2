@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { RestaurantUpdateInformationComponent } from './restaurant-update-information.component';
+import { RestaurantUpdateInformationComponent } from "./restaurant-update-information.component";
 
-describe('RestaurantUpdateInformationComponent', () => {
+describe("RestaurantUpdateInformationComponent", () => {
   let component: RestaurantUpdateInformationComponent;
   let fixture: ComponentFixture<RestaurantUpdateInformationComponent>;
 
@@ -17,7 +17,7 @@ describe('RestaurantUpdateInformationComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

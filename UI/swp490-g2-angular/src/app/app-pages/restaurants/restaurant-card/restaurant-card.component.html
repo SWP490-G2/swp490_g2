@@ -1,0 +1,36 @@
+<div class="border-2 border-dashed border-300 border-round surface-0 p-4">
+  <div
+    class="flex align-items-start sm:align-items-center sm:flex-row surface-border"
+  >
+    <app-image-attachment
+      [url]="restaurant.avatarFile?.filePath"
+    ></app-image-attachment>
+    <div class="pl-5 flex flex-column gap-2">
+      <a
+        class="text-900 text-xl font-medium cursor-pointer"
+        (click)="onRestaurantNameClick()"
+      >
+        {{ restaurant.restaurantName }}
+      </a>
+      <span class="text-600">
+        {{ getRestaurantFullAddress(restaurant) }}
+      </span>
+      <span class="inline-flex align-items-center">
+        <span class="text-600 mr-2">
+          Categories:
+          <strong>{{ getRestaurantCategories(restaurant) }}</strong>
+        </span>
+      </span>
+      <span class="inline-flex align-items-center" *ngIf="hasDistance">
+        <span class="text-600 mr-2">
+          Distance:
+          <strong>{{ getRestaurantDistance(restaurant) }}</strong>
+        </span>
+      </span>
+      <span class="flex align-items-center">
+        <i class="pi pi-exclamation-triangle text-600 mr-2"></i>
+        <span class="text-600">Only 8 Available.</span>
+      </span>
+    </div>
+  </div>
+</div>

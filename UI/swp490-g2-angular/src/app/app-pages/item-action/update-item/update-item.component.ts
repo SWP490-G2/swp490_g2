@@ -1,15 +1,12 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import {
-  NgForm,
-  Validators,
-} from "@angular/forms";
-import { MessageService, SelectItemGroup } from 'primeng/api';
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { NgForm, Validators } from "@angular/forms";
+import { MessageService, SelectItemGroup } from "primeng/api";
 
 @Component({
-  selector: 'app-update-item',
-  templateUrl: './update-item.component.html'
+  selector: "app-update-item",
+  templateUrl: "./update-item.component.html",
 })
-export class UpdateItemComponent implements OnInit, AfterViewInit{
+export class UpdateItemComponent implements OnInit, AfterViewInit {
   uploadedFiles: any[] = [];
   selectedCategory: string;
   groupedCategory: SelectItemGroup[];
@@ -17,9 +14,7 @@ export class UpdateItemComponent implements OnInit, AfterViewInit{
   displayModal: boolean;
 
   constructor(private messageService: MessageService) {
-    this.groupedCategory = [
-
-    ]
+    this.groupedCategory = [];
   }
 
   showModalDialog() {
@@ -30,13 +25,13 @@ export class UpdateItemComponent implements OnInit, AfterViewInit{
     setTimeout(() => {
       this.form.controls["price"].addValidators([
         Validators.required,
-        Validators.pattern("^([0-9])$")
+        Validators.pattern("^([0-9])$"),
       ]);
       this.form.controls["quantity"].addValidators([
         Validators.required,
-        Validators.pattern("^([0-9])$")
+        Validators.pattern("^([0-9])$"),
       ]);
-    })
+    });
   }
   ngOnInit(): void {}
 
@@ -51,11 +46,5 @@ export class UpdateItemComponent implements OnInit, AfterViewInit{
       detail: "",
     });
   }
-  updateItem(): void {
-
-  }
+  updateItem(): void {}
 }
-function showModalDialog() {
-  throw new Error('Function not implemented.');
-}
-

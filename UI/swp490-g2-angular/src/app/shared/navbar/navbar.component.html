@@ -1,22 +1,25 @@
 <div
-  class="surface-overlay shadow-2 flex relative lg:static justify-content-between"
+  class="surface-overlay shadow-2 flex align-items-center justify-content-between relative lg:static"
   style="min-height: 42px; padding: 1rem"
 >
+  <img src="../../favicon.ico" height="40" class="mr-0 lg:mr-2" routerLink="" />
+
   <a
     pRipple
-    class="cursor-pointer inline-flex align-items-center px-3 lg:hidden text-700"
+    class="cursor-pointer block lg:hidden text-700"
     pStyleClass="@next"
     enterClass="hidden"
     leaveToClass="hidden"
     [hideOnOutsideClick]="true"
   >
-    <i class="pi pi-bars text-2xl"></i>
+    <i class="pi pi-bars text-4xl"></i>
   </a>
-  <img src="../../favicon.ico" height="40" class="mr-2" routerLink="" />
   <div
-    class="hidden lg:flex absolute lg:static w-full surface-overlay left-0 top-100 z-1 shadow-2 lg:shadow-none"
+    class="align-items-center flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full surface-overlay left-0 top-100 z-1 shadow-2 lg:shadow-none"
   >
-    <ul class="flex list-none p-0 m-0 flex-column lg:flex-row">
+    <ul
+      class="list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row"
+    >
       <ng-container *ngIf="userExisted()">
         <li class="h-full">
           <a
@@ -68,21 +71,6 @@
         </li>
       </ng-container>
     </ul>
-  </div>
-
-  <a
-    pRipple
-    class="cursor-pointer inline-flex align-items-center px-3 lg:hidden text-700"
-    pStyleClass="@next"
-    enterClass="hidden"
-    leaveToClass="hidden"
-    [hideOnOutsideClick]="true"
-  >
-    <i class="pi pi-ellipsis-v text-xl"></i>
-  </a>
-  <div
-    class="hidden lg:flex lg:justify-content-end absolute lg:static w-full surface-overlay left-0 top-100 z-1 shadow-2 lg:shadow-none"
-  >
     <ul class="flex list-none p-0 m-0 flex-column lg:flex-row">
       <li class="h-full">
         <a

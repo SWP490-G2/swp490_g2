@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { finalize } from "rxjs";
-import { AuthenticationResponse, City, District } from "src/app/ngswag/client";
+import { AuthenticationResponse } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-update-restaurant-info-apply",

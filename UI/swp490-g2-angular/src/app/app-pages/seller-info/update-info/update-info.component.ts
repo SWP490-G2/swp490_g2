@@ -1,12 +1,12 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
-import { finalize } from 'rxjs';
-import { AuthenticationResponse, City, District } from 'src/app/ngswag/client';
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { NgForm, Validators } from "@angular/forms";
+import { MessageService } from "primeng/api";
+import { finalize } from "rxjs";
+import { AuthenticationResponse, City, District } from "src/app/ngswag/client";
 
 @Component({
-  selector: 'app-update-info',
-  templateUrl: './update-info.component.html'
+  selector: "app-update-info",
+  templateUrl: "./update-info.component.html"
 })
 export class UpdateInfoComponent implements AfterViewInit, OnInit{
   @ViewChild("form", { static: false }) form!: NgForm;

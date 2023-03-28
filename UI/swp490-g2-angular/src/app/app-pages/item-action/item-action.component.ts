@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-item-action',
-  templateUrl: './item-action.component.html'
+  selector: "app-item-action",
+  templateUrl: "./item-action.component.html"
 })
 export class ItemActionComponent {
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { Title } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { forkJoin, Observable, of, switchMap } from "rxjs";
@@ -56,7 +57,8 @@ export class RestaurantComponent implements OnInit {
     private $auth: AuthService,
     private $productCategoryClient: ProductCategoryClient,
     private $productClient: ProductClient,
-    private $userClient: UserClient
+    private $userClient: UserClient,
+    private $title: Title
   ) {
     const id: number = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("id")
@@ -79,6 +81,8 @@ export class RestaurantComponent implements OnInit {
       .getById(this.restaurantId)
       .subscribe((restaurant) => {
         this.restaurant = restaurant;
+        if (this.restaurant.restaurantName)
+          this.$title.setTitle(this.restaurant.restaurantName);
       });
 
     forkJoin([

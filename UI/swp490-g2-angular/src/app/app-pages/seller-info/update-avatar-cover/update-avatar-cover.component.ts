@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { Component } from "@angular/core";
+import { MessageService } from "primeng/api";
 
 @Component({
-  selector: 'app-update-avatar-cover',
-  templateUrl: './update-avatar-cover.component.html'
+  selector: "app-update-avatar-cover",
+  templateUrl: "./update-avatar-cover.component.html"
 })
 export class UpdateAvatarCoverComponent {
   uploadedFiles: any[] = [];

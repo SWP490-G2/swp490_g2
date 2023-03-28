@@ -12,12 +12,13 @@ import {
   Validators,
 } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
-import { MessageService } from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
   Address,
   City,
   District,
+  FileClient,
   Restaurant,
   User,
   UserClient,
@@ -40,21 +41,27 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   display = false;
   user?: User;
   restaurants: Restaurant[];
+  restaurantsShown = false;
 
   constructor(
-    private messageService: MessageService,
     private $router: Router,
     private $route: ActivatedRoute,
     private $auth: AuthService,
-    private $title: Title,
+    $title: Title,
     private $userClient: UserClient,
     private $message: MessageService,
-    private $map: GoogleMapService
+    private $map: GoogleMapService,
+    private $confirmation: ConfirmationService,
+    private $fileClient: FileClient
   ) {
     $title.setTitle("Account Information");
   }
 
   ngOnInit() {
+    this.refresh();
+  }
+
+  refresh() {
     this.$auth.getCurrentUser(true).subscribe((user) => {
       this.user = user;
       if (!this.user) return;
@@ -99,7 +106,7 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   }
 
   navToListOfRestaurants() {
-    this.$router.navigate(["list-of-restaurants"], { relativeTo: this.$route });
+    this.restaurantsShown = true;
   }
 
   get isBuyer(): boolean {
@@ -190,5 +197,24 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
         })
       )
       .subscribe();
+  }
+
+  selectRestaurant(restaurant: Restaurant) {
+    this.$confirmation.confirm({
+      header: "Confirmation",
+      message: `Are you sure that you want to select restaurant "${restaurant.restaurantName}"?`,
+      accept: () => {
+        if (this.user) {
+          this.user.requestingRestaurant = new Restaurant({
+            id: restaurant.id,
+          });
+
+          this.$userClient.updateRaw(this.user).subscribe(() => {
+            this.display = false;
+            location.reload();
+          });
+        }
+      },
+    });
   }
 }

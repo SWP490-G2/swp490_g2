@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm, Validators } from '@angular/forms';
-import { SelectItemGroup, MessageService } from 'primeng/api';
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { NgForm, Validators } from "@angular/forms";
+import { SelectItemGroup, MessageService } from "primeng/api";
 
 @Component({
-  selector: 'app-add-item',
-  templateUrl: './add-item.component.html'
+  selector: "app-add-item",
+  templateUrl: "./add-item.component.html"
 })
 export class AddItemComponent implements OnInit, AfterViewInit{
   uploadedFiles: any[] = [];

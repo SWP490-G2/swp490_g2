@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
-import { ItemActionRoutingModule } from './item-action-routing.module';
-import { ItemActionComponent } from './item-action.component';
+import { ItemActionRoutingModule } from "./item-action-routing.module";
+import { ItemActionComponent } from "./item-action.component";
 
 
 @NgModule({

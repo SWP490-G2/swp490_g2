@@ -18,9 +18,11 @@ import { StyleClassModule } from "primeng/styleclass";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { GoogleMapsModule } from "@angular/google-maps";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
+import { RestaurantCardComponent } from "./restaurant-card/restaurant-card.component";
+import { PaginatorModule } from "primeng/paginator";
 
 @NgModule({
-  declarations: [RestaurantsComponent],
+  declarations: [RestaurantsComponent, RestaurantCardComponent],
   imports: [
     CommonModule,
     RestaurantsRoutingModule,
@@ -39,6 +41,8 @@ import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-att
     DividerModule,
     GoogleMapsModule,
     ImageAttachmentModule,
+    PaginatorModule,
   ],
+  exports: [RestaurantsComponent, RestaurantCardComponent],
 })
 export class RestaurantsModule {}

@@ -7,7 +7,6 @@ import {
 } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { ConfirmationService, MessageService } from "primeng/api";
-import { finalize } from "rxjs";
 import { Restaurant, RestaurantClient, Ward } from "src/app/ngswag/client";
 
 @Component({
@@ -19,7 +18,7 @@ export class RestaurantUpdateInformationComponent {
   @Input() restaurant: Restaurant;
   @Input() editable: boolean;
   @ViewChild("form", { static: false }) form!: NgForm;
-  @Output() onHide = new EventEmitter();
+  @Output() hidden = new EventEmitter();
 
   displayModal = false;
   private _submitButtonDisabled = false;
@@ -57,6 +56,6 @@ export class RestaurantUpdateInformationComponent {
   }
 
   onDialogHide() {
-    this.onHide.emit();
+    this.hidden.emit();
   }
 }
