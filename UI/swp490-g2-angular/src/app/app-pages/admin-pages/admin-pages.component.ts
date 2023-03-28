@@ -12,27 +12,22 @@ export class AdminPagesComponent {
   }
 
   private initButtonContents(): void {
-    const colors = ["teal", "pink", "orange"];
+    const colors = ["red", "green", "blue"];
     this.buttonContents = [
       {
-        title: "View Restaurant Opening Request",
-        routerLink: "request-open-list",
-        iconClass: "pi-list",
-      },
-      {
-        title: "View All Users",
+        title: "User Management",
         routerLink: "view-all-user",
         iconClass: "pi-users",
       },
       {
-        title: "View All Restaurants",
+        title: "Restaurant Management",
         routerLink: "view-all-restaurant",
         iconClass: "pi-bars",
       },
       {
-        title: "View All Restaurant Promotion Campaign",
-        routerLink: "view-all-promo",
-        iconClass: "pi-ticket",
+        title: "Restaurant Opening Request Management",
+        routerLink: "request-open-list",
+        iconClass: "pi-list",
       },
     ];
 

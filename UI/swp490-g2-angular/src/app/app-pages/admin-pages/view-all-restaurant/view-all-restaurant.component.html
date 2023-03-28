@@ -32,6 +32,44 @@
         </div>
       </div>
     </div>
+    <div class="p-5">
+      <button
+        pButton
+        type="button"
+        class="p-button-rounded"
+        icon="pi pi-list"
+        pTooltip="View Details"
+        tooltipPosition="top"
+        [routerLink]="'view-restaurant-details'"
+      ></button>
+      <button
+        pButton
+        type="button"
+        class="p-button-rounded p-button-danger"
+        icon="pi pi-ban"
+        pTooltip="Ban"
+        tooltipPosition="top"
+        [routerLink]="'ban-restaurant-apply'"
+      ></button>
+      <button
+        pButton
+        type="button"
+        class="p-button-rounded p-button-success"
+        icon="pi pi-pencil"
+        pTooltip="Update Information"
+        tooltipPosition="top"
+        [routerLink]="'update-restaurant-info-apply'"
+      ></button>
+      <button
+        pButton
+        type="button"
+        class="p-button-rounded p-button-secondary"
+        icon="pi pi-box"
+        pTooltip="View All Items"
+        tooltipPosition="top"
+        [routerLink]="'../../restaurant/1'"
+      ></button>
+    </div>
   </div>
 </div>
 <div class="surface-section px-4 py-8 md:px-6 lg:px-8">
@@ -105,7 +143,6 @@
             <p-sortIcon field="activity"></p-sortIcon>
           </div>
         </th>
-        <th style="width: 5rem"></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-resList>
@@ -140,7 +177,7 @@
           <button
             pButton
             type="button"
-            class="p-button-rounded p-button-secondary"
+            class="p-button-rounded"
             icon="pi pi-list"
             pTooltip="View Details"
             tooltipPosition="top"
@@ -163,6 +200,15 @@
             pTooltip="Update Information"
             tooltipPosition="top"
             [routerLink]="'update-restaurant-info-apply'"
+          ></button>
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-secondary"
+            icon="pi pi-box"
+            pTooltip="View All Items"
+            tooltipPosition="top"
+            [routerLink]="'../../restaurant/' + 'resList.id'"
           ></button>
         </td>
       </tr>

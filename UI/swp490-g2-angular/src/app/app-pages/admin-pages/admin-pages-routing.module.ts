@@ -28,14 +28,6 @@ const routes: Routes = [
         (m) => m.ViewAllRestaurantModule
       ),
   },
-
-  {
-    path: "view-all-promo",
-    loadChildren: () =>
-      import("./view-all-promo/view-all-promo.module").then(
-        (m) => m.ViewAllPromoModule
-      ),
-  },
 ];
 
 @NgModule({
