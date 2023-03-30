@@ -1,7 +1,12 @@
 package com.swp490_g2.hrms.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
+import com.swp490_g2.hrms.entity.enums.Role;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,8 +14,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -31,7 +39,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, unique = true)
     private String phoneNumber;
 
-    @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 0", insertable = false)
     private boolean isActive;
 
     @Column(columnDefinition = "VARCHAR(6)")
@@ -54,18 +62,32 @@ public class User extends BaseEntity implements UserDetails {
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Instant dateOfBirth;
 
-    @OneToOne(cascade=CascadeType.ALL)
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    private Instant requestingOpeningRestaurantDate;
+
+
+    @Column(columnDefinition = "nvarchar(16) default 'PENDING'")
+    @Enumerated(EnumType.STRING)
+    private RequestingRestaurantStatus requestingRestaurantStatus;
+
+    @OneToOne(cascade = CascadeType.ALL)
     private File avatarFile;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
+    @ElementCollection(targetClass = Role.class)
+    @JoinTable(name = "role", joinColumns = @JoinColumn(name = "userId"))
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private List<Role> roles;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.name())).toList();
     }
 
     @Override
@@ -98,6 +120,33 @@ public class User extends BaseEntity implements UserDetails {
         return true;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "requestingRestaurantId")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Restaurant requestingRestaurant;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user__restaurant",
+            joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "restaurantId"))
+    private Set<Restaurant> restaurants;
 
+    public boolean isAdmin() {
+        return roles != null && roles.stream().anyMatch(role -> role == Role.ADMIN);
+    }
+
+    public boolean isBuyer() {
+        return roles != null && roles.stream().anyMatch(role -> role == Role.BUYER);
+    }
+
+    public boolean isSeller() {
+        return roles != null && roles.stream().anyMatch(role -> role == Role.SELLER);
+    }
+
+    public void addRole(Role role) {
+        if (roles == null)
+            roles = new ArrayList<>();
+
+        if (!roles.contains(role))
+            roles.add(role);
+    }
 }

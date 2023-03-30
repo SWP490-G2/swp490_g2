@@ -57,12 +57,14 @@ export class ImageAttachmentComponent implements OnInit {
     });
 
     this.loadImage();
-    this.$fileClient.getAll().subscribe((files) => {
-      this.images = files;
-      this.images.map((image) => {
-        this.getSrc(image);
+    if (this.editable) {
+      this.$fileClient.getAll().subscribe((files) => {
+        this.images = files;
+        this.images.map((image) => {
+          this.getSrc(image);
+        });
       });
-    });
+    }
   }
 
   private loadImage() {

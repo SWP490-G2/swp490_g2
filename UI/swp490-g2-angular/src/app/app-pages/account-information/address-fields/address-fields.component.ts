@@ -41,37 +41,37 @@ export class AddressFieldsComponent implements OnInit, AfterViewInit {
         this.cities = cities.sort(
           (a, b) => <number>a.cityName?.localeCompare(b.cityName!)
         );
-
-        this.form.controls["city"].setValue(this.address?.ward?.district?.city);
       });
 
-      if (this.address?.ward?.district?.city?.id) {
-        this.$addressClient
-          .getDistrictsByCityId(this.address?.ward?.district?.city?.id)
-          .subscribe((districts) => {
-            this.districts = districts.sort(
-              (a, b) => <number>a.districtName?.localeCompare(b.districtName!)
-            );
-
-            this.form.controls["district"].setValue(
-              this.address?.ward?.district
-            );
-          });
-      }
-
-      if (this.address?.ward?.district?.id) {
-        this.$addressClient
-          .getWardsByDistrictId(this.address?.ward?.district?.id)
-          .subscribe((wards) => {
-            this.wards = wards.sort(
-              (a, b) => <number>a.wardName?.localeCompare(b.wardName!)
-            );
-
-            this.form.controls["ward"].setValue(this.address?.ward);
-          });
-      }
-
       if (this.address?.specificAddress) {
+        this.form.controls["city"].setValue(this.address?.ward?.district?.city);
+
+        if (this.address?.ward?.district?.city?.id) {
+          this.$addressClient
+            .getDistrictsByCityId(this.address?.ward?.district?.city?.id)
+            .subscribe((districts) => {
+              this.districts = districts.sort(
+                (a, b) => <number>a.districtName?.localeCompare(b.districtName!)
+              );
+
+              this.form.controls["district"].setValue(
+                this.address?.ward?.district
+              );
+            });
+        }
+
+        if (this.address?.ward?.district?.id) {
+          this.$addressClient
+            .getWardsByDistrictId(this.address?.ward?.district?.id)
+            .subscribe((wards) => {
+              this.wards = wards.sort(
+                (a, b) => <number>a.wardName?.localeCompare(b.wardName!)
+              );
+
+              this.form.controls["ward"].setValue(this.address?.ward);
+            });
+        }
+
         this.form.controls["specificAddress"].setValue(
           this.address?.specificAddress
         );

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AddressFieldsComponent } from "./address-fields.component";
+import { SortByComponent } from "./sort-by.component";
 
-describe("AddressFieldsComponent", () => {
-  let component: AddressFieldsComponent;
-  let fixture: ComponentFixture<AddressFieldsComponent>;
+describe("SortByComponent", () => {
+  let component: SortByComponent;
+  let fixture: ComponentFixture<SortByComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddressFieldsComponent ]
+      declarations: [ SortByComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AddressFieldsComponent);
+    fixture = TestBed.createComponent(SortByComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

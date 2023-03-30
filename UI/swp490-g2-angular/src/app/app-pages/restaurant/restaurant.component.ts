@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
+import { Title } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
-import { forkJoin, Observable, switchMap } from "rxjs";
+import { forkJoin, Observable, of, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import {
   File,
@@ -14,8 +15,11 @@ import {
   Restaurant,
   RestaurantClient,
   SearchRequest,
+  SortRequest,
   User,
+  UserClient,
 } from "src/app/ngswag/client";
+import { getFullAddress } from "src/app/utils";
 
 @Component({
   selector: "app-restaurant",
@@ -40,13 +44,21 @@ export class RestaurantComponent implements OnInit {
   private timeout?: number;
   private isFulltextSearching = false;
   fulltext = "";
+  sorts: SortRequest[] = [
+    new SortRequest({
+      key: "productName",
+      direction: "ASC",
+    }),
+  ];
 
   constructor(
     private $route: ActivatedRoute,
     private $restaurantClient: RestaurantClient,
     private $auth: AuthService,
     private $productCategoryClient: ProductCategoryClient,
-    private $productClient: ProductClient
+    private $productClient: ProductClient,
+    private $userClient: UserClient,
+    private $title: Title
   ) {
     const id: number = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("id")
@@ -69,6 +81,8 @@ export class RestaurantComponent implements OnInit {
       .getById(this.restaurantId)
       .subscribe((restaurant) => {
         this.restaurant = restaurant;
+        if (this.restaurant.restaurantName)
+          this.$title.setTitle(this.restaurant.restaurantName);
       });
 
     forkJoin([
@@ -94,7 +108,24 @@ export class RestaurantComponent implements OnInit {
         this.totalPages = productPage.totalPages!;
       });
 
-    this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
+    this.$auth
+      .getCurrentUser()
+      .pipe(
+        switchMap((user) => {
+          this.user = user;
+          if (this.user?.id && AuthService.isSeller(this.user)) {
+            return this.$userClient.getById(this.user.id).pipe(
+              switchMap((seller) => {
+                this.user = seller;
+                return of();
+              })
+            );
+          }
+
+          return of();
+        })
+      )
+      .subscribe();
   }
 
   private productSearch(): Observable<PageProduct> {
@@ -123,6 +154,7 @@ export class RestaurantComponent implements OnInit {
             valueTo: this.selectedPriceRange[1],
           }),
         ],
+        sorts: this.sorts,
         page: this.currentPage,
         size: this.pageSize,
       })
@@ -138,21 +170,19 @@ export class RestaurantComponent implements OnInit {
       .subscribe(() => location.reload());
   }
 
-  canEditImage(): boolean {
-    return true;
+  get editable(): boolean {
+    if (!this.user || !this.user.id) return false;
+    if (AuthService.isAdmin(this.user)) return true;
+    if (
+      AuthService.isSeller(this.user) &&
+      this.user.restaurants?.some(
+        (restaurant) => restaurant.id === this.restaurant?.id
+      )
+    ) {
+      return true;
+    }
 
-    // if (!this.user || !this.user.id) return false;
-    // if (this.user.role === "ADMIN") return true;
-    // if (
-    //   this.user.role === "SELLER" &&
-    //   (<Seller>this.user).restaurants?.some(
-    //     (restaurant) => restaurant.id === this.restaurant?.id
-    //   )
-    // ) {
-    //   return true;
-    // }
-
-    // return false;
+    return false;
   }
 
   toggleAllCategories(selected: boolean) {
@@ -208,6 +238,15 @@ export class RestaurantComponent implements OnInit {
   get loadMoreShown(): boolean {
     if (this.isFulltextSearching) return false;
     return this.currentPage < this.totalPages - 1;
+  }
+
+  onSortByChange(sortRequest: SortRequest) {
+    this.sorts = [sortRequest];
+    this.changeFilter();
+  }
+
+  get fullAddress(): string {
+    return getFullAddress(this.restaurant?.address);
   }
 }
 

@@ -71,4 +71,16 @@ export class AuthService {
   getJwtToken() {
     return localStorage.getItem(this.JWT_TOKEN);
   }
+
+  static isAdmin(user?: User): boolean {
+    return !!user?.roles?.includes("ADMIN");
+  }
+
+  static isBuyer(user?: User): boolean {
+    return !!user?.roles?.includes("BUYER");
+  }
+
+  static isSeller(user?: User): boolean {
+    return !!user?.roles?.includes("SELLER");
+  }
 }

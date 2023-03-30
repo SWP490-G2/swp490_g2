@@ -12,17 +12,23 @@ import {
   Validators,
 } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
-import { MessageService } from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
+  Address,
+  City,
+  District,
+  FileClient,
   Restaurant,
   User,
   UserClient,
   UserInformationRequest,
+  Ward,
 } from "src/app/ngswag/client";
 import { Title } from "@angular/platform-browser";
-import { DateUtils } from "src/app/utils";
-import { finalize } from "rxjs";
+import { DateUtils, getFullAddress } from "src/app/utils";
+import { finalize, of, switchMap } from "rxjs";
+import { GoogleMapService } from "src/app/global/google-map.service";
 
 @Component({
   selector: "app-account-information",
@@ -35,20 +41,27 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   display = false;
   user?: User;
   restaurants: Restaurant[];
+  restaurantsShown = false;
 
   constructor(
-    private messageService: MessageService,
     private $router: Router,
     private $route: ActivatedRoute,
     private $auth: AuthService,
-    private $title: Title,
+    $title: Title,
     private $userClient: UserClient,
-    private $message: MessageService
+    private $message: MessageService,
+    private $map: GoogleMapService,
+    private $confirmation: ConfirmationService,
+    private $fileClient: FileClient
   ) {
     $title.setTitle("Account Information");
   }
 
   ngOnInit() {
+    this.refresh();
+  }
+
+  refresh() {
     this.$auth.getCurrentUser(true).subscribe((user) => {
       this.user = user;
       if (!this.user) return;
@@ -93,11 +106,11 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   }
 
   navToListOfRestaurants() {
-    this.$router.navigate(["list-of-restaurants"], { relativeTo: this.$route });
+    this.restaurantsShown = true;
   }
 
   get isBuyer(): boolean {
-    return this.user?.role === "BUYER";
+    return AuthService.isBuyer(this.user);
   }
 
   getRestaurantName(): string {
@@ -135,28 +148,73 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   save() {
     this._submitButtonDisabled = true;
     const formValue = this.form.value;
-    this.$userClient
-      .update(
-        new UserInformationRequest({
-          firstName: formValue.firstName,
-          middleName: formValue.middleName,
-          lastName: formValue.lastName,
-          dateOfBirth: DateUtils.toDB(formValue.dateOfBirth),
-          wardId: formValue.ward.id,
-          specificAddress: formValue.specificAddress,
-        })
+
+    this.$map
+      .getAddressDetails(
+        getFullAddress(
+          new Address({
+            specificAddress: formValue.specificAddress,
+            ward: new Ward({
+              wardName: formValue.ward.wardName,
+              district: new District({
+                districtName: formValue.ward.district.districtName,
+                city: new City({
+                  cityName: formValue.ward.district.city.cityName,
+                }),
+              }),
+            }),
+          })
+        )
       )
       .pipe(
+        switchMap((res) => {
+          const loc = res?.geometry.location;
+          return this.$userClient.update(
+            new UserInformationRequest({
+              firstName: formValue.firstName,
+              middleName: formValue.middleName,
+              lastName: formValue.lastName,
+              dateOfBirth: DateUtils.toDB(formValue.dateOfBirth),
+              wardId: formValue.ward.id,
+              specificAddress: formValue.specificAddress,
+              addressLat: loc?.lat(),
+              addressLng: loc?.lng(),
+              addressId: this.user?.address?.id,
+            })
+          );
+        }),
+        switchMap(() => {
+          this.$message.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Account information updated successfully!",
+          });
+
+          return of();
+        }),
         finalize(() => {
           this._submitButtonDisabled = false;
         })
       )
-      .subscribe(() => {
-        this.$message.add({
-          severity: "success",
-          summary: "Success",
-          detail: "Account information updated successfully!",
-        });
-      });
+      .subscribe();
+  }
+
+  selectRestaurant(restaurant: Restaurant) {
+    this.$confirmation.confirm({
+      header: "Confirmation",
+      message: `Are you sure that you want to select restaurant "${restaurant.restaurantName}"?`,
+      accept: () => {
+        if (this.user) {
+          this.user.requestingRestaurant = new Restaurant({
+            id: restaurant.id,
+          });
+
+          this.$userClient.updateRaw(this.user).subscribe(() => {
+            this.display = false;
+            location.reload();
+          });
+        }
+      },
+    });
   }
 }

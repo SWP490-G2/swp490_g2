@@ -59,6 +59,9 @@ public class UserController {
         userService.update(userInformationRequest);
     }
 
-
+    @PutMapping("/update-raw")
+    public void update(@RequestBody User user){
+        userService.update(user);
+    }
 }
 

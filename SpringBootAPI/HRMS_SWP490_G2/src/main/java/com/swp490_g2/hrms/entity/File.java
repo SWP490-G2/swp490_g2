@@ -15,8 +15,4 @@ import lombok.*;
 public class File extends BaseEntity{
     @Column(nullable = false)
     private String filePath;
-
-    @OneToOne(mappedBy = "avatarFile")
-    @JsonIgnore
-    private Restaurant avatarFileRestaurant;
 }

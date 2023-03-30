@@ -44,6 +44,34 @@ const routes: Routes = [
         loadChildren: () =>
           import("./feed-page/feed-page.module").then((m) => m.FeedPageModule),
       },
+      {
+        path: "restaurants",
+        loadChildren: () =>
+          import("./restaurants/restaurants.module").then(
+            (m) => m.RestaurantsModule
+          ),
+      },
+      {
+        path: "item-action",
+        loadChildren: () =>
+          import("./item-action/item-action.module").then(
+            (m) => m.ItemActionModule
+          ),
+      },
+      {
+        path: "seller-info",
+        loadChildren: () =>
+          import("./seller-info/seller-info.module").then(
+            (m) => m.SellerInfoModule
+          ),
+      },
+      {
+        path: "order-pages",
+        loadChildren: () =>
+          import("./order-pages/order-pages.module").then(
+            (m) => m.OrderPagesModule
+          ),
+      },
     ],
   },
 ];

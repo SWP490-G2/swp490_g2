@@ -104,7 +104,7 @@
       <p-dialog
         header="Do you want to become a seller? Choose now:"
         [(visible)]="display"
-        [style]="{ width: '50vw' }"
+        styleClass="w-full"
         [closable]="true"
         [modal]="true"
       >
@@ -114,7 +114,7 @@
             pRipple
             label="Open new restaurant"
             class="w-6 mt-3"
-            type="submit"
+            type="button"
             (click)="navToOpenNewRestaurant()"
           ></button>
           <button
@@ -122,9 +122,17 @@
             pRipple
             label="List of restaurants"
             class="w-6 mt-3"
-            type="submit"
+            type="button"
             (click)="navToListOfRestaurants()"
           ></button>
+        </div>
+        <div *ngIf="restaurantsShown" class="mt-2">
+          <app-restaurants
+            [hasCurrentUser]="false"
+            [hasPagination]="true"
+            [navigateWhenClick]="false"
+            (restaurantClick)="selectRestaurant($event)"
+          ></app-restaurants>
         </div>
       </p-dialog>
 
@@ -132,19 +140,18 @@
         <div class="surface-border border-top-1 opacity-50 mt-3 col-12"></div>
         <p>You are a <strong>buyer</strong>.</p>
 
-        <div class="grid" *ngIf="user?.['requestingRestaurant']" class="col">
+        <div class="grid" *ngIf="user && user.requestingRestaurant" class="col">
           <p>Your request to become a seller is being reviewed.</p>
           <div class="col">
             <p-accordion>
-              <p-accordionTab header="Requesting Restaurant Information">
-                <span class="font-medium inline">
-                  Restaurant Name:
-                  <strong>{{ getRestaurantName() }}</strong></span
-                >
-                -
-                <span class="font-medium inline">
-                  Created Date: <strong>{{ getCreatedDate() }}</strong></span
-                >
+              <p-accordionTab
+                [selected]="true"
+                header="Requesting Restaurant Information"
+              >
+                <app-restaurant-card
+                  [restaurant]="user.requestingRestaurant"
+                  [hasDistance]="false"
+                ></app-restaurant-card>
               </p-accordionTab>
             </p-accordion>
           </div>
@@ -177,3 +184,4 @@
   </form>
 </div>
 <p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>

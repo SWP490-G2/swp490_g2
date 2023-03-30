@@ -32,14 +32,6 @@ export class HttpErrorHandler implements ErrorHandler {
           }
 
           break;
-
-        case HttpStatusCode.Unauthorized:
-          message = "Người dùng hiện tại không có quyền thực hiện truy cập này (401)";
-          break;
-
-        case HttpStatusCode.Forbidden:
-          message = "Người dùng hiện tại không có quyền thực hiện truy cập này (403)";
-          break;
       }
     }
 

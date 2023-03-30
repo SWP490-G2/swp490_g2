@@ -18,13 +18,28 @@
                   (selectedImageHandler)="updateAvatar($event)"
                   method="PUT"
                   class="mr-5 mb-3 lg:mb-0"
-                  [editable]="canEditImage()"
+                  [editable]="editable"
                 ></app-image-attachment>
                 <div>
-                  <span class="text-900 font-medium text-3xl">
-                    {{ restaurant.restaurantName }}
-                  </span>
-                  <i class="pi pi-star text-2xl ml-4 text-yellow-500"></i>
+                  <div class="flex align-items-center">
+                    <app-restaurant-name
+                      [restaurant]="restaurant"
+                      [editable]="editable"
+                    ></app-restaurant-name>
+                    <i class="pi pi-star text-2xl ml-4 text-yellow-500"></i>
+                  </div>
+
+                  <div
+                    class="flex align-items-center flex-wrap text-sm"
+                    *ngIf="fullAddress"
+                  >
+                    <div class="mr-5 mt-3">
+                      <span class="font-medium text-500">
+                        {{ fullAddress }}
+                      </span>
+                    </div>
+                  </div>
+
                   <div class="flex align-items-center flex-wrap text-sm">
                     <div class="mr-5 mt-3">
                       <span class="font-medium text-500">FOLLOWERS</span>
@@ -58,12 +73,11 @@
                   icon="pi pi-heart"
                   class="p-button-rounded p-button-success mr-2"
                 ></button>
-                <button
-                  pButton
-                  pRipple
-                  icon="pi pi-list"
-                  class="p-button-rounded p-button-help"
-                ></button>
+                <app-restaurant-update-information
+                  [restaurant]="restaurant"
+                  [editable]="editable"
+                  (hidden)="refresh()"
+                ></app-restaurant-update-information>
               </div>
             </div>
           </div>
@@ -165,7 +179,8 @@
         class="w-full border-2 border-dashed surface-border surface-section mt-3 lg:mt-0"
         style="min-height: 25rem"
       ></div> -->
-        <div class="flex flex-column flex-grow-1">
+        <div class="flex flex-column flex-grow-1 gap-5">
+          <app-sort-by (sortedBy)="onSortByChange($event)"></app-sort-by>
           <app-product-list [products]="products"></app-product-list>
           <p-button
             label="Load more"

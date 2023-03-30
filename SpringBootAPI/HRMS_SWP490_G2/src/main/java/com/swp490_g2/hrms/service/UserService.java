@@ -3,18 +3,17 @@ package com.swp490_g2.hrms.service;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.config.JwtService;
 import com.swp490_g2.hrms.entity.*;
-import com.swp490_g2.hrms.entity.shallowEntities.Operator;
-import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
+import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.entity.shallowEntities.TokenType;
-import com.swp490_g2.hrms.repositories.BuyerRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
-import com.swp490_g2.hrms.requests.*;
+import com.swp490_g2.hrms.requests.ChangePasswordRequest;
+import com.swp490_g2.hrms.requests.RegisterRequest;
+import com.swp490_g2.hrms.requests.UserInformationRequest;
 import com.swp490_g2.hrms.security.AuthenticationRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,8 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.swp490_g2.hrms.requests.FilterRequest;
 import com.swp490_g2.hrms.requests.SearchRequest;
 
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.*;
 
 
 @Service
@@ -38,14 +37,6 @@ public class UserService {
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    @Autowired
-    private BuyerRepository buyerRepository;
-
-    @Autowired
-    public void setBuyerRepository(BuyerRepository buyerRepository) {
-        this.buyerRepository = buyerRepository;
     }
 
     private TokenRepository tokenRepository;
@@ -144,7 +135,7 @@ public class UserService {
 
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole(Role.USER);
+        user.addRole(Role.USER);
         user.setVerificationCode(generateVerificationCode());
         user.setPhoneNumber(registerRequest.getPhoneNumber());
 
@@ -186,16 +177,11 @@ public class UserService {
 
         if (!verifyCodeOnly) {
             user.setActive(true);
-            user.setRole(Role.BUYER);
+            user.addRole(Role.BUYER);
         }
 
         user.setVerificationCode(generateVerificationCode());
         userRepository.save(user);
-
-        if (!verifyCodeOnly) {
-            buyerRepository.addFromUser(user.getId());
-        }
-
         return null;
     }
 
@@ -246,20 +232,10 @@ public class UserService {
             return null;
 
         String email = authentication.getName();
-        User user = getByEmail(email);
-        if (user == null)
+        if (!authentication.isAuthenticated() || email == null)
             return null;
 
-        if (user.getRole() == Role.BUYER)
-            return buyerService.getById(user.getId());
-
-        if (user.getRole() == Role.SELLER)
-            return sellerService.getById(user.getId());
-
-        if (user.getRole() == Role.ADMIN)
-            return adminService.getById(user.getId());
-
-        return null;
+        return getByEmail(email);
     }
 
     public AuthenticationResponse changePassword(ChangePasswordRequest request) {
@@ -292,29 +268,20 @@ public class UserService {
 
         Ward ward = new Ward();
         ward.setId(userInformationRequest.getWardId());
-        user.setAddress(Address.builder()
+        Address address = Address.builder()
                 .specificAddress(userInformationRequest.getSpecificAddress())
                 .ward(ward)
-                .build());
+                .lat(userInformationRequest.getAddressLat())
+                .lng(userInformationRequest.getAddressLng())
+                .build();
+
+        address.setId(userInformationRequest.getAddressId());
+        user.setAddress(address);
+
         userRepository.save(user);
     }
 
-    public List<User> getAllUsers() {
-        Admin currentAdmin = this.adminService.getCurrentAdmin();
-        if (currentAdmin == null)
-            throw new AccessDeniedException("This request allows admin only!");
-
-//        FilterRequest filterRequest = FilterRequest.builder()
-//                .key1("id")
-//                .operator(Operator.IS_NOT_NULL)
-//                .build();
-//
-//        List<FilterRequest> filters = new ArrayList<>(Collections.singletonList(filterRequest));
-//        SearchRequest request = SearchRequest.builder()
-//                .filters(filters)
-//                .build();
-//
-//        SearchSpecification<User> specification = new SearchSpecification<>(request);
-        return userRepository.findAll();
+    public void update(User user) {
+        userRepository.save(user);
     }
 }

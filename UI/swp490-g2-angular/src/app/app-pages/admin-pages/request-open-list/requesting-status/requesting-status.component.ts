@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { Buyer } from "src/app/ngswag/client";
+import { User } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-requesting-status",
@@ -7,7 +7,7 @@ import { Buyer } from "src/app/ngswag/client";
   styleUrls: ["./requesting-status.component.scss"],
 })
 export class RequestingStatusComponent {
-  @Input() requester?: Buyer;
+  @Input() requester?: User;
 
   get status():
     | {
