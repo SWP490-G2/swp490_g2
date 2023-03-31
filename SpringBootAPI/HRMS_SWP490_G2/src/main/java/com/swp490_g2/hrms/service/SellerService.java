@@ -25,4 +25,9 @@ public class SellerService {
     public Seller getByEmail(String email) {
         return this.sellerRepository.findByEmail(email).orElse(null);
     }
+
+    public Seller getByRestaurantId(Long restaurantId) {
+            Seller seller = this.sellerRepository.findByRestaurantId(restaurantId).orElse(null);
+        return seller;
+    }
 }

@@ -46,6 +46,7 @@
     [paginator]="true"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [filterDelay]="0"
+    [value]="restaurants"
   >
     <ng-template pTemplate="caption">
       <div class="table-header flex align-items-center justify-content-between">
@@ -112,15 +113,15 @@
       <tr class="p-selectable-row">
         <td>
           <span class="p-column-title">#</span>
-          {{ resList.id }}
+          {{ resList.restaurantId }}
         </td>
         <td>
           <span class="p-column-title">Restaurant Name</span>
-          {{ resList.requestingRestaurant.restaurantName }}
+          {{ resList.restaurantName }}
         </td>
         <td>
           <span class="p-column-title">Restaurant Owner</span>
-          {{ resList.createdBy }}
+          {{ resList.seller.username }}
         </td>
         <td>
           <span class="p-column-title">Created Date</span>
@@ -132,18 +133,35 @@
         </td>
         <td>
           <span class="p-column-title">Status</span>
-          <span [class]="'customer-badge status-' + resList.status">{{
-            resList.requestingRestaurant.active
-          }}</span>
+          <p-tag
+            *ngIf="resList.active"
+            styleClass="mr-2"
+            value="active"
+          ></p-tag>
+          <p-tag
+            *ngIf="!resList.active"
+            styleClass="mr-2"
+            value="inactive"
+            severity="danger"
+          ></p-tag>
         </td>
         <td style="text-align: center">
           <button
             pButton
+            pRipple
             type="button"
-            label="View Details"
-            class="p-button-secondary"
-            icon="pi pi-list"
-            routerLink="request-open-details"
+            icon="pi pi-eye"
+            class="btn-action p-button-rounded mr-2"
+            [routerLink]="'view-restaurant-details/' + resList.restaurantId"
+          ></button>
+
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-trash"
+            class="btn-action p-button-rounded p-button-danger"
+            (click)="deleteRestaurant(resList.restaurantId)"
           ></button>
         </td>
       </tr>
@@ -155,3 +173,5 @@
     </ng-template>
   </p-table>
 </div>
+<p-toast></p-toast>
+<p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>

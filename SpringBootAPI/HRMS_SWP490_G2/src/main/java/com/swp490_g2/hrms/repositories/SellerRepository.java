@@ -10,4 +10,9 @@ import java.util.Optional;
 
 public interface SellerRepository extends  JpaRepository<Seller, Long>  {
     Optional<Seller> findByEmail(String email);
+
+    @Query(value = "SELECT u.* FROM user u JOIN seller__restaurant sr\n" +
+            "ON u.userId = sr.userId\n" +
+            "WHERE sr.restaurantId = :restaurantId", nativeQuery = true)
+    Optional<Seller> findByRestaurantId(Long restaurantId);
 }

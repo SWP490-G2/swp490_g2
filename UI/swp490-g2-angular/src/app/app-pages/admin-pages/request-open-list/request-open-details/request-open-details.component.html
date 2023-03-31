@@ -82,7 +82,7 @@
             icon="pi pi-ban"
             label="No"
             class="p-button-rounded p-button-danger"
-            (click)="rejected()"
+            (click)="this.displayModal = false"
           ></button>
         </ng-template>
       </p-dialog>
@@ -139,7 +139,7 @@
             icon="pi pi-check"
             label="Confirm"
             class="p-button-rounded p-button-success mr-2"
-            (click)="displayMaximizable = false"
+            (click)="rejected()"
           ></button>
           <button
             pButton

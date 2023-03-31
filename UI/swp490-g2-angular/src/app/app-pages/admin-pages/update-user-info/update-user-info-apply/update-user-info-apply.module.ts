@@ -15,6 +15,7 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { ToastModule } from "primeng/toast";
 import { HttpErrorHandler } from "src/app/global/http-error-handler";
+import { DropdownModule } from "primeng/dropdown";
 
 @NgModule({
   declarations: [UpdateUserInfoApplyComponent],
@@ -31,6 +32,7 @@ import { HttpErrorHandler } from "src/app/global/http-error-handler";
     FileUploadModule,
     HttpClientModule,
     ToastModule,
+    DropdownModule,
   ],
   providers: [
     MessageService,

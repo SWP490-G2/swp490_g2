@@ -16,15 +16,19 @@
   >
     <div class="flex align-items-start flex-column md:flex-row">
       <div class="p-5">
-        <span class="text-900 font-medium text-3xl"
-          >Update Restaurant Information</span
-        >
+        <span class="text-900 font-medium text-3xl">
+          Update Restaurant Information
+        </span>
       </div>
     </div>
   </div>
 </div>
 
-<div class="surface-section px-2 py-4 md:px-6 lg:px-8">
+<form
+  #form="ngForm"
+  class="surface-section px-2 py-4 md:px-6 lg:px-8"
+  (ngSubmit)="submit()"
+>
   <label for="owner" class="block text-900 font-medium my-3">Owner</label>
   <div class="grid">
     <div class="col-12">
@@ -40,46 +44,46 @@
   <div class="grid">
     <div class="col-12">
       <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="Restaurant Name" />
+        <input
+          [(ngModel)]="restaurant.restaurantName"
+          name="restaurantName"
+          type="text"
+          pInputText
+          placeholder="Restaurant Name"
+        />
       </div>
     </div>
   </div>
 
-  <label for="address" class="block text-900 font-medium my-3">Address</label>
-  <div class="grid">
-    <div class="col-12">
-      <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="Address No." />
-      </div>
-    </div>
-  </div>
-  <div class="grid p-fluid my-2">
-    <div class="col-12 md:col-4">
-      <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="City" />
-      </div>
-    </div>
-    <div class="col-12 md:col-4">
-      <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="District" />
-      </div>
-    </div>
-    <div class="col-12 md:col-4">
-      <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="Ward" />
-      </div>
-    </div>
-  </div>
+  <app-address-fields [address]="restaurant.address"></app-address-fields>
 
-  <label for="phoneNo" class="block text-900 font-medium my-3"
+  <label for="phoneNumber" class="block text-900 font-medium my-3"
     >Phone Number</label
   >
   <div class="grid">
     <div class="col-12">
       <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="Phone Number" />
+        <input
+          id="phoneNumber"
+          type="text"
+          pInputText
+          class="w-full mb-1"
+          [(ngModel)]="restaurant.phoneNumber"
+          name="phoneNumber"
+          placeholder="Phone Number"
+        />
       </div>
     </div>
+  </div>
+  <div
+    class="flex align-items-center gap-1"
+    *ngIf="
+      form.controls['phoneNumber']?.dirty &&
+      form.controls['phoneNumber']?.errors
+    "
+  >
+    <i class="pi pi-times-circle text-danger"></i>
+    <small class="text-danger"> Enter a valid phone number! </small>
   </div>
 
   <label for="descr" class="block text-900 font-medium my-3">Description</label>
@@ -91,12 +95,14 @@
           cols="30"
           pInputTextarea
           placeholder="Description"
+          [(ngModel)]="restaurant.description"
+          name="description"
         ></textarea>
       </div>
     </div>
   </div>
 
-  <label for="contact" class="block text-900 font-medium my-3">Contact</label>
+  <!-- <label for="contact" class="block text-900 font-medium my-3">Contact</label>
   <div class="grid">
     <div class="col-12">
       <div class="p-inputgroup">
@@ -221,6 +227,26 @@
     </div>
   </div>
 
+  <label for="avatar" class="block text-900 font-medium my-3">Avatar</label>
+  <div class="grid">
+    <div class="col-12">
+      <p-fileUpload
+        name="avatar"
+        url="./upload.php"
+        (onUpload)="onUpload($event)"
+        accept="image/*"
+      >
+        <ng-template pTemplate="content">
+          <ul *ngIf="uploadedFiles.length">
+            <li *ngFor="let file of uploadedFiles">
+              {{ file.name }} - {{ file.size }} bytes
+            </li>
+          </ul>
+        </ng-template>
+      </p-fileUpload>
+    </div>
+  </div>
+
   <label for="menu" class="block text-900 font-medium my-3">Menu</label>
   <div class="grid">
     <div class="col-12">
@@ -239,7 +265,7 @@
         </ng-template>
       </p-fileUpload>
     </div>
-  </div>
+  </div> -->
 
   <button
     pButton
@@ -248,4 +274,4 @@
     icon="pi pi-check"
     class="w-full mt-4"
   ></button>
-</div>
+</form>
