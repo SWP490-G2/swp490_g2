@@ -320,31 +320,6 @@ INSERT INTO `restaurant_category` VALUES (1,'2023-03-26 09:26:12',NULL,'2023-03-
 UNLOCK TABLES;
 
 --
--- Table structure for table `role`
---
-
-DROP TABLE IF EXISTS `role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `role` (
-  `userId` bigint NOT NULL,
-  `roles` varchar(255) NOT NULL,
-  KEY `FK2sxwvkcadqxpmg44g32mujak0` (`userId`),
-  CONSTRAINT `FK2sxwvkcadqxpmg44g32mujak0` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `role`
---
-
-LOCK TABLES `role` WRITE;
-/*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (5,'USER'),(5,'BUYER'),(5,'ADMIN'),(2,'USER'),(3,'USER'),(4,'USER'),(4,'BUYER'),(3,'BUYER'),(2,'BUYER'),(1,'BUYER'),(1,'USER'),(1,'BUYER');
-/*!40000 ALTER TABLE `role` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `token`
 --
 
@@ -515,4 +490,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-31 16:14:36
+-- Dump completed on 2023-04-01  9:23:01
