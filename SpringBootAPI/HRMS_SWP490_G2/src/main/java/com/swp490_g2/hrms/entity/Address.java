@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.entity;
 
+import com.google.maps.GeocodingApi;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -14,7 +15,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "address")
 @AttributeOverride(name = "id", column = @Column(name = "addressId"))
-public class Address extends BaseEntity{
+public class Address extends BaseEntity {
 
     @Column(nullable = false)
     private String specificAddress;
@@ -29,4 +30,11 @@ public class Address extends BaseEntity{
 
     @Column(nullable = false)
     private Double lng;
+
+    public String getFullAddress() {
+        if (ward == null)
+            return null;
+
+        return "%s, %s, %s, %s".formatted(specificAddress, ward.getWardName(), ward.getDistrict().getDistrictName(), ward.getDistrict().getCity().getCityName());
+    }
 }

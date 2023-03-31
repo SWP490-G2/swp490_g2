@@ -41,6 +41,13 @@ public class RestaurantService {
         this.userService = userService;
     }
 
+    private AddressService addressService;
+
+    @Autowired
+    public void setAddressService(AddressService addressService) {
+        this.addressService = addressService;
+    }
+
     public Restaurant insert(Restaurant restaurant) {
         return restaurantRepository.save(restaurant);
     }
@@ -68,6 +75,7 @@ public class RestaurantService {
     }
 
     public void update(Restaurant restaurant) {
+        restaurant.setAddress(addressService.populateLatLng(restaurant.getAddress()));
         restaurantRepository.save(restaurant);
     }
 

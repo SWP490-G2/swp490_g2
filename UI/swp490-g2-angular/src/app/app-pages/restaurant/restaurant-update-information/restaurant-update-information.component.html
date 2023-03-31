@@ -63,7 +63,13 @@
       <app-address-fields [address]="restaurant.address"></app-address-fields>
 
       <div class="col text-center">
-        <button pButton pRipple label="Save" type="submit"></button>
+        <button
+          pButton
+          pRipple
+          label="Save"
+          type="submit"
+          [disabled]="submitButtonDisabled"
+        ></button>
       </div>
     </form>
   </div>

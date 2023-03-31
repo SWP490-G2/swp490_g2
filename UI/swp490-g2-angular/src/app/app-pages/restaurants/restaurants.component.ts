@@ -184,6 +184,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
 
         // Them cham do vao map
         const marker = new google.maps.Marker({
+          animation: google.maps.Animation.DROP,
           position: pos,
           map: this.map,
           icon: !restaurant ? "assets/images/user-marker.png" : null,
@@ -211,7 +212,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   }
 
   onRestaurantListItemClick(restaurant: Restaurant) {
-    this.map?.setCenter(
+    this.map?.panTo(
       (restaurant as any).marker.getPosition() as google.maps.LatLng
     );
   }
