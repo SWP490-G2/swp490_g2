@@ -3,6 +3,7 @@ package com.swp490_g2.hrms.service;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import com.swp490_g2.hrms.entity.shallowEntities.Operator;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import com.swp490_g2.hrms.repositories.UserRepository;
@@ -64,6 +65,7 @@ public class BuyerService {
         Restaurant createdRestaurant = restaurantService.insert(restaurant);
         buyer.setRequestingRestaurant(createdRestaurant);
         buyer.setRequestingOpeningRestaurantDate(Instant.now());
+        buyer.setRequestingRestaurantStatus(RequestingRestaurantStatus.PENDING);
         createdRestaurant.setCreatedBy(buyer.getId());
         userService.update(buyer);
         restaurantService.update(createdRestaurant);

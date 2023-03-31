@@ -28,4 +28,50 @@ export class SideBarsComponent implements OnInit {
   ngOnInit() {
     this.items = [];
   }
+
+  userExistedAdmin(): boolean {
+    return AuthService.isAdmin(this.user);
+  }
+
+  navToHomePage() {
+    this.$router.navigate([""], {
+      relativeTo: this.$route,
+    });
+  }
+
+  navToFeed() {
+    this.$router.navigate(["feed-page"], {
+      relativeTo: this.$route,
+    });
+  }
+
+  navToSettings() {
+    this.$router.navigate(["account-information"], {
+      relativeTo: this.$route,
+    });
+  }
+
+  navToRestaurant() {
+    this.$router.navigate(["restaurant"], {
+      relativeTo: this.$route,
+    });
+  }
+
+  viewAllUsers() {
+    this.$router.navigate(["admin-pages", "view-all-user"], {
+      relativeTo: this.$route,
+    });
+  }
+
+  viewAllRestaurants() {
+    this.$router.navigate(["admin-pages", "view-all-restaurant"], {
+      relativeTo: this.$route,
+    });
+  }
+
+  viewAllRequest() {
+    this.$router.navigate(["admin-pages", "request-open-list"], {
+      relativeTo: this.$route,
+    });
+  }
 }

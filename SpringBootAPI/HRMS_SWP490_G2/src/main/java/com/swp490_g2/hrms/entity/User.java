@@ -14,10 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -82,7 +79,7 @@ public class User extends BaseEntity implements UserDetails {
     @JoinTable(name = "role", joinColumns = @JoinColumn(name = "userId"))
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private List<Role> roles;
+    private Set<Role> roles;
 
     @Override
     @JsonIgnore
@@ -144,9 +141,8 @@ public class User extends BaseEntity implements UserDetails {
 
     public void addRole(Role role) {
         if (roles == null)
-            roles = new ArrayList<>();
+            roles = new HashSet<>();
 
-        if (!roles.contains(role))
-            roles.add(role);
+        roles.add(role);
     }
 }

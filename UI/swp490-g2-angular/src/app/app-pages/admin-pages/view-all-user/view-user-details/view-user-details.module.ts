@@ -9,6 +9,7 @@ import { DropdownModule } from "primeng/dropdown";
 import { TableModule } from "primeng/table";
 import { TabMenuModule } from "primeng/tabmenu";
 import { TagModule } from "primeng/tag";
+import { ViewAllUserModule } from "../view-all-user.module";
 
 @NgModule({
   declarations: [ViewUserDetailsComponent],
@@ -23,6 +24,7 @@ import { TagModule } from "primeng/tag";
     TabMenuModule,
     FormsModule,
     ButtonModule,
+    ViewAllUserModule,
   ],
 })
 export class ViewUserDetailsModule {}

@@ -1,8 +1,10 @@
 package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +31,8 @@ public class AdminController {
         adminService.rejectBecomeSeller(buyerId);
     }
 
-    @GetMapping("/get-all-users/")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(adminService.getAllUsers());
+    @PostMapping("/get-all-users")
+    public ResponseEntity<Page<User>> getAllUsers(@RequestBody SearchRequest request) {
+        return ResponseEntity.ok(adminService.getAllUsers(request));
     }
 }

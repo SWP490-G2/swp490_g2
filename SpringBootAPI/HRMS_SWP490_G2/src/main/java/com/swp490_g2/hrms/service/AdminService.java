@@ -4,8 +4,13 @@ import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
+import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
+import com.swp490_g2.hrms.repositories.UserRepository;
+import com.swp490_g2.hrms.requests.SearchRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +24,14 @@ public class AdminService {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
+
+    private UserRepository userRepository;
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
 
     private AuthenticationFacade authenticationFacade;
 
@@ -42,11 +55,19 @@ public class AdminService {
     }
 
     public List<User> getAllOpeningRestaurantRequests() {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null || currentUser.isAdmin())
+        {
+            return List.of();
+        }
+
         return this.buyerService.getAllOpeningRestaurantRequests();
     }
 
-    public List<User> getAllUsers() {
-        return this.userService.getAllUsers();
+    public Page<User> getAllUsers(SearchRequest request) {
+        SearchSpecification<User> specification = new SearchSpecification<>(request);
+        Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
+        return userRepository.findAll(specification, pageable);
     }
 
     public void approveBecomeSeller(Long buyerId) {

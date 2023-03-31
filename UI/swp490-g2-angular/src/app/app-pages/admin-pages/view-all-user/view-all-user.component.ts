@@ -12,8 +12,12 @@ export class ViewAllUserComponent implements OnInit {
   ngOnInit(): void {}
   userList: User[] = [];
   request: SearchRequest;
+  users?: User;
 
   constructor(private $adminClient: AdminClient) {
-    this.$adminClient.getAllUsers;
+    this.$adminClient.getAllUsers(new SearchRequest()).subscribe((res) => {
+      if (!res.content) return;
+      this.userList = res.content;
+    });
   }
 }
