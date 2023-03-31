@@ -2,6 +2,7 @@ package com.swp490_g2.hrms.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -9,6 +10,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,27 +26,30 @@ public class Restaurant extends BaseEntity {
     @Column(nullable = false)
     private String restaurantName;
 
-    @Column(nullable = true, columnDefinition = "VARCHAR(450)")
+    @Column(columnDefinition = "VARCHAR(450)")
     private String description;
 
-    @Column(nullable = true, unique = true)
+    @Column(unique = true)
     private String phoneNumber;
 
-    @Column(nullable = false, columnDefinition = "tinyint(1) default 0", insertable = false)
+    @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)
     private boolean isActive;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private File avatarFile;
 
-    @ManyToMany(mappedBy = "restaurants")
-    @JsonIgnore
-    private Set<Seller> sellers;
-
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy="restaurant")
     @JsonManagedReference
     @Transient
     private Set<Product> products;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Address address;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "restaurant__restaurant_category",
+            joinColumns = @JoinColumn(name = "restaurantId"), inverseJoinColumns = @JoinColumn(name = "restaurantCategoryId"))
+    private List<RestaurantCategory> restaurantCategories;
 }

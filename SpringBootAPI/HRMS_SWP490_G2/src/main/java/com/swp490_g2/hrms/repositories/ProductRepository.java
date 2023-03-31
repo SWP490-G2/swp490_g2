@@ -17,7 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query(value = """
         select *\s
         from product\s
-            where (match (productName) against (:text)\s
+            where (match (productName) against (:text IN NATURAL LANGUAGE MODE)\s
             or productName like %:text%)\s
             and restaurantId = :restaurantId
             """, nativeQuery = true)

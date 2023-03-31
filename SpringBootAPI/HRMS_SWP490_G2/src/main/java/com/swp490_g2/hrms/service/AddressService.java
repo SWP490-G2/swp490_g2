@@ -1,5 +1,11 @@
 package com.swp490_g2.hrms.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.GeocodingResult;
 import com.swp490_g2.hrms.entity.Address;
 import com.swp490_g2.hrms.entity.City;
 import com.swp490_g2.hrms.entity.District;
@@ -17,6 +23,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +58,10 @@ public class AddressService {
     public void setWardRepository(WardRepository wardRepository) {
         this.wardRepository = wardRepository;
     }
+
+    private GeoApiContext geoApiContext = new GeoApiContext.Builder()
+            .apiKey("AIzaSyC_FzXd_agkmiZ_pEH6WB_oCskuwWyna58")
+            .build();
 
     public List<City> getCities() {
         return this.cityRepository.findAll();
@@ -94,5 +105,31 @@ public class AddressService {
 
     public Address getById(Long id) {
         return addressRepository.findById(id).orElse(null);
+    }
+
+    public Address populateLatLng(Address address) {
+        if (address == null) {
+            return null;
+        }
+
+        Address regenAddress = getById(address.getId());
+        if (regenAddress == null)
+            return address;
+
+        try {
+            GeocodingResult[] results = GeocodingApi.geocode(geoApiContext, regenAddress.getFullAddress()).await();
+            if (results[0] != null) {
+                regenAddress.setLat(results[0].geometry.location.lat);
+                regenAddress.setLng(results[0].geometry.location.lng);
+            }
+        } catch (ApiException | InterruptedException | IOException ignored) {
+        }
+
+        return regenAddress;
+    }
+
+    public void update(Address address) {
+        address = populateLatLng(address);
+        addressRepository.save(address);
     }
 }

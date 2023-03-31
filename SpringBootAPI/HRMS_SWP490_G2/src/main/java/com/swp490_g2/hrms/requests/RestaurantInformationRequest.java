@@ -3,7 +3,7 @@ package com.swp490_g2.hrms.requests;
 import com.swp490_g2.hrms.entity.Address;
 import com.swp490_g2.hrms.entity.File;
 import com.swp490_g2.hrms.entity.Restaurant;
-import com.swp490_g2.hrms.entity.Seller;
+import com.swp490_g2.hrms.entity.User;
 import lombok.*;
 
 import java.util.Date;
@@ -26,13 +26,13 @@ public class RestaurantInformationRequest {
 
     private File avatarFile;
 
-    private Seller seller;
+    private User user;
 
     private Address address;
 
     private Date createdAt;
 
-    public static RestaurantInformationRequest set(Seller seller, Restaurant restaurant) {
+    public static RestaurantInformationRequest set(User user, Restaurant restaurant) {
         RestaurantInformationRequest request = RestaurantInformationRequest.builder()
                 .restaurantId(restaurant.getId())
                 .restaurantName(restaurant.getRestaurantName())
@@ -40,7 +40,7 @@ public class RestaurantInformationRequest {
                 .phoneNumber(restaurant.getPhoneNumber())
                 .isActive(restaurant.isActive())
                 .avatarFile(restaurant.getAvatarFile())
-                .seller(seller)
+                .user(user)
                 .address(restaurant.getAddress())
                 .createdAt(Date.from(restaurant.getCreatedAt()))
                 .build();

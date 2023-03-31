@@ -1,11 +1,9 @@
 package com.swp490_g2.hrms.controller;
 
-import com.swp490_g2.hrms.entity.Buyer;
 import com.swp490_g2.hrms.entity.Restaurant;
-import com.swp490_g2.hrms.entity.Seller;
+import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.requests.RestaurantInformationRequest;
 import com.swp490_g2.hrms.service.AdminService;
-import com.swp490_g2.hrms.service.SellerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +15,9 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
     private final AdminService adminService;
-    private final SellerService sellerService;
 
     @GetMapping("/get-all-opening-restaurant-requests")
-    public ResponseEntity<List<Buyer>> getAllOpeningRestaurantRequests() {
+    public ResponseEntity<List<User>> getAllOpeningRestaurantRequests() {
         return ResponseEntity.ok(adminService.getAllOpeningRestaurantRequests());
     }
 
@@ -37,11 +34,6 @@ public class AdminController {
     @GetMapping("/get-all-restaurant")
     public ResponseEntity<List<RestaurantInformationRequest>> getAllRestaurant() {
         return ResponseEntity.ok(adminService.getAllRestaurant());
-    }
-
-    @GetMapping("/find-seller-by-restaurant/{restaurantId}")
-    public ResponseEntity<Seller> getSellerByRestaurantId(@PathVariable Long restaurantId) {
-        return ResponseEntity.ok(sellerService.getByRestaurantId(restaurantId));
     }
 
     @GetMapping("/get-restaurant-by-id/{id}")

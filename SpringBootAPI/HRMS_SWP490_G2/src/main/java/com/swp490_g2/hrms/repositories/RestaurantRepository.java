@@ -8,9 +8,27 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long>, JpaSpecificationExecutor<Restaurant> {
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM seller__restaurant WHERE restaurantId = :restaurantId and userId = :userId", nativeQuery = true)
     int deleteSellerRestaurant(@Param("restaurantId") Long restaurantId, @Param("userId") Long userId);
+
+    @Query(value = """
+            select distinct r.*
+            from restaurant r
+            	inner join product p on p.restaurantId = r.restaurantId
+                inner join restaurant__restaurant_category rrc on rrc.restaurantId = r.restaurantId
+                inner join restaurant_category rc on rc.restaurantCategoryId = rrc.restaurantCategoryId
+            	where (match (r.restaurantName) against (:text IN NATURAL LANGUAGE MODE)
+            	or r.restaurantName like %:text%)
+                or (match (p.productName) against (:text IN NATURAL LANGUAGE MODE)
+            	or p.productName like %:text%)
+                or (match (rc.restaurantCategoryName) against (:text IN NATURAL LANGUAGE MODE)
+            	or rc.restaurantCategoryName like %:text%)
+                ;
+            """, nativeQuery = true)
+    public List<Restaurant> fulltextSearch(String text);
 }

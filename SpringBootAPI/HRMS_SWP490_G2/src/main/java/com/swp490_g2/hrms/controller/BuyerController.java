@@ -1,10 +1,6 @@
 package com.swp490_g2.hrms.controller;
 
-import com.swp490_g2.hrms.entity.Buyer;
 import com.swp490_g2.hrms.entity.Restaurant;
-import com.swp490_g2.hrms.entity.User;
-import com.swp490_g2.hrms.requests.OpeningRestaurantRequest;
-import com.swp490_g2.hrms.service.AddressService;
 import com.swp490_g2.hrms.service.BuyerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +16,5 @@ public class BuyerController {
     @PostMapping("/request-opening-new-restaurant")
     public void requestOpeningNewRestaurant(@RequestBody Restaurant restaurant){
         buyerService.requestOpeningNewRestaurant(restaurant);
-    }
-
-    @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<Buyer> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(buyerService.getById(id));
     }
 }

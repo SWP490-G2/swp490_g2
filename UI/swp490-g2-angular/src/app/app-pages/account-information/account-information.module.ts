@@ -18,8 +18,7 @@ import { ToastModule } from "primeng/toast";
 import { AccordionModule } from "primeng/accordion";
 import { TableModule } from "primeng/table";
 import { AddressFieldsComponent } from "./address-fields/address-fields.component";
-
-
+import { RestaurantsModule } from "../restaurants/restaurants.module";
 
 @NgModule({
   declarations: [
@@ -44,13 +43,9 @@ import { AddressFieldsComponent } from "./address-fields/address-fields.componen
     ToastModule,
     AccordionModule,
     TableModule,
+    RestaurantsModule,
   ],
-  exports: [
-    AddressFieldsComponent
-  ],
-  providers: [
-    MessageService,
-    ConfirmationService,
-  ]
+  exports: [AddressFieldsComponent],
+  providers: [MessageService, ConfirmationService],
 })
-export class AccountInformationModule { }
+export class AccountInformationModule {}

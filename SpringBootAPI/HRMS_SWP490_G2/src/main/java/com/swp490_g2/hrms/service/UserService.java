@@ -3,19 +3,17 @@ package com.swp490_g2.hrms.service;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.config.JwtService;
 import com.swp490_g2.hrms.entity.*;
+import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.entity.shallowEntities.TokenType;
-import com.swp490_g2.hrms.repositories.BuyerRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.ChangePasswordRequest;
-import com.swp490_g2.hrms.requests.FilterRequest;
 import com.swp490_g2.hrms.requests.RegisterRequest;
 import com.swp490_g2.hrms.requests.UserInformationRequest;
 import com.swp490_g2.hrms.security.AuthenticationRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,8 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.*;
 
 
 @Service
@@ -36,13 +34,6 @@ public class UserService {
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    private BuyerRepository buyerRepository;
-
-    @Autowired
-    public void setBuyerRepository(BuyerRepository buyerRepository) {
-        this.buyerRepository = buyerRepository;
     }
 
     private TokenRepository tokenRepository;
@@ -80,14 +71,6 @@ public class UserService {
     @Autowired
     public void setBuyerService(BuyerService buyerService) {
         this.buyerService = buyerService;
-    }
-
-    private SellerService sellerService;
-
-
-    @Autowired
-    public void setSellerService(SellerService sellerService) {
-        this.sellerService = sellerService;
     }
 
     private AdminService adminService;
@@ -141,7 +124,7 @@ public class UserService {
 
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole(Role.USER);
+        user.addRole(Role.USER);
         user.setVerificationCode(generateVerificationCode());
         user.setPhoneNumber(registerRequest.getPhoneNumber());
 
@@ -183,16 +166,11 @@ public class UserService {
 
         if (!verifyCodeOnly) {
             user.setActive(true);
-            user.setRole(Role.BUYER);
+            user.addRole(Role.BUYER);
         }
 
         user.setVerificationCode(generateVerificationCode());
         userRepository.save(user);
-
-        if (!verifyCodeOnly) {
-            buyerRepository.addFromUser(user.getId());
-        }
-
         return null;
     }
 
@@ -246,17 +224,7 @@ public class UserService {
         if (!authentication.isAuthenticated() || email == null)
             return null;
 
-        String role = authentication.getAuthorities().stream().findFirst().get().getAuthority();
-        if (role.equals("BUYER"))
-            return buyerService.getByEmail(email);
-
-        if (role.equals("SELLER"))
-            return sellerService.getByEmail(email);
-
-        if (role.equals("ADMIN"))
-            return adminService.getByEmail(email);
-
-        return null;
+        return getByEmail(email);
     }
 
     public AuthenticationResponse changePassword(ChangePasswordRequest request) {
@@ -302,5 +270,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void update(User user) {
+        userRepository.save(user);
+    }
 
+    public User getByRestaurantId(Long restaurantId) {
+        return this.userRepository.findByRestaurantId(restaurantId).orElse(null);
+    }
 }

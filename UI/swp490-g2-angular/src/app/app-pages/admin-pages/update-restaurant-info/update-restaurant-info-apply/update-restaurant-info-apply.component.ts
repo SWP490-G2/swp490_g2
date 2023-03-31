@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { finalize } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
-import { AdminClient, AuthenticationResponse, City, District, Restaurant, RestaurantClient, RestaurantInformationRequest, User, Ward } from "src/app/ngswag/client";
+import { AdminClient, AuthenticationResponse, RestaurantClient, RestaurantInformationRequest, User, Ward } from "src/app/ngswag/client";
 import { DateUtils } from "src/app/utils";
 
 @Component({

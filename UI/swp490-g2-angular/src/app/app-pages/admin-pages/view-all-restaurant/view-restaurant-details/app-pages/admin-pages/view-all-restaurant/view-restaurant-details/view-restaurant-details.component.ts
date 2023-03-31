@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AuthService } from "src/app/global/auth.service";
-import { AdminClient, File, RestaurantInformationRequest, Seller, User } from "src/app/ngswag/client";
+import { AdminClient, File, RestaurantInformationRequest, User } from "src/app/ngswag/client";
 import { DateUtils, getFullAddress } from "src/app/utils";
 
 @Component({
@@ -45,15 +45,15 @@ export class ViewRestaurantDetailsComponent implements OnInit {
 
   get editable(): boolean {
     if (!this.user || !this.user.id) return false;
-    if (this.user.role === "ADMIN") return true;
-    if (
-      this.user.role === "SELLER" &&
-      (<Seller>this.user).restaurants?.some(
-        (restaurant) => restaurant.id === this.restaurant?.restaurantId
-      )
-    ) {
-      return true;
-    }
+    // if (this.user.role === "ADMIN") return true;
+    // if (
+    //   this.user.role === "SELLER" &&
+    //   (<Seller>this.user).restaurants?.some(
+    //     (restaurant) => restaurant.id === this.restaurant?.restaurantId
+    //   )
+    // ) {
+    //   return true;
+    // }
 
     return false;
   }

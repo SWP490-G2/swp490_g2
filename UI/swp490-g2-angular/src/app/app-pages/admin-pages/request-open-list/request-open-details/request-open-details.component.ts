@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { finalize } from "rxjs";
-import { Buyer, AdminClient, BuyerClient } from "src/app/ngswag/client";
+import { AdminClient, User, UserClient } from "src/app/ngswag/client";
 import { DateUtils } from "src/app/utils";
 
 @Component({
@@ -15,17 +15,17 @@ export class RequestOpenDetailsComponent implements OnInit {
   statuses: any[];
   loading = true;
   activityValues: number[] = [0, 100];
-  requestingUsers: Buyer[] = [];
-  acceptRes: Buyer[] = [];
+  requestingUsers: User[] = [];
+  acceptRes: User[] = [];
   displayModal: boolean;
   displayMaximizable: boolean;
-  requester?: Buyer;
+  requester?: User;
   buyerId: number;
 
   constructor(
     private $adminClient: AdminClient,
     private $route: ActivatedRoute,
-    private $buyerClient: BuyerClient
+    private $userClient: UserClient
   ) {
     const id: number = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("id")
@@ -36,7 +36,7 @@ export class RequestOpenDetailsComponent implements OnInit {
   }
 
   refresh() {
-    this.$buyerClient.getById(this.buyerId).subscribe((requester) => {
+    this.$userClient.getById(this.buyerId).subscribe((requester) => {
       this.requester = requester;
       this.requester.requestingOpeningRestaurantDate = DateUtils.fromDB(
         this.requester.requestingOpeningRestaurantDate

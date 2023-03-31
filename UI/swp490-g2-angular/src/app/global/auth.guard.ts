@@ -41,12 +41,12 @@ export class AuthGuard implements CanActivate {
 
     return this.$auth.getCurrentUser().pipe(
       switchMap((user) => {
-        if (!user || !user.role) {
+        if (!user || !user.roles) {
           this.$router.navigate([""]);
           return of();
         }
 
-        if (roles.includes(user.role)) {
+        if (user.roles.some((role) => roles.includes(role))) {
           return of(true);
         }
 

@@ -1,1 +1,3 @@
-ALTER TABLE product ADD FULLTEXT(productName IN NATURAL LANGUAGE MODE);
+ALTER TABLE product ADD FULLTEXT(productName);
+alter table restaurant add fulltext(restaurantName);
+alter table restaurant_category add fulltext(restaurantCategoryName);
