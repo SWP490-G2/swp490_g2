@@ -36,7 +36,9 @@ public class SecurityConfiguration {
                         "/user/verify-code",
                         "/v3/api-docs",
                         "/user/get-current-user",
-                        "/user/change-password")
+                        "/user/change-password",
+                        "/restaurant-category/get-all"
+                )
                 .permitAll()
                 .anyRequest()
                 .authenticated()

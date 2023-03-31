@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import com.swp490_g2.hrms.entity.enums.Role;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,11 +13,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -82,7 +79,7 @@ public class User extends BaseEntity implements UserDetails {
     @JoinTable(name = "role", joinColumns = @JoinColumn(name = "userId"))
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private List<Role> roles;
+    private Set<Role> roles;
 
     @Override
     @JsonIgnore
@@ -144,9 +141,8 @@ public class User extends BaseEntity implements UserDetails {
 
     public void addRole(Role role) {
         if (roles == null)
-            roles = new ArrayList<>();
+            roles = new HashSet<>();
 
-        if (!roles.contains(role))
-            roles.add(role);
+        roles.add(role);
     }
 }
