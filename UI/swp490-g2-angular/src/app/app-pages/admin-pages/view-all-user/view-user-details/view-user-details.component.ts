@@ -27,6 +27,7 @@ export class ViewUserDetailsComponent implements OnInit {
     this.$userClient.getById(this.userId).subscribe((users) => {
       this.users = users;
       this.users.dateOfBirth = DateUtils.fromDB(this.users.dateOfBirth);
+      this.users.createdAt = DateUtils.fromDB(this.users.createdAt);
       console.log(users);
     });
   }

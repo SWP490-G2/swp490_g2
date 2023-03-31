@@ -52,7 +52,7 @@ export class SideBarsComponent implements OnInit {
   }
 
   navToRestaurant() {
-    this.$router.navigate(["restaurant"], {
+    this.$router.navigate(["restaurants"], {
       relativeTo: this.$route,
     });
   }

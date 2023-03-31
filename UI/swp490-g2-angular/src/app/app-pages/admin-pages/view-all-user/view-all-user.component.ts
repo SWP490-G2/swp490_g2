@@ -18,6 +18,10 @@ export class ViewAllUserComponent implements OnInit {
     this.$adminClient.getAllUsers(new SearchRequest()).subscribe((res) => {
       if (!res.content) return;
       this.userList = res.content;
+      console.log(res);
     });
   }
+
+  // adminUser() {
+  // }
 }
