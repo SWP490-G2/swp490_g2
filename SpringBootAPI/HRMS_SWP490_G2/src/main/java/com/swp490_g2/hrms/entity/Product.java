@@ -3,6 +3,8 @@ package com.swp490_g2.hrms.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Set;
 
@@ -24,6 +26,7 @@ public class Product extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "restaurantId", nullable = false)
     @JsonBackReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurant restaurant;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

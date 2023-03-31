@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> , JpaSpecifica
     Optional<User> findByEmail(String email);
     Optional<User> findByPhoneNumber(String phoneNumber);
 
-    @Query(value = "SELECT * FROM user u JOIN user__restaurant ur\n" +
+    @Query(value = "SELECT u.* FROM user u JOIN user__restaurant ur\n" +
             "ON u.userId = ur.userId\n" +
             "WHERE ur.restaurantId = :restaurantId", nativeQuery = true)
     Optional<User> findByRestaurantId(Long restaurantId);

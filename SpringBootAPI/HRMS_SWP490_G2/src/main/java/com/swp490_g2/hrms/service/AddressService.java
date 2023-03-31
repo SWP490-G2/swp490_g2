@@ -112,20 +112,19 @@ public class AddressService {
             return null;
         }
 
-        Address regenAddress = getById(address.getId());
-        if (regenAddress == null)
-            return address;
+        Ward ward = wardRepository.findById(address.getWard().getId()).orElse(null);
+        address.setWard(ward);
 
         try {
-            GeocodingResult[] results = GeocodingApi.geocode(geoApiContext, regenAddress.getFullAddress()).await();
+            GeocodingResult[] results = GeocodingApi.geocode(geoApiContext, address.getFullAddress()).await();
             if (results[0] != null) {
-                regenAddress.setLat(results[0].geometry.location.lat);
-                regenAddress.setLng(results[0].geometry.location.lng);
+                address.setLat(results[0].geometry.location.lat);
+                address.setLng(results[0].geometry.location.lng);
             }
         } catch (ApiException | InterruptedException | IOException ignored) {
         }
 
-        return regenAddress;
+        return address;
     }
 
     public void update(Address address) {

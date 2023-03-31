@@ -1,12 +1,10 @@
 package com.swp490_g2.hrms.requests;
 
-import com.swp490_g2.hrms.entity.Address;
-import com.swp490_g2.hrms.entity.File;
-import com.swp490_g2.hrms.entity.Restaurant;
-import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.entity.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,6 +26,8 @@ public class RestaurantInformationRequest {
 
     private User user;
 
+    private List<RestaurantCategory> restaurantCategory;
+
     private Address address;
 
     private Date createdAt;
@@ -41,6 +41,7 @@ public class RestaurantInformationRequest {
                 .isActive(restaurant.isActive())
                 .avatarFile(restaurant.getAvatarFile())
                 .user(user)
+                .restaurantCategory(restaurant.getRestaurantCategories())
                 .address(restaurant.getAddress())
                 .createdAt(Date.from(restaurant.getCreatedAt()))
                 .build();

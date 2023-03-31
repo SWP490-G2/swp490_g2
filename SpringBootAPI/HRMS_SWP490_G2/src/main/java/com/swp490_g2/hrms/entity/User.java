@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import com.swp490_g2.hrms.entity.enums.Role;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,8 +13,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -76,8 +76,8 @@ public class User extends BaseEntity implements UserDetails {
     private Address address;
 
     @ElementCollection(targetClass = Role.class)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userId"))
-    @Column(nullable = false)
+    @JoinTable(name = "user__role", joinColumns = @JoinColumn(name = "userId"))
+    @Column(name = "roleName", nullable = false)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
@@ -143,7 +143,6 @@ public class User extends BaseEntity implements UserDetails {
         if (roles == null)
             roles = new HashSet<>();
 
-        if (!roles.contains(role))
-            roles.add(role);
+        roles.add(role);
     }
 }

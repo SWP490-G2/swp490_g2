@@ -42,6 +42,7 @@ public class Restaurant extends BaseEntity {
     @OneToMany(mappedBy="restaurant")
     @JsonManagedReference
     @Transient
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Product> products;
 
     @OneToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)

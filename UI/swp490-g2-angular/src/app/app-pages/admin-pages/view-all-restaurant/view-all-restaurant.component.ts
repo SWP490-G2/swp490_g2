@@ -58,8 +58,9 @@ export class ViewAllRestaurantComponent {
             detail: "Deleted successfully!",
           })
         );
+        this.refresh();
       },
     });
-    this.refresh();
+  
   }
 }

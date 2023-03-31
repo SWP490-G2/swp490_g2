@@ -50,16 +50,24 @@
   >
     <ng-template pTemplate="caption">
       <div class="table-header flex align-items-center justify-content-between">
-        <p></p>
-        <input
-          id="search"
-          type="text"
-          pInputText
-          class="w-full mb-1 surface-card p-2 shadow-2 border-round lg:w-3"
-          name="search"
-          ngModel
-          placeholder="Search"
-        />
+        <div>
+          <p-button
+          label="Add new restaurant" 
+          [routerLink]="['/admin-pages/add-restaurant-info']"
+          ></p-button>
+        </div>
+        <div>
+          <input
+            id="search"
+            type="text"
+            pInputText
+            class="w-full mb-1 surface-card p-2 shadow-2 border-round"
+            style="min-width: 15.5rem"
+            name="search"
+            ngModel
+            placeholder="Search"
+          />
+        </div>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
@@ -121,7 +129,7 @@
         </td>
         <td>
           <span class="p-column-title">Restaurant Owner</span>
-          {{ resList.seller.username }}
+          {{ resList.user?.username }}
         </td>
         <td>
           <span class="p-column-title">Created Date</span>
