@@ -76,8 +76,8 @@ public class User extends BaseEntity implements UserDetails {
     private Address address;
 
     @ElementCollection(targetClass = Role.class)
-    @JoinTable(name = "role", joinColumns = @JoinColumn(name = "userId"))
-    @Column(nullable = false)
+    @JoinTable(name = "user__role", joinColumns = @JoinColumn(name = "userId"))
+    @Column(name = "roleName", nullable = false)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
