@@ -212,6 +212,8 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   }
 
   onRestaurantListItemClick(restaurant: Restaurant) {
+    if (!(restaurant as any).marker) return;
+
     this.map?.panTo(
       (restaurant as any).marker.getPosition() as google.maps.LatLng
     );
