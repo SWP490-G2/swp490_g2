@@ -1,18 +1,13 @@
 import { Component } from "@angular/core";
-import {
-  ConfirmationService,
-  ConfirmEventType,
-  MessageService,
-} from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
+import { of, switchMap } from "rxjs";
 import {
   AdminClient,
   Restaurant,
   RestaurantClient,
-  RestaurantInformationRequest,
   SearchRestaurantsRequest,
   UserClient,
 } from "src/app/ngswag/client";
-import { DateUtils, getFullName } from "src/app/utils";
 import { AllRes } from "src/app/utils/allres";
 
 @Component({
@@ -45,18 +40,25 @@ export class ViewAllRestaurantComponent {
     // });
     this.$restaurantClient
       .search(undefined, undefined, undefined, new SearchRestaurantsRequest())
-      .subscribe((page) => {
-        if (page.content) {
-          this.restaurants = page.content;
-          this.$userClient
-            .getAllOwnersByRestaurantIds(this.restaurants.map((r) => r.id!))
-            .subscribe((owners) => {
-              this.restaurants.map((r) => {
-                (r as any).owners = owners.filter((o) =>
-                  o.restaurants?.some((r1) => r1.id === r.id)
-                );
-              });
-            });
+      .pipe(
+        switchMap((page) => {
+          if (page.content) {
+            this.restaurants = page.content;
+            return this.$userClient.getAllOwnersByRestaurantIds(
+              this.restaurants.map((r) => r.id!)
+            );
+          }
+
+          return of(undefined);
+        })
+      )
+      .subscribe((owners) => {
+        if (owners) {
+          this.restaurants.map((r) => {
+            (r as any).owners = owners.filter((o) =>
+              o.restaurants?.some((r1) => r1.id === r.id)
+            );
+          });
         }
       });
   }
