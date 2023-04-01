@@ -52,8 +52,8 @@
       <div class="table-header flex align-items-center justify-content-between">
         <div>
           <p-button
-          label="Add new restaurant" 
-          [routerLink]="['/admin-pages/add-restaurant-info']"
+            label="Add new restaurant"
+            [routerLink]="['/admin-pages/add-restaurant-info']"
           ></p-button>
         </div>
         <div>
@@ -128,8 +128,8 @@
           {{ resList.restaurantName }}
         </td>
         <td>
-          <span class="p-column-title">Restaurant Owner</span>
-          {{ resList.user?.username }}
+          <span class="p-column-title">Restaurant Owners</span>
+          {{ getOwners(resList) }}
         </td>
         <td>
           <span class="p-column-title">Created Date</span>

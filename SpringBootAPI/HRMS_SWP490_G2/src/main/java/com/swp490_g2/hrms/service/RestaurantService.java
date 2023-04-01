@@ -136,6 +136,7 @@ public class RestaurantService {
             RestaurantInformationRequest request = RestaurantInformationRequest.set(user, restaurant);
             requestList.add(request);
         }
+
         return requestList;
     }
 

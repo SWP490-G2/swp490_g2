@@ -7,9 +7,12 @@ import {
 import {
   AdminClient,
   Restaurant,
+  RestaurantClient,
   RestaurantInformationRequest,
+  SearchRestaurantsRequest,
+  UserClient,
 } from "src/app/ngswag/client";
-import { DateUtils } from "src/app/utils";
+import { DateUtils, getFullName } from "src/app/utils";
 import { AllRes } from "src/app/utils/allres";
 
 @Component({
@@ -23,20 +26,39 @@ export class ViewAllRestaurantComponent {
   statuses: any[];
   loading = true;
   activityValues: number[] = [0, 100];
-  restaurants: RestaurantInformationRequest[] = [];
+  // restaurants: RestaurantInformationRequest[] = [];
+  restaurants: Restaurant[] = [];
 
   constructor(
     private $adminClient: AdminClient,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private $restaurantClient: RestaurantClient,
+    private $userClient: UserClient
   ) {
     this.refresh();
   }
 
   refresh() {
-    this.$adminClient.getAllRestaurant().subscribe((restaurants) => {
-      this.restaurants = restaurants;
-    });
+    // this.$adminClient.getAllRestaurant().subscribe((restaurants) => {
+    //   this.restaurants = restaurants;
+    // });
+    this.$restaurantClient
+      .search(undefined, undefined, undefined, new SearchRestaurantsRequest())
+      .subscribe((page) => {
+        if (page.content) {
+          this.restaurants = page.content;
+          this.$userClient
+            .getAllOwnersByRestaurantIds(this.restaurants.map((r) => r.id!))
+            .subscribe((owners) => {
+              this.restaurants.map((r) => {
+                (r as any).owners = owners.filter((o) =>
+                  o.restaurants?.some((r1) => r1.id === r.id)
+                );
+              });
+            });
+        }
+      });
   }
 
   // deleteRestaurant(id: number) {
@@ -61,6 +83,11 @@ export class ViewAllRestaurantComponent {
         this.refresh();
       },
     });
-  
+  }
+
+  getOwners(restaurant: Restaurant): string {
+    if (!(restaurant as any).owners) return "";
+
+    return (restaurant as any).owners.map((o) => o.email).join(", ");
   }
 }

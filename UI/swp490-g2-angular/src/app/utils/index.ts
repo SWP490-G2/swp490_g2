@@ -1,4 +1,4 @@
-import { Address, BusinessException } from "../ngswag/client";
+import { Address, BusinessException, User } from "../ngswag/client";
 
 export * from "./CustomValidators";
 export * from "./date";
@@ -10,6 +10,14 @@ export function getBusinessExceptionErrorCode(
     return JSON.parse(JSON.parse(error.response).message).errorCode;
 
   return -1;
+}
+
+export function getFullName(user?: User): string {
+  if (!user) {
+    return "";
+  }
+
+  return [user.lastName, user.middleName, user.firstName].join(" ");
 }
 
 export function getFullAddress(address?: Address): string {
