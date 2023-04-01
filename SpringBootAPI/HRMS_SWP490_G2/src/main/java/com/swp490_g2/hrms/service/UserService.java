@@ -91,6 +91,13 @@ public class UserService {
         this.authenticationFacade = authenticationFacade;
     }
 
+    private SMSService smsService;
+
+    @Autowired
+    public void setSmsService(SMSService smsService) {
+        this.smsService = smsService;
+    }
+
     private static String generateVerificationCode() {
         // It will generate 6 digit random Number.
         // from 0 to 999999
@@ -126,7 +133,12 @@ public class UserService {
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.addRole(Role.USER);
-        user.setVerificationCode(generateVerificationCode());
+
+        String verificationCode = generateVerificationCode();
+        smsService.sendMessage(registerRequest.getPhoneNumber(),
+                "Verification code for register a new account is " + verificationCode);
+
+        user.setVerificationCode(verificationCode);
         user.setPhoneNumber(registerRequest.getPhoneNumber());
 
         var savedUser = userRepository.save(user);
@@ -278,7 +290,7 @@ public class UserService {
     public User getByRestaurantId(Long restaurantId) {
         return this.userRepository.findByRestaurantId(restaurantId).orElse(null);
     }
-    
+
     public List<User> getAllOwnersByRestaurantIds(List<Long> restaurantIds) {
         return userRepository.findByRestaurantsIn(restaurantIds);
     }
