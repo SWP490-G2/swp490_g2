@@ -37,11 +37,17 @@ public class SMSService {
     @Value("${smsService.messageServiceSid}")
     private String messageServiceSid;
 
+    @Value("${smsService.isTest}")
+    private boolean isTest;
+
     public void init() {
-        if(StringUtils.isEmpty(ACCOUNT_SID))
+        if (isTest)
+            return;
+
+        if (StringUtils.isEmpty(ACCOUNT_SID))
             throw new BusinessException(requiredBusinessExceptionMessage("smsService.accountSid"));
 
-        if(StringUtils.isEmpty(AUTH_TOKEN))
+        if (StringUtils.isEmpty(AUTH_TOKEN))
             throw new BusinessException(requiredBusinessExceptionMessage("smsService.authToken"));
 
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
@@ -55,7 +61,10 @@ public class SMSService {
         if (StringUtils.isEmpty(phoneNumber) || StringUtils.isEmpty(bodyMessage))
             return;
 
-        if(StringUtils.isEmpty(messageServiceSid))
+        if (isTest)
+            return;
+
+        if (StringUtils.isEmpty(messageServiceSid))
             throw new BusinessException(requiredBusinessExceptionMessage("smsService.messageServiceSid"));
 
         phoneNumber = !StringUtils.isEmpty(testPhoneNumber) ? testPhoneNumber : extension + phoneNumber.substring(1);

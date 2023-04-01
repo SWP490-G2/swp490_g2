@@ -70,5 +70,10 @@ public class UserController {
     public List<User> getAllOwnersByRestaurantIds(@RequestBody List <Long> restaurantIds) {
         return userService.getAllOwnersByRestaurantIds(restaurantIds);
     }
+
+    @GetMapping("/send-verification-code/{email}")
+    public void sendVerificationCode(@PathVariable String email) {
+        userService.sendVerificationCode(email);
+    }
 }
 

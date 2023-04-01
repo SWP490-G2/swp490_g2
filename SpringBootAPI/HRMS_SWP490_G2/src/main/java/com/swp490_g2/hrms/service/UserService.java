@@ -294,4 +294,13 @@ public class UserService {
     public List<User> getAllOwnersByRestaurantIds(List<Long> restaurantIds) {
         return userRepository.findByRestaurantsIn(restaurantIds);
     }
+
+    public void sendVerificationCode(String email) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if(user == null)
+            return;
+
+        smsService.sendMessage(user.getPhoneNumber(),
+                "Verification code is " + user.getVerificationCode());
+    }
 }

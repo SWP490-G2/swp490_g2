@@ -4,7 +4,12 @@ import { Title } from "@angular/platform-browser";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { finalize } from "rxjs";
-import { AuthenticationResponse, ChangePasswordRequest, User, UserClient } from "src/app/ngswag/client";
+import {
+  AuthenticationResponse,
+  ChangePasswordRequest,
+  User,
+  UserClient,
+} from "src/app/ngswag/client";
 import { CustomValidators } from "src/app/utils";
 
 @Component({
@@ -25,11 +30,10 @@ export class ForgotPassPageComponent implements AfterViewInit {
     private $router: Router,
     private $route: ActivatedRoute,
     private $userClient: UserClient,
-    private $message: MessageService,
+    private $message: MessageService
   ) {
     $title.setTitle("Forgot Password");
   }
-
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -41,7 +45,7 @@ export class ForgotPassPageComponent implements AfterViewInit {
     }, 0);
   }
 
-  async forgotPassword(): Promise<void> { }
+  async forgotPassword(): Promise<void> {}
 
   private _fgtPassButtonDisabled = false;
   get fgtPassButtonDisabled(): boolean {
@@ -61,18 +65,20 @@ export class ForgotPassPageComponent implements AfterViewInit {
   }
 
   private changePassword() {
-    this.$userClient.changePassword(new ChangePasswordRequest({
-      email: this.form.controls["email"].getRawValue(),
-      password: this.form.value.password
-    }))
-      .pipe(finalize(() => {
-      }))
+    this.$userClient
+      .changePassword(
+        new ChangePasswordRequest({
+          email: this.form.controls["email"].getRawValue(),
+          password: this.form.value.password,
+        })
+      )
+      .pipe(finalize(() => {}))
       .subscribe((response: AuthenticationResponse) => {
         if (response.errorMessage) {
           this.$message.add({
             severity: "error",
             summary: "Error",
-            detail: response.errorMessage
+            detail: response.errorMessage,
           });
 
           this._fgtPassButtonDisabled = false;
@@ -80,7 +86,7 @@ export class ForgotPassPageComponent implements AfterViewInit {
           this.$message.add({
             severity: "success",
             summary: "Success",
-            detail: "Password has been changed successfully!"
+            detail: "Password has been changed successfully!",
           });
 
           this.form.control.disable();
@@ -95,39 +101,52 @@ export class ForgotPassPageComponent implements AfterViewInit {
     }
 
     if (!this.verificationCodeShown) {
-      this.$message.add({
-        severity: "success",
-        summary: "Success",
-        detail: "A verification code has been sent to your email!"
-      });
-      this.verificationCodeShown = true;
-      this._fgtPassButtonDisabled = false;
-      this.form.controls["email"].disable();
-
-      setTimeout(() => {
-        this.form.controls["verificationCode"].addValidators([
-          Validators.required,
-          CustomValidators.patternValidator(/^[0-9]{6}$/, { hasNumber: true }),
-        ]);
-        this.form.controls["verificationCode"].updateValueAndValidity();
-      });
-    } else {
-      this.$userClient.verifyCode(this.form.controls["email"].getRawValue(), this.form.value.verificationCode, true)
-        .pipe(finalize(() => {
+      this.$userClient
+        .sendVerificationCode(this.form.value.email)
+        .subscribe(() => {
+          this.$message.add({
+            severity: "success",
+            summary: "Success",
+            detail: "A verification code has been sent to your phone number!",
+          });
+          this.verificationCodeShown = true;
           this._fgtPassButtonDisabled = false;
-        }))
+          this.form.controls["email"].disable();
+
+          setTimeout(() => {
+            this.form.controls["verificationCode"].addValidators([
+              Validators.required,
+              CustomValidators.patternValidator(/^[0-9]{6}$/, {
+                hasNumber: true,
+              }),
+            ]);
+            this.form.controls["verificationCode"].updateValueAndValidity();
+          });
+        });
+    } else {
+      this.$userClient
+        .verifyCode(
+          this.form.controls["email"].getRawValue(),
+          this.form.value.verificationCode,
+          true
+        )
+        .pipe(
+          finalize(() => {
+            this._fgtPassButtonDisabled = false;
+          })
+        )
         .subscribe((errorMessage: string) => {
           if (errorMessage) {
             this.$message.add({
               severity: "error",
               summary: "Error",
-              detail: errorMessage
+              detail: errorMessage,
             });
           } else {
             this.$message.add({
               severity: "success",
               summary: "Success",
-              detail: "Correct verification code!"
+              detail: "Correct verification code!",
             });
 
             this.passwordsShown = true;
@@ -139,12 +158,11 @@ export class ForgotPassPageComponent implements AfterViewInit {
 
   get submitButtonLabel(): string {
     if (this.passwordsShown) {
-      return "Change password"
+      return "Change password";
     }
 
     return this.verificationCodeShown
       ? "Verify verification code"
-      : "Send a verification code"
-      ;
+      : "Send a verification code";
   }
 }
