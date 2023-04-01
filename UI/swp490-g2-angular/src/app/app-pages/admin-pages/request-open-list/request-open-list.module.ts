@@ -9,9 +9,14 @@ import { FormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
 import { RequestingStatusComponent } from "./requesting-status/requesting-status.component";
 import { TagModule } from "primeng/tag";
+import { SidebarReqComponent } from "./sidebar-req/sidebar-req.component";
 
 @NgModule({
-  declarations: [RequestOpenListComponent, RequestingStatusComponent],
+  declarations: [
+    RequestOpenListComponent,
+    RequestingStatusComponent,
+    SidebarReqComponent,
+  ],
   imports: [
     CommonModule,
     RequestOpenListRoutingModule,
@@ -21,6 +26,6 @@ import { TagModule } from "primeng/tag";
     ButtonModule,
     TagModule,
   ],
-  exports: [RequestingStatusComponent],
+  exports: [RequestingStatusComponent, SidebarReqComponent],
 })
 export class RequestOpenListModule {}
