@@ -58,7 +58,7 @@ public class SMSService {
         if(StringUtils.isEmpty(messageServiceSid))
             throw new BusinessException(requiredBusinessExceptionMessage("smsService.messageServiceSid"));
 
-        phoneNumber = testPhoneNumber != null ? testPhoneNumber : extension + phoneNumber.substring(1);
+        phoneNumber = !StringUtils.isEmpty(testPhoneNumber) ? testPhoneNumber : extension + phoneNumber.substring(1);
 
         Message message = Message.creator(
                         new com.twilio.type.PhoneNumber(phoneNumber),

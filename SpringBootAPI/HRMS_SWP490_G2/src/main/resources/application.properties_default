@@ -15,4 +15,4 @@ spring.main.allow-circular-references=true
 smsService.extension=+84
 smsService.messageServiceSid=MG4cd05d592c915dbbaf3cd56d01a8db5d
 smsService.accountSid=AC51e088a695351ec0038829236365a2f3
-smsService.authToken=d1bb5638cc65aad46a12c93db25e2fd1
+smsService.authToken=800f036cfc9ae60a9c4660caa8766a31
