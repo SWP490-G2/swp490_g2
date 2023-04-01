@@ -8,9 +8,10 @@ import { DropdownModule } from "primeng/dropdown";
 import { TableModule } from "primeng/table";
 import { ButtonModule } from "primeng/button";
 import { TooltipModule } from "primeng/tooltip";
+import { SidebarResComponent } from "./sidebar-res/sidebar-res.component";
 
 @NgModule({
-  declarations: [ViewAllRestaurantComponent],
+  declarations: [ViewAllRestaurantComponent, SidebarResComponent],
   imports: [
     CommonModule,
     ViewAllRestaurantRoutingModule,
@@ -20,5 +21,6 @@ import { TooltipModule } from "primeng/tooltip";
     ButtonModule,
     TooltipModule,
   ],
+  exports: [SidebarResComponent],
 })
 export class ViewAllRestaurantModule {}

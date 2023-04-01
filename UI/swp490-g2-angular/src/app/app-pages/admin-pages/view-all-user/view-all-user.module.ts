@@ -11,9 +11,10 @@ import { TooltipModule } from "primeng/tooltip";
 import { RouterModule } from "@angular/router";
 import { UserStatusComponent } from "./user-status/user-status.component";
 import { TagModule } from "primeng/tag";
+import { SidebarComponent } from "./sidebar/sidebar.component";
 
 @NgModule({
-  declarations: [ViewAllUserComponent, UserStatusComponent],
+  declarations: [ViewAllUserComponent, UserStatusComponent, SidebarComponent],
   imports: [
     CommonModule,
     ViewAllUserRoutingModule,
@@ -25,6 +26,6 @@ import { TagModule } from "primeng/tag";
     RouterModule,
     TagModule,
   ],
-  exports: [UserStatusComponent],
+  exports: [UserStatusComponent, SidebarComponent],
 })
 export class ViewAllUserModule {}

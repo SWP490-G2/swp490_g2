@@ -1,172 +1,179 @@
-<div class="surface-section px-6 py-5">
-  <button
-    pButton
-    pRipple
-    type="button"
-    label="Back"
-    icon="pi pi-arrow-left"
-    class="p-button-rounded p-button-info"
-    routerLink=".."
-  ></button>
-</div>
-<div class="surface-section px-4 py-5 md:px-6 lg:px-8">
-  <div
-    class="flex align-items-start bg-gray-200 flex-column lg:flex-row lg:justify-content-between"
-  >
-    <div class="flex align-items-start flex-column md:flex-row">
-      <div class="p-5">
-        <span class="text-900 font-medium text-3xl">User Management</span>
-        <div class="flex align-items-center flex-wrap text-sm">
-          <div class="mr-5 mt-3">
-            <span class="font-medium text-500">TOTAL USER</span>
-            <div class="text-700 mt-2">{{ userList.length }}</div>
-          </div>
-          <div class="mr-5 mt-3">
-            <span class="font-medium text-500">NORMAL</span>
-            <div class="text-700 mt-2">{{ userList.length }}</div>
-          </div>
-          <div class="mr-5 mt-3">
-            <span class="font-medium text-500">BANNED</span>
-            <div class="text-700 mt-2">1{{ userList.length }}</div>
+<div class="min-h-screen flex surface-ground">
+  <app-sidebar></app-sidebar>
+  <div class="min-h-screen flex flex-column relative flex-auto">
+    <div class="surface-section px-6 py-5">
+      <button
+        pButton
+        pRipple
+        type="button"
+        label="Back"
+        icon="pi pi-arrow-left"
+        class="p-button-rounded p-button-info"
+        routerLink=".."
+      ></button>
+    </div>
+    <div class="surface-section px-4 py-5 md:px-6 lg:px-8">
+      <div
+        class="flex align-items-start bg-gray-200 flex-column lg:flex-row lg:justify-content-between"
+      >
+        <div class="flex align-items-start flex-column md:flex-row">
+          <div class="p-5">
+            <span class="text-900 font-medium text-3xl">User Management</span>
+            <div class="flex align-items-center flex-wrap text-sm">
+              <div class="mr-5 mt-3">
+                <span class="font-medium text-500">TOTAL USER</span>
+                <div class="text-700 mt-2">{{ userList.length }}</div>
+              </div>
+              <div class="mr-5 mt-3">
+                <span class="font-medium text-500">NORMAL</span>
+                <div class="text-700 mt-2">{{ userList.length }}</div>
+              </div>
+              <div class="mr-5 mt-3">
+                <span class="font-medium text-500">BANNED</span>
+                <div class="text-700 mt-2">1{{ userList.length }}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <div class="surface-section px-4 py-8 md:px-6 lg:px-8">
+      <p-table
+        #dt
+        [value]="userList"
+        dataKey="id"
+        [rowHover]="true"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [paginator]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [filterDelay]="0"
+      >
+        <ng-template pTemplate="caption">
+          <div
+            class="table-header flex align-items-center justify-content-between"
+          >
+            <p></p>
+            <input
+              id="search"
+              type="text"
+              pInputText
+              class="w-full mb-1 surface-card p-2 shadow-2 border-round lg:w-3"
+              name="search"
+              ngModel
+              placeholder="Search"
+            />
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="no" style="min-width: 5.5rem">
+              <div class="flex justify-content-between align-items-center">
+                #
+                <p-sortIcon field="no"></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="email" style="min-width: 16rem">
+              <div class="flex justify-content-between align-items-center">
+                Email
+                <p-sortIcon field="email"></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="name" style="min-width: 16rem">
+              <div class="flex justify-content-between align-items-center">
+                Full Name
+                <p-sortIcon field="name"></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="phoneNo" style="min-width: 16rem">
+              <div class="flex justify-content-between align-items-center">
+                Phone Number
+                <p-sortIcon field="phoneNo"></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="roles" style="min-width: 8rem">
+              <div class="flex justify-content-between align-items-center">
+                Roles
+                <p-sortIcon field="roles"></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="status" style="min-width: 8rem">
+              <div class="flex justify-content-between align-items-center">
+                Status
+              </div>
+            </th>
+            <th pSortableColumn="activity" style="min-width: 10rem">
+              <div class="flex justify-content-between align-items-center">
+                Action
+              </div>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-user>
+          <tr class="p-selectable-row">
+            <td>
+              <span class="p-column-title">#</span>
+              {{ user.id }}
+            </td>
+            <td>
+              <span class="p-column-title">Email</span>
+              {{ user.email }}
+            </td>
+            <td>
+              <span class="p-column-title">Full Name</span>
+              {{ user.firstName }} {{ user.middleName }}
+              {{ user.lastName }}
+            </td>
+            <td>
+              <span class="p-column-title">Phone Number</span>
+              {{ user.phoneNumber }}
+            </td>
+            <td>
+              <span class="p-column-title">Roles</span>
+              {{ user.roles }}
+            </td>
+            <td>
+              <span class="p-column-title">Status</span>
+              <app-user-status [users]="user"></app-user-status>
+            </td>
+            <td class="flex gap-1">
+              <button
+                pButton
+                type="button"
+                class="p-button-rounded p-button-secondary"
+                icon="pi pi-list"
+                pTooltip="View Details"
+                tooltipPosition="top"
+                [routerLink]="'view-user-details/' + user.id"
+              ></button>
+              <button
+                pButton
+                type="button"
+                class="p-button-rounded p-button-danger"
+                icon="pi pi-ban"
+                pTooltip="Ban"
+                tooltipPosition="top"
+                [routerLink]="'ban-user/' + user.id"
+              ></button>
+              <button
+                pButton
+                type="button"
+                class="p-button-rounded p-button-success"
+                icon="pi pi-pencil"
+                pTooltip="Update Role"
+                tooltipPosition="top"
+                [routerLink]="'change-role/' + user.id"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="9">No Data</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </div>
-</div>
-<div class="surface-section px-4 py-8 md:px-6 lg:px-8">
-  <p-table
-    #dt
-    [value]="userList"
-    dataKey="id"
-    [rowHover]="true"
-    [rows]="10"
-    [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [paginator]="true"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [filterDelay]="0"
-  >
-    <ng-template pTemplate="caption">
-      <div class="table-header flex align-items-center justify-content-between">
-        <p></p>
-        <input
-          id="search"
-          type="text"
-          pInputText
-          class="w-full mb-1 surface-card p-2 shadow-2 border-round lg:w-3"
-          name="search"
-          ngModel
-          placeholder="Search"
-        />
-      </div>
-    </ng-template>
-    <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="no" style="min-width: 5.5rem">
-          <div class="flex justify-content-between align-items-center">
-            #
-            <p-sortIcon field="no"></p-sortIcon>
-          </div>
-        </th>
-        <th pSortableColumn="email" style="min-width: 16rem">
-          <div class="flex justify-content-between align-items-center">
-            Email
-            <p-sortIcon field="email"></p-sortIcon>
-          </div>
-        </th>
-        <th pSortableColumn="name" style="min-width: 16rem">
-          <div class="flex justify-content-between align-items-center">
-            Full Name
-            <p-sortIcon field="name"></p-sortIcon>
-          </div>
-        </th>
-        <th pSortableColumn="phoneNo" style="min-width: 16rem">
-          <div class="flex justify-content-between align-items-center">
-            Phone Number
-            <p-sortIcon field="phoneNo"></p-sortIcon>
-          </div>
-        </th>
-        <th pSortableColumn="roles" style="min-width: 8rem">
-          <div class="flex justify-content-between align-items-center">
-            Roles
-            <p-sortIcon field="roles"></p-sortIcon>
-          </div>
-        </th>
-        <th pSortableColumn="status" style="min-width: 8rem">
-          <div class="flex justify-content-between align-items-center">
-            Status
-          </div>
-        </th>
-        <th pSortableColumn="activity" style="min-width: 10rem">
-          <div class="flex justify-content-between align-items-center">
-            Action
-          </div>
-        </th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-user>
-      <tr class="p-selectable-row">
-        <td>
-          <span class="p-column-title">#</span>
-          {{ user.id }}
-        </td>
-        <td>
-          <span class="p-column-title">Email</span>
-          {{ user.email }}
-        </td>
-        <td>
-          <span class="p-column-title">Full Name</span>
-          {{ user.firstName }} {{ user.middleName }}
-          {{ user.lastName }}
-        </td>
-        <td>
-          <span class="p-column-title">Phone Number</span>
-          {{ user.phoneNumber }}
-        </td>
-        <td>
-          <span class="p-column-title">Roles</span>
-          {{ user.roles }}
-        </td>
-        <td>
-          <span class="p-column-title">Status</span>
-          <app-user-status [users]="user"></app-user-status>
-        </td>
-        <td class="flex gap-1">
-          <button
-            pButton
-            type="button"
-            class="p-button-rounded p-button-secondary"
-            icon="pi pi-list"
-            pTooltip="View Details"
-            tooltipPosition="top"
-            [routerLink]="'view-user-details/' + user.id"
-          ></button>
-          <button
-            pButton
-            type="button"
-            class="p-button-rounded p-button-danger"
-            icon="pi pi-ban"
-            pTooltip="Ban"
-            tooltipPosition="top"
-            [routerLink]="'ban-user/' + user.id"
-          ></button>
-          <button
-            pButton
-            type="button"
-            class="p-button-rounded p-button-success"
-            icon="pi pi-pencil"
-            pTooltip="Update Role"
-            tooltipPosition="top"
-            [routerLink]="'change-role/' + user.id"
-          ></button>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="9">No Data</td>
-      </tr>
-    </ng-template>
-  </p-table>
 </div>
