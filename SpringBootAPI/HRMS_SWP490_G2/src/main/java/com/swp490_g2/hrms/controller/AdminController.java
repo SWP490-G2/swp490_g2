@@ -38,7 +38,7 @@ public class AdminController {
     }
 
     @GetMapping("/get-restaurant-by-id/{id}")
-    public ResponseEntity<RestaurantInformationRequest> getRestaurantById(@PathVariable Long id) {
+    public ResponseEntity<Restaurant> getRestaurantById(@PathVariable Long id) {
         return ResponseEntity.ok(adminService.getRestaurantById(id));
     }
 

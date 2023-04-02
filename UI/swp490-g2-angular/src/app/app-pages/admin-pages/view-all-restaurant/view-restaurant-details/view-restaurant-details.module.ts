@@ -11,7 +11,7 @@ import { TableModule } from "primeng/table";
 import { TabMenuModule } from "primeng/tabmenu";
 import { TagModule } from "primeng/tag";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
-import { DialogModule } from 'primeng/dialog';
+import { DialogModule } from "primeng/dialog";
 
 @NgModule({
   declarations: [ViewRestaurantDetailsComponent],

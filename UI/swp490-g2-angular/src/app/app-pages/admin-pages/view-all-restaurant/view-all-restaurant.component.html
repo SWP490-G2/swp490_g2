@@ -121,7 +121,7 @@
       <tr class="p-selectable-row">
         <td>
           <span class="p-column-title">#</span>
-          {{ resList.restaurantId }}
+          {{ resList.id }}
         </td>
         <td>
           <span class="p-column-title">Restaurant Name</span>
@@ -141,17 +141,18 @@
         </td>
         <td>
           <span class="p-column-title">Status</span>
-          <p-tag
-            *ngIf="resList.active"
-            styleClass="mr-2"
-            value="active"
-          ></p-tag>
-          <p-tag
-            *ngIf="!resList.active"
-            styleClass="mr-2"
-            value="inactive"
-            severity="danger"
-          ></p-tag>
+          <div
+            class="flex align-items-center gap-2"
+            *ngIf="resList.active !== null && resList.active !== undefined"
+          >
+            <p-toggleButton
+              styleClass="w-7rem"
+              [(ngModel)]="resList.active"
+              onLabel="Active"
+              offLabel="Inactive"
+              (onChange)="toggleRestaurantStatus(resList, $event)"
+            ></p-toggleButton>
+          </div>
         </td>
         <td style="text-align: center">
           <button
@@ -160,17 +161,16 @@
             type="button"
             icon="pi pi-eye"
             class="btn-action p-button-rounded mr-2"
-            [routerLink]="'view-restaurant-details/' + resList.restaurantId"
+            [routerLink]="'view-restaurant-details/' + resList.id"
           ></button>
-
-          <button
+          <!-- <button
             pButton
             pRipple
             type="button"
             icon="pi pi-trash"
             class="btn-action p-button-rounded p-button-danger"
-            (click)="deleteRestaurant(resList.restaurantId)"
-          ></button>
+            (click)="toggleRestaurantStatus(resList.id)"
+          ></button> -->
         </td>
       </tr>
     </ng-template>

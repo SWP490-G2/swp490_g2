@@ -40,8 +40,9 @@ public class RestaurantController {
     public ResponseEntity<Page<Restaurant>> search(@RequestParam(value = "distance", required = false) Double distance,
                                                    @RequestParam(value = "user-id", required = false) Long userId,
                                                    @RequestParam(value = "full-text", required = false) String fullText,
+                                                   @RequestParam(value = "active-included", required = false) Boolean activeIncluded,
                                                    @RequestBody SearchRestaurantsRequest searchRestaurantsRequest
     ) {
-        return ResponseEntity.ok(restaurantService.search(distance, userId, fullText, searchRestaurantsRequest));
+        return ResponseEntity.ok(restaurantService.search(distance, userId, fullText, activeIncluded, searchRestaurantsRequest));
     }
 }

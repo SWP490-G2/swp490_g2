@@ -77,7 +77,7 @@ public class RestaurantService {
         restaurantRepository.save(restaurant);
     }
 
-    public Page<Restaurant> search(Double distance, Long userId, String fullText, SearchRestaurantsRequest searchRestaurantsRequest) {
+    public Page<Restaurant> search(Double distance, Long userId, String fullText, Boolean activeIncluded, SearchRestaurantsRequest searchRestaurantsRequest) {
         List<Restaurant> restaurants;
         if (fullText == null || fullText.isEmpty())
             restaurants = restaurantRepository.findAll();
@@ -86,7 +86,7 @@ public class RestaurantService {
         User user = userId != null ? userService.getById(userId) : null;
 
         List<Restaurant> filteredRestaurants = restaurants.stream()
-                .filter(Restaurant::isActive)
+                .filter(restaurant -> activeIncluded == null || activeIncluded.booleanValue() ? restaurant.isActive() : true)
                 .filter(restaurant -> {
                     if (distance == null || user == null)
                         return true;

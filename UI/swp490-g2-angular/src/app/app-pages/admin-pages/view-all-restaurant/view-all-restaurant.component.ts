@@ -39,7 +39,13 @@ export class ViewAllRestaurantComponent {
     //   this.restaurants = restaurants;
     // });
     this.$restaurantClient
-      .search(undefined, undefined, undefined, new SearchRestaurantsRequest())
+      .search(
+        undefined,
+        undefined,
+        undefined,
+        false,
+        new SearchRestaurantsRequest()
+      )
       .pipe(
         switchMap((page) => {
           if (page.content) {
@@ -69,20 +75,19 @@ export class ViewAllRestaurantComponent {
   //     .subscribe(() => location.reload());
   // }
 
-  deleteRestaurant(id: number) {
+  toggleRestaurantStatus(restaurant: Restaurant, event: any) {
+    const intended = event.checked;
     this.confirmationService.confirm({
-      message: "Do you want to delete this restaurant?",
-      header: "Delete Confirmation",
+      message: `Do you want to ${
+        intended ? "activate" : "disable"
+      } this restaurant?`,
+      header: "Toggle Status Confirmation",
       icon: "pi pi-info-circle",
       accept: () => {
-        this.$adminClient.deleteRestaurantById(id).subscribe(() =>
-          this.messageService.add({
-            severity: "info",
-            summary: "Confirmed",
-            detail: "Deleted successfully!",
-          })
-        );
-        this.refresh();
+        this.$restaurantClient.update(restaurant).subscribe();
+      },
+      reject: () => {
+        restaurant.active = !intended;
       },
     });
   }

@@ -9,8 +9,10 @@ import { TableModule } from "primeng/table";
 import { ButtonModule } from "primeng/button";
 import { TagModule } from "primeng/tag";
 import { DialogModule } from "primeng/dialog";
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { ToastModule } from "primeng/toast";
+import { InputSwitchModule } from "primeng/inputswitch";
+import { ToggleButtonModule } from "primeng/togglebutton";
 
 @NgModule({
   declarations: [ViewAllRestaurantComponent],
@@ -24,7 +26,9 @@ import { ToastModule } from 'primeng/toast';
     TagModule,
     DialogModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
+    InputSwitchModule,
+    ToggleButtonModule,
   ],
 })
 export class ViewAllRestaurantModule {}

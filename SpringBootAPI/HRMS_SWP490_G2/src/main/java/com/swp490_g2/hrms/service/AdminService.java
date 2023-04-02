@@ -93,11 +93,11 @@ public class AdminService {
         return restaurantService.getAllRestaurant();
     }
 
-    public RestaurantInformationRequest getRestaurantById(Long restaurantId) {
+    public Restaurant getRestaurantById(Long restaurantId) {
         User currentAdmin = userService.getCurrentUser();
         if (currentAdmin == null)
             throw new AccessDeniedException("This request allows admin only!");
-        return restaurantService.getRestaurantById(restaurantId);
+        return restaurantService.getById(restaurantId);
     }
 
     public void insertNewRestaurant(Restaurant restaurant) {

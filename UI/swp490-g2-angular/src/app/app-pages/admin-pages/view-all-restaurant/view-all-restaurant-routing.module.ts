@@ -7,9 +7,9 @@ const routes: Routes = [
   {
     path: "view-restaurant-details",
     loadChildren: () =>
-      import(
-        "./view-restaurant-details/app-pages/admin-pages/view-all-restaurant/view-restaurant-details/view-restaurant-details.module"
-      ).then((m) => m.ViewRestaurantDetailsModule),
+      import("./view-restaurant-details/view-restaurant-details.module").then(
+        (m) => m.ViewRestaurantDetailsModule
+      ),
   },
 ];
 

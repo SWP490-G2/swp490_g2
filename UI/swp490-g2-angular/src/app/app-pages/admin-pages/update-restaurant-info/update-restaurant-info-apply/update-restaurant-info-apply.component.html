@@ -25,6 +25,7 @@
 </div>
 
 <form
+  *ngIf="restaurant"
   #form="ngForm"
   class="surface-section px-2 py-4 md:px-6 lg:px-8"
   (ngSubmit)="submit()"

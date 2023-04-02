@@ -45,7 +45,7 @@ public class Restaurant extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Product> products;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Address address;
 

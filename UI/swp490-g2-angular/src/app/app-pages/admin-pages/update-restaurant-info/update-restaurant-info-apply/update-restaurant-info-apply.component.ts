@@ -1,10 +1,17 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { finalize } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
-import { AdminClient, AuthenticationResponse, RestaurantClient, RestaurantInformationRequest, User, Ward } from "src/app/ngswag/client";
+import {
+  AdminClient,
+  AuthenticationResponse,
+  Restaurant,
+  RestaurantClient,
+  User,
+  Ward,
+} from "src/app/ngswag/client";
 import { DateUtils } from "src/app/utils";
 
 @Component({
@@ -38,7 +45,7 @@ export class UpdateRestaurantInfoApplyComponent
   genders: any;
 
   restaurantId: number;
-  restaurant: RestaurantInformationRequest;
+  restaurant?: Restaurant;
   user?: User;
 
   constructor(
@@ -47,7 +54,7 @@ export class UpdateRestaurantInfoApplyComponent
     private $auth: AuthService,
     private $message: MessageService,
     private $route: ActivatedRoute
-    ) {
+  ) {
     const id: number = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("id")
     );
@@ -58,17 +65,19 @@ export class UpdateRestaurantInfoApplyComponent
   }
 
   refresh() {
-    this.$adminClient.getRestaurantById(this.restaurantId).subscribe((restaurant) => {
-      this.restaurant = restaurant;
-      this.restaurant.createdAt = DateUtils.fromDB(
-        this.restaurant.createdAt
-      );
-    });
+    this.$adminClient
+      .getRestaurantById(this.restaurantId)
+      .subscribe((restaurant) => {
+        this.restaurant = restaurant;
+        this.restaurant.createdAt = DateUtils.fromDB(this.restaurant.createdAt);
+      });
 
     this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
   }
 
   submit(): void {
+    if (!this.restaurant) return;
+
     if (this.restaurant.address) {
       this.restaurant.address.ward = new Ward({
         id: this.form.value.ward.id,
@@ -93,7 +102,7 @@ export class UpdateRestaurantInfoApplyComponent
         Validators.pattern("^(0[3|5|7|8|9])+([0-9]{8})$"),
       ]);
       this.form.controls["phoneNumber"].updateValueAndValidity();
-    }, 0);
+    }, 1000);
   }
 
   onUpload(event) {
