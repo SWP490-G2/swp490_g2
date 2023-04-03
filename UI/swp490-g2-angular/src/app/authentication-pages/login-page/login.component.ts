@@ -26,11 +26,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.form.controls["email"].addValidators([
+      this.form.controls["emailOrPhoneNumber"].addValidators([
         Validators.required,
-        Validators.email,
       ]);
-      this.form.controls["email"].updateValueAndValidity(); // !Important: this line must be added after validators created
+      this.form.controls["emailOrPhoneNumber"].updateValueAndValidity(); // !Important: this line must be added after validators created
 
       this.form.controls["password"].addValidators([Validators.required]);
       this.form.controls["password"].updateValueAndValidity();

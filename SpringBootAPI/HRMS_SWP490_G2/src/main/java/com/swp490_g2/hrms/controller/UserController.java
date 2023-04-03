@@ -36,8 +36,8 @@ public class UserController {
     }
 
     @PostMapping("/verify-code")
-    public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String code, @RequestParam(required = false) boolean verifyCodeOnly) {
-        return ResponseEntity.ok(userService.verifyCode(email, code, verifyCodeOnly));
+    public ResponseEntity<String> verifyCode(@RequestParam String emailOrPhoneNumber, @RequestParam String code, @RequestParam(required = false) boolean verifyCodeOnly) {
+        return ResponseEntity.ok(userService.verifyCode(emailOrPhoneNumber, code, verifyCodeOnly));
     }
 
     @PostMapping(value = "/login")
@@ -71,9 +71,9 @@ public class UserController {
         return userService.getAllOwnersByRestaurantIds(restaurantIds);
     }
 
-    @GetMapping("/send-verification-code/{email}")
-    public void sendVerificationCode(@PathVariable String email) {
-        userService.sendVerificationCode(email);
+    @GetMapping("/send-verification-code/{emailOrPhoneNumber}")
+    public void sendVerificationCode(@PathVariable String emailOrPhoneNumber) {
+        userService.sendVerificationCode(emailOrPhoneNumber);
     }
 }
 

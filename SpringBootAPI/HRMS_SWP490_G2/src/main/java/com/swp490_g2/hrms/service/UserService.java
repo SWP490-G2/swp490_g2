@@ -21,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -166,11 +165,11 @@ public class UserService {
     }
 
     @Transactional
-    public String verifyCode(String email, String code, boolean verifyCodeOnly) {
+    public String verifyCode(String emailOrPhoneNumber, String code, boolean verifyCodeOnly) {
         if (!code.matches("[0-9]{6}"))
             return "\"Invalid code\"";
 
-        User user = getByEmail(email);
+        User user = getByEmailOrPhoneNumber(emailOrPhoneNumber);
         if (user == null)
             return "\"User not existed\"";
 
@@ -191,21 +190,39 @@ public class UserService {
         return userRepository.findByEmail(email).orElse(null);
     }
 
+    public User getByEmailOrPhoneNumber(String emailOrPhoneNumber) {
+        var user = userRepository.findByEmail(emailOrPhoneNumber).orElse(null);
+        if(user == null) {
+            user = userRepository.findByPhoneNumber(emailOrPhoneNumber).orElse(null);
+        }
+
+        return user;
+    }
+
     public AuthenticationResponse login(AuthenticationRequest request) {
+        var user = getByEmailOrPhoneNumber(request.getEmailOrPhoneNumber());
+        if(user == null)
+        {
+            return AuthenticationResponse.builder()
+                    .errorMessage("User is not existed!")
+                    .build();
+        }
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        user.getEmail(),
                         request.getPassword()
                 )
         );
 
 
-        var user = userRepository.findByEmail(request.getEmail()).orElse(null);
 
-        if (user == null || !user.isActive())
+        if (!user.isActive())
+        {
             return AuthenticationResponse.builder()
                     .errorMessage("User has not been activated!")
                     .build();
+        }
 
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
@@ -241,7 +258,7 @@ public class UserService {
     }
 
     public AuthenticationResponse changePassword(ChangePasswordRequest request) {
-        User user = userRepository.findByEmail(request.getEmail()).orElse(null);
+        User user = getByEmailOrPhoneNumber(request.getEmailOrPhoneNumber());
         if (user == null) {
             return AuthenticationResponse.builder()
                     .errorMessage("\"User not existed\"")
@@ -295,8 +312,8 @@ public class UserService {
         return userRepository.findByRestaurantsIn(restaurantIds);
     }
 
-    public void sendVerificationCode(String email) {
-        User user = userRepository.findByEmail(email).orElse(null);
+    public void sendVerificationCode(String emailOrPhoneNumber) {
+        User user = getByEmailOrPhoneNumber(emailOrPhoneNumber);
         if(user == null)
             return;
 

@@ -40,11 +40,11 @@ export class AuthService {
     );
   }
 
-  login(request: { email: string; password: string }) {
+  login(request: { emailOrPhoneNumber: string; password: string }) {
     return this.$client
       .login(
         new AuthenticationRequest({
-          email: request.email,
+          emailOrPhoneNumber: request.emailOrPhoneNumber,
           password: request.password,
         })
       )
