@@ -11,6 +11,18 @@ const routes: Routes = [
         (m) => m.ViewUserDetailsModule
       ),
   },
+  {
+    path: "ban-user",
+    loadChildren: () =>
+      import("./ban-user/ban-user.module").then((m) => m.BanUserModule),
+  },
+  {
+    path: "change-role",
+    loadChildren: () =>
+      import("./change-role/change-role.module").then(
+        (m) => m.ChangeRoleModule
+      ),
+  },
 ];
 
 @NgModule({

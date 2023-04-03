@@ -128,27 +128,19 @@ public class RestaurantService {
                 filteredRestaurants.size());
     }
 
-    public List<RestaurantInformationRequest> getAllRestaurant() {
-        List<Restaurant> restaurantList = restaurantRepository.findAll();
-        List<RestaurantInformationRequest> requestList = new ArrayList<>();
-        for (Restaurant restaurant: restaurantList) {
-            User user = userService.getByRestaurantId(restaurant.getId());
-            RestaurantInformationRequest request = RestaurantInformationRequest.set(user, restaurant);
-            requestList.add(request);
-        }
-
-        return requestList;
+    public List<Restaurant> getAllRestaurant() {
+        return restaurantRepository.findAll();
     }
 
     public void deleteRestaurantById(Long restaurantId) {
         RestaurantInformationRequest request = getRestaurantById(restaurantId);
-        if(Objects.nonNull(request)) {
-            if(request.getRestaurantCategory() != null || request.getRestaurantCategory().size() > 0) {
-                for (RestaurantCategory category: request.getRestaurantCategory()) {
+        if (Objects.nonNull(request)) {
+            if (request.getRestaurantCategory() != null || request.getRestaurantCategory().size() > 0) {
+                for (RestaurantCategory category : request.getRestaurantCategory()) {
                     restaurantRepository.deleteRestaurantCategory(restaurantId, category.getId());
                 }
             }
-            if(Objects.nonNull(request.getUser())) {
+            if (Objects.nonNull(request.getUser())) {
                 restaurantRepository.deleteSellerRestaurant(restaurantId, request.getUser().getId());
             }
             restaurantRepository.deleteById(restaurantId);

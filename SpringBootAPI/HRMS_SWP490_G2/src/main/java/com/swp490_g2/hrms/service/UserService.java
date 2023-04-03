@@ -20,6 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.swp490_g2.hrms.requests.FilterRequest;
+import com.swp490_g2.hrms.requests.SearchRequest;
 
 import java.util.List;
 import java.util.Random;

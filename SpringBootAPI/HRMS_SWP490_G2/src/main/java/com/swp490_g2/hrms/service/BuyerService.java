@@ -3,6 +3,7 @@ package com.swp490_g2.hrms.service;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import com.swp490_g2.hrms.entity.shallowEntities.Operator;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import com.swp490_g2.hrms.repositories.UserRepository;
@@ -64,6 +65,7 @@ public class BuyerService {
         Restaurant createdRestaurant = restaurantService.insert(restaurant);
         buyer.setRequestingRestaurant(createdRestaurant);
         buyer.setRequestingOpeningRestaurantDate(Instant.now());
+        buyer.setRequestingRestaurantStatus(RequestingRestaurantStatus.PENDING);
         createdRestaurant.setCreatedBy(buyer.getId());
         userService.update(buyer);
         restaurantService.update(createdRestaurant);
@@ -74,18 +76,7 @@ public class BuyerService {
         if (currentAdmin == null || !currentAdmin.isAdmin())
             return null;
 
-        FilterRequest filterRequest = FilterRequest.builder()
-                .key1("requestingRestaurant")
-                .key2("id")
-                .operator(Operator.IS_NOT_NULL)
-                .build();
-
-        List<FilterRequest> filters = new ArrayList<>(Collections.singletonList(filterRequest));
-        SearchRequest request = SearchRequest.builder()
-                .filters(filters)
-                .build();
-
-        SearchSpecification<User> specification = new SearchSpecification<>(request);
-        return userRepository.findAll(specification);
+        List <User> users = userRepository.findAll();
+        return users.stream().filter(user -> user.getRequestingRestaurant() != null).toList();
     }
 }

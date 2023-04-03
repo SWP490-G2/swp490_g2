@@ -13,6 +13,7 @@ import { Client, User } from "src/app/ngswag/client";
 export class NavbarComponent implements OnInit {
   // @Input: duoc truyen vao tu parent
   @Input() user?: User;
+  sidebarVisible: boolean;
 
   constructor(
     private $router: Router,
