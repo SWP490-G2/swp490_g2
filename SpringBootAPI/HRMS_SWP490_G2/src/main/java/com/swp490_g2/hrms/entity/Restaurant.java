@@ -1,10 +1,14 @@
 package com.swp490_g2.hrms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 import java.util.Set;
@@ -17,7 +21,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "restaurant")
 @AttributeOverride(name = "id", column = @Column(name = "restaurantId"))
-public class Restaurant extends BaseEntity{
+public class Restaurant extends BaseEntity {
 
     @Column(nullable = false)
     private String restaurantName;
@@ -38,9 +42,10 @@ public class Restaurant extends BaseEntity{
     @OneToMany(mappedBy="restaurant")
     @JsonManagedReference
     @Transient
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Product> products;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Address address;
 

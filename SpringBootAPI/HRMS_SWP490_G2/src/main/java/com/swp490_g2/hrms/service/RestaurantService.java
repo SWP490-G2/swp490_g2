@@ -4,18 +4,16 @@ import com.swp490_g2.hrms.common.utils.CommonUtils;
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.repositories.RestaurantRepository;
 import com.swp490_g2.hrms.requests.SearchRestaurantsRequest;
+import com.swp490_g2.hrms.requests.RestaurantInformationRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @Getter
@@ -79,7 +77,7 @@ public class RestaurantService {
         restaurantRepository.save(restaurant);
     }
 
-    public Page<Restaurant> search(Double distance, Long userId, String fullText, SearchRestaurantsRequest searchRestaurantsRequest) {
+    public Page<Restaurant> search(Double distance, Long userId, String fullText, Boolean activeIncluded, SearchRestaurantsRequest searchRestaurantsRequest) {
         List<Restaurant> restaurants;
         if (fullText == null || fullText.isEmpty())
             restaurants = restaurantRepository.findAll();
@@ -88,7 +86,7 @@ public class RestaurantService {
         User user = userId != null ? userService.getById(userId) : null;
 
         List<Restaurant> filteredRestaurants = restaurants.stream()
-                .filter(Restaurant::isActive)
+                .filter(restaurant -> activeIncluded == null || activeIncluded.booleanValue() ? restaurant.isActive() : true)
                 .filter(restaurant -> {
                     if (distance == null || user == null)
                         return true;
@@ -128,5 +126,39 @@ public class RestaurantService {
                 PageRequest.of(searchRestaurantsRequest.getSearchRequest().getPage(),
                         searchRestaurantsRequest.getSearchRequest().getSize()),
                 filteredRestaurants.size());
+    }
+
+    public List<RestaurantInformationRequest> getAllRestaurant() {
+        List<Restaurant> restaurantList = restaurantRepository.findAll();
+        List<RestaurantInformationRequest> requestList = new ArrayList<>();
+        for (Restaurant restaurant: restaurantList) {
+            User user = userService.getByRestaurantId(restaurant.getId());
+            RestaurantInformationRequest request = RestaurantInformationRequest.set(user, restaurant);
+            requestList.add(request);
+        }
+
+        return requestList;
+    }
+
+    public void deleteRestaurantById(Long restaurantId) {
+        RestaurantInformationRequest request = getRestaurantById(restaurantId);
+        if(Objects.nonNull(request)) {
+            if(request.getRestaurantCategory() != null || request.getRestaurantCategory().size() > 0) {
+                for (RestaurantCategory category: request.getRestaurantCategory()) {
+                    restaurantRepository.deleteRestaurantCategory(restaurantId, category.getId());
+                }
+            }
+            if(Objects.nonNull(request.getUser())) {
+                restaurantRepository.deleteSellerRestaurant(restaurantId, request.getUser().getId());
+            }
+            restaurantRepository.deleteById(restaurantId);
+        }
+    }
+
+    public RestaurantInformationRequest getRestaurantById(Long id) {
+        Restaurant restaurant = restaurantRepository.getById(id);
+        User user = userService.getByRestaurantId(id);
+        RestaurantInformationRequest request = RestaurantInformationRequest.set(user, restaurant);
+        return request;
     }
 }

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -73,14 +74,6 @@ public class UserService {
         this.buyerService = buyerService;
     }
 
-    private SellerService sellerService;
-
-
-    @Autowired
-    public void setSellerService(SellerService sellerService) {
-        this.sellerService = sellerService;
-    }
-
     private AdminService adminService;
 
     @Autowired
@@ -96,6 +89,13 @@ public class UserService {
     @Autowired
     public void setAuthenticationFacade(AuthenticationFacade authenticationFacade) {
         this.authenticationFacade = authenticationFacade;
+    }
+
+    private SMSService smsService;
+
+    @Autowired
+    public void setSmsService(SMSService smsService) {
+        this.smsService = smsService;
     }
 
     private static String generateVerificationCode() {
@@ -133,7 +133,12 @@ public class UserService {
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.addRole(Role.USER);
-        user.setVerificationCode(generateVerificationCode());
+
+        String verificationCode = generateVerificationCode();
+        smsService.sendMessage(registerRequest.getPhoneNumber(),
+                "Verification code for register a new account is " + verificationCode);
+
+        user.setVerificationCode(verificationCode);
         user.setPhoneNumber(registerRequest.getPhoneNumber());
 
         var savedUser = userRepository.save(user);
@@ -280,5 +285,22 @@ public class UserService {
 
     public void update(User user) {
         userRepository.save(user);
+    }
+
+    public User getByRestaurantId(Long restaurantId) {
+        return this.userRepository.findByRestaurantId(restaurantId).orElse(null);
+    }
+
+    public List<User> getAllOwnersByRestaurantIds(List<Long> restaurantIds) {
+        return userRepository.findByRestaurantsIn(restaurantIds);
+    }
+
+    public void sendVerificationCode(String email) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if(user == null)
+            return;
+
+        smsService.sendMessage(user.getPhoneNumber(),
+                "Verification code is " + user.getVerificationCode());
     }
 }

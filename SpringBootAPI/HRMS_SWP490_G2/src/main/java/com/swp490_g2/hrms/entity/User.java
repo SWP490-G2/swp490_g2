@@ -13,9 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -122,10 +120,14 @@ public class User extends BaseEntity implements UserDetails {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Restaurant requestingRestaurant;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(name = "user__restaurant",
             joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "restaurantId"))
-    private Set<Restaurant> restaurants;
+    private List<Restaurant> restaurants = new ArrayList<>();
 
     public boolean isAdmin() {
         return roles != null && roles.stream().anyMatch(role -> role == Role.ADMIN);

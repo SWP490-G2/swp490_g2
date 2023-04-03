@@ -122,6 +122,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
           this.distance.value,
           <number>this.currentUser?.id,
           this.restaurantFullText,
+          true,
           new SearchRestaurantsRequest({
             restaurantCategories: this.selectedCategories,
           })
@@ -130,6 +131,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
           undefined,
           undefined,
           this.restaurantFullText,
+          true,
           new SearchRestaurantsRequest({
             searchRequest: new SearchRequest({
               page: this.pageIndex,

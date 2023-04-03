@@ -4,8 +4,11 @@ import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
+import com.swp490_g2.hrms.requests.RestaurantInformationRequest;
+import com.swp490_g2.hrms.entity.User;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -82,5 +85,40 @@ public class AdminService {
 
         requester.setRequestingRestaurantStatus(RequestingRestaurantStatus.REJECTED);
         userService.update(requester);
+    }
+
+    public List<RestaurantInformationRequest> getAllRestaurant() {
+        User currentAdmin = userService.getCurrentUser();
+        if (currentAdmin == null)
+            throw new AccessDeniedException("This request allows admin only!");
+        return restaurantService.getAllRestaurant();
+    }
+
+    public Restaurant getRestaurantById(Long restaurantId) {
+        User currentAdmin = userService.getCurrentUser();
+        if (currentAdmin == null)
+            throw new AccessDeniedException("This request allows admin only!");
+        return restaurantService.getById(restaurantId);
+    }
+
+    public void insertNewRestaurant(Restaurant restaurant) {
+        User currentAdmin = userService.getCurrentUser();
+        if (currentAdmin == null)
+            throw new AccessDeniedException("This request allows admin only!");
+        restaurantService.insert(restaurant);
+    }
+
+    public void updateRestaurant(Restaurant restaurant) {
+        User currentAdmin = userService.getCurrentUser();
+        if (currentAdmin == null)
+            throw new AccessDeniedException("This request allows admin only!");
+        restaurantService.update(restaurant);
+    }
+
+    public void deleteRestaurantById(Long id) {
+        User currentAdmin = userService.getCurrentUser();
+        if (currentAdmin == null)
+            throw new AccessDeniedException("This request allows admin only!");
+        restaurantService.deleteRestaurantById(id);
     }
 }

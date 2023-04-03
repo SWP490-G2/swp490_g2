@@ -1,8 +1,18 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { finalize } from "rxjs";
-import { AuthenticationResponse } from "src/app/ngswag/client";
+import { AuthService } from "src/app/global/auth.service";
+import {
+  AdminClient,
+  AuthenticationResponse,
+  Restaurant,
+  RestaurantClient,
+  User,
+  Ward,
+} from "src/app/ngswag/client";
+import { DateUtils } from "src/app/utils";
 
 @Component({
   selector: "app-update-restaurant-info-apply",
@@ -34,7 +44,56 @@ export class UpdateRestaurantInfoApplyComponent
   selectedGender: any;
   genders: any;
 
-  constructor(private messageService: MessageService) {}
+  restaurantId: number;
+  restaurant?: Restaurant;
+  user?: User;
+
+  constructor(
+    private $restaurantClient: RestaurantClient,
+    private $adminClient: AdminClient,
+    private $auth: AuthService,
+    private $message: MessageService,
+    private $route: ActivatedRoute
+  ) {
+    const id: number = Number.parseInt(
+      <string>this.$route.snapshot.paramMap.get("id")
+    );
+
+    this.restaurantId = id;
+    console.log(this.restaurantId);
+    this.refresh();
+  }
+
+  refresh() {
+    this.$adminClient
+      .getRestaurantById(this.restaurantId)
+      .subscribe((restaurant) => {
+        this.restaurant = restaurant;
+        this.restaurant.createdAt = DateUtils.fromDB(this.restaurant.createdAt);
+      });
+
+    this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
+  }
+
+  submit(): void {
+    if (!this.restaurant) return;
+
+    if (this.restaurant.address) {
+      this.restaurant.address.ward = new Ward({
+        id: this.form.value.ward.id,
+      });
+
+      this.restaurant.address.specificAddress = this.form.value.specificAddress;
+    }
+
+    this.$restaurantClient.update(this.restaurant).subscribe(() => {
+      this.$message.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Restaurant's information has changed",
+      });
+    });
+  }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -43,7 +102,7 @@ export class UpdateRestaurantInfoApplyComponent
         Validators.pattern("^(0[3|5|7|8|9])+([0-9]{8})$"),
       ]);
       this.form.controls["phoneNumber"].updateValueAndValidity();
-    }, 0);
+    }, 1000);
   }
 
   onUpload(event) {
@@ -51,7 +110,7 @@ export class UpdateRestaurantInfoApplyComponent
       this.uploadedFiles.push(file);
     }
 
-    this.messageService.add({
+    this.$message.add({
       severity: "info",
       summary: "File Uploaded",
       detail: "",

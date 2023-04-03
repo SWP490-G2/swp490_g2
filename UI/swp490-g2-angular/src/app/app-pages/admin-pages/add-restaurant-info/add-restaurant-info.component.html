@@ -17,7 +17,7 @@
     <div class="flex align-items-start flex-column md:flex-row">
       <div class="p-5">
         <span class="text-900 font-medium text-3xl">
-          Update Restaurant Information
+          Add Restaurant Information
         </span>
       </div>
     </div>
@@ -25,7 +25,6 @@
 </div>
 
 <form
-  *ngIf="restaurant"
   #form="ngForm"
   class="surface-section px-2 py-4 md:px-6 lg:px-8"
   (ngSubmit)="submit()"
@@ -46,7 +45,6 @@
     <div class="col-12">
       <div class="p-inputgroup">
         <input
-          [(ngModel)]="restaurant.restaurantName"
           name="restaurantName"
           type="text"
           pInputText
@@ -56,7 +54,7 @@
     </div>
   </div>
 
-  <app-address-fields [address]="restaurant.address"></app-address-fields>
+  <app-address-fields></app-address-fields>
 
   <label for="phoneNumber" class="block text-900 font-medium my-3"
     >Phone Number</label
@@ -69,7 +67,6 @@
           type="text"
           pInputText
           class="w-full mb-1"
-          [(ngModel)]="restaurant.phoneNumber"
           name="phoneNumber"
           placeholder="Phone Number"
         />
@@ -96,7 +93,6 @@
           cols="30"
           pInputTextarea
           placeholder="Description"
-          [(ngModel)]="restaurant.description"
           name="description"
         ></textarea>
       </div>
