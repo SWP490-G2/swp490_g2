@@ -17,21 +17,15 @@ export class SidebarComponent {
     private $auth: AuthService,
     private $client: Client
   ) {}
-  viewAllUsers() {
-    this.$router.navigate(["..", "view-all-user"], {
-      relativeTo: this.$route,
-    });
-  }
+  // viewAllUsers() {
+  //   this.$router.navigate(["admin-pages", "view-all-user"]);
+  // }
 
-  viewAllRestaurants() {
-    this.$router.navigate(["..", "view-all-restaurant"], {
-      relativeTo: this.$route,
-    });
-  }
+  // viewAllRestaurants() {
+  //   this.$router.navigate(["admin-pages", "view-all-restaurant"]);
+  // }
 
-  viewAllRequest() {
-    this.$router.navigate(["..", "request-open-list"], {
-      relativeTo: this.$route,
-    });
-  }
+  // viewAllRequest() {
+  //   this.$router.navigate(["admin-pages", "request-open-list"]);
+  // }
 }

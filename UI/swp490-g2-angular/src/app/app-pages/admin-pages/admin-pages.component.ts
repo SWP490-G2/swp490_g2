@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-admin-pages",
@@ -7,7 +8,7 @@ import { Component } from "@angular/core";
 export class AdminPagesComponent {
   buttonContents: ButtonContent[] = [];
 
-  constructor() {
+  constructor(private $router: Router) {
     this.initButtonContents();
   }
 
@@ -34,6 +35,10 @@ export class AdminPagesComponent {
     this.buttonContents.map((buttonContent, index) => {
       buttonContent.color = colors[index % 3];
     });
+  }
+
+  isParentPage() {
+    return this.$router.url === "/admin-pages";
   }
 }
 
