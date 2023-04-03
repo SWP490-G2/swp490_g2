@@ -56,7 +56,7 @@ public class AdminService {
 
     public List<User> getAllOpeningRestaurantRequests() {
         User currentUser = userService.getCurrentUser();
-        if (currentUser == null || currentUser.isAdmin())
+        if (currentUser == null || !currentUser.isAdmin())
         {
             return List.of();
         }

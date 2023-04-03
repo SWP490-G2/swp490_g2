@@ -76,18 +76,7 @@ public class BuyerService {
         if (currentAdmin == null || !currentAdmin.isAdmin())
             return null;
 
-        FilterRequest filterRequest = FilterRequest.builder()
-                .key1("requestingRestaurant")
-                .key2("id")
-                .operator(Operator.IS_NOT_NULL)
-                .build();
-
-        List<FilterRequest> filters = new ArrayList<>(Collections.singletonList(filterRequest));
-        SearchRequest request = SearchRequest.builder()
-                .filters(filters)
-                .build();
-
-        SearchSpecification<User> specification = new SearchSpecification<>(request);
-        return userRepository.findAll(specification);
+        List <User> users = userRepository.findAll();
+        return users.stream().filter(user -> user.getRequestingRestaurant() != null).toList();
     }
 }
