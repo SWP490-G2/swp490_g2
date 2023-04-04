@@ -13,9 +13,13 @@ import com.twilio.Twilio;
 import com.twilio.converter.Promoter;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+import org.springframework.util.CollectionUtils;
 
 import java.net.URI;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @Getter
@@ -52,13 +56,16 @@ public class SMSService {
     }
 
     public void sendMessage(String phoneNumber, String bodyMessage) {
-        if (StringUtils.isEmpty(phoneNumber) || StringUtils.isEmpty(bodyMessage))
+        if (phoneNumber.isEmpty() || StringUtils.isEmpty(bodyMessage))
             return;
+        List a = new ArrayList<>();
+        if(CollectionUtils.isEmpty(a)) {
 
+        }
         if(StringUtils.isEmpty(messageServiceSid))
             throw new BusinessException(requiredBusinessExceptionMessage("smsService.messageServiceSid"));
 
-        phoneNumber = testPhoneNumber != null ? testPhoneNumber : extension + phoneNumber.substring(1);
+        phoneNumber = (testPhoneNumber != null && !testPhoneNumber.isEmpty()) ? testPhoneNumber : extension + phoneNumber.substring(1);
 
         Message message = Message.creator(
                         new com.twilio.type.PhoneNumber(phoneNumber),

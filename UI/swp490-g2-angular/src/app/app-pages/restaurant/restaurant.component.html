@@ -30,6 +30,17 @@
                   </div>
 
                   <div
+                    class="flex align-items-center flex-wrap text-sm mr-3 mt-3"
+                  >
+                    <div>
+                      <span class="font-medium text-600 mr-3" style="font-size: 20px;">
+                        Opening status
+                      </span>
+                    </div>
+                    <p-inputSwitch [(ngModel)]="isOpening"></p-inputSwitch>
+                  </div>
+
+                  <div
                     class="flex align-items-center flex-wrap text-sm"
                     *ngIf="fullAddress"
                   >

@@ -35,9 +35,13 @@ public class Restaurant extends BaseEntity {
     @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)
     private boolean isActive;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private File avatarFile;
+
+//    @ManyToMany(mappedBy = "restaurants")
+//    @JsonIgnore
+//    private Set<User> Users;
 
     @OneToMany(mappedBy="restaurant")
     @JsonManagedReference
