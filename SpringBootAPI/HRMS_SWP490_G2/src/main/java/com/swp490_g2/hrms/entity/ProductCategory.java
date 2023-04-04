@@ -18,4 +18,7 @@ import java.util.Set;
 public class ProductCategory extends BaseEntity {
     @Column(nullable = false)
     private String productCategoryName;
+
+    @ManyToMany(mappedBy = "categories")
+    private Set<Product> products;
 }

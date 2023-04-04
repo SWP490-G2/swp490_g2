@@ -1,12 +1,15 @@
 package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.Product;
+import com.swp490_g2.hrms.requests.ProductInformationRequest;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
@@ -30,5 +33,10 @@ public class ProductController {
     @GetMapping("/fulltext-search")
     public ResponseEntity<Set<Product>> fulltextSearch(@RequestParam String text, @RequestParam Long restaurantId) {
         return ResponseEntity.ok(productService.fulltextSearch(restaurantId, text));
+    }
+
+    @PostMapping("/add-new-product")
+    public void addNewProduct(@RequestPart("file") MultipartFile[] productImages, @Valid ProductInformationRequest productInformationRequest){
+        productService.addNewProduct(productInformationRequest, productImages);
     }
 }
