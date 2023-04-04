@@ -1,6 +1,7 @@
 package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.Product;
+import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.requests.ProductInformationRequest;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.service.ProductService;
@@ -24,7 +25,6 @@ public class ProductController {
         return ResponseEntity.ok(productService.search(request));
     }
 
-
     @GetMapping("/get-product-price-ranges-by-restaurant-id/{restaurantId}")
     public ResponseEntity<Double[]> getProductPriceRanges(@PathVariable Long restaurantId) {
         return ResponseEntity.ok(productService.getProductPriceRanges(restaurantId));
@@ -36,7 +36,24 @@ public class ProductController {
     }
 
     @PostMapping("/add-new-product")
-    public void addNewProduct(@RequestPart("file") MultipartFile[] productImages, @Valid ProductInformationRequest productInformationRequest){
+    public void addNewProduct(@RequestPart("file") MultipartFile[] productImages, @Valid ProductInformationRequest productInformationRequest) {
         productService.addNewProduct(productInformationRequest, productImages);
+    }
+
+    @GetMapping("/get-by-id/{id}")
+    public ResponseEntity<Product> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getById(id));
+    }
+
+    @PostMapping(value = "/add-image/{productId}")
+    public void addImage(@PathVariable Long productId,
+                         @RequestParam("file") MultipartFile imageFile
+    ) {
+        productService.addImage(productId, imageFile);
+    }
+
+    @PutMapping("/update")
+    public void update(@RequestBody Product product) {
+        productService.update(product);
     }
 }

@@ -37,7 +37,6 @@ public class ProductService {
     @Autowired
     private FileRepository fileRepository;
 
-    @Autowired
     private ProductCategoryRepository productCategoryRepository;
 
     @Autowired
@@ -62,7 +61,7 @@ public class ProductService {
         return productRepository.fulltextSearch(restaurantId, text);
     }
 
-    public File productImage(User user, MultipartFile imageFile){
+    public File productImage(User user, MultipartFile imageFile) {
         String path = fileService.save(imageFile, "product", "image");
         File productImage = File.builder()
                 .filePath(path)
@@ -72,21 +71,21 @@ public class ProductService {
         return productImage;
     }
 
-    public void addNewProduct(ProductInformationRequest productInformationRequest, MultipartFile[] images){
+    public void addNewProduct(ProductInformationRequest productInformationRequest, MultipartFile[] images) {
         User currentUser = userService.getCurrentUser();
-        if(currentUser == null || !currentUser.isSeller() || !currentUser.isAdmin()){
+        if (currentUser == null || !currentUser.isSeller() || !currentUser.isAdmin()) {
             return;
         }
         Restaurant ownerRestaurant = restaurantRepository.getOwnerRestaurant(currentUser.getId()).orElse(null);
         ProductStatus productStatus = productStatusRepository.findById(productInformationRequest.getProductStatusId()).orElse(null);
         Set<ProductCategory> requestCategories = new HashSet<>();
-        for (ProductCategory productCategory: productInformationRequest.getProductCategories()) {
+        for (ProductCategory productCategory : productInformationRequest.getProductCategories()) {
             ProductCategory category = productCategoryRepository.findById(productCategory.getId()).orElse(null);
             requestCategories.add(category);
         }
-        if((ownerRestaurant != null) && (currentUser.isSeller()) || currentUser.isAdmin()){
+        if ((ownerRestaurant != null) && (currentUser.isSeller()) || currentUser.isAdmin()) {
             Set<File> productImages = new HashSet<>();
-            for(MultipartFile imageFile: images){
+            for (MultipartFile imageFile : images) {
                 if (imageFile.getContentType().equalsIgnoreCase("image/png")) {
                     File file = productImage(currentUser, imageFile);
                     productImages.add(file);
@@ -97,20 +96,49 @@ public class ProductService {
             product.setPrice(productInformationRequest.getPrice());
             product.setQuantity(productInformationRequest.getQuantity());
             product.setDescription(productInformationRequest.getDescription());
-            product.setRestaurant(ownerRestaurant);
-            product.setProductStatus(productStatus);
-            product.setFiles(productImages);
+//            product.setRestaurant(ownerRestaurant);
+//            product.setProductStatus(productStatus);
+//            product.setFiles(productImages);
             product.setCategories(requestCategories);
             productRepository.save(product);
         }
     }
 
-    public void deleteProductById(Long productId){
+    public void deleteProductById(Long productId) {
 
 
     }
 
+    public Product getById(Long id) {
+        return productRepository.findById(id).orElse(null);
+    }
 
+    public void addImage(Long productId, MultipartFile imageFile) {
+        Product product = getById(productId);
+        if (product == null)
+            return;
 
+        String path = fileService.save(imageFile, "product", productId.toString());
+        File productImage = File.builder()
+                .filePath(path)
+                .build();
 
+        User user = userService.getCurrentUser();
+        productImage.setCreatedBy(user.getId());
+
+        product.getImages().add(productImage);
+        update(product);
+    }
+
+    public void update(Product product) {
+        if(product == null)
+            return;
+
+        // Re-add restaurant because restaurant is ignored
+        Product storedProduct = productRepository.findById(product.getId()).orElse(null);
+        assert storedProduct != null;
+        product.setRestaurant(storedProduct.getRestaurant());
+
+        productRepository.save(product);
+    }
 }

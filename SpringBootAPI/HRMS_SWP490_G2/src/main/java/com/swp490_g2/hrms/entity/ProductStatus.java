@@ -21,9 +21,9 @@ public class ProductStatus extends BaseEntity{
     @Column(nullable = false)
     private String productStatusName;
 
-    @OneToMany(mappedBy="product_status")
-    @JsonManagedReference
-    @Transient
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<Product> products;
+    // @OneToMany(mappedBy="product_status")
+    // @JsonManagedReference
+    // @Transient
+    // @OnDelete(action = OnDeleteAction.CASCADE)
+    // private Set<Product> products;
 }

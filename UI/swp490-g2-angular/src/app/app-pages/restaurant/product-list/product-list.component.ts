@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { Product } from "src/app/ngswag/client";
+import { FileClient, Product } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-product-list",
