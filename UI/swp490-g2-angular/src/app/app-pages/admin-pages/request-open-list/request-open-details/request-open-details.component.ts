@@ -20,7 +20,7 @@ export class RequestOpenDetailsComponent implements OnInit {
   displayModal: boolean;
   displayMaximizable: boolean;
   requester?: User;
-  buyerId: number;
+  userId: number;
 
   constructor(
     private $adminClient: AdminClient,
@@ -31,12 +31,12 @@ export class RequestOpenDetailsComponent implements OnInit {
       <string>this.$route.snapshot.paramMap.get("id")
     );
 
-    this.buyerId = id;
+    this.userId = id;
     this.refresh();
   }
 
   refresh() {
-    this.$userClient.getById(this.buyerId).subscribe((requester) => {
+    this.$userClient.getById(this.userId).subscribe((requester) => {
       this.requester = requester;
       this.requester.requestingOpeningRestaurantDate = DateUtils.fromDB(
         this.requester.requestingOpeningRestaurantDate
@@ -61,7 +61,7 @@ export class RequestOpenDetailsComponent implements OnInit {
 
   approve() {
     this.$adminClient
-      .approveBecomeSeller(this.buyerId)
+      .approveBecomeSeller(this.userId)
       .pipe(
         finalize(() => {
           this.displayModal = false;
@@ -74,7 +74,7 @@ export class RequestOpenDetailsComponent implements OnInit {
 
   rejected() {
     this.$adminClient
-      .rejectBecomeSeller(this.buyerId)
+      .rejectBecomeSeller(this.userId)
       .pipe(
         finalize(() => {
           this.displayModal = false;

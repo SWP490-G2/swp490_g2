@@ -1,200 +1,210 @@
-<div class="surface-section px-6 py-5">
-  <button
-    pButton
-    pRipple
-    type="button"
-    label="Back"
-    icon="pi pi-arrow-left"
-    class="p-button-rounded p-button-info"
-    routerLink="../.."
-  ></button>
-</div>
-<div class="surface-section px-4 py-5 md:px-6 lg:px-8">
-  <div
-    class="flex align-items-start bg-gray-200 flex-column lg:flex-row lg:justify-content-between"
-  >
-    <div class="flex align-items-start flex-column md:flex-row">
-      <div class="p-5">
-        <span class="text-900 font-medium text-3xl">
-          Request Open Restaurant Details</span
-        >
-        <div class="flex align-items-center flex-wrap text-sm">
-          <div class="mr-5 mt-3">
-            <span class="font-medium text-500"
-              >Review Request to Approve or Reject for
-              {{ requester?.requestingRestaurant?.restaurantName }}
-              Restaurant</span
+<div class="min-h-screen flex surface-ground">
+  <div class="min-h-screen flex flex-column relative flex-auto">
+    <div class="surface-section px-6 py-5">
+      <button
+        pButton
+        pRipple
+        type="button"
+        label="Back"
+        icon="pi pi-arrow-left"
+        class="p-button-rounded p-button-info"
+        routerLink="../.."
+      ></button>
+    </div>
+    <div class="surface-section px-4 py-5 md:px-6 lg:px-8">
+      <div
+        class="flex align-items-start bg-gray-200 flex-column lg:flex-row lg:justify-content-between"
+      >
+        <div class="flex align-items-start flex-column md:flex-row">
+          <div class="p-5">
+            <span class="text-900 font-medium text-3xl">
+              Request Open Restaurant Details</span
             >
+            <div class="flex align-items-center flex-wrap text-sm">
+              <div class="mr-5 mt-3">
+                <span class="font-medium text-500"
+                  >Review Request to Approve or Reject for
+                  {{ requester?.requestingRestaurant?.restaurantName }}
+                  Restaurant</span
+                >
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-<div class="surface-section px-6 py-5">
-  <div
-    class="flex align-items-start flex-column lg:flex-row lg:justify-content-between"
-  >
-    <div class="flex align-items-start flex-column md:flex-row">
-      <img
-        src="../../../../../assets/avatars/images.jpg"
-        class="mr-5 mb-3 lg:mb-0"
-        style="width: 90px; height: 90px"
-      />
-      <div>
-        <span class="text-900 font-medium text-3xl">
-          {{ requester?.requestingRestaurant?.restaurantName }}</span
-        >
-      </div>
-    </div>
-    <div class="mt-3 lg:mt-0" *ngIf="getStatus()">
-      <button
-        pButton
-        pRipple
-        icon="pi pi-check"
-        label="Approve"
-        class="p-button-rounded p-button-success mr-2"
-        (click)="showModalDialog()"
-      ></button>
-      <p-dialog
-        header="Confirm to Approve?"
-        [(visible)]="displayModal"
-        [modal]="true"
-        [style]="{ width: '50vw' }"
-        [draggable]="false"
-        [resizable]="false"
+    <div class="surface-section px-6 py-5">
+      <div
+        class="flex align-items-start flex-column lg:flex-row lg:justify-content-between"
       >
-        <p class="m-0">
-          Are you sure to Approved this Restaurant Opening Request?
-        </p>
-        <ng-template pTemplate="footer">
+        <div class="flex align-items-start flex-column md:flex-row">
+          <img
+            src="../../../../../assets/avatars/images.jpg"
+            class="mr-5 mb-3 lg:mb-0"
+            style="width: 90px; height: 90px"
+          />
+          <div>
+            <span class="text-900 font-medium text-3xl">
+              {{ requester?.requestingRestaurant?.restaurantName }}</span
+            >
+          </div>
+        </div>
+        <div class="mt-3 lg:mt-0" *ngIf="getStatus()">
           <button
             pButton
             pRipple
             icon="pi pi-check"
-            label="Yes"
+            label="Approve"
             class="p-button-rounded p-button-success mr-2"
-            (click)="approve()"
+            (click)="showModalDialog()"
           ></button>
+          <p-dialog
+            header="Confirm to Approve?"
+            [(visible)]="displayModal"
+            [modal]="true"
+            [style]="{ width: '50vw' }"
+            [draggable]="false"
+            [resizable]="false"
+          >
+            <p class="m-0">
+              Are you sure to Approved this Restaurant Opening Request?
+            </p>
+            <ng-template pTemplate="footer">
+              <button
+                pButton
+                pRipple
+                icon="pi pi-check"
+                label="Yes"
+                class="p-button-rounded p-button-success mr-2"
+                (click)="approve()"
+              ></button>
+              <button
+                pButton
+                pRipple
+                icon="pi pi-ban"
+                label="No"
+                class="p-button-rounded p-button-danger"
+                (click)="this.displayModal = false"
+              ></button>
+            </ng-template>
+          </p-dialog>
           <button
             pButton
             pRipple
             icon="pi pi-ban"
-            label="No"
+            label="Reject"
             class="p-button-rounded p-button-danger"
-            (click)="this.displayModal = false"
+            (click)="showMaximizableDialog()"
           ></button>
-        </ng-template>
-      </p-dialog>
-      <button
-        pButton
-        pRipple
-        icon="pi pi-ban"
-        label="Reject"
-        class="p-button-rounded p-button-danger"
-        (click)="showMaximizableDialog()"
-      ></button>
-      <p-dialog
-        header="Select Reason to Reject this Restaurant Opening Request"
-        [(visible)]="displayMaximizable"
-        [modal]="true"
-        [style]="{ width: '50vw' }"
-        [maximizable]="true"
-        [draggable]="false"
-        [resizable]="false"
-      >
-        <div class="field-checkbox">
-          <p-checkbox
-            name="group1"
-            value="1"
-            [(ngModel)]="selectedReason"
-            inputId="1"
-          ></p-checkbox>
-          <label for="1">This request sent not enough information</label>
-        </div>
-        <div class="field-checkbox">
-          <p-checkbox
-            name="group1"
-            value="2"
-            [(ngModel)]="selectedReason"
-            inputId="2"
-          ></p-checkbox>
-          <label for="2"
-            >This request does not sent food safety certifications</label
+          <p-dialog
+            header="Select Reason to Reject this Restaurant Opening Request"
+            [(visible)]="displayMaximizable"
+            [modal]="true"
+            [style]="{ width: '50vw' }"
+            [maximizable]="true"
+            [draggable]="false"
+            [resizable]="false"
           >
+            <div class="field-checkbox">
+              <p-checkbox
+                name="group1"
+                value="1"
+                [(ngModel)]="selectedReason"
+                inputId="1"
+              ></p-checkbox>
+              <label for="1">This request sent not enough information</label>
+            </div>
+            <div class="field-checkbox">
+              <p-checkbox
+                name="group1"
+                value="2"
+                [(ngModel)]="selectedReason"
+                inputId="2"
+              ></p-checkbox>
+              <label for="2"
+                >This request does not sent food safety certifications</label
+              >
+            </div>
+            <div class="field-checkbox">
+              <p-checkbox
+                name="group1"
+                value="3"
+                [(ngModel)]="selectedReason"
+                inputId="3"
+              ></p-checkbox>
+              <label for="3">This restaurant had banned in the past</label>
+            </div>
+            <ng-template pTemplate="footer">
+              <button
+                pButton
+                pRipple
+                icon="pi pi-check"
+                label="Confirm"
+                class="p-button-rounded p-button-success mr-2"
+                (click)="rejected()"
+              ></button>
+              <button
+                pButton
+                pRipple
+                icon="pi pi-chevron-circle-left"
+                label="Back"
+                class="p-button-rounded p-button-danger"
+                (click)="displayMaximizable = false"
+              ></button>
+            </ng-template>
+          </p-dialog>
         </div>
-        <div class="field-checkbox">
-          <p-checkbox
-            name="group1"
-            value="3"
-            [(ngModel)]="selectedReason"
-            inputId="3"
-          ></p-checkbox>
-          <label for="3">This restaurant had banned in the past</label>
-        </div>
-        <ng-template pTemplate="footer">
-          <button
-            pButton
-            pRipple
-            icon="pi pi-check"
-            label="Confirm"
-            class="p-button-rounded p-button-success mr-2"
-            (click)="rejected()"
-          ></button>
-          <button
-            pButton
-            pRipple
-            icon="pi pi-chevron-circle-left"
-            label="Back"
-            class="p-button-rounded p-button-danger"
-            (click)="displayMaximizable = false"
-          ></button>
-        </ng-template>
-      </p-dialog>
+      </div>
     </div>
-  </div>
-</div>
-<div class="px-6 py-5">
-  <div class="surface-card p-4 shadow-2 border-round">
-    <div class="font-medium text-3xl text-900 mb-3">
-      New Restaurant Opening Request
+    <div class="px-6 py-5">
+      <div class="surface-card p-4 shadow-2 border-round">
+        <div class="font-medium text-3xl text-900 mb-3">
+          New Restaurant Opening Request
+        </div>
+        <ul class="list-none p-0 m-0 border-top-1 border-300">
+          <li class="flex align-items-center py-3 px-2 flex-wrap surface-100">
+            <div class="text-500 w-full md:w-2 font-medium">
+              Restaurant Name
+            </div>
+            <div class="text-900 w-full md:w-10">
+              {{ requester?.requestingRestaurant?.restaurantName }}
+            </div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap">
+            <div class="text-500 w-full md:w-2 font-medium">Requester Name</div>
+            <div class="text-900 w-full md:w-10 line-height-3">
+              {{ requester?.firstName }} {{ requester?.middleName }}
+              {{ requester?.lastName }}
+            </div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap surface-100">
+            <div class="text-500 w-full md:w-2 font-medium">Email</div>
+            <div class="text-900 w-full md:w-10">{{ requester?.email }}</div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap">
+            <div class="text-500 w-full md:w-2 font-medium">Created Date</div>
+            <div class="text-900 w-full md:w-10">
+              {{
+                requester?.requestingOpeningRestaurantDate | date : "dd/MM/yyyy"
+              }}
+            </div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap surface-100">
+            <div class="text-500 w-full md:w-2 font-medium">Phone Number</div>
+            <div class="text-900 w-full md:w-10">
+              {{ requester?.phoneNumber }}
+            </div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap">
+            <div class="text-500 w-full md:w-2 font-medium">Status</div>
+            <div class="text-900 w-full md:w-10">
+              <app-requesting-status
+                [requester]="requester"
+              ></app-requesting-status>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
-    <ul class="list-none p-0 m-0 border-top-1 border-300">
-      <li class="flex align-items-center py-3 px-2 flex-wrap surface-50">
-        <div class="text-500 w-full md:w-2 font-medium">Restaurant Name</div>
-        <div class="text-900 w-full md:w-10">
-          {{ requester?.requestingRestaurant?.restaurantName }}
-        </div>
-      </li>
-      <li class="flex align-items-center py-3 px-2 flex-wrap">
-        <div class="text-500 w-full md:w-2 font-medium">Requester Name</div>
-        <div class="text-900 w-full md:w-10 line-height-3">
-          {{ requester?.firstName }} {{ requester?.middleName }}
-          {{ requester?.lastName }}
-        </div>
-      </li>
-      <li class="flex align-items-center py-3 px-2 flex-wrap surface-50">
-        <div class="text-500 w-full md:w-2 font-medium">Email</div>
-        <div class="text-900 w-full md:w-10">{{ requester?.email }}</div>
-      </li>
-      <li class="flex align-items-center py-3 px-2 flex-wrap">
-        <div class="text-500 w-full md:w-2 font-medium">Created Date</div>
-        <div class="text-900 w-full md:w-10">
-          {{ requester?.requestingOpeningRestaurantDate | date : "dd/MM/yyyy" }}
-        </div>
-      </li>
-      <li class="flex align-items-center py-3 px-2 flex-wrap surface-50">
-        <div class="text-500 w-full md:w-2 font-medium">Phone Number</div>
-        <div class="text-900 w-full md:w-10">{{ requester?.phoneNumber }}</div>
-      </li>
-      <li class="flex align-items-center py-3 px-2 flex-wrap">
-        <div class="text-500 w-full md:w-2 font-medium">Status</div>
-        <div class="text-900 w-full md:w-10">
-          <app-requesting-status
-            [requester]="requester"
-          ></app-requesting-status>
-        </div>
-      </li>
-    </ul>
   </div>
 </div>

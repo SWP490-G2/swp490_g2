@@ -17,26 +17,30 @@
     </div>
 
     <div>
-      <label for="email" class="block text-900 font-medium my-2">Email*</label>
+      <label for="email" class="block text-900 font-medium my-2"
+        >Email / Phone Number *</label
+      >
       <input
         id="email"
         type="text"
         pInputText
         class="w-full mb-1"
-        name="email"
+        name="emailOrPhoneNumber"
         ngModel
-        placeholder="example@fpt.edu.vn"
       />
       <div
         class="flex align-items-center gap-1"
-        *ngIf="form.controls['email']?.dirty && form.controls['email']?.errors"
+        *ngIf="
+          form.controls['emailOrPhoneNumber']?.dirty &&
+          form.controls['emailOrPhoneNumber']?.errors
+        "
       >
         <i class="pi pi-times-circle text-danger"></i>
         <small class="text-danger"> Enter a valid email address! </small>
       </div>
 
       <label for="password" class="block text-900 font-medium my-2"
-        >Password*</label
+        >Password *</label
       >
       <input
         id="password"
@@ -45,7 +49,6 @@
         class="w-full mb-1"
         name="password"
         ngModel
-        placeholder="Password here"
       />
     </div>
     <div class="surface-border flex">

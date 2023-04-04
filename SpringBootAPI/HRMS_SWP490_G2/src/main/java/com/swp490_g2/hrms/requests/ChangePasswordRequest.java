@@ -15,8 +15,7 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 public class ChangePasswordRequest {
 
-    @Pattern(regexp = "^[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}$", flags = Pattern.Flag.UNICODE_CASE)
-    private String email;
+    private String emailOrPhoneNumber;
 
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[ !\"#$%&'()*+,-./:;<=>?@\\[\\\\\\]^_`{|}~]).{8,25}$", flags = Pattern.Flag.UNICODE_CASE)
     private String password;

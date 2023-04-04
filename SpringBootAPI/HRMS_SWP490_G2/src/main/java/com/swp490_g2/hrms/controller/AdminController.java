@@ -4,8 +4,10 @@ import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.requests.RestaurantInformationRequest;
+import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +36,7 @@ public class AdminController {
     }
 
     @GetMapping("/get-all-restaurant")
-    public ResponseEntity<List<RestaurantInformationRequest>> getAllRestaurant() {
+    public ResponseEntity<List<Restaurant>> getAllRestaurant() {
         return ResponseEntity.ok(adminService.getAllRestaurant());
     }
 
@@ -56,5 +58,10 @@ public class AdminController {
     @DeleteMapping("/delete-restaurant-by-id/{id}")
     public void deleteRestaurantById(@PathVariable Long id) {
         adminService.deleteRestaurantById(id);
+    }
+
+    @PostMapping("/get-all-users")
+    public ResponseEntity<Page<User>> getAllUsers(@RequestBody SearchRequest request) {
+        return ResponseEntity.ok(adminService.getAllUsers(request));
     }
 }

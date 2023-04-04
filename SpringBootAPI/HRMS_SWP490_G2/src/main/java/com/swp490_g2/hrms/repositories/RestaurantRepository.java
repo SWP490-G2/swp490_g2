@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.repositories;
 
+import com.swp490_g2.hrms.entity.Product;
 import com.swp490_g2.hrms.entity.Restaurant;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

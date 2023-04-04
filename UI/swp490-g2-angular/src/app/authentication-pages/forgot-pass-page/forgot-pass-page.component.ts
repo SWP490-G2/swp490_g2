@@ -37,11 +37,10 @@ export class ForgotPassPageComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.form.controls["email"].addValidators([
+      this.form.controls["emailOrPhoneNumber"].addValidators([
         Validators.required,
-        Validators.email,
       ]);
-      this.form.controls["email"].updateValueAndValidity();
+      this.form.controls["emailOrPhoneNumber"].updateValueAndValidity();
     }, 0);
   }
 
@@ -68,7 +67,8 @@ export class ForgotPassPageComponent implements AfterViewInit {
     this.$userClient
       .changePassword(
         new ChangePasswordRequest({
-          email: this.form.controls["email"].getRawValue(),
+          emailOrPhoneNumber:
+            this.form.controls["emailOrPhoneNumber"].getRawValue(),
           password: this.form.value.password,
         })
       )
@@ -102,7 +102,7 @@ export class ForgotPassPageComponent implements AfterViewInit {
 
     if (!this.verificationCodeShown) {
       this.$userClient
-        .sendVerificationCode(this.form.value.email)
+        .sendVerificationCode(this.form.value.emailOrPhoneNumber)
         .subscribe(() => {
           this.$message.add({
             severity: "success",
@@ -111,7 +111,7 @@ export class ForgotPassPageComponent implements AfterViewInit {
           });
           this.verificationCodeShown = true;
           this._fgtPassButtonDisabled = false;
-          this.form.controls["email"].disable();
+          this.form.controls["emailOrPhoneNumber"].disable();
 
           setTimeout(() => {
             this.form.controls["verificationCode"].addValidators([
@@ -126,7 +126,7 @@ export class ForgotPassPageComponent implements AfterViewInit {
     } else {
       this.$userClient
         .verifyCode(
-          this.form.controls["email"].getRawValue(),
+          this.form.controls["emailOrPhoneNumber"].getRawValue(),
           this.form.value.verificationCode,
           true
         )

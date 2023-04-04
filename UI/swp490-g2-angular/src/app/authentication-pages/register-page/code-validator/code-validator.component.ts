@@ -29,9 +29,7 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
     private $route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
-    // console.log(this.email);
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     setTimeout(() => {

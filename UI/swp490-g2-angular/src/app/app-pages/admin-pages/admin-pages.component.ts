@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-admin-pages",
@@ -7,78 +8,37 @@ import { Component } from "@angular/core";
 export class AdminPagesComponent {
   buttonContents: ButtonContent[] = [];
 
-  constructor() {
+  constructor(private $router: Router) {
     this.initButtonContents();
   }
 
   private initButtonContents(): void {
-    const colors = ["teal", "pink", "orange"];
+    const colors = ["red", "green", "blue"];
     this.buttonContents = [
       {
-        title: "View Restaurant Opening Request",
-        routerLink: "request-open-list",
-        iconClass: "pi-list",
-      },
-      {
-        title: "View All Users",
+        title: "User Management",
         routerLink: "view-all-user",
         iconClass: "pi-users",
       },
       {
-        title: "View All Restaurants",
+        title: "Restaurant Management",
         routerLink: "view-all-restaurant",
         iconClass: "pi-bars",
       },
       {
-        title: "Ban An User",
-        routerLink: "ban-user",
-        iconClass: "pi-user-minus",
-      },
-      {
-        title: "Ban An Restaurant",
-        routerLink: "ban-restaurant",
-        iconClass: "pi-ban",
-      },
-      {
-        title: "Update Seller Information",
-        routerLink: "update-user-info",
-        iconClass: "pi-user-edit",
-      },
-      {
-        title: "Update User Role",
-        routerLink: "update-user-role",
-        iconClass: "pi-user-edit",
-      },
-      {
-        title: "Update Restaurant Avatar and Cover",
-        routerLink: "change-avatar-cover",
-        iconClass: "pi-image",
-      },
-      {
-        title: "Update Restaurant Information",
-        routerLink: "update-restaurant-info",
-        iconClass: "pi-pencil",
-      },
-      {
-        title: "Create New Restaurant Promotion Campaign",
-        routerLink: "create-promo",
-        iconClass: "pi-plus-circle",
-      },
-      {
-        title: "View All Restaurant Promotion Campaign",
-        routerLink: "view-all-promo",
-        iconClass: "pi-ticket",
-      },
-      {
-        title: "Update Restaurant Promotion Campaign",
-        routerLink: "update-promo",
-        iconClass: "pi-pencil",
+        title: "Restaurant Opening Request Management",
+        routerLink: "request-open-list",
+        iconClass: "pi-list",
       },
     ];
 
     this.buttonContents.map((buttonContent, index) => {
       buttonContent.color = colors[index % 3];
     });
+  }
+
+  isParentPage() {
+    return this.$router.url === "/admin-pages";
   }
 }
 

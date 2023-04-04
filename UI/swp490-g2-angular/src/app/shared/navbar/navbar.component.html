@@ -2,6 +2,16 @@
   class="surface-overlay shadow-2 flex align-items-center justify-content-between relative lg:static"
   style="min-height: 42px; padding: 1rem"
 >
+  <p-sidebar [(visible)]="sidebarVisible" styleClass="w-18rem">
+    <app-side-bars [user]="user"></app-side-bars>
+  </p-sidebar>
+  <p-button
+    (click)="sidebarVisible = true"
+    class="p-button-rounded p-button-secondary mr-3"
+    pTooltip="Sidebar"
+    tooltipPosition="top"
+    icon="pi pi-list"
+  ></p-button>
   <img src="../../favicon.ico" height="40" class="mr-0 lg:mr-2" routerLink="" />
 
   <a
@@ -20,7 +30,7 @@
     <ul
       class="list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row"
     >
-      <ng-container *ngIf="userExisted()">
+      <ng-container>
         <li class="h-full">
           <a
             pRipple
