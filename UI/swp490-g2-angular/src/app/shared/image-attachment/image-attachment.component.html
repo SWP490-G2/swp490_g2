@@ -5,7 +5,14 @@
     [ngClass]="{ hover: editable, 'cursor-pointer': editable }"
     (click)="openDialog()"
   >
-    <img id="mainImage" [src]="imageSrc" [ngStyle]="imageStyle" />
+    <img
+      id="mainImage"
+      [src]="imageSrc"
+      [ngStyle]="imageStyle"
+      [ngClass]="{
+        'round-border': isRound
+      }"
+    />
     <div class="absolute w-full h-full top-0" *ngIf="editable">
       <i
         class="absolute top-50 left-50 pi pi-paperclip transform-middle text-white"
@@ -15,11 +22,11 @@
 
   <div
     *ngIf="!url"
-    class="round-button"
     [ngStyle]="imageStyle"
     [ngClass]="{
       'cursor-pointer': editable,
-      hover: editable
+      hover: editable,
+      'round-button': isRound
     }"
     (click)="openDialog()"
   >

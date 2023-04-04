@@ -15,6 +15,10 @@ const routes: Routes = [
     loadChildren: () =>
       import("./app-pages/app-pages.module").then((m) => m.AppPagesModule),
   },
+  {
+    path: "**",
+    redirectTo: "",
+  },
 ];
 
 @NgModule({

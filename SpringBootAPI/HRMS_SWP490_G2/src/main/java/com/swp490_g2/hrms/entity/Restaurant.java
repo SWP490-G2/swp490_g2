@@ -32,17 +32,14 @@ public class Restaurant extends BaseEntity {
     @Column(unique = true)
     private String phoneNumber;
 
-    @Column(nullable = false, columnDefinition="tinyint(1) default 0", insertable = false)
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 0", insertable = false)
     private boolean isActive;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private File avatarFile;
 
-    @OneToMany(mappedBy="restaurant")
-    @JsonManagedReference
-    @Transient
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Product> products;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

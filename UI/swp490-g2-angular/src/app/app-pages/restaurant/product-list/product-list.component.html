@@ -3,10 +3,20 @@
     <div class="col-6 lg:col-3 mb-5 md:mb-0" *ngFor="let product of products">
       <div class="p-2">
         <div class="relative mb-3">
-          <img
-            src="assets/images/blocks/ecommerce/productlist/product-list-5-1.png"
-            class="w-full"
-          />
+          <p-carousel
+            *ngIf="product.images && product.images.length > 0"
+            [value]="product.images"
+            [circular]="true"
+          >
+            <ng-template let-image pTemplate="item">
+              <app-image-attachment
+                [url]="image.filePath"
+                width="100%"
+                height="100%"
+                [isRound]="false"
+              ></app-image-attachment>
+            </ng-template>
+          </p-carousel>
         </div>
         <span class="text-900 font-medium text-xl">
           {{ product.productName }}
@@ -34,6 +44,14 @@
           class="w-full"
           (click)="addToCart(product)"
         ></button>
+        <a
+          pButton
+          pRipple
+          label="Edit"
+          icon="pi pi-file-edit"
+          class="w-full mt-2"
+          [routerLink]="['product', product.id]"
+        ></a>
       </div>
     </div>
   </div>

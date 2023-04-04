@@ -1,0 +1,26 @@
+<div class="flex justify-content-center pt-5" *ngIf="product">
+  <form class="surface-card p-4 shadow-2 border-round w-full lg:w-10">
+    <a
+      pButton
+      pRipple
+      icon="pi pi-arrow-left"
+      label="Back"
+      routerLink="../.."
+    ></a>
+    <label class="block text-900 font-medium my-2"> Images </label>
+    <div class="flex flex-wrap gap-5">
+      <app-image-attachment
+        *ngFor="let image of product.images"
+        [url]="image.filePath"
+        [isRound]="false"
+        width="auto"
+        height="10rem"
+      ></app-image-attachment>
+      <app-image-attachment
+        [editable]="true"
+        [uploadUrl]="'product/add-image/' + productId"
+        (selectedImageHandler)="addImage($event)"
+      ></app-image-attachment>
+    </div>
+  </form>
+</div>
