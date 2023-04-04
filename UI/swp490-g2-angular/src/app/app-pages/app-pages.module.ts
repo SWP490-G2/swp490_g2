@@ -8,6 +8,7 @@ import { FooterModule } from "../shared/footer/footer.module";
 import { HomePageModule } from "./home-page/home-page.module";
 import { RestaurantModule } from "./restaurant/restaurant.module";
 import { AccountInformationModule } from "./account-information/account-information.module";
+import { CartPagesModule } from "./cart-pages/cart-pages.module";
 
 @NgModule({
   declarations: [AppPagesComponent],
@@ -19,6 +20,7 @@ import { AccountInformationModule } from "./account-information/account-informat
     HomePageModule,
     RestaurantModule,
     AccountInformationModule,
+    CartPagesModule,
   ],
   bootstrap: [AppPagesComponent],
 })

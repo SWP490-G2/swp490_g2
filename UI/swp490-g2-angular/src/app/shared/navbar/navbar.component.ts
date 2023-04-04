@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import { Client, User } from "src/app/ngswag/client";
+import { CartItem, CartService } from "src/app/service/cart.service";
 
 @Component({
   selector: "app-navbar",
@@ -15,12 +16,14 @@ export class NavbarComponent implements OnInit {
   @Input() user?: User;
   sidebarVisible: boolean;
 
+  cartItems: CartItem[];
   constructor(
     private $router: Router,
     private $route: ActivatedRoute,
     private $title: Title,
     private $auth: AuthService,
-    private $client: Client
+    private $client: Client,
+    private cartService: CartService
   ) {
     $title.setTitle("Home");
   }
@@ -28,8 +31,11 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.items = [];
-  }
 
+    this.cartService.getCartItemsObservable().subscribe((items) => {
+      this.cartItems = items;
+    });
+  }
   getUserDisplay(): string {
     // Thoa man 2 dieu kien:
     // 1. this.user ton tai
@@ -53,6 +59,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logOut(): void {
+    this.cartService.clearCart();
     this.$auth.logout();
   }
 
