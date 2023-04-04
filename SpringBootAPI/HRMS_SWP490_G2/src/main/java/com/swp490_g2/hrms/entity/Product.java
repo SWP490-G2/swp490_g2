@@ -34,7 +34,7 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurantId", nullable = false)
     @JsonIgnore
     private Restaurant restaurant;

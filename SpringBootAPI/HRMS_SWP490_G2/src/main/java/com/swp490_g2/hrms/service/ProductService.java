@@ -9,6 +9,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +21,12 @@ import java.util.stream.Collectors;
 @Service
 @Getter
 public class ProductService {
+
     private ProductRepository productRepository;
+    @Autowired
+    public void setProductRepository(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Autowired
     private FileService fileService;
@@ -40,8 +46,8 @@ public class ProductService {
     private ProductCategoryRepository productCategoryRepository;
 
     @Autowired
-    public void setProductRepository(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public void setProductCategoryRepository(ProductCategoryRepository productCategoryRepository) {
+        this.productCategoryRepository = productCategoryRepository;
     }
 
     public Page<Product> search(SearchRequest request) {
@@ -73,9 +79,10 @@ public class ProductService {
 
     public void addNewProduct(ProductInformationRequest productInformationRequest, MultipartFile[] images) {
         User currentUser = userService.getCurrentUser();
-        if (currentUser == null || !currentUser.isSeller() || !currentUser.isAdmin()) {
-            return;
+        if(currentUser == null || !currentUser.isSeller() || !currentUser.isAdmin()){
+            throw new AccessDeniedException("This request allows seller or admin only!");
         }
+
         Restaurant ownerRestaurant = restaurantRepository.getOwnerRestaurant(currentUser.getId()).orElse(null);
         ProductStatus productStatus = productStatusRepository.findById(productInformationRequest.getProductStatusId()).orElse(null);
         Set<ProductCategory> requestCategories = new HashSet<>();
@@ -104,11 +111,6 @@ public class ProductService {
         }
     }
 
-    public void deleteProductById(Long productId) {
-
-
-    }
-
     public Product getById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
@@ -125,10 +127,24 @@ public class ProductService {
 
         User user = userService.getCurrentUser();
         productImage.setCreatedBy(user.getId());
-
         product.getImages().add(productImage);
         update(product);
     }
+
+    public void deleteProductById(Long productId){
+        User currentUser = userService.getCurrentUser();
+        if(currentUser == null || !currentUser.isSeller() || !currentUser.isAdmin()){
+            throw new AccessDeniedException("This request allows seller or admin only!");
+        }
+        List<ProductCategory> getAllCategoriesByProductId = productCategoryRepository.getAllCategoriesByProductId(productId);
+        for (ProductCategory productCategory: getAllCategoriesByProductId){
+            productRepository.deleteProductProductCategory(productId, productCategory.getId());
+        }
+        Product product = productRepository.getById(productId);
+        productRepository.delete(product);
+    }
+
+        
 
     public void update(Product product) {
         if(product == null)
