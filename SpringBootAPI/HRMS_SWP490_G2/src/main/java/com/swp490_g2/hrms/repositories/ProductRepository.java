@@ -4,6 +4,7 @@ import com.swp490_g2.hrms.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Set;
 
@@ -22,4 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             and restaurantId = :restaurantId
             """, nativeQuery = true)
     public Set<Product> fulltextSearch(Long restaurantId, String text);
+
+    @Query(value = "delete from product__product_category where productId = :productId and productCategoryId = :productCategoryId", nativeQuery = true)
+    int deleteProductCategory(@Param("productId") Long productId, @Param("productCategoryId") Long productCategoryId);
 }

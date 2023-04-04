@@ -38,6 +38,7 @@ export class ImageAttachmentComponent implements OnInit {
   selectedImage?: File;
   @Output() selectedImageHandler = new EventEmitter<File>();
   @Input() editable = false;
+  @Input() isRound = true;
 
   constructor(
     private $auth: AuthService,

@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
 
@@ -37,4 +39,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long>, J
                 ;
             """, nativeQuery = true)
     public List<Restaurant> fulltextSearch(String text);
+
+    @Query(value = "select r.* from restaurant as r inner join user__restaurant as ur on r.restaurantId = ur.restaurantId where ur.userId = :userId", nativeQuery = true)
+    Optional<Restaurant> getOwnerRestaurant(@Param("userId") Long userId);
 }
