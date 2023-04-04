@@ -8,6 +8,7 @@ import { NgForm } from '@angular/forms';
 })
 export class AddRestaurantInfoComponent {
   @ViewChild("form", { static: false }) form!: NgForm;
+  uploadedFiles: any[] = [];
 
   submit(): void {
     // if (this.restaurant.address) {
@@ -24,6 +25,18 @@ export class AddRestaurantInfoComponent {
     //     summary: "Success",
     //     detail: "Restaurant's information has changed",
     //   });
+    // });
+  }
+
+  onUpload(event) {
+    // for (const file of event.files) {
+    //   this.uploadedFiles.push(file);
+    // }
+
+    // this.$message.add({
+    //   severity: "info",
+    //   summary: "File Uploaded",
+    //   detail: "",
     // });
   }
 }

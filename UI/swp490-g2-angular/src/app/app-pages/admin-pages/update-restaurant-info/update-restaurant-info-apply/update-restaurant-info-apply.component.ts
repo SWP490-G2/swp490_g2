@@ -2,11 +2,13 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
-import { finalize } from "rxjs";
+import { finalize, of, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
+import { UserClient } from "src/app/ngswag/client";
 import {
   AdminClient,
   AuthenticationResponse,
+  File,
   Restaurant,
   RestaurantClient,
   User,
@@ -47,10 +49,12 @@ export class UpdateRestaurantInfoApplyComponent
   restaurantId: number;
   restaurant?: Restaurant;
   user?: User;
+  uploadUrl: string;
 
   constructor(
     private $restaurantClient: RestaurantClient,
     private $adminClient: AdminClient,
+    private $userClient: UserClient,
     private $auth: AuthService,
     private $message: MessageService,
     private $route: ActivatedRoute
@@ -60,16 +64,27 @@ export class UpdateRestaurantInfoApplyComponent
     );
 
     this.restaurantId = id;
-    console.log(this.restaurantId);
+    this.uploadUrl = "restaurant/update-avatar/" + id;
     this.refresh();
   }
 
   refresh() {
     this.$adminClient
       .getRestaurantById(this.restaurantId)
-      .subscribe((restaurant) => {
-        this.restaurant = restaurant;
-        this.restaurant.createdAt = DateUtils.fromDB(this.restaurant.createdAt);
+      .pipe(
+        switchMap((restaurant) => {
+          this.restaurant = restaurant;
+          if (restaurant.id) {
+            return this.$userClient.getAllOwnersByRestaurantIds([
+              restaurant.id,
+            ]);
+          } else return of(undefined);
+        })
+      )
+      .subscribe((owners) => {
+        if (owners) {
+          (this.restaurant as any).owners = owners;
+        }
       });
 
     this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
@@ -136,4 +151,34 @@ export class UpdateRestaurantInfoApplyComponent
   }
 
   ngOnInit() {}
+
+  updateAvatar(image: File) {
+    if (!this.restaurant) return;
+
+    this.restaurant.avatarFile = image;
+    this.$restaurantClient
+      .update(this.restaurant)
+      .subscribe(() => location.reload());
+  }
+
+  get editable(): boolean {
+    if (!this.user || !this.user.id) return false;
+    if (AuthService.isAdmin(this.user)) return true;
+    if (
+      AuthService.isSeller(this.user) &&
+      this.user.restaurants?.some(
+        (restaurant) => restaurant.id === this.restaurant?.id
+      )
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  getOwners(restaurant: Restaurant): string {
+    if (!(restaurant as any).owners) return "";
+
+    return (restaurant as any).owners.map((o) => o.email).join(", ");
+  }
 }

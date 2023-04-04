@@ -17,6 +17,7 @@ import { ToastModule } from "primeng/toast";
 import { HttpErrorHandler } from "src/app/global/http-error-handler";
 import { DropdownModule } from "primeng/dropdown";
 import { AccountInformationModule } from "src/app/app-pages/account-information/account-information.module";
+import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 
 @NgModule({
   declarations: [UpdateRestaurantInfoApplyComponent],
@@ -35,6 +36,7 @@ import { AccountInformationModule } from "src/app/app-pages/account-information/
     ToastModule,
     DropdownModule,
     AccountInformationModule,
+    ImageAttachmentModule,
   ],
   providers: [
     MessageService,
