@@ -1,0 +1,46 @@
+<div class="bg-white p-7">
+  <p class="text-2xl font-bold">Your Cart</p>
+  <div *ngIf="!cartItems.length" class="text-center text-xl">{{ message }}</div>
+  <div *ngIf="cartItems.length" class="grid">
+    <div class="col-6 lg:col-3 mb-5 md:mb-0" *ngFor="let product of cartItems">
+      <div class="p-2">
+        <div class="relative mb-3">
+          <img
+            src="assets/images/blocks/ecommerce/productlist/product-list-5-1.png"
+            class="w-full"
+          />
+        </div>
+        <span class="text-900 font-medium text-xl">
+          {{ product.name }}
+        </span>
+        <div class="my-3">
+          <span>Quantity: </span>
+          <span class="text-500">{{ product.quantity }}</span>
+        </div>
+        <div class="mb-4">
+          <span class="font-bold text-900">
+            {{ product.price * product.quantity | currency : "VND" }}
+          </span>
+        </div>
+        <button
+          pButton
+          pRipple
+          label="Remove"
+          icon="pi pi-shopping-cart"
+          class="w-full p-button-danger"
+        ></button>
+      </div>
+    </div>
+  </div>
+  <div class="text-2xl mt-4 flex align-items-center justify-content-end">
+    Total price: &nbsp;
+    <span class="font-bold">{{ totalPrice | currency : "VND" }}</span>
+    <button
+      pButton
+      pRipple
+      label="Check Out"
+      icon="pi pi-shopping-cart"
+      class="ml-4"
+    ></button>
+  </div>
+</div>
