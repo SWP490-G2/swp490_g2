@@ -7,6 +7,7 @@ import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import com.swp490_g2.hrms.repositories.UserRepository;
+import com.swp490_g2.hrms.requests.RestaurantInformationRequest;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,8 @@ public class AdminService {
             return List.of();
         }
 
-        return this.buyerService.getAllOpeningRestaurantRequests();
+        List<User> list = this.buyerService.getAllOpeningRestaurantRequests();
+        return list;
     }
 
     public Page<User> getAllUsers(SearchRequest request) {
@@ -112,7 +114,7 @@ public class AdminService {
         userService.update(requester);
     }
 
-    public List<RestaurantInformationRequest> getAllRestaurant() {
+    public List<Restaurant> getAllRestaurant() {
         allowAdminExecuteAction();
         return restaurantService.getAllRestaurant();
     }

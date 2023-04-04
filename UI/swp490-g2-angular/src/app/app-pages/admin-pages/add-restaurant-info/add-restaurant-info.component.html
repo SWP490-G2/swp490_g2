@@ -17,7 +17,7 @@
     <div class="flex align-items-start flex-column md:flex-row">
       <div class="p-5">
         <span class="text-900 font-medium text-3xl">
-          Add Restaurant Information
+          Create Restaurant Information
         </span>
       </div>
     </div>
@@ -25,15 +25,26 @@
 </div>
 
 <form
+  *ngIf="restaurant"
   #form="ngForm"
   class="surface-section px-2 py-4 md:px-6 lg:px-8"
   (ngSubmit)="submit()"
 >
-  <label for="owner" class="block text-900 font-medium my-3">Owner</label>
+  <label for="res.name" class="block text-900 font-medium my-3"
+    >Restaurant Owner</label
+  >
   <div class="grid">
     <div class="col-12">
       <div class="p-inputgroup">
-        <input type="text" pInputText disabled placeholder="Owner Name" />
+        <span class="p-inputgroup-addon"
+          ><p-checkbox [(ngModel)]="checkUserValid" [binary]="true"></p-checkbox
+        ></span>
+        <input
+          type="text"
+          pInputText
+          name="email"
+          placeholder="Enter Email ..."
+        />
       </div>
     </div>
   </div>
@@ -103,9 +114,24 @@
   <div class="grid">
     <div class="col-12">
       <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="Contact Number" />
+        <input
+          id="contact"
+          type="text"
+          pInputText
+          class="w-full mb-1"
+          name="contact"
+          ngModel
+          placeholder="Contact Number"
+        />
       </div>
     </div>
+  </div>
+  <div
+    class="flex align-items-center gap-1"
+    *ngIf="form.controls['contact']?.dirty && form.controls['contact']?.errors"
+  >
+    <i class="pi pi-times-circle text-danger"></i>
+    <small class="text-danger"> Enter a valid phone number! </small>
   </div>
 
   <label for="delivery" class="block text-900 font-medium my-3"
@@ -222,9 +248,9 @@
         inputId="timeonly"
       ></p-calendar>
     </div>
-  </div>
+  </div> -->
 
-  <label for="avatar" class="block text-900 font-medium my-3">Avatar</label>
+  <!-- <label for="avatar" class="block text-900 font-medium my-3">Avatar</label>
   <div class="grid">
     <div class="col-12">
       <p-fileUpload
@@ -242,9 +268,9 @@
         </ng-template>
       </p-fileUpload>
     </div>
-  </div>
+  </div> -->
 
-  <label for="menu" class="block text-900 font-medium my-3">Menu</label>
+  <!-- <label for="menu" class="block text-900 font-medium my-3">Menu</label>
   <div class="grid">
     <div class="col-12">
       <p-fileUpload
@@ -263,26 +289,6 @@
       </p-fileUpload>
     </div>
   </div> -->
-
-  <label for="avatar" class="block text-900 font-medium my-3">Avatar</label>
-  <div class="grid">
-    <div class="col-12">
-      <p-fileUpload
-        name="avatar"
-        url="./upload.php"
-        (onUpload)="onUpload($event)"
-        accept="image/*"
-      >
-        <ng-template pTemplate="content">
-          <ul *ngIf="uploadedFiles.length">
-            <li *ngFor="let file of uploadedFiles">
-              {{ file.name }} - {{ file.size }} bytes
-            </li>
-          </ul>
-        </ng-template>
-      </p-fileUpload>
-    </div>
-  </div>
 
   <button
     pButton
