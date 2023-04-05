@@ -73,6 +73,9 @@ public class RestaurantService {
     }
 
     public void update(Restaurant restaurant) {
+        if(restaurant == null)
+            return;
+
         restaurant.setAddress(addressService.populateLatLng(restaurant.getAddress()));
         restaurantRepository.save(restaurant);
     }

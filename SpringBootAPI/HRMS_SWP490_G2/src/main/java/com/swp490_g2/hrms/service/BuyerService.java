@@ -4,18 +4,12 @@ import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
-import com.swp490_g2.hrms.entity.shallowEntities.Operator;
-import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import com.swp490_g2.hrms.repositories.UserRepository;
-import com.swp490_g2.hrms.requests.FilterRequest;
-import com.swp490_g2.hrms.requests.SearchRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -56,6 +50,13 @@ public class BuyerService {
         this.userRepository = userRepository;
     }
 
+    private WebSocketService webSocketService;
+
+    @Autowired
+    public void setWebSocketService(WebSocketService webSocketService) {
+        this.webSocketService = webSocketService;
+    }
+
     public void requestOpeningNewRestaurant(Restaurant restaurant) {
         User buyer = userService.getCurrentUser();
         if (buyer == null || !buyer.isBuyer()) {
@@ -76,7 +77,7 @@ public class BuyerService {
         if (currentAdmin == null || !currentAdmin.isAdmin())
             return null;
 
-        List <User> users = userRepository.findAll();
+        List<User> users = userRepository.findAll();
         return users.stream().filter(user -> user.getRequestingRestaurant() != null).toList();
     }
 }

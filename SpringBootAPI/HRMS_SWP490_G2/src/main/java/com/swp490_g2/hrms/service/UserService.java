@@ -4,7 +4,9 @@ import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.config.JwtService;
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.Role;
+import com.swp490_g2.hrms.entity.Notification;
 import com.swp490_g2.hrms.entity.shallowEntities.TokenType;
+import com.swp490_g2.hrms.repositories.RestaurantRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.ChangePasswordRequest;
@@ -20,8 +22,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.swp490_g2.hrms.requests.FilterRequest;
-import com.swp490_g2.hrms.requests.SearchRequest;
 
 import java.util.List;
 import java.util.Random;
@@ -97,6 +97,20 @@ public class UserService {
     @Autowired
     public void setSmsService(SMSService smsService) {
         this.smsService = smsService;
+    }
+
+    private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    public void setRestaurantRepository(RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
+    }
+
+    private WebSocketService webSocketService;
+
+    @Autowired
+    public void setWebSocketService(WebSocketService webSocketService) {
+        this.webSocketService = webSocketService;
     }
 
     private static String generateVerificationCode() {
@@ -194,7 +208,7 @@ public class UserService {
 
     public User getByEmailOrPhoneNumber(String emailOrPhoneNumber) {
         var user = userRepository.findByEmail(emailOrPhoneNumber).orElse(null);
-        if(user == null) {
+        if (user == null) {
             user = userRepository.findByPhoneNumber(emailOrPhoneNumber).orElse(null);
         }
 
@@ -203,8 +217,7 @@ public class UserService {
 
     public AuthenticationResponse login(AuthenticationRequest request) {
         var user = getByEmailOrPhoneNumber(request.getEmailOrPhoneNumber());
-        if(user == null)
-        {
+        if (user == null) {
             return AuthenticationResponse.builder()
                     .errorMessage("User is not existed!")
                     .build();
@@ -218,9 +231,7 @@ public class UserService {
         );
 
 
-
-        if (!user.isActive())
-        {
+        if (!user.isActive()) {
             return AuthenticationResponse.builder()
                     .errorMessage("User has not been activated!")
                     .build();
@@ -303,6 +314,20 @@ public class UserService {
     }
 
     public void update(User user) {
+        if (user == null)
+            return;
+
+        User savedUser = getById(user.getId());
+        if (savedUser.getRequestingRestaurant() == null && user.getRequestingRestaurant() != null
+                && restaurantRepository.existsById(user.getRequestingRestaurant().getId())) {
+            getAllByRoles(List.of(Role.ADMIN)).forEach(u -> {
+                webSocketService.push("/notification", Notification.builder()
+                        .userId(u.getId())
+                        .message("Buyer [%s] wants to become a seller".formatted(user.getEmail()))
+                        .build(), u);
+            });
+        }
+
         userRepository.save(user);
     }
 
@@ -316,10 +341,18 @@ public class UserService {
 
     public void sendVerificationCode(String emailOrPhoneNumber) {
         User user = getByEmailOrPhoneNumber(emailOrPhoneNumber);
-        if(user == null)
+        if (user == null)
             return;
 
         smsService.sendMessage(user.getPhoneNumber(),
                 "Verification code is " + user.getVerificationCode());
+    }
+
+
+    public List<User> getAllByRoles(List<Role> roles) {
+        if (roles == null || roles.isEmpty())
+            return null;
+
+        return userRepository.findByRolesIn(roles);
     }
 }

@@ -9,13 +9,8 @@ import { WebsocketService } from "./global/websocket.service";
 })
 export class AppComponent implements OnInit {
   title = "swp490-g2-angular";
-  socket: WebSocket;
 
-  constructor(
-    private primengConfig: PrimeNGConfig,
-    private $webSocket: WebsocketService,
-    private $zone: NgZone
-  ) {}
+  constructor(private primengConfig: PrimeNGConfig) {}
 
   ngOnInit() {
     this.primengConfig.ripple = true;

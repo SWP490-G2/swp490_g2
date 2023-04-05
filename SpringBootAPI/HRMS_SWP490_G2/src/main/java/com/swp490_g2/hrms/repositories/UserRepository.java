@@ -3,6 +3,7 @@ package com.swp490_g2.hrms.repositories;
 import com.swp490_g2.hrms.entity.Product;
 import com.swp490_g2.hrms.entity.Token;
 import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -22,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Optional<User> findByRestaurantId(Long restaurantId);
 
     List<User> findByRestaurantsIn(List<Long> restaurantIds);
+
+    List<User> findByRolesIn(List<Role> roles);
 }

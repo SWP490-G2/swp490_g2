@@ -9,6 +9,7 @@ import { HomePageModule } from "./home-page/home-page.module";
 import { RestaurantModule } from "./restaurant/restaurant.module";
 import { AccountInformationModule } from "./account-information/account-information.module";
 import { CartPagesModule } from "./cart-pages/cart-pages.module";
+import { ToastModule } from "primeng/toast";
 
 @NgModule({
   declarations: [AppPagesComponent],
@@ -21,6 +22,7 @@ import { CartPagesModule } from "./cart-pages/cart-pages.module";
     RestaurantModule,
     AccountInformationModule,
     CartPagesModule,
+    ToastModule,
   ],
   bootstrap: [AppPagesComponent],
 })
