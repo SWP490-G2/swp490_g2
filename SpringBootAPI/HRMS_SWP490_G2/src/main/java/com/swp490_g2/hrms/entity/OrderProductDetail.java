@@ -16,11 +16,14 @@ import lombok.*;
 @AttributeOverride(name = "id", column = @Column(name = "orderProductDetail"))
 public class OrderProductDetail extends BaseEntity {
     @Column(nullable = false)
-    private Long productId;
+    private long productId;
 
     @Column(nullable = false)
-    private Long quantity;
+    private int quantity;
 
     @Column(nullable = false)
-    private Double price;
+    private double price;
+
+    @Column
+    private String note;
 }

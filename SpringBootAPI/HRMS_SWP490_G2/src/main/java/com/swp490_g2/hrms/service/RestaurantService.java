@@ -156,4 +156,8 @@ public class RestaurantService {
         RestaurantInformationRequest request = RestaurantInformationRequest.set(user, restaurant);
         return request;
     }
+
+    public Restaurant getByProductId(Long productId) {
+        return restaurantRepository.findByProductsIn(List.of(productId));
+    }
 }
