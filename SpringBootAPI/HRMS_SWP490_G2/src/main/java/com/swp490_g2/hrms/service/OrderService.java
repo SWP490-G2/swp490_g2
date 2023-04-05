@@ -118,4 +118,54 @@ public class OrderService {
         orderRepository.save(order);
         return null;
     }
+
+    public String completed(Long orderId) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null)
+            return "Current user does not have permission to do this action!";
+
+        Restaurant restaurant = getRestaurantByOrderId(orderId);
+        if(restaurant == null)
+            return "Order [id=%d] is not valid!";
+
+        List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
+        if(owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+            return "Current user does not have permission to do this action!";
+
+        if (!orderRepository.existsById(orderId))
+            return "Order [id=%d] does not exist!".formatted(orderId);
+
+        Order order = getById(orderId);
+        if (order.getOrderStatus() != OrderStatus.DELIVERING)
+            return "Cannot change order status from [%s] to [COMPLETED]!".formatted(order.getOrderStatus());
+
+        order.setOrderStatus(OrderStatus.COMPLETED);
+        orderRepository.save(order);
+        return null;
+    }
+
+    public String aborted(Long orderId) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null)
+            return "Current user does not have permission to do this action!";
+
+        Restaurant restaurant = getRestaurantByOrderId(orderId);
+        if(restaurant == null)
+            return "Order [id=%d] is not valid!";
+
+        List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
+        if(owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+            return "Current user does not have permission to do this action!";
+
+        if (!orderRepository.existsById(orderId))
+            return "Order [id=%d] does not exist!".formatted(orderId);
+
+        Order order = getById(orderId);
+        if (order.getOrderStatus() == OrderStatus.PENDING)
+            return "Cannot change order status from [%s] to [ABORTED]!".formatted(order.getOrderStatus());
+
+        order.setOrderStatus(OrderStatus.ABORTED);
+        orderRepository.save(order);
+        return null;
+    }
 }
