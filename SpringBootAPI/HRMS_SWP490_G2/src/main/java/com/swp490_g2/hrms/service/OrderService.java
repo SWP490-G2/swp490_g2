@@ -119,6 +119,57 @@ public class OrderService {
         return null;
     }
 
+    public String rejected(Long orderId) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null)
+            return "Current user does not have permission to do this action!";
+
+        Restaurant restaurant = getRestaurantByOrderId(orderId);
+        if(restaurant == null)
+            return "Order [id=%d] is not valid!";
+
+        List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
+        if(owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+            return "Current user does not have permission to do this action!";
+
+        if (!orderRepository.existsById(orderId))
+            return "Order [id=%d] does not exist!".formatted(orderId);
+
+        Order order = getById(orderId);
+        if (order.getOrderStatus() != OrderStatus.ACCEPTED)
+            return "Cannot change order status from [%s] to [REJECTED]!".formatted(order.getOrderStatus());
+
+        order.setOrderStatus(OrderStatus.REJECTED);
+        orderRepository.save(order);
+        return null;
+    }
+
+    public String delivering(Long orderId) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null)
+            return "Current user does not have permission to do this action!";
+
+        Restaurant restaurant = getRestaurantByOrderId(orderId);
+        if(restaurant == null)
+            return "Order [id=%d] is not valid!";
+
+        List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
+        if(owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+            return "Current user does not have permission to do this action!";
+
+        if (!orderRepository.existsById(orderId))
+            return "Order [id=%d] does not exist!".formatted(orderId);
+
+        Order order = getById(orderId);
+        if (order.getOrderStatus() != OrderStatus.ACCEPTED)
+            return "Cannot change order status from [%s] to [DELIVERING]!".formatted(order.getOrderStatus());
+
+        order.setOrderStatus(OrderStatus.DELIVERING);
+        orderRepository.save(order);
+        return null;
+    }
+
+
     public String completed(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
