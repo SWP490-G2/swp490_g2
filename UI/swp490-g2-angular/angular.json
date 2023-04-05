@@ -31,7 +31,10 @@
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeicons/primeicons.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/sockjs.min.js",
+              "node_modules/stompjs/lib/stomp.min.js"
+            ]
           },
           "configurations": {
             "production": {
