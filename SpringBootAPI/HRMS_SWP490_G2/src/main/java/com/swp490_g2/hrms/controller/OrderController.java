@@ -37,4 +37,14 @@ public class OrderController {
     public ResponseEntity<String> accept(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.accept(orderId));
     }
+
+    @PutMapping("/aborted/{orderId}")
+    public ResponseEntity<String> aborted(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.aborted(orderId));
+    }
+
+    @PutMapping("/completed/{orderId}")
+    public ResponseEntity<String> completed(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.completed(orderId));
+    }
 }
