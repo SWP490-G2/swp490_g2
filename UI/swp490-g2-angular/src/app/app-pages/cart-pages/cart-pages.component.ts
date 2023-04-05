@@ -10,6 +10,8 @@ export class CartPagesComponent implements OnInit {
   cartItems: CartItem[];
   totalPrice = 0;
   message = "";
+  isVisible = false;
+  feedback = "";
   constructor(private cartService: CartService) {}
 
   ngOnInit() {
@@ -25,5 +27,12 @@ export class CartPagesComponent implements OnInit {
         this.message = "Your cart is empty";
       }
     });
+  }
+  showDialog() {
+    this.isVisible = true;
+  }
+  submitReview(value) {
+    console.log(value);
+    this.isVisible = false;
   }
 }

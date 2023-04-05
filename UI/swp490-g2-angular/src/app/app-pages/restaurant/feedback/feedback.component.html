@@ -1,0 +1,13 @@
+<div>
+  <p class="text-xl">Product Feedback:</p>
+  <div *ngFor="let feedback of userFeedbaack" class="flex">
+    <img src="{{ feedback.avatar_url }}" alt="" class="avatar" />
+    <div class="ml-3 w-full">
+      <div>{{ feedback.username }}</div>
+      <div class="date-feedback">{{ feedback.date }}</div>
+      <p class="mb-6">
+        {{ feedback.content }}
+      </p>
+    </div>
+  </div>
+</div>

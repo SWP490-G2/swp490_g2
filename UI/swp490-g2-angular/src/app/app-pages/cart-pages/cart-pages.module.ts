@@ -7,6 +7,7 @@ import { CartPagesRoutingModule } from "./cart-pages-routing.module";
 import { RippleModule } from "primeng/ripple";
 import { ButtonModule } from "primeng/button";
 import { StyleClassModule } from "primeng/styleclass";
+import { DialogModule } from "primeng/dialog";
 
 @NgModule({
   declarations: [CartPagesComponent],
@@ -16,6 +17,7 @@ import { StyleClassModule } from "primeng/styleclass";
     ButtonModule,
     RippleModule,
     StyleClassModule,
+    DialogModule,
   ],
 })
 export class CartPagesModule {}

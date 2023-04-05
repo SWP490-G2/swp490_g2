@@ -1,3 +1,4 @@
+import { FeedbackComponent } from "./feedback/feedback.component";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
@@ -32,7 +33,14 @@ import { RadioButtonModule } from "primeng/radiobutton";
 import { AccountInformationModule } from "../account-information/account-information.module";
 
 @NgModule({
-  declarations: [RestaurantComponent, ProductListComponent, RestaurantNameComponent, RestaurantUpdateInformationComponent, SortByComponent],
+  declarations: [
+    RestaurantComponent,
+    ProductListComponent,
+    RestaurantNameComponent,
+    RestaurantUpdateInformationComponent,
+    SortByComponent,
+    FeedbackComponent,
+  ],
   imports: [
     CommonModule,
     RestaurantRoutingModule,
@@ -58,7 +66,7 @@ import { AccountInformationModule } from "../account-information/account-informa
     ToastModule,
     DialogModule,
     RadioButtonModule,
-    AccountInformationModule
+    AccountInformationModule,
   ],
 })
 export class RestaurantModule {}

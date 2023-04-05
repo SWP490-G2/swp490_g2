@@ -41,6 +41,29 @@
       label="Check Out"
       icon="pi pi-shopping-cart"
       class="ml-4"
+      (click)="showDialog()"
     ></button>
   </div>
 </div>
+<p-dialog header="Header" [(visible)]="isVisible" [style]="{ width: '50vw' }">
+  <ng-template pTemplate="header">
+    <span class="text-xl font-bold">Review your order</span>
+  </ng-template>
+  <textarea
+    name=""
+    class="w-full h-10rem"
+    id=""
+    #content2
+    type="text"
+    name="content"
+    class="w-full h-10rem p-2"
+  ></textarea>
+  <ng-template pTemplate="footer">
+    <p-button
+      icon="pi pi-check"
+      (click)="submitReview(content2.value)"
+      label="Ok"
+      styleClass="p-button-text"
+    ></p-button>
+  </ng-template>
+</p-dialog>
