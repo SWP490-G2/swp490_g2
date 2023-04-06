@@ -10,3 +10,6 @@ cd ~/swp490_g2/SpringBootAPI/HRMS_SWP490_G2
 
 # run 
 sudo ./mvnw spring-boot:run
+
+# application.properties
+vim src/main/resources/application.properties
