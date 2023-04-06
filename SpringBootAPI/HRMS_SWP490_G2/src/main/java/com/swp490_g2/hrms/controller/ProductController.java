@@ -35,8 +35,8 @@ public class ProductController {
     }
 
     @PostMapping("/add-new-product")
-    public void addNewProduct(@RequestPart("file") MultipartFile[] productImages, @Valid ProductInformationRequest productInformationRequest) {
-        productService.addNewProduct(productInformationRequest, productImages);
+    public void addNewProduct(@Valid @RequestBody ProductInformationRequest productInformationRequest) {
+        productService.addNewProduct(productInformationRequest);
     }
 
     @GetMapping("/get-by-id/{id}")

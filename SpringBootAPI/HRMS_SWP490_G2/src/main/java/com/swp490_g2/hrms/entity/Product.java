@@ -48,9 +48,6 @@ public class Product extends BaseEntity {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<File> images = new ArrayList<>();
 
-    // @ManyToOne
-    // @JoinColumn(name = "productStatusId", nullable = false)
-    // @JsonBackReference
-    // @OnDelete(action = OnDeleteAction.CASCADE)
-    // private ProductStatus productStatus;
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private ProductStatus productStatus;
 }

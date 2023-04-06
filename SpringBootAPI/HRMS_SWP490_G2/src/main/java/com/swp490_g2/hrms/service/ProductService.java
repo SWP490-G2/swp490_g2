@@ -104,36 +104,27 @@ public class ProductService {
         return productImage;
     }
 
-    public void addNewProduct(ProductInformationRequest productInformationRequest, MultipartFile[] images) {
+    public void addNewProduct(ProductInformationRequest productInformationRequest) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null || !currentUser.isSeller() || !currentUser.isAdmin()) {
             throw new AccessDeniedException("This request allows seller or admin only!");
         }
-
         Restaurant ownerRestaurant = restaurantRepository.getOwnerRestaurant(currentUser.getId()).orElse(null);
-        ProductStatus productStatus = productStatusRepository.findById(productInformationRequest.getProductStatusId()).orElse(null);
         Set<ProductCategory> requestCategories = new HashSet<>();
         for (ProductCategory productCategory : productInformationRequest.getProductCategories()) {
             ProductCategory category = productCategoryRepository.findById(productCategory.getId()).orElse(null);
             requestCategories.add(category);
         }
-        if ((ownerRestaurant != null) && (currentUser.isSeller()) || currentUser.isAdmin()) {
-            Set<File> productImages = new HashSet<>();
-            for (MultipartFile imageFile : images) {
-                if (imageFile.getContentType().equalsIgnoreCase("image/png")) {
-                    File file = productImage(currentUser, imageFile);
-                    productImages.add(file);
-                }
-            }
+        ProductStatus productStatus = productStatusRepository.findById(productInformationRequest.getProductStatusId()).orElse(null);
+        if ((ownerRestaurant != null && currentUser.isSeller()) || currentUser.isAdmin()) {
             Product product = new Product();
             product.setProductName(productInformationRequest.getProductName());
             product.setPrice(productInformationRequest.getPrice());
             product.setQuantity(productInformationRequest.getQuantity());
             product.setDescription(productInformationRequest.getDescription());
-//            product.setRestaurant(ownerRestaurant);
-//            product.setProductStatus(productStatus);
-//            product.setFiles(productImages);
+            product.setRestaurant(ownerRestaurant);
             product.setCategories(requestCategories);
+            product.setProductStatus(productStatus);
             productRepository.save(product);
         }
     }
