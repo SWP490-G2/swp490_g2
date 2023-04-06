@@ -31,6 +31,7 @@ import { SortByComponent } from "./sort-by/sort-by.component";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { AccountInformationModule } from "../account-information/account-information.module";
 import { InputSwitchModule } from "primeng/inputswitch";
+import { CarouselModule } from "primeng/carousel";
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { InputSwitchModule } from "primeng/inputswitch";
     DialogModule,
     RadioButtonModule,
     AccountInformationModule,
+    CarouselModule,
     InputSwitchModule,
   ],
 })

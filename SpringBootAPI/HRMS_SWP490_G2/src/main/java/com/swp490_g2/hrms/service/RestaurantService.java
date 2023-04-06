@@ -73,6 +73,9 @@ public class RestaurantService {
     }
 
     public void update(Restaurant restaurant) {
+        if(restaurant == null)
+            return;
+
         restaurant.setAddress(addressService.populateLatLng(restaurant.getAddress()));
         restaurantRepository.save(restaurant);
     }
@@ -152,5 +155,9 @@ public class RestaurantService {
         User user = userService.getByRestaurantId(id);
         RestaurantInformationRequest request = RestaurantInformationRequest.set(user, restaurant);
         return request;
+    }
+
+    public Restaurant getByProductId(Long productId) {
+        return restaurantRepository.findByProductsIn(List.of(productId));
     }
 }

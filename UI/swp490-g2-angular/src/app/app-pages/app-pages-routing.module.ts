@@ -1,3 +1,4 @@
+import { CartPagesModule } from "./cart-pages/cart-pages.module";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "../global/auth.guard";
@@ -70,6 +71,13 @@ const routes: Routes = [
         loadChildren: () =>
           import("./order-pages/order-pages.module").then(
             (m) => m.OrderPagesModule
+          ),
+      },
+      {
+        path: "cart",
+        loadChildren: () =>
+          import("./cart-pages/cart-pages.module").then(
+            (m) => m.CartPagesModule
           ),
       },
     ],

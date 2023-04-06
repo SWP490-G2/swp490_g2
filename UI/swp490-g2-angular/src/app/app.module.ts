@@ -16,6 +16,7 @@ import { TokenInterceptor } from "./global/token.interceptor";
 import { ImageAttachmentModule } from "./shared/image-attachment/image-attachment.module";
 import { GoogleMapsModule } from "@angular/google-maps";
 import { GoogleMapService } from "./global/google-map.service";
+import { WebsocketService } from "./global/websocket.service";
 
 @NgModule({
   declarations: [AppComponent],
@@ -48,6 +49,8 @@ import { GoogleMapService } from "./global/google-map.service";
     },
     // Google Map
     GoogleMapService,
+    // Socket
+    WebsocketService,
   ],
   bootstrap: [AppComponent],
 })

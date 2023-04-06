@@ -16,5 +16,8 @@
     },
     "[json]": {
         "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
     }
 }

@@ -109,6 +109,17 @@
           <span class="font-medium inline lg:hidden">Notifications</span>
         </a>
       </li>
+      <li class="h-full">
+        <a
+          routerLink="/cart"
+          pRipple
+          class="cursor-pointer relative h-full inline-flex align-items-center text-600 py-3 lg:py-0 px-3 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 transition-colors transition-duration-150"
+        >
+          <span class="pi pi-cart-plus mr-2 lg:mr-0"></span>
+          <span *ngIf="cartItems.length" class="noti-cart"></span>
+          <span class="font-medium inline lg:hidden">Cart</span>
+        </a>
+      </li>
       <li class="h-full relative">
         <a
           pRipple

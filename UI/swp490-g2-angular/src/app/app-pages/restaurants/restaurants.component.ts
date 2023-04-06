@@ -23,7 +23,7 @@ import {
   User,
   UserClient,
 } from "src/app/ngswag/client";
-import { getFullAddress } from "src/app/utils";
+import { getFullAddress, getLocal, setLocal } from "src/app/utils";
 
 @Component({
   selector: "app-restaurants",
@@ -59,7 +59,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
     },
   ];
 
-  distance = this.distances[0];
+  distance: any;
 
   categories: RestaurantCategory[] = [];
   selectedCategories: RestaurantCategory[] = [];
@@ -70,10 +70,10 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
 
   totalRestaurants = 0;
   pageIndex = 0;
-  pageSize = 5;
+  pageSize = 6;
 
   @Input() hasCurrentUser = true;
-  @Input() hasPagination = false;
+  @Input() hasPagination = true;
   @Input() navigateWhenClick = true;
   @Output() restaurantClick = new EventEmitter<Restaurant>();
 
@@ -84,7 +84,10 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
     private $title: Title,
     private $router: Router,
     private $restaurantCategoryClient: RestaurantCategoryClient
-  ) {}
+  ) {
+    this.distance =
+      getLocal(this.$router.url + "/distance") || this.distances[0];
+  }
 
   ngAfterViewInit(): void {
     if (this.hasCurrentUser) this.$title.setTitle("Restaurants");
@@ -111,6 +114,8 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   }
 
   searchRestaurants() {
+    setLocal(this.$router.url + "/distance", this.distance);
+
     this.restaurantMarkers.map((marker) => {
       marker.setMap(null);
     });
@@ -125,6 +130,10 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
           true,
           new SearchRestaurantsRequest({
             restaurantCategories: this.selectedCategories,
+            searchRequest: new SearchRequest({
+              page: this.pageIndex,
+              size: this.pageSize,
+            }),
           })
         )
       : this.$restaurantClient.search(

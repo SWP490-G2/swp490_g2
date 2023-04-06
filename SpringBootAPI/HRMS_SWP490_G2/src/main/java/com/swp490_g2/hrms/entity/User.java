@@ -68,7 +68,7 @@ public class User extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private RequestingRestaurantStatus requestingRestaurantStatus;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private File avatarFile;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -128,7 +128,11 @@ public class User extends BaseEntity implements UserDetails {
             })
     @JoinTable(name = "user__restaurant",
             joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "restaurantId"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Restaurant> restaurants = new ArrayList<>();
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private List<Notification> notifications = new ArrayList<>();
 
     public boolean isAdmin() {
         return roles != null && roles.stream().anyMatch(role -> role == Role.ADMIN);
