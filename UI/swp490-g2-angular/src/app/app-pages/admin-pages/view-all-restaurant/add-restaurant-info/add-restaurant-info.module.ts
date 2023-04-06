@@ -1,8 +1,8 @@
-import { ErrorHandler, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
-import { UpdateRestaurantInfoApplyRoutingModule } from "./update-restaurant-info-apply-routing.module";
-import { UpdateRestaurantInfoApplyComponent } from "./update-restaurant-info-apply.component";
+import { AddRestaurantInfoRoutingModule } from "./add-restaurant-info-routing.module";
+import { AddRestaurantInfoComponent } from "./add-restaurant-info.component";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { MessageService, ConfirmationService } from "primeng/api";
@@ -20,10 +20,11 @@ import { AccountInformationModule } from "src/app/app-pages/account-information/
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 
 @NgModule({
-  declarations: [UpdateRestaurantInfoApplyComponent],
+  declarations: [AddRestaurantInfoComponent],
   imports: [
     CommonModule,
-    UpdateRestaurantInfoApplyRoutingModule,
+    AddRestaurantInfoRoutingModule,
+    CommonModule,
     CheckboxModule,
     RadioButtonModule,
     FormsModule,
@@ -38,14 +39,5 @@ import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-att
     AccountInformationModule,
     ImageAttachmentModule,
   ],
-  providers: [
-    MessageService,
-    ConfirmationService,
-    {
-      // processes all errors
-      provide: ErrorHandler,
-      useClass: HttpErrorHandler,
-    },
-  ],
 })
-export class UpdateRestaurantInfoApplyModule {}
+export class AddRestaurantInfoModule {}

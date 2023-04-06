@@ -44,6 +44,7 @@ export class RestaurantComponent implements OnInit {
   private timeout?: number;
   private isFulltextSearching = false;
   fulltext = "";
+  isOpening: boolean = true;
   sorts: SortRequest[] = [
     new SortRequest({
       key: "productName",

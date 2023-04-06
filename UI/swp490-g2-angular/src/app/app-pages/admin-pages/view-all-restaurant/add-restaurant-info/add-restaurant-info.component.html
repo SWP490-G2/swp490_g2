@@ -17,7 +17,7 @@
     <div class="flex align-items-start flex-column md:flex-row">
       <div class="p-5">
         <span class="text-900 font-medium text-3xl">
-          Update Restaurant Information
+          Create Restaurant Information
         </span>
       </div>
     </div>
@@ -25,20 +25,10 @@
 </div>
 
 <form
-  *ngIf="restaurant"
   #form="ngForm"
   class="surface-section px-2 py-4 md:px-6 lg:px-8"
   (ngSubmit)="submit()"
 >
-  <div class="flex align-items-center my-3 flex-wrap">
-    <label for="res.name" class="block text-900 font-medium my-3 mr-5"
-      >Restaurant Owner</label
-    >
-    <div class="text-900 w-full md:w-10 line-height-3">
-      {{ getOwners(restaurant) }}
-    </div>
-  </div>
-
   <label for="res.name" class="block text-900 font-medium my-3"
     >Restaurant Name</label
   >
@@ -46,7 +36,6 @@
     <div class="col-12">
       <div class="p-inputgroup">
         <input
-          [(ngModel)]="restaurant.restaurantName"
           name="restaurantName"
           type="text"
           pInputText
@@ -56,7 +45,7 @@
     </div>
   </div>
 
-  <app-address-fields [address]="restaurant.address"></app-address-fields>
+  <app-address-fields></app-address-fields>
 
   <label for="phoneNumber" class="block text-900 font-medium my-3"
     >Phone Number</label
@@ -69,14 +58,13 @@
           type="text"
           pInputText
           class="w-full mb-1"
-          [(ngModel)]="restaurant.phoneNumber"
           name="phoneNumber"
           placeholder="Phone Number"
         />
       </div>
     </div>
   </div>
-  <div
+  <!-- <div
     class="flex align-items-center gap-1"
     *ngIf="
       form.controls['phoneNumber']?.dirty &&
@@ -85,7 +73,7 @@
   >
     <i class="pi pi-times-circle text-danger"></i>
     <small class="text-danger"> Enter a valid phone number! </small>
-  </div>
+  </div> -->
 
   <label for="descr" class="block text-900 font-medium my-3">Description</label>
   <div class="grid">
@@ -96,14 +84,13 @@
           cols="30"
           pInputTextarea
           placeholder="Description"
-          [(ngModel)]="restaurant.description"
           name="description"
         ></textarea>
       </div>
     </div>
   </div>
 
-  <label for="descr" class="block text-900 font-medium my-3">Avatar</label>
+  <!-- <label for="descr" class="block text-900 font-medium my-3">Avatar</label>
   <div class="grid">
     <div class="col-12">
       <app-image-attachment
@@ -115,7 +102,7 @@
         [editable]="editable"
       ></app-image-attachment>
     </div>
-  </div>
+  </div> -->
 
   <button
     pButton
