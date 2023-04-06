@@ -12,6 +12,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: "update-restaurant-info-apply",
+    loadChildren: () =>
+      import(
+        "./update-restaurant-info-apply/update-restaurant-info-apply.module"
+      ).then((m) => m.UpdateRestaurantInfoApplyModule),
+  },
+  {
     path: "add-restaurant-info",
     loadChildren: () =>
       import("./add-restaurant-info/add-restaurant-info.module").then(
