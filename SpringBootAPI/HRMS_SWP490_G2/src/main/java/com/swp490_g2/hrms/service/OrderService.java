@@ -4,7 +4,6 @@ import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.OrderStatus;
 import com.swp490_g2.hrms.repositories.OrderRepository;
 import lombok.Getter;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,7 +118,7 @@ public class OrderService {
         return null;
     }
 
-    public String rejected(Long orderId) {
+    public String reject(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "Current user does not have permission to do this action!";
@@ -136,7 +135,7 @@ public class OrderService {
             return "Order [id=%d] does not exist!".formatted(orderId);
 
         Order order = getById(orderId);
-        if (order.getOrderStatus() != OrderStatus.ACCEPTED)
+        if (order.getOrderStatus() != OrderStatus.PENDING)
             return "Cannot change order status from [%s] to [REJECTED]!".formatted(order.getOrderStatus());
 
         order.setOrderStatus(OrderStatus.REJECTED);
@@ -144,7 +143,7 @@ public class OrderService {
         return null;
     }
 
-    public String delivering(Long orderId) {
+    public String deliver(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "Current user does not have permission to do this action!";
@@ -170,7 +169,7 @@ public class OrderService {
     }
 
 
-    public String completed(Long orderId) {
+    public String complete(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "Current user does not have permission to do this action!";
@@ -195,7 +194,7 @@ public class OrderService {
         return null;
     }
 
-    public String aborted(Long orderId) {
+    public String abort(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "Current user does not have permission to do this action!";
@@ -212,7 +211,7 @@ public class OrderService {
             return "Order [id=%d] does not exist!".formatted(orderId);
 
         Order order = getById(orderId);
-        if (order.getOrderStatus() == OrderStatus.PENDING)
+        if (order.getOrderStatus() == OrderStatus.DELIVERING)
             return "Cannot change order status from [%s] to [ABORTED]!".formatted(order.getOrderStatus());
 
         order.setOrderStatus(OrderStatus.ABORTED);
