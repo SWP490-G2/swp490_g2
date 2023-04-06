@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
+import { Order, OrderProductDetail } from "../ngswag/client";
+import { HttpClient } from "@angular/common/http";
 
 export interface CartItem {
   id: number;
@@ -14,7 +16,8 @@ export interface CartItem {
 export class CartService {
   private cartItems = new BehaviorSubject<CartItem[]>([]);
   private readonly CART_STORAGE_KEY = "cartItems";
-  constructor() {
+  private apiUrl = "http://localhost:8080";
+  constructor(private http: HttpClient) {
     const storedCartItems = localStorage.getItem(this.CART_STORAGE_KEY);
     if (storedCartItems) {
       const parsedCartItems = JSON.parse(storedCartItems);
@@ -52,5 +55,9 @@ export class CartService {
 
   getCartItemsObservable(): Observable<CartItem[]> {
     return this.cartItems.asObservable();
+  }
+
+  insertOrder(order: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/order/insert`, order);
   }
 }
