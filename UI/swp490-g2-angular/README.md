@@ -27,3 +27,12 @@ npm run build
 npm install -g firebase-tools (1st time)
 firebase login (1st time)
 firebase deploy
+
+# Deploy Backend
+
+ssh root@66.175.233.233 (login)
+BS2p@\_h609 (login)
+cd /root/swp490_g2/SpringBootAPI/HRMS_SWP490_G2/
+./mvnw package -DskipTests
+sudo systemctl restart hrms
+sudo systemctl restart nginx
