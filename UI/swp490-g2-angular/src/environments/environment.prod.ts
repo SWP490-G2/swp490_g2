@@ -4,7 +4,7 @@
 
 export const environment = {
   production: true,
-  apiUrl: "https://holarestaurantmanagement.online",
+  apiUrl: "https://66.175.233.233",
 };
 
 /*
