@@ -1,7 +1,6 @@
 package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.Product;
-import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.requests.ProductInformationRequest;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.service.ProductService;
@@ -45,7 +44,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getById(id));
     }
 
-    @PostMapping(value = "/add-image/{productId}")
+    @PutMapping(value = "/add-image/{productId}")
     public void addImage(@PathVariable Long productId,
                          @RequestParam("file") MultipartFile imageFile
     ) {

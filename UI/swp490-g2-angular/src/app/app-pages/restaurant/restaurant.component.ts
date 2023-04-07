@@ -44,7 +44,7 @@ export class RestaurantComponent implements OnInit {
   private timeout?: number;
   private isFulltextSearching = false;
   fulltext = "";
-  isOpening: boolean = true;
+  isOpening = true;
   sorts: SortRequest[] = [
     new SortRequest({
       key: "productName",
@@ -80,19 +80,19 @@ export class RestaurantComponent implements OnInit {
   refresh() {
     this.$restaurantClient
       .getById(this.restaurantId)
-      .subscribe((restaurant) => {
-        this.restaurant = restaurant;
-        if (this.restaurant.restaurantName)
-          this.$title.setTitle(this.restaurant.restaurantName);
-      });
-
-    forkJoin([
-      this.$productCategoryClient.getAllByRestaurantId(this.restaurantId),
-      this.$productClient.getProductPriceRangesByRestaurantId(
-        this.restaurantId
-      ),
-    ])
       .pipe(
+        switchMap((restaurant) => {
+          this.restaurant = restaurant;
+          if (this.restaurant.restaurantName)
+            this.$title.setTitle(this.restaurant.restaurantName);
+
+          return forkJoin([
+            this.$productCategoryClient.getAllByRestaurantId(this.restaurantId),
+            this.$productClient.getProductPriceRangesByRestaurantId(
+              this.restaurantId
+            ),
+          ])
+        }),
         switchMap(([categories, priceRange]) => {
           this.categories = categories;
           this.selectedCategoryIds = this.categories.map((c) => c.id!);
@@ -102,12 +102,16 @@ export class RestaurantComponent implements OnInit {
           this.selectedPriceRange = [...this.priceRange];
 
           return this.productSearch();
+        }),
+        switchMap((productPage) => {
+          this.products = productPage.content!;
+          this.totalPages = productPage.totalPages!;
+          return of();
         })
       )
-      .subscribe((productPage) => {
-        this.products = productPage.content!;
-        this.totalPages = productPage.totalPages!;
-      });
+      .subscribe();
+
+
 
     this.$auth
       .getCurrentUser()
@@ -134,11 +138,10 @@ export class RestaurantComponent implements OnInit {
       new SearchRequest({
         filters: [
           new FilterRequest({
-            key1: "restaurant",
-            key2: "id",
-            operator: "EQUAL",
+            key1: "id",
+            operator: "IN",
             fieldType: "LONG",
-            value: this.restaurantId,
+            values: this.restaurant?.products?.map(p => p.id),
           }),
           new FilterRequest({
             key1: "categories",

@@ -16,32 +16,59 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Getter
 public class ProductService {
 
     private ProductRepository productRepository;
+
     @Autowired
     public void setProductRepository(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    @Autowired
     private FileService fileService;
 
     @Autowired
+    public void setFileRepository(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
+
     private UserService userService;
 
     @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
     private RestaurantRepository restaurantRepository;
 
     @Autowired
+    public void setRestaurantRepository(RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
+    }
+
     private ProductStatusRepository productStatusRepository;
 
     @Autowired
+    public void setProductStatusRepository(ProductStatusRepository productStatusRepository) {
+        this.productStatusRepository = productStatusRepository;
+    }
+
     private FileRepository fileRepository;
+
+    @Autowired
+    public void setFileService(FileService fileService) {
+        this.fileService = fileService;
+    }
+
+    private RestaurantService restaurantService;
+
+    @Autowired
+    public void setRestaurantService(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+    }
 
     private ProductCategoryRepository productCategoryRepository;
 
@@ -79,7 +106,7 @@ public class ProductService {
 
     public void addNewProduct(ProductInformationRequest productInformationRequest, MultipartFile[] images) {
         User currentUser = userService.getCurrentUser();
-        if(currentUser == null || !currentUser.isSeller() || !currentUser.isAdmin()){
+        if (currentUser == null || !currentUser.isSeller() || !currentUser.isAdmin()) {
             throw new AccessDeniedException("This request allows seller or admin only!");
         }
 
@@ -131,29 +158,23 @@ public class ProductService {
         update(product);
     }
 
-    public void deleteProductById(Long productId){
+    public void deleteProductById(Long productId) {
         User currentUser = userService.getCurrentUser();
-        if(currentUser == null || !currentUser.isSeller() || !currentUser.isAdmin()){
+        if (currentUser == null || !currentUser.isSeller() || !currentUser.isAdmin()) {
             throw new AccessDeniedException("This request allows seller or admin only!");
         }
         List<ProductCategory> getAllCategoriesByProductId = productCategoryRepository.getAllCategoriesByProductId(productId);
-        for (ProductCategory productCategory: getAllCategoriesByProductId){
+        for (ProductCategory productCategory : getAllCategoriesByProductId) {
             productRepository.deleteProductProductCategory(productId, productCategory.getId());
         }
         Product product = productRepository.getById(productId);
         productRepository.delete(product);
     }
 
-        
 
     public void update(Product product) {
-        if(product == null)
+        if (product == null)
             return;
-
-        // Re-add restaurant because restaurant is ignored
-        Product storedProduct = productRepository.findById(product.getId()).orElse(null);
-        assert storedProduct != null;
-        product.setRestaurant(storedProduct.getRestaurant());
 
         productRepository.save(product);
     }

@@ -19,6 +19,7 @@
       <app-image-attachment
         [editable]="true"
         [uploadUrl]="'product/add-image/' + productId"
+        method="PUT"
         (selectedImageHandler)="addImage($event)"
       ></app-image-attachment>
     </div>

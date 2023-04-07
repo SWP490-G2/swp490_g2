@@ -13,8 +13,8 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
                   select distinct pc.* from product_category pc\s
                       inner join product__product_category ppc on ppc.productCategoryId = pc.productCategoryId\s
                       inner join product p on p.productId = ppc.productId\s
-                      inner join restaurant r on r.restaurantId = p.restaurantId\s
-                      where r.restaurantId = :restaurantId\s
+                      inner join restaurant_product rp on rp.products_productId = p.productId\s
+                      where rp.restaurant_restaurantId = :restaurantId\s
                       order by pc.productCategoryName
             """, nativeQuery = true)
     Set<ProductCategory> findAllByRestaurantId(Long restaurantId);

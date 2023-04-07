@@ -39,7 +39,7 @@ public class Restaurant extends BaseEntity {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private File avatarFile;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Set<Product> products;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

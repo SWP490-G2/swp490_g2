@@ -11,19 +11,22 @@ import org.springframework.data.repository.query.Param;
 import java.util.Set;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
-    @Query(value = "SELECT min(price) FROM product where restaurantId = :restaurantId", nativeQuery = true)
+    @Query(value = "SELECT min(p.price) FROM product p inner join restaurant_product rp on rp.products_productId = p.productId\n" +
+            "                      where rp.restaurant_restaurantId = :restaurantId", nativeQuery = true)
     public Double getMinPriceByRestaurantId(Long restaurantId);
 
-    @Query(value = "SELECT max(price) FROM product where restaurantId = :restaurantId", nativeQuery = true)
+    @Query(value = "SELECT max(p.price) FROM product p inner join restaurant_product rp on rp.products_productId = p.productId\n" +
+            "                      where rp.restaurant_restaurantId = :restaurantId", nativeQuery = true)
     public Double getMaxPriceByRestaurantId(Long restaurantId);
 
     @Query(value = """
-        select *\s
-        from product\s
-            where (match (productName) against (:text IN NATURAL LANGUAGE MODE)\s
-            or productName like %:text%)\s
-            and restaurantId = :restaurantId
-            """, nativeQuery = true)
+            select *\s
+            from product p\s
+                inner join restaurant_product rp on rp.products_productId = p.productId
+                where (match (p.productName) against (:text IN NATURAL LANGUAGE MODE)\s
+                or p.productName like %:text%)\s
+                and rp.restaurant_restaurantId = :restaurantId
+                """, nativeQuery = true)
     public Set<Product> fulltextSearch(Long restaurantId, String text);
 
     @Transactional
