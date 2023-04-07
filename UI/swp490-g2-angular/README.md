@@ -31,7 +31,7 @@ firebase deploy
 # Deploy Backend
 
 ssh root@66.175.233.233 (login)
-BS2p@\_h609 (login)
+BS2p@_h609 (login)
 cd /root/swp490_g2/SpringBootAPI/HRMS_SWP490_G2/
 git pull
 ./mvnw package -DskipTests
