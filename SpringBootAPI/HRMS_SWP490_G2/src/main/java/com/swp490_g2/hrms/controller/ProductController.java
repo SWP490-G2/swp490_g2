@@ -34,9 +34,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.fulltextSearch(restaurantId, text));
     }
 
-    @PostMapping("/add-new-product")
-    public void addNewProduct(@Valid @RequestBody ProductInformationRequest productInformationRequest) {
-        productService.addNewProduct(productInformationRequest);
+    @PostMapping("/add-new-product/{restaurantId}")
+    public ResponseEntity<String> addNewProduct(@PathVariable Long restaurantId, @RequestBody Product product) {
+        return ResponseEntity.ok(productService.addNewProduct(restaurantId, product));
     }
 
     @GetMapping("/get-by-id/{id}")
@@ -56,8 +56,11 @@ public class ProductController {
         productService.update(product);
     }
 
-    @DeleteMapping("/delete-product-by-id/{productId}")
-    public void deleteProductById(@PathVariable Long productId){
-        productService.deleteProductById(productId);
+    @DeleteMapping("/delete-product-by-id")
+    public void deleteProductById(
+            @RequestParam("restaurant-id") Long restaurantId,
+            @RequestParam("product-id") Long productId
+    ){
+        productService.deleteProductById(restaurantId, productId);
     }
 }
