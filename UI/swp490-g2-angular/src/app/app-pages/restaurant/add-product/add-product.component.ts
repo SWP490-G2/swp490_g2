@@ -10,10 +10,10 @@ import {
 import { ActivatedRoute } from "@angular/router";
 import {
   Body2,
+  Product,
   ProductCategory,
   ProductCategoryClient,
   ProductClient,
-  ProductInformationRequest,
 } from "src/app/ngswag/client";
 
 @Component({
@@ -39,13 +39,11 @@ export class AddProductComponent implements OnInit {
     );
     this.restaurantId = id;
     this.productForm = this.fb.group({
-      productName: [""],
-      price: [0],
-      quantity: [0],
-      description: ["null"],
-      productCategories: this.fb.array([]),
-      restaurantId: [this.restaurantId],
-      productStatusId: [0],
+      productName: ['', Validators.required],
+      price: ['', [Validators.required, Validators.min(1)]],
+      quantity: ['', [Validators.required, Validators.min(1)]],
+      description: [''],
+      productCategories: this.fb.array([])
     });
   }
 
@@ -54,6 +52,8 @@ export class AddProductComponent implements OnInit {
       .getAllByRestaurantId(this.restaurantId)
       .subscribe((categories) => {
         this.productCategories = categories;
+        console.log(this.productCategories);
+        
         const categoryFormArray = this.productForm.get(
           "productCategories"
         ) as FormArray;
@@ -66,35 +66,41 @@ export class AddProductComponent implements OnInit {
     this.productImages = event.target.files;
   }
   onSubmit() {
-    const selectedCategories = this.productCategories
-      .filter(
-        (category, index) => this.productForm.value.productCategories[index]
-      )
-      .map((category) => ({
-        id: category.id,
-        productCategoryName: category.productCategoryName,
-        toJSON: function () {
-          // define a toJSON method for the object
-          return {
-            id: this.id,
-            productCategoryName: this.productCategoryName,
-          };
-        },
-      }));
 
-    // const productInformationRequest = this.productForm.value;
-    const body = {
-      productName: this.productForm.value.productName,
-      price: this.productForm.value.price,
-      quantity: this.productForm.value.quantity,
-      description: this.productForm.value.description,
-      productCategories: selectedCategories,
-      restaurantId: this.productForm.value.restaurantId,
-      productStatusId: 1,
-    };
-    console.log(body);
-    this.$productClient
-      .addNewProduct(new ProductInformationRequest(body as any))
-      .subscribe((res) => console.log(res));
+    if (this.productForm.valid) {
+      console.log(this.productForm.value);
+
+      const selectedCategories = this.productCategories
+        .filter(
+          (category, index) => this.productForm.value.productCategories[index]
+        )
+        .map((category) => ({
+          id: category.id,
+          productCategoryName: category.productCategoryName,
+          toJSON: function () {
+            // define a toJSON method for the object
+            return {
+              id: this.id,
+              productCategoryName: this.productCategoryName,
+            };
+          },
+        }));
+  
+      // const productInformationRequest = this.productForm.value;
+      const body = {
+        productName: this.productForm.value.productName,
+        price: this.productForm.value.price,
+        quantity: this.productForm.value.quantity,
+        description: this.productForm.value.description,
+        productCategories: selectedCategories,
+      };
+      console.log(body);
+      this.$productClient
+        .addNewProduct(this.restaurantId ,new Product(body as any))
+        .subscribe((res) => console.log(res));
+    }else{
+      console.log("Please fill out all required fields and ensure that the price and quantity are valid.");
+    }
+
   }
 }
