@@ -18,17 +18,15 @@
     (change)="onFileSelected($event)"
     multiple
   />
-
-  <label for="productCategories">Product Categories:</label>
-  <select
-    formControlName="productCategories"
-    id="product-category"
-    class="form-control"
-  >
-    <option *ngFor="let category of productCategories" [value]="category.id">
-      {{ category.productCategoryName }}
-    </option>
-  </select>
+  <div formArrayName="productCategories">
+    <label for="productCategories">Product Categories:</label>
+    <div *ngFor="let category of productCategories; let i = index">
+      <label>
+        <input type="checkbox" [formControlName]="i" />
+        {{ category.productCategoryName }}
+      </label>
+    </div>
+  </div>
 
   <button type="submit">Add New Product</button>
 </form>

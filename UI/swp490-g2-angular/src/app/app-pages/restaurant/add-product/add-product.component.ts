@@ -1,5 +1,12 @@
+import { map } from "rxjs";
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import {
   Body2,
@@ -8,7 +15,6 @@ import {
   ProductClient,
   ProductInformationRequest,
 } from "src/app/ngswag/client";
-import { ProductService } from "src/app/service/product.service";
 
 @Component({
   selector: "app-add-product",
@@ -21,26 +27,25 @@ export class AddProductComponent implements OnInit {
   productCategories: ProductCategory[];
   productForm: FormGroup;
   productImages: File[] = [];
+  selectedCategories: any[] = [];
   constructor(
     private fb: FormBuilder,
     private $productClient: ProductClient,
     private $productCategoryClient: ProductCategoryClient,
-    private $route: ActivatedRoute,
-    private productService: ProductService
+    private $route: ActivatedRoute
   ) {
     const id: number = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("id")
     );
     this.restaurantId = id;
     this.productForm = this.fb.group({
-      productName: [null],
-      price: [null],
-      quantity: [null],
-      description: [null],
-      productImages: [null],
-      productCategories: [null],
+      productName: [""],
+      price: [0],
+      quantity: [0],
+      description: ["null"],
+      productCategories: this.fb.array([]),
       restaurantId: [this.restaurantId],
-      productStatusId: [null],
+      productStatusId: [0],
     });
   }
 
@@ -49,20 +54,47 @@ export class AddProductComponent implements OnInit {
       .getAllByRestaurantId(this.restaurantId)
       .subscribe((categories) => {
         this.productCategories = categories;
+        const categoryFormArray = this.productForm.get(
+          "productCategories"
+        ) as FormArray;
+        categories.forEach(() =>
+          categoryFormArray.push(this.fb.control(false))
+        );
       });
   }
   onFileSelected(event: any) {
     this.productImages = event.target.files;
   }
   onSubmit() {
-    const productInformationRequest = this.productForm.value;
-    console.log(productInformationRequest);
-    console.log(this.productImages);
+    const selectedCategories = this.productCategories
+      .filter(
+        (category, index) => this.productForm.value.productCategories[index]
+      )
+      .map((category) => ({
+        id: category.id,
+        productCategoryName: category.productCategoryName,
+        toJSON: function () {
+          // define a toJSON method for the object
+          return {
+            id: this.id,
+            productCategoryName: this.productCategoryName,
+          };
+        },
+      }));
 
-    this.productService
-      .addNewProduct(productInformationRequest, this.productImages)
-      .subscribe((response) => {
-        console.log(response);
-      });
+    // const productInformationRequest = this.productForm.value;
+    const body = {
+      productName: this.productForm.value.productName,
+      price: this.productForm.value.price,
+      quantity: this.productForm.value.quantity,
+      description: this.productForm.value.description,
+      productCategories: selectedCategories,
+      restaurantId: this.productForm.value.restaurantId,
+      productStatusId: 1,
+    };
+    console.log(body);
+    this.$productClient
+      .addNewProduct(new ProductInformationRequest(body as any))
+      .subscribe((res) => console.log(res));
   }
 }
