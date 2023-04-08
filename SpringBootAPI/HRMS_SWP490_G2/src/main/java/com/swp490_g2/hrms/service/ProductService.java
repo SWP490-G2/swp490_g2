@@ -9,12 +9,15 @@ import com.swp490_g2.hrms.requests.SearchRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -75,7 +78,22 @@ public class ProductService {
     public Page<Product> search(SearchRequest request) {
         SearchSpecification<Product> specification = new SearchSpecification<>(request);
         Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
-        return productRepository.findAll(specification, pageable);
+        List<Product> products = productRepository.findAll(specification, pageable).getContent();
+        List<Product> uniqueProducts = new ArrayList<>();
+        products.forEach(product -> {
+            if(uniqueProducts.stream().noneMatch(up -> up.getId().equals(product.getId()))) {
+                uniqueProducts.add(product);
+            }
+        });
+
+        return new PageImpl<>(uniqueProducts.subList(
+                request.getSize() * request.getPage(),
+                Integer.min(request.getSize() *request.getPage()
+                        + request.getSize(), uniqueProducts.size())
+        ),
+                PageRequest.of(request.getPage(),
+                        request.getSize()),
+                uniqueProducts.size());
     }
 
     public Double[] getProductPriceRanges(Long restaurantId) {

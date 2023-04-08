@@ -3,7 +3,7 @@ import { NgForm } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { finalize, of, switchMap } from "rxjs";
-import { File, Product, ProductClient } from "src/app/ngswag/client";
+import { File, Product, ProductCategory, ProductCategoryClient, ProductClient } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-product",
@@ -19,11 +19,15 @@ export class ProductComponent implements OnInit {
     images: [],
   });
 
+  productCategoryNames: string[] = [];
+  allCategories: ProductCategory[] = [];
+
   constructor(
     private $router: Router,
     private $route: ActivatedRoute,
     private $productClient: ProductClient,
     private $message: MessageService,
+    private $productCategoryClient: ProductCategoryClient
   ) {
     this.productId = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("productId")
@@ -38,8 +42,12 @@ export class ProductComponent implements OnInit {
     if (this.productId) {
       this.$productClient.getById(this.productId).subscribe((product) => {
         this.product = product;
+        if (this.product.categories)
+          this.productCategoryNames = this.product.categories?.map(c => c.productCategoryName!);
       });
     }
+
+    this.$productCategoryClient.getAllByRestaurantId(this.restaurantId).subscribe(categories => this.allCategories = categories);
   }
 
   ngOnInit(): void {
@@ -58,7 +66,9 @@ export class ProductComponent implements OnInit {
 
     const apiCall = this.productId
       ? this.$productClient.update(this.product)
-        .pipe(switchMap(() => of()))
+        .pipe(switchMap(() => {
+          return of("");
+        }))
       : this.$productClient.addNewProduct(this.restaurantId, this.product);
 
 
@@ -70,7 +80,7 @@ export class ProductComponent implements OnInit {
         this.$message.add({
           severity: "success",
           summary: "Success",
-          detail: `Product [${this.product.productName}] has been successfully ${this.productId ? "added" : "updated"}!`
+          detail: `Product [${this.product.productName}] has been successfully ${this.productId ? "updated" : "added"}!`
         });
 
         return of();
@@ -101,5 +111,28 @@ export class ProductComponent implements OnInit {
 
         this.refresh();
       });
+  }
+
+  changeProductCategory(productCategoryNames: string[]) {
+    if (!this.product.categories) {
+      return;
+    }
+
+    productCategoryNames.forEach(pcn => {
+      const category = this.allCategories?.find(c => c.productCategoryName === pcn)
+      if (category) {
+        if (this.product.categories?.every(c => c.id !== category.id)) {
+          this.product.categories.push(category);
+        }
+      } else {
+        if (this.product.categories?.every(c => c.productCategoryName !== pcn)) {
+          this.product.categories?.push(new ProductCategory({
+            productCategoryName: pcn
+          }));
+        }
+      }
+    })
+
+    this.productCategoryNames = [...this.product.categories.map(c => c.productCategoryName!)];
   }
 }

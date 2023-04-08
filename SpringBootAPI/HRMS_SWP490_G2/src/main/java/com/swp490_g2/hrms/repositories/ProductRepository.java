@@ -1,7 +1,10 @@
 package com.swp490_g2.hrms.repositories;
 
 import com.swp490_g2.hrms.entity.Product;
+import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -38,4 +41,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Modifying
     @Query(value = "delete from product__product_category where productId = :productId and productCategoryId = :productCategoryId", nativeQuery = true)
     int deleteRestaurantProduct(@Param("productId") Long productId, @Param("productCategoryId") Long productCategoryId);
+
+    Page<Product> findAllDistinctBy(SearchSpecification<Product> specification, Pageable pageable);
 }
