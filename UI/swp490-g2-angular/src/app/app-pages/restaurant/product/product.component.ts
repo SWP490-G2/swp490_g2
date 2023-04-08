@@ -17,6 +17,7 @@ export class ProductComponent implements OnInit {
   product: Product = new Product({
     categories: [],
     images: [],
+    productStatus: "ACTIVE"
   });
 
   productCategoryNames: string[] = [];

@@ -81,14 +81,20 @@ public class ProductService {
         List<Product> products = productRepository.findAll(specification, pageable).getContent();
         List<Product> uniqueProducts = new ArrayList<>();
         products.forEach(product -> {
-            if(uniqueProducts.stream().noneMatch(up -> up.getId().equals(product.getId()))) {
+            if (uniqueProducts.stream().noneMatch(up -> up.getId().equals(product.getId()))) {
                 uniqueProducts.add(product);
             }
         });
 
+        if (request.getSize() == null
+                || request.getPage() == null
+        ) {
+            return new PageImpl<>(uniqueProducts);
+        }
+
         return new PageImpl<>(uniqueProducts.subList(
                 request.getSize() * request.getPage(),
-                Integer.min(request.getSize() *request.getPage()
+                Integer.min(request.getSize() * request.getPage()
                         + request.getSize(), uniqueProducts.size())
         ),
                 PageRequest.of(request.getPage(),
@@ -189,7 +195,7 @@ public class ProductService {
             restaurant.getProducts().removeIf(p -> p.getId().equals(productId));
             restaurantService.update(restaurant);
         }
-        
+
         productRepository.deleteById(productId);
     }
 

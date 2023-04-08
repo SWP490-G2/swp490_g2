@@ -11,6 +11,7 @@ import { StyleClassModule } from "primeng/styleclass";
 import { SidebarModule } from "primeng/sidebar";
 import { ButtonModule } from "primeng/button";
 import { SideBarsModule } from "../side-bars/side-bars.module";
+import { CartPagesModule } from "src/app/app-pages/cart-pages/cart-pages.module";
 
 @NgModule({
   declarations: [NavbarComponent],
@@ -27,6 +28,7 @@ import { SideBarsModule } from "../side-bars/side-bars.module";
     SidebarModule,
     ButtonModule,
     SideBarsModule,
+    CartPagesModule
   ],
 })
-export class NavbarModule {}
+export class NavbarModule { }

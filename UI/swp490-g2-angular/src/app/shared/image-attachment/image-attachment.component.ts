@@ -35,7 +35,7 @@ export class ImageAttachmentComponent implements OnInit {
   imageSrc: any;
   timeStamp?: number;
   fileUploaded = false;
-  images: File[];
+  images: File[] = [];
   selectedImage?: File;
   @Output() selectedImageHandler = new EventEmitter<File>();
   @Input() editable = false;
@@ -55,7 +55,7 @@ export class ImageAttachmentComponent implements OnInit {
   ngOnInit(): void {
     this.imageStyle = {
       height: this.height,
-      width: this.width,
+      width: this.width
     };
 
     this.headers = new HttpHeaders({
@@ -63,14 +63,6 @@ export class ImageAttachmentComponent implements OnInit {
     });
 
     this.loadImage();
-    if (this.editable) {
-      this.$fileClient.getAll().subscribe((files) => {
-        this.images = files;
-        this.images.map((image) => {
-          this.getSrc(image);
-        });
-      });
-    }
   }
 
   private loadImage() {
@@ -157,7 +149,16 @@ export class ImageAttachmentComponent implements OnInit {
     this.fileUploaded = true;
   }
 
-  onAccordionTabChange() {
+  onAccordionTabChange(event: any) {
+    if (event.index === 1 && !this.images.length) {
+      this.$fileClient.getAll().subscribe((files) => {
+        this.images = files;
+        this.images.map((image) => {
+          this.getSrc(image);
+        });
+      });
+    }
+
     this.fileUploaded = false;
   }
 

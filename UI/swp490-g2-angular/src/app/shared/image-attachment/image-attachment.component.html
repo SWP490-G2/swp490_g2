@@ -12,6 +12,7 @@
       [ngClass]="{
         'round-border': isRound
       }"
+      class="border-round"
     />
     <div class="absolute w-full h-full top-0" *ngIf="editable">
       <i
@@ -49,7 +50,7 @@
   [style]="{ 'max-width': '50vw' }"
   contentStyleClass="py-2"
 >
-  <p-accordion (onOpen)="onAccordionTabChange()">
+  <p-accordion (onOpen)="onAccordionTabChange($event)">
     <p-accordionTab header="Upload an image" [selected]="true">
       <p-fileUpload
         #fileUpload

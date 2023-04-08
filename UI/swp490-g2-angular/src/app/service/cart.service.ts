@@ -1,5 +1,8 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
+import { Order, OrderProductDetail } from "../ngswag/client";
+import { AuthService } from "../global/auth.service";
+import { getLocal, setLocal } from "../utils";
 
 export interface CartItem {
   id: number;
@@ -12,45 +15,73 @@ export interface CartItem {
   providedIn: "root",
 })
 export class CartService {
-  private cartItems = new BehaviorSubject<CartItem[]>([]);
-  private readonly CART_STORAGE_KEY = "cartItems";
-  constructor() {
-    const storedCartItems = localStorage.getItem(this.CART_STORAGE_KEY);
-    if (storedCartItems) {
-      const parsedCartItems = JSON.parse(storedCartItems);
-      this.cartItems.next(parsedCartItems);
-    }
+  private order$ = new BehaviorSubject<Order>(new Order());
+  private CART_STORAGE_KEY = "";
+
+  constructor(private $auth: AuthService) {
+    $auth.getCurrentUser().subscribe((user) => {
+      if (!user)
+        return;
+
+      this.CART_STORAGE_KEY = `order/${user.id}`
+      const order = new Order(getLocal(this.CART_STORAGE_KEY));
+      order.orderProductDetails = order.orderProductDetails?.map(opd => new OrderProductDetail(opd));
+      this.order$.next(order);
+    });
+
   }
 
-  addToCart(item: CartItem) {
-    const items = this.cartItems.value;
-    const index = items.findIndex((i) => i.id === item.id);
-    if (index >= 0) {
-      // The item already exists in the cart, so increase its quantity by 1
-      items[index].quantity += 1;
-    } else {
-      // The item is new to the cart, so add it to the array
-      items.push(item);
+  addToCart(orderProductDetail: OrderProductDetail) {
+    const order = this.order$.value;
+    if (!order.orderProductDetails)
+      order.orderProductDetails = [];
+
+    const existed = order.orderProductDetails.some((opd, index) => {
+      if (opd.productId === orderProductDetail.productId) {
+        if (orderProductDetail.quantity) {
+          order.orderProductDetails![index] = orderProductDetail.clone();
+        } else {
+          order.orderProductDetails?.splice(index, 1);
+        }
+
+        return true;
+      }
+
+      return false;
+    });
+
+    if (!existed) {
+      order.orderProductDetails.push(orderProductDetail);
     }
-    this.cartItems.next(items);
-    localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(items));
+
+    this.order$.next(order);
+    setLocal(this.CART_STORAGE_KEY, order.toJSON());
   }
-  removeFromCart(item: CartItem) {
-    const items = this.cartItems.value;
-    const index = items.findIndex((i) => i.id === item.id);
+
+  removeFromCart(orderProductDetail: OrderProductDetail) {
+    const order = this.order$.value;
+    if (!order.orderProductDetails)
+      return;
+
+    const index = order.orderProductDetails.findIndex((i) => i.id === orderProductDetail.id);
     if (index >= 0) {
-      items.splice(index, 1);
-      this.cartItems.next(items);
-      localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(items));
+      order.orderProductDetails.splice(index, 1);
+      this.order$.next(order);
+      setLocal(this.CART_STORAGE_KEY, order.toJSON());
     }
   }
 
   clearCart() {
-    this.cartItems.next([]);
-    localStorage.setItem(this.CART_STORAGE_KEY, "");
+    const order = this.order$.value;
+    if (!order.orderProductDetails)
+      return;
+
+    order.orderProductDetails.length = 0;
+    this.order$.next(order);
+    setLocal(this.CART_STORAGE_KEY, order.toJSON());
   }
 
-  getCartItemsObservable(): Observable<CartItem[]> {
-    return this.cartItems.asObservable();
+  getOrderObservable(): Observable<Order> {
+    return this.order$.asObservable();
   }
 }

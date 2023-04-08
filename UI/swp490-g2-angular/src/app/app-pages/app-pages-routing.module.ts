@@ -73,13 +73,6 @@ const routes: Routes = [
             (m) => m.OrderPagesModule
           ),
       },
-      {
-        path: "cart",
-        loadChildren: () =>
-          import("./cart-pages/cart-pages.module").then(
-            (m) => m.CartPagesModule
-          ),
-      },
     ],
   },
 ];
@@ -88,4 +81,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AppPagesRoutingModule {}
+export class AppPagesRoutingModule { }

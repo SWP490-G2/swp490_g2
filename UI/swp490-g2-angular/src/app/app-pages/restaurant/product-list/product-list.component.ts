@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ConfirmationService, MessageService } from "primeng/api";
-import { Product, ProductClient } from "src/app/ngswag/client";
+import { Order, OrderProductDetail, Product, ProductClient } from "src/app/ngswag/client";
 import { CartItem, CartService } from "src/app/service/cart.service";
 
 @Component({
@@ -12,21 +12,29 @@ export class ProductListComponent implements OnInit {
   @Input() products: Product[] = [];
   @Input() restaurantId: number;
   @Output() productDeleted = new EventEmitter();
+  order: Order | undefined;
 
   constructor(private cartService: CartService, private $productClient: ProductClient, private $message: MessageService, private $confirmation: ConfirmationService,) { }
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.cartService.getOrderObservable().subscribe(order => this.order = order);
+  }
   get initialized(): boolean {
     return true;
   }
 
-  addToCart(product: any): void {
-    const cartItem: CartItem = {
-      id: product.id,
-      name: product.productName,
+  addToCart(product: Product, quantity: number): void {
+    const orderProductDetail: OrderProductDetail = new OrderProductDetail({
+      productId: product.id,
+      quantity: quantity,
       price: product.price,
-      quantity: 1,
-    };
-    this.cartService.addToCart(cartItem);
+    });
+
+    this.cartService.addToCart(orderProductDetail);
+    this.$message.add({
+      severity: "success",
+      summary: "Success",
+      detail: `Product [${product.productName}] with quantity = ${quantity} is added to cart!`
+    });
   }
 
   delete(product: Product) {
@@ -65,5 +73,16 @@ export class ProductListComponent implements OnInit {
     }
 
     return undefined
+  }
+
+  getOrderProductDetail(product: Product): OrderProductDetail {
+    if(!this.order
+      || !this.order.orderProductDetails
+      || this.order.orderProductDetails.every(opd => opd.productId !== product.id)
+      ) {
+      return new OrderProductDetail();
+    }
+
+    return this.order.orderProductDetails.find(opd => opd.productId === product.id)!;
   }
 }

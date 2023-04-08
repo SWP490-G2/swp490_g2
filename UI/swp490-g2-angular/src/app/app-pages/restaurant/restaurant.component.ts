@@ -204,13 +204,13 @@ export class RestaurantComponent implements OnInit {
   toggleAllCategories(selected: boolean) {
     if (selected) {
       this.selectedCategoryIds = [...this.originalSelectedCategoryIds];
-      this.productSearch().subscribe((productPage) => {
-        this.products = productPage.content!;
-      });
     } else {
       this.selectedCategoryIds = [];
-      this.products = [];
     }
+
+    this.productSearch().subscribe((productPage) => {
+      this.products = productPage.content!;
+    });
   }
 
   changeFilter() {
