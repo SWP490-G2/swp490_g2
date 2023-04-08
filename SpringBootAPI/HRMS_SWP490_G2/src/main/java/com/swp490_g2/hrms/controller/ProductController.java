@@ -60,7 +60,12 @@ public class ProductController {
     public void deleteProductById(
             @RequestParam("restaurant-id") Long restaurantId,
             @RequestParam("product-id") Long productId
-    ){
+    ) {
         productService.deleteProductById(restaurantId, productId);
+    }
+
+    @DeleteMapping("/delete-image")
+    public void deleteImage(@RequestParam("product-id") Long productId, @RequestParam("image-id") Long imageId) {
+        productService.deleteImage(productId, imageId);
     }
 }

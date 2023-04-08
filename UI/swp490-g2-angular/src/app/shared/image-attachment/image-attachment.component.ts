@@ -13,6 +13,7 @@ import { FileUpload } from "primeng/fileupload";
 import { AuthService } from "src/app/global/auth.service";
 import { FileUploadService } from "src/app/global/file-upload.service";
 import { File, FileClient } from "../../ngswag/client";
+import { ConfirmationService } from "primeng/api";
 
 @Component({
   selector: "app-image-attachment",
@@ -39,13 +40,17 @@ export class ImageAttachmentComponent implements OnInit {
   @Output() selectedImageHandler = new EventEmitter<File>();
   @Input() editable = false;
   @Input() isRound = true;
+  @Input() deletable = false;
+  @Output() deleteImageHandler = new EventEmitter();
+  deleteImageDialogVisible = false;
 
   constructor(
     private $auth: AuthService,
     private $fileUpload: FileUploadService,
     private $fileClient: FileClient,
-    private $cdRef: ChangeDetectorRef
-  ) {}
+    private $cdRef: ChangeDetectorRef,
+    private $confirmation: ConfirmationService,
+  ) { }
 
   ngOnInit(): void {
     this.imageStyle = {
@@ -154,5 +159,14 @@ export class ImageAttachmentComponent implements OnInit {
 
   onAccordionTabChange() {
     this.fileUploaded = false;
+  }
+
+  deleteImage() {
+    this.deleteImageDialogVisible = true;
+  }
+
+  onDeleteImageDialogHide() {
+    this.deleteImageDialogVisible = false;
+    this.deleteImageHandler.emit();
   }
 }

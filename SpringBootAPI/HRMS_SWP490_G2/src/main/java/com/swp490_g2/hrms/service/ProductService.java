@@ -148,6 +148,15 @@ public class ProductService {
         update(product);
     }
 
+    public void deleteImage(Long productId, Long imageId) {
+        Product product = getById(productId);
+        if (product == null)
+            return;
+
+        product.getImages().removeIf(image -> image.getId().equals(imageId));
+        update(product);
+    }
+
     @Transactional
     public void deleteProductById(Long restaurantId, Long productId) {
         checkValidUserForRestaurant(restaurantId);

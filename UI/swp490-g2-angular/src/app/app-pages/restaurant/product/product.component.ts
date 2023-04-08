@@ -34,12 +34,16 @@ export class ProductComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
+  refresh() {
     if (this.productId) {
       this.$productClient.getById(this.productId).subscribe((product) => {
         this.product = product;
       });
     }
+  }
+
+  ngOnInit(): void {
+    this.refresh();
   }
 
   addImage(image: File) {
@@ -81,5 +85,21 @@ export class ProductComponent implements OnInit {
   private _submitButtonDisabled = false;
   get submitButtonDisabled(): boolean {
     return !!this.form?.invalid || this._submitButtonDisabled;
+  }
+
+  deleteImage(image: File) {
+    if (!this.productId || !image.id)
+      return;
+
+    this.$productClient.deleteImage(this.productId, image.id)
+      .subscribe(() => {
+        this.$message.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Image has been deleted successfully!"
+        });
+
+        this.refresh();
+      });
   }
 }

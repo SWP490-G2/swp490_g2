@@ -86,6 +86,8 @@
           [isRound]="false"
           width="auto"
           height="10rem"
+          [deletable]="true"
+          (deleteImageHandler)="deleteImage(image)"
         ></app-image-attachment>
         <app-image-attachment
           [editable]="true"

@@ -5,6 +5,7 @@ import { DialogModule } from "primeng/dialog";
 import { ButtonModule } from "primeng/button";
 import { FileUploadModule } from "primeng/fileupload";
 import { AccordionModule } from "primeng/accordion";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
 
 
 
@@ -18,9 +19,10 @@ import { AccordionModule } from "primeng/accordion";
     ButtonModule,
     FileUploadModule,
     AccordionModule,
+    ConfirmDialogModule
   ],
   exports: [
-    ImageAttachmentComponent
+    ImageAttachmentComponent,
   ]
 })
 export class ImageAttachmentModule { }
