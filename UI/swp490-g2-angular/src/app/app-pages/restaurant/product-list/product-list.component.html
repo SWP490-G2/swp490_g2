@@ -36,23 +36,38 @@
             {{ product.price | currency : "VND" }}
           </span>
         </div>
-        <button
-          pButton
-          pRipple
-          label="Add to Cart"
-          icon="pi pi-shopping-cart"
-          class="w-full"
-          (click)="addToCart(product)"
-        ></button>
-        <a
-          pButton
-          pRipple
-          label="Edit"
-          icon="pi pi-file-edit"
-          class="w-full mt-2"
-          [routerLink]="['product', product.id]"
-        ></a>
+        <div class="flex flex-column gap-2">
+          <button
+            pButton
+            pRipple
+            label="Add to Cart"
+            icon="pi pi-shopping-cart"
+            class="w-full"
+            (click)="addToCart(product)"
+          ></button>
+          <a
+            pButton
+            pRipple
+            label="Edit"
+            icon="pi pi-file-edit"
+            class="w-full"
+            [routerLink]="['product', product.id]"
+          ></a>
+          <button
+            pButton
+            pRipple
+            label="Delete"
+            icon="pi pi-times"
+            class="w-full p-button-danger"
+            (click)="delete(product)"
+          ></button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<p-confirmDialog
+  header="Confirmation"
+  icon="pi pi-exclamation-triangle"
+></p-confirmDialog>

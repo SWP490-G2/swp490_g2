@@ -99,25 +99,32 @@ public class ProductService {
         return productImage;
     }
 
-    public String addNewProduct(Long restaurantId, Product product) {
+    private void checkValidUserForRestaurant(Long restaurantId) {
         User currentUser = userService.getCurrentUser();
-        Restaurant ownerRestaurant = restaurantRepository.getOwnerRestaurant(currentUser.getId(), restaurantId).orElse(null);
-        if (currentUser == null || (!currentUser.isSeller() && !currentUser.isAdmin())) {
+        if (currentUser == null) {
             throw new AccessDeniedException("This request allows seller or admin only.");
         }
-        if ((ownerRestaurant != null && currentUser.isSeller())) {
-            Restaurant restaurant = restaurantService.getById(restaurantId);
-            if(restaurant == null) {
-                return "This restaurant with id "+restaurantId+" does not exist.";
-            }
-            boolean hasSameProductName = restaurant.getProducts().stream().anyMatch(p -> p.getProductName().equals(product.getProductName()));
-            if(hasSameProductName)
-            {
-                return "This product with name "+product.getProductName()+" is already existed.";
-            }
-            restaurant.getProducts().add(product);
-            restaurantService.update(restaurant);
+
+        Restaurant ownerRestaurant = restaurantRepository.getOwnerRestaurant(currentUser.getId(), restaurantId).orElse(null);
+        if (!currentUser.isAdmin() && (currentUser.isSeller() && ownerRestaurant == null)) {
+            throw new AccessDeniedException("This request allows seller or admin only.");
         }
+    }
+
+    public String addNewProduct(Long restaurantId, Product product) {
+        checkValidUserForRestaurant(restaurantId);
+
+        Restaurant restaurant = restaurantService.getById(restaurantId);
+        if (restaurant == null) {
+            return "\"This restaurant with id [" + restaurantId + "] does not exist.\"";
+        }
+        boolean hasSameProductName = restaurant.getProducts().stream().anyMatch(p -> p.getProductName().equals(product.getProductName()));
+        if (hasSameProductName) {
+            return "\"This product with name [" + product.getProductName() + "] is already existed.\"";
+        }
+        restaurant.getProducts().add(product);
+        restaurantService.update(restaurant);
+
         return null;
     }
 
@@ -143,23 +150,20 @@ public class ProductService {
 
     @Transactional
     public void deleteProductById(Long restaurantId, Long productId) {
-        User currentUser = userService.getCurrentUser();
-        Restaurant ownerRestaurant = restaurantRepository.getOwnerRestaurant(currentUser.getId(), restaurantId).orElse(null);
-        if (currentUser == null || (!currentUser.isSeller() && !currentUser.isAdmin())) {
-            throw new AccessDeniedException("This request allows seller or admin only.");
+        checkValidUserForRestaurant(restaurantId);
+
+        List<ProductCategory> getAllCategoriesByProductId = productCategoryRepository.getAllCategoriesByProductId(productId);
+        for (ProductCategory productCategory : getAllCategoriesByProductId) {
+            productRepository.deleteProductProductCategory(productId, productCategory.getId());
         }
-        if ((ownerRestaurant != null && currentUser.isSeller())) {
-            List<ProductCategory> getAllCategoriesByProductId = productCategoryRepository.getAllCategoriesByProductId(productId);
-            for (ProductCategory productCategory : getAllCategoriesByProductId) {
-                productRepository.deleteProductProductCategory(productId, productCategory.getId());
-            }
-            Restaurant restaurant = restaurantService.getById(restaurantId);
-            if(restaurant != null) {
-                restaurant.getProducts().removeIf(p -> p.getId().equals(productId));
-                restaurantService.update(restaurant);
-            }
-            productRepository.deleteById(productId);
+
+        Restaurant restaurant = restaurantService.getById(restaurantId);
+        if (restaurant != null) {
+            restaurant.getProducts().removeIf(p -> p.getId().equals(productId));
+            restaurantService.update(restaurant);
         }
+        
+        productRepository.deleteById(productId);
     }
 
     public void update(Product product) {

@@ -135,30 +135,41 @@ export class RestaurantComponent implements OnInit {
   }
 
   private productSearch(): Observable<PageProduct> {
+    const filters = [
+      new FilterRequest({
+        key1: "id",
+        operator: "IN",
+        fieldType: "LONG",
+        values: this.restaurant?.products?.map(p => p.id),
+      }),
+    ];
+
+    if (this.selectedCategoryIds.length > 0) {
+      filters.push(new FilterRequest({
+        key1: "categories",
+        key2: "id",
+        operator: "IN",
+        fieldType: "LONG",
+        values: this.selectedCategoryIds,
+      }),);
+    }
+
+    if (this.selectedPriceRange?.length > 1
+      && this.selectedPriceRange[0]
+      && this.selectedPriceRange[1]
+    ) {
+      filters.push(new FilterRequest({
+        key1: "price",
+        operator: "BETWEEN",
+        fieldType: "DOUBLE",
+        value: this.selectedPriceRange[0],
+        valueTo: this.selectedPriceRange[1],
+      }));
+    }
+
     return this.$productClient.search(
       new SearchRequest({
-        filters: [
-          new FilterRequest({
-            key1: "id",
-            operator: "IN",
-            fieldType: "LONG",
-            values: this.restaurant?.products?.map(p => p.id),
-          }),
-          new FilterRequest({
-            key1: "categories",
-            key2: "id",
-            operator: "IN",
-            fieldType: "LONG",
-            values: this.selectedCategoryIds,
-          }),
-          new FilterRequest({
-            key1: "price",
-            operator: "BETWEEN",
-            fieldType: "DOUBLE",
-            value: this.selectedPriceRange[0],
-            valueTo: this.selectedPriceRange[1],
-          }),
-        ],
+        filters: filters,
         sorts: this.sorts,
         page: this.currentPage,
         size: this.pageSize,
