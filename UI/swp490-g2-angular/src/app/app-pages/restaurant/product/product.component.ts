@@ -118,6 +118,12 @@ export class ProductComponent implements OnInit {
       return;
     }
 
+    this.product.categories.forEach(c => {
+      if (productCategoryNames.every(pcn => pcn !== c.productCategoryName)) {
+        this.product.categories = this.product.categories?.filter(c2 => c2.id !== c.id);
+      }
+    });
+
     productCategoryNames.forEach(pcn => {
       const category = this.allCategories?.find(c => c.productCategoryName === pcn)
       if (category) {
