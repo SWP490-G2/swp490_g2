@@ -1,7 +1,7 @@
 <p-dialog
   header="Update Information Restaurant"
   [(visible)]="displayModal"
-  [style]="{ width: '50vw' }"
+  styleClass="w-full xl:w-5"
   [closable]="true"
   [modal]="true"
   (hidden)="onDialogHide()"
@@ -26,6 +26,21 @@
           placeholder="Enter name for restaurant ..."
           required
         />
+      </div>
+
+      <div class="col">
+        <div class="flex align-items-center gap-2 flex-wrap">
+          <label for="categories"> Categories </label>
+          <p-multiSelect
+            inputId="categories"
+            [options]="categories"
+            [(ngModel)]="restaurant.restaurantCategories"
+            name="restaurantCategories"
+            defaultLabel="Select a category"
+            optionLabel="restaurantCategoryName"
+            styleClass="w-20rem"
+          ></p-multiSelect>
+        </div>
       </div>
 
       <div class="col">
@@ -76,8 +91,7 @@
 </p-dialog>
 
 <button
-  *ngIf="editable"
-  pTooltip="Edit basic information"
+  pTooltip="Basic information"
   tooltipPosition="left"
   pButton
   pRipple
