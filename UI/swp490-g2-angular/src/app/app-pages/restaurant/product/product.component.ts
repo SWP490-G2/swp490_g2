@@ -1,5 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { NgForm } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { MessageService } from "primeng/api";
+import { finalize, of, switchMap } from "rxjs";
 import { File, Product, ProductClient } from "src/app/ngswag/client";
 
 @Component({
@@ -8,25 +11,35 @@ import { File, Product, ProductClient } from "src/app/ngswag/client";
   styleUrls: ["./product.component.scss"],
 })
 export class ProductComponent implements OnInit {
-  productId: number;
-  product?: Product;
+  @ViewChild("form", { static: false }) form!: NgForm;
+  productId: number | undefined;
+  restaurantId: number;
+  product: Product = new Product({
+    categories: [],
+    images: [],
+  });
 
   constructor(
     private $router: Router,
     private $route: ActivatedRoute,
-    private $productClient: ProductClient
+    private $productClient: ProductClient,
+    private $message: MessageService,
   ) {
-    const id: number = Number.parseInt(
-      <string>this.$route.snapshot.paramMap.get("id")
+    this.productId = Number.parseInt(
+      <string>this.$route.snapshot.paramMap.get("productId")
     );
 
-    this.productId = id;
+    this.restaurantId = Number.parseInt(
+      <string>this.$route.snapshot.paramMap.get("id")
+    );
   }
 
   ngOnInit(): void {
-    this.$productClient.getById(this.productId).subscribe((product) => {
-      this.product = product;
-    });
+    if (this.productId) {
+      this.$productClient.getById(this.productId).subscribe((product) => {
+        this.product = product;
+      });
+    }
   }
 
   addImage(image: File) {
@@ -34,5 +47,39 @@ export class ProductComponent implements OnInit {
     if (!this.product.images) this.product.images = [];
     this.product.images.push(image);
     this.$productClient.update(this.product).subscribe(() => location.reload());
+  }
+
+  onSubmit() {
+    this._submitButtonDisabled = true;
+
+    const apiCall = this.productId
+      ? this.$productClient.update(this.product)
+        .pipe(switchMap(() => of()))
+      : this.$productClient.addNewProduct(this.restaurantId, this.product);
+
+
+    apiCall.pipe(
+      switchMap((errorMessage: string | undefined) => {
+        if (errorMessage)
+          throw new Error(errorMessage);
+
+        this.$message.add({
+          severity: "success",
+          summary: "Success",
+          detail: `Product [${this.product.productName}] has been successfully ${this.productId ? "added" : "updated"}!`
+        });
+
+        return of();
+      }),
+      finalize(() => {
+        this._submitButtonDisabled = false;
+      })
+    ).subscribe();
+
+  }
+
+  private _submitButtonDisabled = false;
+  get submitButtonDisabled(): boolean {
+    return !!this.form?.invalid || this._submitButtonDisabled;
   }
 }

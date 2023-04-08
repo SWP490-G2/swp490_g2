@@ -20,22 +20,11 @@ import java.util.Set;
 @JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 public class ProductInformationRequest {
     private String productName;
-
     private Double price;
-
     private int quantity;
-
     private String description;
-
-    private Set<File> productImages;
-
     private List<ProductCategory> productCategories;
-
     private Long restaurantId;
-
     private Long productStatusId;
 
-//    private Product product;
-//
-//    private MultipartFile[] files;
 }

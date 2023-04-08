@@ -40,8 +40,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long>, J
             """, nativeQuery = true)
     public List<Restaurant> fulltextSearch(String text);
 
-    @Query(value = "select r.* from restaurant as r inner join user__restaurant as ur on r.restaurantId = ur.restaurantId where ur.userId = :userId", nativeQuery = true)
-    Optional<Restaurant> getOwnerRestaurant(@Param("userId") Long userId);
+    @Query(value = "select r.* from restaurant as r inner join user__restaurant as ur on r.restaurantId = ur.restaurantId where ur.userId = :userId and ur.restaurantId = :restaurantId", nativeQuery = true)
+    Optional<Restaurant> getOwnerRestaurant(@Param("userId") Long userId, @Param("restaurantId") Long restaurantId);
 
     Restaurant findByProductsIn(List<Long> productId);
 

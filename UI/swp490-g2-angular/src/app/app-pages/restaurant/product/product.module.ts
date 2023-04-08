@@ -6,6 +6,11 @@ import { ProductComponent } from "./product.component";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 import { ButtonModule } from "primeng/button";
 import { RippleModule } from "primeng/ripple";
+import { FormsModule } from "@angular/forms";
+import { InputTextModule } from "primeng/inputtext";
+import { ToastModule } from "primeng/toast";
+import { InputTextareaModule } from "primeng/inputtextarea";
+import { InputNumberModule } from "primeng/inputnumber";
 
 @NgModule({
   declarations: [ProductComponent],
@@ -15,6 +20,11 @@ import { RippleModule } from "primeng/ripple";
     ImageAttachmentModule,
     ButtonModule,
     RippleModule,
+    FormsModule,
+    InputTextModule,
+    ToastModule,
+    InputTextareaModule,
+    InputNumberModule,
   ],
 })
-export class ProductModule {}
+export class ProductModule { }

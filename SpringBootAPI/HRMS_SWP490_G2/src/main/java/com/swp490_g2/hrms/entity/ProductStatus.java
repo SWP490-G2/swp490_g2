@@ -17,13 +17,7 @@ import java.util.Set;
 @Table(name = "product_status")
 @AttributeOverride(name = "id", column = @Column(name = "productStatusId"))
 public class ProductStatus extends BaseEntity{
-
     @Column(nullable = false)
     private String productStatusName;
 
-    // @OneToMany(mappedBy="product_status")
-    // @JsonManagedReference
-    // @Transient
-    // @OnDelete(action = OnDeleteAction.CASCADE)
-    // private Set<Product> products;
 }

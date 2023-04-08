@@ -1,27 +1,108 @@
 <div class="flex justify-content-center pt-5" *ngIf="product">
-  <form class="surface-card p-4 shadow-2 border-round w-full lg:w-10">
+  <form
+    class="surface-card p-4 shadow-2 border-round w-full lg:w-10"
+    (ngSubmit)="onSubmit()"
+    #form="ngForm"
+  >
     <a
       pButton
       pRipple
       icon="pi pi-arrow-left"
       label="Back"
-      routerLink="../.."
+      [routerLink]="productId ? '../..' : '..'"
     ></a>
-    <label class="block text-900 font-medium my-2"> Images </label>
-    <div class="flex flex-wrap gap-5">
-      <app-image-attachment
-        *ngFor="let image of product.images"
-        [url]="image.filePath"
-        [isRound]="false"
-        width="auto"
-        height="10rem"
-      ></app-image-attachment>
-      <app-image-attachment
-        [editable]="true"
-        [uploadUrl]="'product/add-image/' + productId"
-        method="PUT"
-        (selectedImageHandler)="addImage($event)"
-      ></app-image-attachment>
+
+    <div class="flex flex-wrap gap-2">
+      <div>
+        <label for="productName" class="block text-900 font-medium my-2"
+          >Product Name*</label
+        >
+        <input
+          id="productName"
+          type="text"
+          pInputText
+          class="w-full mb-1"
+          name="productName"
+          [(ngModel)]="product.productName"
+          #productName="ngModel"
+          required
+        />
+        <div
+          class="flex align-items-center gap-1"
+          *ngIf="productName.dirty && productName.errors"
+        >
+          <i class="pi pi-times-circle text-danger"></i>
+          <small class="text-danger"> Enter a valid product name </small>
+        </div>
+      </div>
+      <div>
+        <label for="price" class="block text-900 font-medium my-2">
+          Price*
+        </label>
+        <p-inputNumber
+          id="price"
+          className="mb-1"
+          name="price"
+          [(ngModel)]="product.price"
+          #price="ngModel"
+          [required]="true"
+        ></p-inputNumber>
+        <div
+          class="flex align-items-center gap-1"
+          *ngIf="price.dirty && price.errors"
+        >
+          <i class="pi pi-times-circle text-danger"></i>
+          <small class="text-danger"> Enter a valid product price </small>
+        </div>
+      </div>
     </div>
+
+    <label for="description" class="block text-900 font-medium my-2">
+      Description*
+    </label>
+    <textarea
+      id="description"
+      pInputTextarea
+      class="w-full mb-1"
+      name="description"
+      [(ngModel)]="product.description"
+      #description="ngModel"
+      required
+    ></textarea>
+    <div
+      class="flex align-items-center gap-1"
+      *ngIf="description.dirty && description.errors"
+    >
+      <i class="pi pi-times-circle text-danger"></i>
+      <small class="text-danger"> Enter a valid product description </small>
+    </div>
+
+    <ng-container *ngIf="productId">
+      <label class="block text-900 font-medium my-2"> Images </label>
+      <div class="flex flex-wrap gap-5">
+        <app-image-attachment
+          *ngFor="let image of product.images"
+          [url]="image.filePath"
+          [isRound]="false"
+          width="auto"
+          height="10rem"
+        ></app-image-attachment>
+        <app-image-attachment
+          [editable]="true"
+          [uploadUrl]="'product/add-image/' + productId"
+          method="PUT"
+          (selectedImageHandler)="addImage($event)"
+        ></app-image-attachment>
+      </div>
+    </ng-container>
+
+    <button
+      pButton
+      pRipple
+      label="Submit"
+      class="w-full mt-3"
+      [disabled]="submitButtonDisabled"
+    ></button>
   </form>
 </div>
+<p-toast></p-toast>

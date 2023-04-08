@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.swp490_g2.hrms.entity.enums.OrderStatus;
+import com.swp490_g2.hrms.entity.enums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -48,9 +50,7 @@ public class Product extends BaseEntity {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<File> images = new ArrayList<>();
 
-    // @ManyToOne
-    // @JoinColumn(name = "productStatusId", nullable = false)
-    // @JsonBackReference
-    // @OnDelete(action = OnDeleteAction.CASCADE)
-    // private ProductStatus productStatus;
+    @Column(columnDefinition = "nvarchar(16) default 'ACTIVE'", insertable = false)
+    @Enumerated(EnumType.STRING)
+    private ProductStatus productStatus = ProductStatus.ACTIVE;
 }

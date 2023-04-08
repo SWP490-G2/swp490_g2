@@ -209,7 +209,11 @@
       ></div> -->
         <div class="flex flex-column flex-grow-1 gap-5">
           <app-sort-by (sortedBy)="onSortByChange($event)"></app-sort-by>
-          <app-product-list [products]="products"></app-product-list>
+          <app-product-list
+            [products]="products"
+            [restaurantId]="restaurantId"
+            (productDeleted)="refresh()"
+          ></app-product-list>
           <p-button
             label="Load more"
             class="align-self-center"
@@ -217,6 +221,15 @@
             *ngIf="loadMoreShown"
           ></p-button>
         </div>
+      </div>
+      <!-- <app-add-product></app-add-product> -->
+      <div class="text-right">
+        <a
+          pButton
+          label="Add product"
+          class="align-self-center"
+          routerLink="product"
+        ></a>
       </div>
     </div>
   </ng-container>

@@ -33,4 +33,9 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Modifying
     @Query(value = "delete from product__product_category where productId = :productId and productCategoryId = :productCategoryId", nativeQuery = true)
     int deleteProductProductCategory(@Param("productId") Long productId, @Param("productCategoryId") Long productCategoryId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from product__product_category where productId = :productId and productCategoryId = :productCategoryId", nativeQuery = true)
+    int deleteRestaurantProduct(@Param("productId") Long productId, @Param("productCategoryId") Long productCategoryId);
 }

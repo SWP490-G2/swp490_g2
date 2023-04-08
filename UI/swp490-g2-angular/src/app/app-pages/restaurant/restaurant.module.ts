@@ -32,6 +32,7 @@ import { RadioButtonModule } from "primeng/radiobutton";
 import { AccountInformationModule } from "../account-information/account-information.module";
 import { InputSwitchModule } from "primeng/inputswitch";
 import { CarouselModule } from "primeng/carousel";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { CarouselModule } from "primeng/carousel";
     AccountInformationModule,
     CarouselModule,
     InputSwitchModule,
+    ConfirmDialogModule,
   ],
 })
 export class RestaurantModule {}
