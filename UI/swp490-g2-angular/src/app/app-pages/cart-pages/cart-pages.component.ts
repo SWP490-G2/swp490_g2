@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
 import {
   Order,
   OrderClient,
@@ -18,7 +18,7 @@ export class CartPagesComponent implements OnInit {
   totalPrice = 0;
   message = "";
   orderForm = this.fb.group({
-    orderProductDetails: this.fb.array([this.createOrderProductDetail()]),
+    orderProductDetails: this.fb.array([]),
     orderStatus: "PENDING",
   });
 
@@ -26,13 +26,13 @@ export class CartPagesComponent implements OnInit {
     private cartService: CartService,
     private fb: FormBuilder,
     private $orderClient: OrderClient
-  ) {}
+  ) { }
 
   createOrderProductDetail(): FormGroup {
     return this.fb.group({
-      productId: [1],
-      quantity: [1],
-      price: [120],
+      productId: [],
+      quantity: [],
+      price: [],
       note: [""],
     });
   }
@@ -45,6 +45,17 @@ export class CartPagesComponent implements OnInit {
           .reduce(
             (prevPrice, currPrice) => (this.totalPrice = prevPrice + currPrice)
           );
+        const orderProductDetailsFormArray = this.orderForm.get('orderProductDetails') as FormArray;
+        this.cartItems.forEach((item) => {
+          orderProductDetailsFormArray.push(this.fb.group({
+            productId: item.id,
+            productName: item.name,
+            quantity: item.quantity,
+            price: item.price
+          }));
+        });
+
+
       } else {
         this.message = "Your cart is empty";
       }
@@ -62,7 +73,7 @@ export class CartPagesComponent implements OnInit {
       .insert(
         new Order({
           orderProductDetails: order.orderProductDetails?.map(
-            (o) => new OrderProductDetail(o)
+            (o) => new OrderProductDetail(o!)
           ),
           orderStatus: order.orderStatus as any,
         })
