@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ConfirmationService, MessageService } from "primeng/api";
-import { Order, OrderProductDetail, Product, ProductClient } from "src/app/ngswag/client";
+import { Order, OrderProductDetail, Product, ProductClient, Restaurant } from "src/app/ngswag/client";
 import { CartItem, CartService } from "src/app/service/cart.service";
 
 @Component({
@@ -10,7 +10,7 @@ import { CartItem, CartService } from "src/app/service/cart.service";
 })
 export class ProductListComponent implements OnInit {
   @Input() products: Product[] = [];
-  @Input() restaurantId: number;
+  @Input() restaurant: Restaurant;
   @Output() productDeleted = new EventEmitter();
   order: Order | undefined;
 
@@ -23,6 +23,19 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(product: Product, quantity: number): void {
+    if (
+      this.order?.orderProductDetails?.length &&
+      this.restaurant.products?.every(p => this.order?.orderProductDetails?.every(opd => opd.productId !== p.id))
+    ) {
+      this.$message.add({
+        severity: "error",
+        summary: "Error",
+        detail: "You need to empty the cart before do this action!"
+      });
+
+      return;
+    }
+
     const orderProductDetail: OrderProductDetail = new OrderProductDetail({
       productId: product.id,
       quantity: quantity,
@@ -38,11 +51,14 @@ export class ProductListComponent implements OnInit {
   }
 
   delete(product: Product) {
+    if (!this.restaurant.id)
+      return;
+
     this.$confirmation.confirm({
       message:
         "Are you sure to delete this product?",
       accept: () => {
-        this.$productClient.deleteProductById(this.restaurantId, product.id!).subscribe(() => {
+        this.$productClient.deleteProductById(this.restaurant.id!, product.id!).subscribe(() => {
           this.productDeleted.emit();
           this.$message.add({
             severity: "success",
@@ -76,10 +92,10 @@ export class ProductListComponent implements OnInit {
   }
 
   getOrderProductDetail(product: Product): OrderProductDetail {
-    if(!this.order
+    if (!this.order
       || !this.order.orderProductDetails
       || this.order.orderProductDetails.every(opd => opd.productId !== product.id)
-      ) {
+    ) {
       return new OrderProductDetail();
     }
 

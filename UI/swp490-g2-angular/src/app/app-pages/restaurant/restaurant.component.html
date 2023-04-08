@@ -211,7 +211,7 @@
           <app-sort-by (sortedBy)="onSortByChange($event)"></app-sort-by>
           <app-product-list
             [products]="products"
-            [restaurantId]="restaurantId"
+            [restaurant]="restaurant"
             (productDeleted)="refresh()"
           ></app-product-list>
           <p-button

@@ -92,4 +92,8 @@ export class CartPagesComponent implements OnInit {
   remove(detail: OrderProductDetail) {
     this.$cart.removeFromCart(detail);
   }
+
+  emptyCart() {
+    this.$cart.clearCart();
+  }
 }
