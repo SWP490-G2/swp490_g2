@@ -26,7 +26,7 @@ public class Restaurant extends BaseEntity {
     @Column(nullable = false)
     private String restaurantName;
 
-    @Column(columnDefinition = "VARCHAR(450)")
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
 
     @Column(unique = true)
