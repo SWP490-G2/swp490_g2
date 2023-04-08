@@ -45,4 +45,25 @@ export class ProductListComponent implements OnInit {
       },
     });
   }
+
+  getProductStatus(product: Product): {
+    name: string,
+    textColor: string
+  } | undefined {
+    switch (product.productStatus) {
+      case "ACTIVE":
+        return {
+          name: "Available",
+          textColor: "text-green-500"
+        };
+
+      case "OUT_OF_STOCK":
+        return {
+          name: "Out of stock",
+          textColor: "text-red-500"
+        }
+    }
+
+    return undefined
+  }
 }

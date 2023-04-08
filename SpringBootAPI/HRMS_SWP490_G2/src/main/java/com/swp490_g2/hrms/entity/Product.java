@@ -31,9 +31,6 @@ public class Product extends BaseEntity {
     private Double price;
 
     @Column(nullable = false)
-    private int quantity;
-
-    @Column(nullable = false)
     private String description;
 
 //    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)

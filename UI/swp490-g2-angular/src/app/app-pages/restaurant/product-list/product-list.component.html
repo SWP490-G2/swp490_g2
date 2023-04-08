@@ -44,6 +44,15 @@
             {{ product.price | currency : "VND" }}
           </span>
         </div>
+        <div class="mb-4">
+          Status:
+          <span
+            class="font-bold text-900"
+            [ngClass]="getProductStatus(product)?.textColor"
+          >
+            {{ getProductStatus(product)?.name }}
+          </span>
+        </div>
         <div class="flex flex-column gap-2">
           <button
             pButton

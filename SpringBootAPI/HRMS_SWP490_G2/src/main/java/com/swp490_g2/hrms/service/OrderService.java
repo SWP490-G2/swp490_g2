@@ -2,6 +2,7 @@ package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.OrderStatus;
+import com.swp490_g2.hrms.entity.enums.ProductStatus;
 import com.swp490_g2.hrms.repositories.OrderRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,11 +60,10 @@ public class OrderService {
 
         for (OrderProductDetail orderProductDetail : order.getOrderProductDetails()) {
             Product product = productService.getById(orderProductDetail.getProductId());
-            if (product.getQuantity() < orderProductDetail.getQuantity()) {
-                return "Product [%s] is out of stock (quantity: %d)".formatted(product.getProductName(), product.getQuantity());
+            if (product.getProductStatus() == ProductStatus.OUT_OF_STOCK) {
+                return "Product [%s] is out of stock!".formatted(product.getProductName());
             }
 
-            product.setQuantity(product.getQuantity() - orderProductDetail.getQuantity());
             productService.update(product);
         }
 

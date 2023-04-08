@@ -12,6 +12,7 @@ import { ToastModule } from "primeng/toast";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { InputNumberModule } from "primeng/inputnumber";
 import { ChipsModule } from 'primeng/chips';
+import { RadioButtonModule } from "primeng/radiobutton";
 
 @NgModule({
   declarations: [ProductComponent],
@@ -27,6 +28,7 @@ import { ChipsModule } from 'primeng/chips';
     InputTextareaModule,
     InputNumberModule,
     ChipsModule,
+    RadioButtonModule
   ],
   providers: [
   ]
