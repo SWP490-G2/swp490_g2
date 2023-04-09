@@ -10,6 +10,7 @@ import { CheckboxModule } from "primeng/checkbox";
 import { FormsModule } from "@angular/forms";
 import { InputNumberModule } from "primeng/inputnumber";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
+import { ToastModule } from "primeng/toast";
 
 @NgModule({
   declarations: [CartPagesComponent],
@@ -28,7 +29,8 @@ import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-att
     RippleModule,
     CheckboxModule,
     StyleClassModule,
-    ImageAttachmentModule
+    ImageAttachmentModule,
+    ToastModule,
   ],
   exports: [CartPagesComponent]
 })

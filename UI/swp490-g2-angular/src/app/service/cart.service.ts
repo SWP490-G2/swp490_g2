@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
-import { Order, OrderProductDetail } from "../ngswag/client";
+import { BehaviorSubject, Observable, tap } from "rxjs";
+import { Order, OrderClient, OrderProductDetail } from "../ngswag/client";
 import { AuthService } from "../global/auth.service";
 import { getLocal, setLocal } from "../utils";
 
@@ -18,7 +18,7 @@ export class CartService {
   private order$ = new BehaviorSubject<Order>(new Order());
   private CART_STORAGE_KEY = "";
 
-  constructor(private $auth: AuthService) {
+  constructor(private $auth: AuthService, private $orderClient: OrderClient) {
     $auth.getCurrentUser().subscribe((user) => {
       if (!user)
         return;
@@ -83,5 +83,14 @@ export class CartService {
 
   getOrderObservable(): Observable<Order> {
     return this.order$.asObservable();
+  }
+
+  addOrder(): Observable<string> {
+    const order = this.order$.value;
+    return this.$orderClient.insert(order)
+      .pipe(
+        tap(() => this.clearCart())
+      )
+      ;
   }
 }

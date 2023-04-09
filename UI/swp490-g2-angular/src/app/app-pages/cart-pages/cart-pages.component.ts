@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from "@angular/core";
+import { MessageService } from "primeng/api";
 import { of, switchMap } from "rxjs";
 import { FilterRequest, Order, OrderProductDetail, Product, ProductClient, SearchRequest } from "src/app/ngswag/client";
 import { CartService } from "src/app/service/cart.service";
@@ -15,7 +16,7 @@ export class CartPagesComponent implements OnInit {
   verticalOffset = 0;
   products: Product[] = [];
 
-  constructor(private $cart: CartService, private $productClient: ProductClient) { }
+  constructor(private $cart: CartService, private $productClient: ProductClient, private $message: MessageService) { }
 
   refresh() {
     this.$cart.getOrderObservable()
@@ -88,5 +89,23 @@ export class CartPagesComponent implements OnInit {
 
   emptyCart() {
     this.$cart.clearCart();
+  }
+
+  addOrder() {
+    this.$cart.addOrder().pipe(
+      switchMap(errorMessage => {
+        if (errorMessage) {
+          throw new Error(errorMessage);
+        }
+
+        this.$message.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Order has been placed!"
+        });
+
+        return of();
+      })
+    ).subscribe();
   }
 }
