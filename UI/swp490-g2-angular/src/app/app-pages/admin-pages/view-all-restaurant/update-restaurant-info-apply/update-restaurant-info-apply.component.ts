@@ -14,15 +14,13 @@ import {
   User,
   Ward,
 } from "src/app/ngswag/client";
-import { DateUtils } from "src/app/utils";
 
 @Component({
   selector: "app-update-restaurant-info-apply",
   templateUrl: "./update-restaurant-info-apply.component.html",
 })
 export class UpdateRestaurantInfoApplyComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild("form", { static: false }) form!: NgForm;
   selectedDelivery: any = null;
   time1: Date;
@@ -155,7 +153,7 @@ export class UpdateRestaurantInfoApplyComponent
       });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   updateAvatar(image: File) {
     if (!this.restaurant) return;

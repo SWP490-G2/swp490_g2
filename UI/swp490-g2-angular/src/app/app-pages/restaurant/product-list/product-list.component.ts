@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { Order, OrderProductDetail, Product, ProductClient, Restaurant } from "src/app/ngswag/client";
-import { CartItem, CartService } from "src/app/service/cart.service";
+import { CartService } from "src/app/service/cart.service";
 
 @Component({
   selector: "app-product-list",

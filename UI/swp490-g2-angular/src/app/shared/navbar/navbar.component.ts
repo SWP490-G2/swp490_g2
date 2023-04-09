@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import { Client, Order, User } from "src/app/ngswag/client";
-import { CartItem, CartService } from "src/app/service/cart.service";
+import { CartService } from "src/app/service/cart.service";
 
 @Component({
   selector: "app-navbar",

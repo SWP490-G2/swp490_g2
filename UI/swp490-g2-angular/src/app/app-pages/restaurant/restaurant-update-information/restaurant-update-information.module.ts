@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
-import { RestaurantUpdateInformationRoutingModule } from './restaurant-update-information-routing.module';
-import { RestaurantUpdateInformationComponent } from './restaurant-update-information.component';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { RestaurantUpdateInformationRoutingModule } from "./restaurant-update-information-routing.module";
+import { RestaurantUpdateInformationComponent } from "./restaurant-update-information.component";
+import { InputTextareaModule } from "primeng/inputtextarea";
 import { DialogModule } from "primeng/dialog";  
 
 

@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import * as Rx from "rxjs";
 import { environment } from "src/environments/environment";
 
 // Declare SockJS and Stomp

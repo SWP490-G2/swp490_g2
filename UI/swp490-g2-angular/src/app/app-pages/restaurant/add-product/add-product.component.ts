@@ -1,15 +1,12 @@
-import { map } from "rxjs";
 import { Component, OnInit } from "@angular/core";
 import {
   FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import {
-  Body2,
   Product,
   ProductCategory,
   ProductCategoryClient,
@@ -39,10 +36,10 @@ export class AddProductComponent implements OnInit {
     );
     this.restaurantId = id;
     this.productForm = this.fb.group({
-      productName: ['', Validators.required],
-      price: ['', [Validators.required, Validators.min(1)]],
-      quantity: ['', [Validators.required, Validators.min(1)]],
-      description: [''],
+      productName: ["", Validators.required],
+      price: ["", [Validators.required, Validators.min(1)]],
+      quantity: ["", [Validators.required, Validators.min(1)]],
+      description: [""],
       productCategories: this.fb.array([])
     });
   }

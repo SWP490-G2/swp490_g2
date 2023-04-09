@@ -1,11 +1,10 @@
 import { Component, ViewChild } from "@angular/core";
-import { NgForm, Validators } from "@angular/forms";
+import { NgForm } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
   AdminClient,
-  File,
   Restaurant,
   RestaurantClient,
   User,
@@ -60,45 +59,4 @@ export class AddRestaurantInfoComponent {
       });
     });
   }
-
-  // ngAfterViewInit(): void {
-  //   setTimeout(() => {
-  //     this.form.controls["phoneNumber"].addValidators([
-  //       Validators.required,
-  //       Validators.pattern("^(0[3|5|7|8|9])+([0-9]{8})$"),
-  //     ]);
-  //     this.form.controls["phoneNumber"].updateValueAndValidity();
-  //     this.form.controls["contact"].addValidators([
-  //       Validators.required,
-  //       Validators.pattern("^(0[3|5|7|8|9])+([0-9]{8})$"),
-  //     ]);
-  //     this.form.controls["contact"].updateValueAndValidity();
-  //   }, 0);
-  // }
-
-  ngOnInit() {}
-
-  // updateAvatar(image: File) {
-  //   if (!this.restaurant) return;
-
-  //   this.restaurant.avatarFile = image;
-  //   this.$restaurantClient
-  //     .update(this.restaurant)
-  //     .subscribe(() => location.reload());
-  // }
-
-  // get editable(): boolean {
-  //   if (!this.user || !this.user.id) return false;
-  //   if (AuthService.isAdmin(this.user)) return true;
-  //   if (
-  //     AuthService.isSeller(this.user) &&
-  //     this.user.restaurants?.some(
-  //       (restaurant) => restaurant.id === this.restaurant?.id
-  //     )
-  //   ) {
-  //     return true;
-  //   }
-
-  //   return false;
-  // }
 }

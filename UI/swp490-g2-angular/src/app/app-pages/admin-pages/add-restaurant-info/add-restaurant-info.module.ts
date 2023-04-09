@@ -1,8 +1,8 @@
-import { ErrorHandler, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ErrorHandler, NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
-import { AddRestaurantInfoRoutingModule } from './add-restaurant-info-routing.module';
-import { AddRestaurantInfoComponent } from './add-restaurant-info.component';
+import { AddRestaurantInfoRoutingModule } from "./add-restaurant-info-routing.module";
+import { AddRestaurantInfoComponent } from "./add-restaurant-info.component";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { MessageService, ConfirmationService } from "primeng/api";

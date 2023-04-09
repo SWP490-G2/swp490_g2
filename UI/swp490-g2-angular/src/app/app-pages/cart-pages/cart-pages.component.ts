@@ -1,8 +1,7 @@
 import { Component, HostListener, OnInit } from "@angular/core";
-import { SelectItem } from "primeng/api";
 import { of, switchMap } from "rxjs";
 import { FilterRequest, Order, OrderProductDetail, Product, ProductClient, SearchRequest } from "src/app/ngswag/client";
-import { CartItem, CartService } from "src/app/service/cart.service";
+import { CartService } from "src/app/service/cart.service";
 
 @Component({
   selector: "app-cart-pages",
@@ -12,12 +11,6 @@ import { CartItem, CartService } from "src/app/service/cart.service";
 export class CartPagesComponent implements OnInit {
   order: Order;
   totalPrice = 0;
-  quantities1: number[] = [1, 1, 1];
-
-  quantities2: number[] = [1, 1];
-
-  quantityOptions: SelectItem[] = [{ label: "1", value: 1 }, { label: "2", value: 2 }, { label: "3", value: 3 }, { label: "4", value: 4 }];
-
   visibleDialog: boolean;
   verticalOffset = 0;
   products: Product[] = [];
@@ -62,10 +55,10 @@ export class CartPagesComponent implements OnInit {
     }
 
     if (this.order.orderProductDetails?.length) {
-      this.order.orderProductDetails
+      this.totalPrice = this.order.orderProductDetails
         .map((item) => item.price! * item.quantity!)
         .reduce(
-          (prevPrice, currPrice) => (this.totalPrice = prevPrice + currPrice)
+          (prevPrice, currPrice) => (prevPrice + currPrice)
         );
     }
   }

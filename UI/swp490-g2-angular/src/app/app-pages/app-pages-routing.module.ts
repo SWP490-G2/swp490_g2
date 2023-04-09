@@ -1,4 +1,3 @@
-import { CartPagesModule } from "./cart-pages/cart-pages.module";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "../global/auth.guard";
