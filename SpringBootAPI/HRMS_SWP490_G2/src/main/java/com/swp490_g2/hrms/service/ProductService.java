@@ -77,8 +77,7 @@ public class ProductService {
 
     public Page<Product> search(SearchRequest request) {
         SearchSpecification<Product> specification = new SearchSpecification<>(request);
-        Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
-        List<Product> products = productRepository.findAll(specification, pageable).getContent();
+        List<Product> products = productRepository.findAll(specification);
         List<Product> uniqueProducts = new ArrayList<>();
         products.forEach(product -> {
             if (uniqueProducts.stream().noneMatch(up -> up.getId().equals(product.getId()))) {

@@ -210,6 +210,7 @@ export class RestaurantComponent implements OnInit {
 
     this.productSearch().subscribe((productPage) => {
       this.products = productPage.content!;
+      this.totalPages = productPage.totalPages!;
     });
   }
 
@@ -227,6 +228,7 @@ export class RestaurantComponent implements OnInit {
     this.currentPage++;
     this.productSearch().subscribe((productPage) => {
       this.products = this.products.concat(productPage.content!);
+      this.totalPages = productPage.totalPages!;
     });
   }
 
