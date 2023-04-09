@@ -96,8 +96,8 @@ export class RestaurantComponent implements OnInit {
         }),
         switchMap(([categories, priceRange]) => {
           this.categories = categories;
-          this.selectedCategoryIds = this.categories.map((c) => c.id!);
-          this.originalSelectedCategoryIds = [...this.selectedCategoryIds];
+          // this.selectedCategoryIds = this.categories.map((c) => c.id!);
+          this.originalSelectedCategoryIds = [...this.categories.map((c) => c.id!)];
 
           this.priceRange = priceRange;
           this.selectedPriceRange = [...this.priceRange];
@@ -241,7 +241,7 @@ export class RestaurantComponent implements OnInit {
       }
 
       this.isFulltextSearching = true;
-      this.selectedCategoryIds = [...this.originalSelectedCategoryIds];
+      // this.selectedCategoryIds = [...this.originalSelectedCategoryIds];
       this.selectedPriceRange = [...this.priceRange];
       this.$productClient
         .fulltextSearch(text, this.restaurantId)
