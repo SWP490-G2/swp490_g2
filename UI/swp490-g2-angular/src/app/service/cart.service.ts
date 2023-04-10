@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, tap } from "rxjs";
-import { Order, OrderClient, OrderProductDetail } from "../ngswag/client";
+import { Order, OrderClient, OrderProductDetail, Restaurant } from "../ngswag/client";
 import { AuthService } from "../global/auth.service";
-import { getLocal, setLocal } from "../utils";
+import { getLocal, removeLocal, setLocal } from "../utils";
 
 export interface CartItem {
   id: number;
@@ -16,22 +16,31 @@ export interface CartItem {
 })
 export class CartService {
   private order$ = new BehaviorSubject<Order>(new Order());
+  restaurant$ = new BehaviorSubject<Restaurant | undefined>(undefined);
   private CART_STORAGE_KEY = "";
+  private RESTAURANT_STORAGE_KEY = "";
 
   constructor(private $auth: AuthService, private $orderClient: OrderClient) {
     $auth.getCurrentUser().subscribe((user) => {
       if (!user)
         return;
 
-      this.CART_STORAGE_KEY = `order/${user.id}`
+      this.CART_STORAGE_KEY = `order/${user.id}`;
+      this.RESTAURANT_STORAGE_KEY = `order/restaurant/${user.id}`;
       const order = new Order(getLocal(this.CART_STORAGE_KEY));
       order.orderProductDetails = order.orderProductDetails?.map(opd => new OrderProductDetail(opd));
       this.order$.next(order);
+
+      const restaurant = new Restaurant(getLocal(this.RESTAURANT_STORAGE_KEY));
+      this.restaurant$.next(restaurant);
     });
 
   }
 
-  addToCart(orderProductDetail: OrderProductDetail) {
+  addToCart(orderProductDetail: OrderProductDetail, restaurant: Restaurant) {
+    this.restaurant$.next(restaurant);
+    setLocal(this.RESTAURANT_STORAGE_KEY, restaurant.toJSON());
+
     const order = this.order$.value;
     if (!order.orderProductDetails)
       order.orderProductDetails = [];
@@ -69,6 +78,11 @@ export class CartService {
       this.order$.next(order);
       setLocal(this.CART_STORAGE_KEY, order.toJSON());
     }
+
+    if (!order.orderProductDetails.length) {
+      this.restaurant$.next(undefined);
+      removeLocal(this.RESTAURANT_STORAGE_KEY);
+    }
   }
 
   clearCart() {
@@ -79,6 +93,9 @@ export class CartService {
     order.orderProductDetails.length = 0;
     this.order$.next(order);
     setLocal(this.CART_STORAGE_KEY, order.toJSON());
+
+    this.restaurant$.next(undefined);
+    removeLocal(this.RESTAURANT_STORAGE_KEY);
   }
 
   getOrderObservable(): Observable<Order> {

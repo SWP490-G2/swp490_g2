@@ -14,9 +14,9 @@ export class ProductListComponent implements OnInit {
   @Output() productDeleted = new EventEmitter();
   order: Order | undefined;
 
-  constructor(private cartService: CartService, private $productClient: ProductClient, private $message: MessageService, private $confirmation: ConfirmationService,) { }
+  constructor(private $cart: CartService, private $productClient: ProductClient, private $message: MessageService, private $confirmation: ConfirmationService,) { }
   ngOnInit(): void {
-    this.cartService.getOrderObservable().subscribe(order => this.order = order);
+    this.$cart.getOrderObservable().subscribe(order => this.order = order);
   }
   get initialized(): boolean {
     return true;
@@ -25,7 +25,7 @@ export class ProductListComponent implements OnInit {
   addToCart(product: Product, quantity: number): void {
     if (
       this.order?.orderProductDetails?.length &&
-      this.restaurant.products?.every(p => this.order?.orderProductDetails?.every(opd => opd.productId !== p.id))
+      this.restaurant.id !== this.$cart.restaurant$.value?.id
     ) {
       this.$message.add({
         severity: "error",
@@ -42,7 +42,7 @@ export class ProductListComponent implements OnInit {
       price: product.price,
     });
 
-    this.cartService.addToCart(orderProductDetail);
+    this.$cart.addToCart(orderProductDetail, this.restaurant);
     this.$message.add({
       severity: "success",
       summary: "Success",

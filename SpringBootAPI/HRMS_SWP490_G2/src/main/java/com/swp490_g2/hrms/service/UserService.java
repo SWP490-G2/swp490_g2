@@ -355,4 +355,17 @@ public class UserService {
 
         return userRepository.findByRolesIn(roles);
     }
+
+    public boolean hasControlsOfRestaurant(Long restaurantId) {
+        User currentUser = getCurrentUser();
+        if (currentUser.isAdmin())
+            return true;
+
+        if (currentUser.isSeller()) {
+            List<User> owners = getAllOwnersByRestaurantIds(List.of(restaurantId));
+            return owners != null && owners.stream().anyMatch(owner -> owner.getId().equals(currentUser.getId()));
+        }
+
+        return false;
+    }
 }

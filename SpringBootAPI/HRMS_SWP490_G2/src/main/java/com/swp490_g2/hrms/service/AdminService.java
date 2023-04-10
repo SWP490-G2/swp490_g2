@@ -77,7 +77,7 @@ public class AdminService {
 
     public void approveBecomeSeller(Long buyerId) {
         User currentUser = userService.getCurrentUser();
-        if (currentUser == null || currentUser.isAdmin())
+        if (currentUser == null || !currentUser.isAdmin())
         {
             return;
         }
@@ -101,7 +101,7 @@ public class AdminService {
 
     public void rejectBecomeSeller(Long buyerId) {
         User currentUser = userService.getCurrentUser();
-        if (currentUser == null || currentUser.isAdmin())
+        if (currentUser == null || !currentUser.isAdmin())
         {
             return;
         }

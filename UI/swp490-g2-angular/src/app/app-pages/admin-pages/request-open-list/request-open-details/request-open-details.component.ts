@@ -44,7 +44,7 @@ export class RequestOpenDetailsComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
   items: MenuItem[];
 
   showModalDialog() {
@@ -56,7 +56,9 @@ export class RequestOpenDetailsComponent implements OnInit {
   }
 
   getStatus() {
-    return this.requester?.requestingRestaurantStatus == "PENDING";
+    return !this.requester?.requestingRestaurantStatus
+      || this.requester?.requestingRestaurantStatus === "PENDING"
+      ;
   }
 
   approve() {

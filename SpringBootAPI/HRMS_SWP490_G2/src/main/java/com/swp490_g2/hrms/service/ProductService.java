@@ -75,12 +75,15 @@ public class ProductService {
         this.productCategoryRepository = productCategoryRepository;
     }
 
-    public Page<Product> search(SearchRequest request) {
+    public Page<Product> search(SearchRequest request, Long restaurantId) {
         SearchSpecification<Product> specification = new SearchSpecification<>(request);
         List<Product> products = productRepository.findAll(specification);
+        List<Product> productsByRestaurantId = productRepository.findAllByRestaurantId(restaurantId);
         List<Product> uniqueProducts = new ArrayList<>();
         products.forEach(product -> {
-            if (uniqueProducts.stream().noneMatch(up -> up.getId().equals(product.getId()))) {
+            if (uniqueProducts.stream().noneMatch(up -> up.getId().equals(product.getId()))
+                && productsByRestaurantId.stream().anyMatch(p -> p.getId().equals(product.getId()))
+            ) {
                 uniqueProducts.add(product);
             }
         });

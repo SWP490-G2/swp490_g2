@@ -66,7 +66,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(columnDefinition = "nvarchar(16) default 'PENDING'")
     @Enumerated(EnumType.STRING)
-    private RequestingRestaurantStatus requestingRestaurantStatus;
+    private RequestingRestaurantStatus requestingRestaurantStatus = RequestingRestaurantStatus.PENDING;
 
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private File avatarFile;
@@ -129,6 +129,7 @@ public class User extends BaseEntity implements UserDetails {
     @JoinTable(name = "user__restaurant",
             joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "restaurantId"))
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @Transient
     private List<Restaurant> restaurants = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)

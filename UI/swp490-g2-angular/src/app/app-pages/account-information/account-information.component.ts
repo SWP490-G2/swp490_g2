@@ -16,6 +16,7 @@ import { ConfirmationService, MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
   Address,
+  BuyerClient,
   City,
   District,
   FileClient,
@@ -52,7 +53,8 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
     private $message: MessageService,
     private $map: GoogleMapService,
     private $confirmation: ConfirmationService,
-    private $fileClient: FileClient
+    private $fileClient: FileClient,
+    private $buyerClient: BuyerClient
   ) {
     $title.setTitle("Account Information");
   }
@@ -204,16 +206,13 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
       header: "Confirmation",
       message: `Are you sure that you want to select restaurant "${restaurant.restaurantName}"?`,
       accept: () => {
-        if (this.user) {
-          this.user.requestingRestaurant = new Restaurant({
-            id: restaurant.id,
-          });
-
-          this.$userClient.updateRaw(this.user).subscribe(() => {
-            this.display = false;
-            location.reload();
-          });
-        }
+        const marker = { ...restaurant["marker"] };
+        restaurant["marker"] = null;
+        this.$buyerClient.requestOpeningNewRestaurant(restaurant).subscribe(() => {
+          restaurant["marker"] = marker;
+          this.display = false;
+          location.reload();
+        });
       },
     });
   }

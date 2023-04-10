@@ -40,6 +40,7 @@ public class Restaurant extends BaseEntity {
     private File avatarFile;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Transient
     private Set<Product> products;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

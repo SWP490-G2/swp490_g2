@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from "@angular/core";
 import { MessageService } from "primeng/api";
 import { of, switchMap } from "rxjs";
-import { FilterRequest, Order, OrderProductDetail, Product, ProductClient, SearchRequest } from "src/app/ngswag/client";
+import { FilterRequest, Order, OrderProductDetail, Product, ProductClient, Restaurant, SearchRequest } from "src/app/ngswag/client";
 import { CartService } from "src/app/service/cart.service";
 
 @Component({
@@ -25,17 +25,19 @@ export class CartPagesComponent implements OnInit {
           this.order = order;
           this.calculateTotal();
 
-          if (order.orderProductDetails?.length) {
-            return this.$productClient.search(new SearchRequest({
-              filters: [
-                new FilterRequest({
-                  key1: "id",
-                  operator: "IN",
-                  fieldType: "LONG",
-                  values: order.orderProductDetails?.map(opd => opd.productId),
-                })
-              ]
-            }));
+          if (order.orderProductDetails?.length && this.$cart.restaurant$.value) {
+            return this.$productClient.search(
+              this.$cart.restaurant$.value.id!,
+              new SearchRequest({
+                filters: [
+                  new FilterRequest({
+                    key1: "id",
+                    operator: "IN",
+                    fieldType: "LONG",
+                    values: order.orderProductDetails?.map(opd => opd.productId),
+                  })
+                ]
+              }));
           }
 
           return of(undefined);
@@ -107,5 +109,9 @@ export class CartPagesComponent implements OnInit {
         return of();
       })
     ).subscribe();
+  }
+
+  get restaurant(): Restaurant | undefined {
+    return this.$cart.restaurant$.value;
   }
 }

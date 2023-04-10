@@ -19,9 +19,9 @@ import java.util.Set;
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping(value = "/search")
-    public ResponseEntity<Page<Product>> search(@RequestBody SearchRequest request) {
-        return ResponseEntity.ok(productService.search(request));
+    @PostMapping(value = "/search/{restaurantId}")
+    public ResponseEntity<Page<Product>> search(@RequestBody SearchRequest request, @PathVariable Long restaurantId) {
+        return ResponseEntity.ok(productService.search(request, restaurantId));
     }
 
     @GetMapping("/get-product-price-ranges-by-restaurant-id/{restaurantId}")

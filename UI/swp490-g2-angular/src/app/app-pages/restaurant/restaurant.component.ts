@@ -5,6 +5,7 @@ import { MenuItem } from "primeng/api";
 import { forkJoin, Observable, of, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import {
+  AdminClient,
   File,
   FilterRequest,
   PageProduct,
@@ -59,6 +60,7 @@ export class RestaurantComponent implements OnInit {
     private $productCategoryClient: ProductCategoryClient,
     private $productClient: ProductClient,
     private $userClient: UserClient,
+    private $adminClient: AdminClient,
     private $title: Title,
     private router: Router
   ) {
@@ -79,10 +81,20 @@ export class RestaurantComponent implements OnInit {
   }
 
   refresh() {
-    this.$restaurantClient
-      .getById(this.restaurantId)
+    this.$auth
+      .getCurrentUser()
       .pipe(
-        switchMap((restaurant) => {
+        switchMap((user) => {
+          this.user = user;
+          return forkJoin([
+            this.$adminClient.getRestaurantById(this.restaurantId),
+            this.$userClient.hasControlsOfRestaurant(this.restaurantId)
+          ]);
+        }),
+        switchMap(([restaurant, hasControlsOfRestaurant]) => {
+          if (this.user && hasControlsOfRestaurant)
+            this.user.restaurants = [restaurant]
+
           this.restaurant = restaurant;
           if (this.restaurant.restaurantName)
             this.$title.setTitle(this.restaurant.restaurantName);
@@ -111,38 +123,10 @@ export class RestaurantComponent implements OnInit {
         })
       )
       .subscribe();
-
-
-
-    this.$auth
-      .getCurrentUser()
-      .pipe(
-        switchMap((user) => {
-          this.user = user;
-          if (this.user?.id && AuthService.isSeller(this.user)) {
-            return this.$userClient.getById(this.user.id).pipe(
-              switchMap((seller) => {
-                this.user = seller;
-                return of();
-              })
-            );
-          }
-
-          return of();
-        })
-      )
-      .subscribe();
   }
 
   private productSearch(): Observable<PageProduct> {
-    const filters = [
-      new FilterRequest({
-        key1: "id",
-        operator: "IN",
-        fieldType: "LONG",
-        values: this.restaurant?.products?.map(p => p.id),
-      }),
-    ];
+    const filters: FilterRequest[] = [];
 
     if (this.selectedCategoryIds.length > 0) {
       filters.push(new FilterRequest({
@@ -168,6 +152,7 @@ export class RestaurantComponent implements OnInit {
     }
 
     return this.$productClient.search(
+      this.restaurantId,
       new SearchRequest({
         filters: filters,
         sorts: this.sorts,

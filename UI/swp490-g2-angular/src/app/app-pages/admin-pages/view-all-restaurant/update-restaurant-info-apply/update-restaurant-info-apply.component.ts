@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
-import { finalize, of, switchMap } from "rxjs";
+import { finalize, forkJoin, of, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import { UserClient } from "src/app/ngswag/client";
 import {
@@ -67,25 +67,31 @@ export class UpdateRestaurantInfoApplyComponent
   }
 
   refresh() {
-    this.$adminClient
-      .getRestaurantById(this.restaurantId)
-      .pipe(
-        switchMap((restaurant) => {
-          this.restaurant = restaurant;
-          if (restaurant.id) {
-            return this.$userClient.getAllOwnersByRestaurantIds([
-              restaurant.id,
-            ]);
-          } else return of(undefined);
-        })
-      )
-      .subscribe((owners) => {
-        if (owners) {
-          (this.restaurant as any).owners = owners;
-        }
-      });
+    this.$auth.getCurrentUser().pipe(
+      switchMap((user) => {
+        this.user = user;
+        return forkJoin([
+          this.$adminClient.getRestaurantById(this.restaurantId),
+          this.$userClient.hasControlsOfRestaurant(this.restaurantId)
+        ])
+      }),
+      switchMap(([restaurant, hasControlsOfRestaurant]) => {
+        this.restaurant = restaurant;
+        if (this.user && hasControlsOfRestaurant)
+          this.user.restaurants = [restaurant];
 
-    this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
+        if (restaurant.id) {
+          return this.$userClient.getAllOwnersByRestaurantIds([
+            restaurant.id,
+          ]);
+        } else return of(undefined);
+      })
+    ).subscribe((owners) => {
+      if (owners) {
+        (this.restaurant as any).owners = owners;
+      }
+    });
+
   }
 
   submit(): void {
