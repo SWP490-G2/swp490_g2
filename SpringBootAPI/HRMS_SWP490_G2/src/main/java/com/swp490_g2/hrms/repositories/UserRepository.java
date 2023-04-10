@@ -7,6 +7,7 @@ import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -26,8 +27,14 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query(value = """
             SELECT u.* FROM user u JOIN user__restaurant ur
             ON u.userId = ur.userId
-            WHERE ur.restaurantId = IN :restaurantIds""", nativeQuery = true)
+            WHERE ur.restaurantId IN :restaurantIds""", nativeQuery = true)
     List<User> findByRestaurantsIn(List<Long> restaurantIds);
 
     List<User> findByRolesIn(List<Role> roles);
+
+    @Modifying
+    @Query(value = """
+            INSERT INTO `user__restaurant` (`userId`, `restaurantId`) VALUES (:sellerId, :restaurantId);
+            """, nativeQuery = true)
+    void addRestaurantForSeller(Long sellerId, Long restaurantId);
 }

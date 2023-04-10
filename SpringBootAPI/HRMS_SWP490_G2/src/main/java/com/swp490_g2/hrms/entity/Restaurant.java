@@ -50,5 +50,6 @@ public class Restaurant extends BaseEntity {
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "restaurant__restaurant_category",
             joinColumns = @JoinColumn(name = "restaurantId"), inverseJoinColumns = @JoinColumn(name = "restaurantCategoryId"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<RestaurantCategory> restaurantCategories;
 }

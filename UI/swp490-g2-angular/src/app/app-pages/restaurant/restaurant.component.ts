@@ -87,7 +87,7 @@ export class RestaurantComponent implements OnInit {
         switchMap((user) => {
           this.user = user;
           return forkJoin([
-            this.$adminClient.getRestaurantById(this.restaurantId),
+            this.$restaurantClient.getById(this.restaurantId),
             this.$userClient.hasControlsOfRestaurant(this.restaurantId)
           ]);
         }),
