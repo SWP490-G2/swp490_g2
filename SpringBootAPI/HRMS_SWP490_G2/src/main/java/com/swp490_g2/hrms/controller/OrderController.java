@@ -1,11 +1,15 @@
 package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.Order;
+import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,4 +51,11 @@ public class OrderController {
     public ResponseEntity<String> delivering(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.deliver(orderId));
     }
+
+    @PostMapping("/search")
+    public ResponseEntity<Page<Order>> search(@RequestBody SearchRequest request) {
+        return ResponseEntity.ok(orderService.search(request));
+    }
+
+//    public getById
 }

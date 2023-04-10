@@ -16,7 +16,7 @@ import lombok.*;
 @AttributeOverride(name = "id", column = @Column(name = "orderProductDetail"))
 public class OrderProductDetail extends BaseEntity {
     @Column(nullable = false)
-    private long productId;
+    private Long productId;
 
     @Column(nullable = false)
     private int quantity;

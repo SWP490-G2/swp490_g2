@@ -4,11 +4,18 @@ import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.OrderStatus;
 import com.swp490_g2.hrms.entity.enums.ProductStatus;
 import com.swp490_g2.hrms.repositories.OrderRepository;
+import com.swp490_g2.hrms.repositories.ProductRepository;
+import com.swp490_g2.hrms.repositories.RestaurantRepository;
+import com.swp490_g2.hrms.requests.SearchRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,6 +26,12 @@ public class OrderService {
     @Autowired
     public void setOrderRepository(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
+    }
+
+    private ProductRepository productRepository;
+    @Autowired
+    public void setProductRepository(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     private ProductService productService;
@@ -40,6 +53,13 @@ public class OrderService {
     @Autowired
     public void setRestaurantService(RestaurantService restaurantService) {
         this.restaurantService = restaurantService;
+    }
+
+    private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    public void setRestaurantRepository(RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
     }
     //////////////////////////////
 
@@ -228,4 +248,37 @@ public class OrderService {
         orderRepository.save(order);
         return null;
     }
+
+    public List<Order> getAllOrdersByRestaurantIds(List<Long> restaurantIds){
+        return orderRepository.getAllOrdersByRestaurantIds(restaurantIds);
+    }
+
+    public Page<Order> search(SearchRequest request) {
+        List<Order> orders = new ArrayList<>();
+        User currentUser = userService.getCurrentUser();
+        if(currentUser.isSeller()){
+            List<Restaurant> getAllRestaurantsByUserId = restaurantRepository.getAllRestaurantsByUserId(currentUser.getId());
+            List<Long> restaurantIds = new ArrayList<>();
+            for(Restaurant restaurant: getAllRestaurantsByUserId){
+                restaurantIds.add(restaurant.getId());
+            }
+            orders = getAllOrdersByRestaurantIds(restaurantIds);
+        }
+        if(currentUser.isAdmin()){
+            orders = orderRepository.findAll();
+        }
+        if(currentUser.isBuyer()){
+            orders = orderRepository.getAllOrdersByBuyerId(currentUser.getId());
+        }
+        return new PageImpl<>(orders.subList(
+                request.getSize() * request.getPage(),
+                Integer.min(request.getSize() * request.getPage()
+                        + request.getSize(), orders.size())
+        ),
+                PageRequest.of(request.getPage(),
+                        request.getSize()),
+                orders.size());
+    }
+
+
 }
