@@ -30,12 +30,28 @@
   (ngSubmit)="submit()"
 >
   <label for="res.name" class="block text-900 font-medium my-3"
+    >Restaurant email's Owner</label
+  >
+  <div class="grid">
+    <div class="col-12">
+      <p-autoComplete
+        [(ngModel)]="selectedUser"
+        [suggestions]="filteredUsers"
+        (completeMethod)="filterUser($event)"
+        field="email"
+        name="email"
+      ></p-autoComplete>
+    </div>
+  </div>
+
+  <label for="res.name" class="block text-900 font-medium my-3"
     >Restaurant Name</label
   >
   <div class="grid">
     <div class="col-12">
       <div class="p-inputgroup">
         <input
+          [(ngModel)]="restaurant.restaurantName"
           name="restaurantName"
           type="text"
           pInputText
@@ -58,13 +74,14 @@
           type="text"
           pInputText
           class="w-full mb-1"
+          [(ngModel)]="restaurant.phoneNumber"
           name="phoneNumber"
           placeholder="Phone Number"
         />
       </div>
     </div>
   </div>
-  <!-- <div
+  <div
     class="flex align-items-center gap-1"
     *ngIf="
       form.controls['phoneNumber']?.dirty &&
@@ -73,7 +90,7 @@
   >
     <i class="pi pi-times-circle text-danger"></i>
     <small class="text-danger"> Enter a valid phone number! </small>
-  </div> -->
+  </div>
 
   <label for="descr" class="block text-900 font-medium my-3">Description</label>
   <div class="grid">
@@ -84,6 +101,7 @@
           cols="30"
           pInputTextarea
           placeholder="Description"
+          [(ngModel)]="restaurant.description"
           name="description"
         ></textarea>
       </div>

@@ -5,6 +5,7 @@ import com.swp490_g2.hrms.entity.File;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
+import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.RestaurantInformationRequest;
@@ -137,6 +138,12 @@ public class AdminService {
     public void deleteRestaurantById(Long id) {
         allowAdminExecuteAction();
         restaurantService.deleteRestaurantById(id);
+    }
+
+    public List<User> getAllUserExceptAdmin() {
+        allowAdminExecuteAction();
+        List<User> userList = userService.getAllByRoles(List.of(Role.USER, Role.BUYER, Role.SELLER));
+        return userList;
     }
 
     private void allowAdminExecuteAction() {

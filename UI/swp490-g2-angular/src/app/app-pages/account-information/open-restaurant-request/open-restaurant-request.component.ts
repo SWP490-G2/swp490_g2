@@ -33,6 +33,7 @@ export class OpenRestaurantRequestComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {}
 
   submit(): void {
+    console.log(this.form.value);
     this.$confirmation.confirm({
       message:
         "Request to open a new restaurant cannot be reverted. Are you sure that you want to perform this action?",

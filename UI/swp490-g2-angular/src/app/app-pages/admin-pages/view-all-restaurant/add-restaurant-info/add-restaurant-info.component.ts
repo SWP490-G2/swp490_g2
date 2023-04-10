@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
@@ -18,13 +18,17 @@ import {
   templateUrl: "./add-restaurant-info.component.html",
   styleUrls: ["./add-restaurant-info.component.scss"],
 })
-export class AddRestaurantInfoComponent {
+export class AddRestaurantInfoComponent implements OnInit {
   @ViewChild("form", { static: false }) form!: NgForm;
 
   restaurantId: number;
-  restaurant?: Restaurant;
+  restaurant = new Restaurant();
   user?: User;
   uploadUrl: string;
+
+  users: any[];
+  selectedUser: any;
+  filteredUsers: any[];
 
   constructor(
     private $restaurantClient: RestaurantClient,
@@ -37,28 +41,45 @@ export class AddRestaurantInfoComponent {
     this.refresh();
   }
 
+  ngOnInit() {
+    this.$adminClient.getAllUserExceptAdmin().subscribe((users) => {
+      this.users = users;
+    });
+  }
+
   refresh() {
     this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
   }
 
   submit(): void {
     if (!this.restaurant) return;
-
     if (this.restaurant.address) {
       this.restaurant.address.ward = new Ward({
         id: this.form.value.ward.id,
       });
-
       this.restaurant.address.specificAddress = this.form.value.specificAddress;
     }
-
-    this.$restaurantClient.update(this.restaurant).subscribe(() => {
+    this.$adminClient.insertRestaurant(this.restaurant).subscribe(() => {
       this.$message.add({
         severity: "success",
         summary: "Success",
-        detail: "Restaurant's information has changed",
+        detail: "Add new restaurant successfully!",
       });
     });
+  }
+
+  filterUser(event) {
+    const filtered: any[] = [];
+    const query = event.query;
+
+    for (let i = 0; i < this.users.length; i++) {
+      const user = this.users[i];
+      if (user.email.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(user);
+      }
+    }
+
+    this.filteredUsers = filtered;
   }
 
   // ngAfterViewInit(): void {
@@ -75,8 +96,6 @@ export class AddRestaurantInfoComponent {
   //     this.form.controls["contact"].updateValueAndValidity();
   //   }, 0);
   // }
-
-  ngOnInit() {}
 
   // updateAvatar(image: File) {
   //   if (!this.restaurant) return;

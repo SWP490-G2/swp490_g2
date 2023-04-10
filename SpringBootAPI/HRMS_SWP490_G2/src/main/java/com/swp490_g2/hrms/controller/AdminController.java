@@ -64,4 +64,9 @@ public class AdminController {
     public ResponseEntity<Page<User>> getAllUsers(@RequestBody SearchRequest request) {
         return ResponseEntity.ok(adminService.getAllUsers(request));
     }
+
+    @GetMapping ("/get-all-user-except-admin")
+    public ResponseEntity<List<User>> getAllUserExceptAdmin() {
+        return ResponseEntity.ok(adminService.getAllUserExceptAdmin());
+    }
 }

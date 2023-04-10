@@ -19,6 +19,7 @@ import { AccordionModule } from "primeng/accordion";
 import { TableModule } from "primeng/table";
 import { AddressFieldsComponent } from "./address-fields/address-fields.component";
 import { RestaurantsModule } from "../restaurants/restaurants.module";
+import { InputTextareaModule } from "primeng/inputtextarea";
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { RestaurantsModule } from "../restaurants/restaurants.module";
     AccordionModule,
     TableModule,
     RestaurantsModule,
+    InputTextareaModule,
   ],
   exports: [AddressFieldsComponent],
   providers: [MessageService, ConfirmationService],

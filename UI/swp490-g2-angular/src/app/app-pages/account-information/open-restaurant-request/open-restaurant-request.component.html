@@ -58,18 +58,16 @@
       ></div>
     </div>
     <div class="card">
-      <label for="email" class="block text-900 font-medium my-3"
-        >Description*</label
-      >
+      <label class="block text-900 font-medium my-3">Description*</label>
       <textarea
-          class="w-full"
-          name="description"
-          rows="5"
-          pInputTextarea
-          required
-          placeholder="Enter description ..."
-          ></textarea
-        >
+        class="w-full"
+        name="description"
+        rows="5"
+        pInputTextarea
+        required
+        ngModel
+        placeholder="Enter description ..."
+      ></textarea>
       <div
         class="flex align-items-center gap-1"
         *ngIf="
