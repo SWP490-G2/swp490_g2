@@ -26,7 +26,7 @@ public class Restaurant extends BaseEntity {
     @Column(nullable = false)
     private String restaurantName;
 
-    @Column(columnDefinition = "VARCHAR(450)")
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
 
     @Column(unique = true)
@@ -39,7 +39,8 @@ public class Restaurant extends BaseEntity {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private File avatarFile;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Transient
     private Set<Product> products;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -49,5 +50,6 @@ public class Restaurant extends BaseEntity {
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "restaurant__restaurant_category",
             joinColumns = @JoinColumn(name = "restaurantId"), inverseJoinColumns = @JoinColumn(name = "restaurantCategoryId"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<RestaurantCategory> restaurantCategories;
 }

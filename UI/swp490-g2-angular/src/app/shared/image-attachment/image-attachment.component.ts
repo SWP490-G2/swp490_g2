@@ -13,6 +13,7 @@ import { FileUpload } from "primeng/fileupload";
 import { AuthService } from "src/app/global/auth.service";
 import { FileUploadService } from "src/app/global/file-upload.service";
 import { File, FileClient } from "../../ngswag/client";
+import { ConfirmationService } from "primeng/api";
 
 @Component({
   selector: "app-image-attachment",
@@ -34,23 +35,27 @@ export class ImageAttachmentComponent implements OnInit {
   imageSrc: any;
   timeStamp?: number;
   fileUploaded = false;
-  images: File[];
+  images: File[] = [];
   selectedImage?: File;
   @Output() selectedImageHandler = new EventEmitter<File>();
   @Input() editable = false;
   @Input() isRound = true;
+  @Input() deletable = false;
+  @Output() deleteImageHandler = new EventEmitter();
+  deleteImageDialogVisible = false;
 
   constructor(
     private $auth: AuthService,
     private $fileUpload: FileUploadService,
     private $fileClient: FileClient,
-    private $cdRef: ChangeDetectorRef
-  ) {}
+    private $cdRef: ChangeDetectorRef,
+    private $confirmation: ConfirmationService,
+  ) { }
 
   ngOnInit(): void {
     this.imageStyle = {
       height: this.height,
-      width: this.width,
+      width: this.width
     };
 
     this.headers = new HttpHeaders({
@@ -58,14 +63,6 @@ export class ImageAttachmentComponent implements OnInit {
     });
 
     this.loadImage();
-    if (this.editable) {
-      this.$fileClient.getAll().subscribe((files) => {
-        this.images = files;
-        this.images.map((image) => {
-          this.getSrc(image);
-        });
-      });
-    }
   }
 
   private loadImage() {
@@ -152,7 +149,25 @@ export class ImageAttachmentComponent implements OnInit {
     this.fileUploaded = true;
   }
 
-  onAccordionTabChange() {
+  onAccordionTabChange(event: any) {
+    if (event.index === 1 && !this.images.length) {
+      this.$fileClient.getAll().subscribe((files) => {
+        this.images = files;
+        this.images.map((image) => {
+          this.getSrc(image);
+        });
+      });
+    }
+
     this.fileUploaded = false;
+  }
+
+  deleteImage() {
+    this.deleteImageDialogVisible = true;
+  }
+
+  onDeleteImageDialogHide() {
+    this.deleteImageDialogVisible = false;
+    this.deleteImageHandler.emit();
   }
 }

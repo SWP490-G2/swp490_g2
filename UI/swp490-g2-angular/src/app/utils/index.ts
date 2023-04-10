@@ -56,15 +56,19 @@ export const PHONE_NUMBER_PATTERN = "^(0[3|5|7|8|9])+([0-9]{8})$";
 
 export function getLocal(key: string): any {
   const value = localStorage.getItem(key);
-  if (!value) return undefined;
+  if (!value) return {};
 
   try {
     return JSON.parse(value);
   } catch (e) {
-    return undefined;
+    return {};
   }
 }
 
 export function setLocal(key: string, value: any): void {
   localStorage.setItem(key, JSON.stringify(value));
+}
+
+export function removeLocal(key: string) {
+  localStorage.removeItem(key);
 }

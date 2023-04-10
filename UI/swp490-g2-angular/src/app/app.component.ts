@@ -1,6 +1,5 @@
-import { Component, NgZone, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { PrimeNGConfig } from "primeng/api";
-import { WebsocketService } from "./global/websocket.service";
 
 @Component({
   selector: "app-root",

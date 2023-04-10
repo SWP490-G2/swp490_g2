@@ -3,8 +3,8 @@ import { Title } from "@angular/platform-browser";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
-import { Client, User } from "src/app/ngswag/client";
-import { CartItem, CartService } from "src/app/service/cart.service";
+import { Client, Order, User } from "src/app/ngswag/client";
+import { CartService } from "src/app/service/cart.service";
 
 @Component({
   selector: "app-navbar",
@@ -16,7 +16,7 @@ export class NavbarComponent implements OnInit {
   @Input() user?: User;
   sidebarVisible: boolean;
 
-  cartItems: CartItem[];
+  order: Order;
   constructor(
     private $router: Router,
     private $route: ActivatedRoute,
@@ -32,8 +32,8 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.items = [];
 
-    this.cartService.getCartItemsObservable().subscribe((items) => {
-      this.cartItems = items;
+    this.cartService.getOrderObservable().subscribe((order) => {
+      this.order = order;
     });
   }
   getUserDisplay(): string {

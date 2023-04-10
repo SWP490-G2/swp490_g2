@@ -75,5 +75,10 @@ public class UserController {
     public void sendVerificationCode(@PathVariable String emailOrPhoneNumber) {
         userService.sendVerificationCode(emailOrPhoneNumber);
     }
+
+    @GetMapping("has-controls-of-restaurant/{restaurantId}")
+    public ResponseEntity<Boolean> hasControlsOfRestaurant(@PathVariable Long restaurantId) {
+        return ResponseEntity.ok(userService.hasControlsOfRestaurant(restaurantId));
+    }
 }
 

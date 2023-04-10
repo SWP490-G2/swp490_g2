@@ -18,10 +18,4 @@ import org.hibernate.annotations.OnDeleteAction;
 public class File extends BaseEntity{
     @Column(nullable = false)
     private String filePath;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "productId", nullable = false)
-//    @JsonBackReference
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    private Product product;
 }

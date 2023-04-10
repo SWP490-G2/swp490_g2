@@ -8,8 +8,8 @@ import {
 } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { ConfirmationService, MessageService } from "primeng/api";
-import { finalize } from "rxjs";
-import { Restaurant, RestaurantClient, Ward } from "src/app/ngswag/client";
+import { finalize, of, switchMap } from "rxjs";
+import { Restaurant, RestaurantCategory, RestaurantCategoryClient, RestaurantClient, Ward } from "src/app/ngswag/client";
 import { PHONE_NUMBER_PATTERN } from "src/app/utils";
 
 @Component({
@@ -22,6 +22,7 @@ export class RestaurantUpdateInformationComponent implements AfterViewInit {
   @Input() editable: boolean;
   @ViewChild("form", { static: false }) form!: NgForm;
   @Output() hidden = new EventEmitter();
+  categories: RestaurantCategory[] = [];
 
   displayModal = false;
   private _submitButtonDisabled = false;
@@ -32,16 +33,31 @@ export class RestaurantUpdateInformationComponent implements AfterViewInit {
   constructor(
     private $restaurantClient: RestaurantClient,
     private $confirmation: ConfirmationService,
-    private $message: MessageService
-  ) {}
+    private $message: MessageService,
+    private $restaurantCategoryClient: RestaurantCategoryClient
+  ) { }
 
   ngAfterViewInit(): void {
+    this.$restaurantCategoryClient
+      .getAll()
+      .pipe(
+        switchMap((categories) => {
+          this.categories = [...categories];
+          return of();
+        })
+      )
+      .subscribe();
+
     setTimeout(() => {
       this.form.controls["phoneNumber"].addValidators([
         Validators.required,
         Validators.pattern(PHONE_NUMBER_PATTERN),
       ]);
       this.form.controls["phoneNumber"].updateValueAndValidity();
+      if (!this.editable)
+      {
+        this.form.control.disable();
+      }
     });
   }
 

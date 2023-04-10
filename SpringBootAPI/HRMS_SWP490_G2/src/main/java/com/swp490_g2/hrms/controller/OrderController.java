@@ -1,21 +1,11 @@
 package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.Order;
-import com.swp490_g2.hrms.entity.User;
-import com.swp490_g2.hrms.requests.ChangePasswordRequest;
-import com.swp490_g2.hrms.requests.RegisterRequest;
-import com.swp490_g2.hrms.requests.UserInformationRequest;
-import com.swp490_g2.hrms.security.AuthenticationRequest;
-import com.swp490_g2.hrms.security.AuthenticationResponse;
 import com.swp490_g2.hrms.service.OrderService;
-import com.swp490_g2.hrms.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,23 +28,23 @@ public class OrderController {
         return ResponseEntity.ok(orderService.accept(orderId));
     }
 
-    @PutMapping("/aborted/{orderId}")
+    @PutMapping("/abort/{orderId}")
     public ResponseEntity<String> aborted(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderService.aborted(orderId));
+        return ResponseEntity.ok(orderService.abort(orderId));
     }
 
-    @PutMapping("/completed/{orderId}")
+    @PutMapping("/complete/{orderId}")
     public ResponseEntity<String> completed(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderService.completed(orderId));
+        return ResponseEntity.ok(orderService.complete(orderId));
     }
 
-    @PutMapping("/rejected/{orderId}")
+    @PutMapping("/reject/{orderId}")
     public ResponseEntity<String> rejected(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderService.rejected(orderId));
+        return ResponseEntity.ok(orderService.reject(orderId));
     }
 
-    @PutMapping("/delivering/{orderId}")
+    @PutMapping("/deliver/{orderId}")
     public ResponseEntity<String> delivering(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderService.delivering(orderId));
+        return ResponseEntity.ok(orderService.deliver(orderId));
     }
 }

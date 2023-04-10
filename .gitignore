@@ -85,3 +85,5 @@ MySQLDB/mysql.cnf
 UI/swp490-g2-angular/src/app/ngswag/client.ts
 SpringBootAPI/HRMS_SWP490_G2/uploads
 UI/swp490-g2-angular/.vscode
+UI/swp490-g2-angular/.firebase
+SpringBootAPI/uploads

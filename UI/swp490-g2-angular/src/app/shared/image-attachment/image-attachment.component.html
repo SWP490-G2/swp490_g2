@@ -12,12 +12,19 @@
       [ngClass]="{
         'round-border': isRound
       }"
+      class="border-round"
     />
     <div class="absolute w-full h-full top-0" *ngIf="editable">
       <i
         class="absolute top-50 left-50 pi pi-paperclip transform-middle text-white"
       ></i>
     </div>
+    <p-button
+      *ngIf="deletable"
+      icon="pi pi-times"
+      styleClass="p-button-rounded p-button-danger p-button-sm absolute top-0 right-0"
+      (click)="deleteImage()"
+    ></p-button>
   </div>
 
   <div
@@ -43,7 +50,7 @@
   [style]="{ 'max-width': '50vw' }"
   contentStyleClass="py-2"
 >
-  <p-accordion (onOpen)="onAccordionTabChange()">
+  <p-accordion (onOpen)="onAccordionTabChange($event)">
     <p-accordionTab header="Upload an image" [selected]="true">
       <p-fileUpload
         #fileUpload
@@ -84,3 +91,9 @@
     ></p-button>
   </ng-template>
 </p-dialog>
+
+<p-confirmDialog
+  [visible]="deleteImageDialogVisible"
+  (onHide)="onDeleteImageDialogHide()"
+  message="Do you want to delete this image?"
+></p-confirmDialog>

@@ -117,7 +117,7 @@ public class AddressService {
 
         try {
             GeocodingResult[] results = GeocodingApi.geocode(geoApiContext, address.getFullAddress()).await();
-            if (results[0] != null) {
+            if (results.length > 0 && results[0] != null) {
                 address.setLat(results[0].geometry.location.lat);
                 address.setLng(results[0].geometry.location.lng);
             }

@@ -17,6 +17,8 @@ import { ImageAttachmentModule } from "./shared/image-attachment/image-attachmen
 import { GoogleMapsModule } from "@angular/google-maps";
 import { GoogleMapService } from "./global/google-map.service";
 import { WebsocketService } from "./global/websocket.service";
+import { environment } from "src/environments/environment";
+import { API_BASE_URL } from "./ngswag/client";
 
 @NgModule({
   declarations: [AppComponent],
@@ -51,6 +53,10 @@ import { WebsocketService } from "./global/websocket.service";
     GoogleMapService,
     // Socket
     WebsocketService,
+    {
+      provide: API_BASE_URL,
+      useValue: environment.apiUrl,
+    },
   ],
   bootstrap: [AppComponent],
 })

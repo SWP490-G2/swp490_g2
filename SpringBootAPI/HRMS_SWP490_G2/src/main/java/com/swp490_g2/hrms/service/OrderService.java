@@ -2,9 +2,9 @@ package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.OrderStatus;
+import com.swp490_g2.hrms.entity.enums.ProductStatus;
 import com.swp490_g2.hrms.repositories.OrderRepository;
 import lombok.Getter;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,8 +45,12 @@ public class OrderService {
 
     @Transactional
     public String insert(Order order) {
+        User currentUser = userService.getCurrentUser();
+        if(currentUser == null)
+            return "\"Current user does not exist!\"";
+
         if (order == null)
-            return "Order does not exist!";
+            return "\"Order does not exist!\"";
 
         Restaurant restaurant = null;
         for (OrderProductDetail orderProductDetail : order.getOrderProductDetails()) {
@@ -54,20 +58,20 @@ public class OrderService {
             if (restaurant == null)
                 restaurant = restaurant2;
             else if (!restaurant.getId().equals(restaurant2.getId())) {
-                return "Order must include products from a SINGLE restaurant!";
+                return "\"Order must include products from a SINGLE restaurant!\"";
             }
         }
 
         for (OrderProductDetail orderProductDetail : order.getOrderProductDetails()) {
             Product product = productService.getById(orderProductDetail.getProductId());
-            if (product.getQuantity() < orderProductDetail.getQuantity()) {
-                return "Product [%s] is out of stock (quantity: %d)".formatted(product.getProductName(), product.getQuantity());
+            if (product.getProductStatus() == ProductStatus.OUT_OF_STOCK) {
+                return "\"Product [%s] is out of stock!\"".formatted(product.getProductName());
             }
 
-            product.setQuantity(product.getQuantity() - orderProductDetail.getQuantity());
             productService.update(product);
         }
 
+        order.setCreatedBy(currentUser.getId());
         orderRepository.save(order);
         return null;
     }
@@ -115,11 +119,12 @@ public class OrderService {
             return "Cannot change order status from [%s] to [ACCEPTED]!".formatted(order.getOrderStatus());
 
         order.setOrderStatus(OrderStatus.ACCEPTED);
+        order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
         return null;
     }
 
-    public String rejected(Long orderId) {
+    public String reject(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "Current user does not have permission to do this action!";
@@ -136,15 +141,16 @@ public class OrderService {
             return "Order [id=%d] does not exist!".formatted(orderId);
 
         Order order = getById(orderId);
-        if (order.getOrderStatus() != OrderStatus.ACCEPTED)
+        if (order.getOrderStatus() != OrderStatus.PENDING)
             return "Cannot change order status from [%s] to [REJECTED]!".formatted(order.getOrderStatus());
 
         order.setOrderStatus(OrderStatus.REJECTED);
+        order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
         return null;
     }
 
-    public String delivering(Long orderId) {
+    public String deliver(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "Current user does not have permission to do this action!";
@@ -165,12 +171,13 @@ public class OrderService {
             return "Cannot change order status from [%s] to [DELIVERING]!".formatted(order.getOrderStatus());
 
         order.setOrderStatus(OrderStatus.DELIVERING);
+        order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
         return null;
     }
 
 
-    public String completed(Long orderId) {
+    public String complete(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "Current user does not have permission to do this action!";
@@ -191,11 +198,12 @@ public class OrderService {
             return "Cannot change order status from [%s] to [COMPLETED]!".formatted(order.getOrderStatus());
 
         order.setOrderStatus(OrderStatus.COMPLETED);
+        order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
         return null;
     }
 
-    public String aborted(Long orderId) {
+    public String abort(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "Current user does not have permission to do this action!";
@@ -212,10 +220,11 @@ public class OrderService {
             return "Order [id=%d] does not exist!".formatted(orderId);
 
         Order order = getById(orderId);
-        if (order.getOrderStatus() == OrderStatus.PENDING)
+        if (order.getOrderStatus() == OrderStatus.DELIVERING)
             return "Cannot change order status from [%s] to [ABORTED]!".formatted(order.getOrderStatus());
 
         order.setOrderStatus(OrderStatus.ABORTED);
+        order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
         return null;
     }

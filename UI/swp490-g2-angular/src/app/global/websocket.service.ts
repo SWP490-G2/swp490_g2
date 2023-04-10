@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import * as Rx from "rxjs";
+import { environment } from "src/environments/environment";
 
 // Declare SockJS and Stomp
 declare let SockJS;
@@ -23,7 +23,7 @@ export class WebsocketService {
    * @param endPoint : Example "/notification"
    */
   connect(endPoint: string, event: (message: any) => void) {
-    const serverUrl = "http://localhost:8080/socket";
+    const serverUrl = `${environment.apiUrl}/socket`;
     const ws = new SockJS(serverUrl);
     this.stompClient = Stomp.over(ws);
     this.stompClient.connect({}, () => {

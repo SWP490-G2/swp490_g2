@@ -11,11 +11,13 @@ export class RequestingStatusComponent {
 
   get status():
     | {
-        text: string;
-        severity: "success" | "info" | "danger";
-      }
+      text: string;
+      severity: "success" | "info" | "danger";
+    }
     | undefined {
     switch (this.requester?.requestingRestaurantStatus) {
+      case null:
+      case undefined:
       case "PENDING":
         return {
           text: "Pending",
@@ -34,7 +36,5 @@ export class RequestingStatusComponent {
           severity: "danger",
         };
     }
-
-    return undefined;
   }
 }
