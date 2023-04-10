@@ -2,6 +2,7 @@ package com.swp490_g2.hrms.common.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,4 +104,12 @@ public final class DateUtils {
         return Date.from(localDate.atTime(time).atZone(ZoneId.systemDefault()).toInstant());
     }
 
+    public static LocalTime toLocalTime(String s) {
+        try {
+            String[] splitted = s.split(":");
+            return LocalTime.of(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

@@ -14,6 +14,10 @@
       >
         {{ restaurant.restaurantName }}
       </a>
+      <p-tag
+        [severity]="restaurant.opening ? 'success' : 'danger'"
+        [value]="restaurant.opening ? 'Opening' : 'Closed'"
+      ></p-tag>
       <span class="text-600">
         {{ getRestaurantFullAddress(restaurant) }}
       </span>
