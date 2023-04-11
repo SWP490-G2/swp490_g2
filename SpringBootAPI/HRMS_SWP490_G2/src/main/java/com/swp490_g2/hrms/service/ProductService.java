@@ -82,7 +82,7 @@ public class ProductService {
         List<Product> uniqueProducts = new ArrayList<>();
         products.forEach(product -> {
             if (uniqueProducts.stream().noneMatch(up -> up.getId().equals(product.getId()))
-                && productsByRestaurantId.stream().anyMatch(p -> p.getId().equals(product.getId()))
+                    && productsByRestaurantId.stream().anyMatch(p -> p.getId().equals(product.getId()))
             ) {
                 uniqueProducts.add(product);
             }
@@ -137,6 +137,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public String addNewProduct(Long restaurantId, Product product) {
         checkValidUserForRestaurant(restaurantId);
 
@@ -144,13 +145,15 @@ public class ProductService {
         if (restaurant == null) {
             return "\"This restaurant with id [" + restaurantId + "] does not exist.\"";
         }
-        boolean hasSameProductName = restaurant.getProducts().stream().anyMatch(p -> p.getProductName().equals(product.getProductName()));
+
+        List<Product> productsOfRestaurant = search(new SearchRequest(), restaurantId).getContent();
+        boolean hasSameProductName = productsOfRestaurant.stream().anyMatch(p -> p.getProductName().equals(product.getProductName()));
         if (hasSameProductName) {
             return "\"This product with name [" + product.getProductName() + "] is already existed.\"";
         }
-        restaurant.getProducts().add(product);
-        restaurantService.update(restaurant);
 
+        Product addedProduct = productRepository.save(product);
+        productRepository.addProductToRestaurant(restaurantId, addedProduct.getId());
         return null;
     }
 
@@ -194,8 +197,7 @@ public class ProductService {
 
         Restaurant restaurant = restaurantService.getById(restaurantId);
         if (restaurant != null) {
-            restaurant.getProducts().removeIf(p -> p.getId().equals(productId));
-            restaurantService.update(restaurant);
+            productRepository.deleteProductFromRestaurant(restaurantId, productId);
         }
 
         productRepository.deleteById(productId);

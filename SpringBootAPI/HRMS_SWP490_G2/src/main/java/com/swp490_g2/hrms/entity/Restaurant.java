@@ -1,17 +1,14 @@
 package com.swp490_g2.hrms.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.swp490_g2.hrms.common.utils.DateUtils;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.List;
-import java.util.Set;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.*;
 
 @Entity
 @Getter
@@ -52,4 +49,25 @@ public class Restaurant extends BaseEntity {
             joinColumns = @JoinColumn(name = "restaurantId"), inverseJoinColumns = @JoinColumn(name = "restaurantCategoryId"))
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<RestaurantCategory> restaurantCategories;
+
+    @Column
+    private String openTime;
+
+    @Column
+    private String closedTime;
+
+    public boolean isOpening() {
+        if (openTime == null || closedTime == null) {
+            return false;
+        }
+
+        LocalTime now = LocalTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        if (Objects.requireNonNull(DateUtils.toLocalTime(openTime)).isBefore(DateUtils.toLocalTime(closedTime))) {
+            return Objects.requireNonNull(DateUtils.toLocalTime(openTime)).isBefore(now)
+                    && now.isBefore(DateUtils.toLocalTime(closedTime));
+        }
+
+        return !(Objects.requireNonNull(DateUtils.toLocalTime(closedTime)).isBefore(now)
+                && now.isBefore(DateUtils.toLocalTime(openTime)));
+    }
 }

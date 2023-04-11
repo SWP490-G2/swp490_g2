@@ -1,4 +1,4 @@
-<div class="grid p-fluid">
+<div class="grid m-0 p-fluid">
   <div class="col-12 md:col-4">
     <label for="city" class="block text-900 font-medium my-2">Province*</label>
     <p-dropdown
@@ -68,27 +68,28 @@
       </ng-template>
     </p-dropdown>
   </div>
-</div>
 
-<ng-container
-  *ngIf="
-    address?.specificAddress ||
-    (form.controls['city']?.value &&
-      form.controls['district']?.value &&
-      form.controls['ward']?.value)
-  "
->
-  <label for="specificAddress" class="block text-900 font-medium mb-2"
-    >Specific Address*</label
+  <div
+    class="col-12"
+    *ngIf="
+      address?.specificAddress ||
+      (form.controls['city']?.value &&
+        form.controls['district']?.value &&
+        form.controls['ward']?.value)
+    "
   >
-  <input
-    id="specificAddress"
-    type="text"
-    pInputText
-    class="w-full mb-1"
-    name="specificAddress"
-    placeholder="House Number,..."
-    ngModel
-    required
-  />
-</ng-container>
+    <label for="specificAddress" class="block text-900 font-medium mb-2"
+      >Specific Address*</label
+    >
+    <input
+      id="specificAddress"
+      type="text"
+      pInputText
+      class="w-full mb-1"
+      name="specificAddress"
+      placeholder="House Number,..."
+      ngModel
+      required
+    />
+  </div>
+</div>

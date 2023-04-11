@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { ConfirmationService, MessageService } from "primeng/api";
+import { ConfirmEventType, ConfirmationService, MessageService } from "primeng/api";
 import { Order, OrderProductDetail, Product, ProductClient, Restaurant } from "src/app/ngswag/client";
 import { CartService } from "src/app/service/cart.service";
 
@@ -13,6 +13,8 @@ export class ProductListComponent implements OnInit {
   @Input() restaurant: Restaurant;
   @Output() productDeleted = new EventEmitter();
   order: Order | undefined;
+  deleteProductDialogVisible = false;
+  deletedProduct: Product | undefined;
 
   constructor(private $cart: CartService, private $productClient: ProductClient, private $message: MessageService, private $confirmation: ConfirmationService,) { }
   ngOnInit(): void {
@@ -50,23 +52,26 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  delete(product: Product) {
+  chooseProductToDelete(product: Product) {
     if (!this.restaurant.id)
+    return;
+    
+    this.deleteProductDialogVisible = true;
+    this.deletedProduct = product;
+  }
+
+  deleteProduct(confirmEventType: ConfirmEventType) {
+    this.deleteProductDialogVisible = false;
+    if (confirmEventType !== ConfirmEventType.ACCEPT || !this.deletedProduct)
       return;
 
-    this.$confirmation.confirm({
-      message:
-        "Are you sure to delete this product?",
-      accept: () => {
-        this.$productClient.deleteProductById(this.restaurant.id!, product.id!).subscribe(() => {
-          this.productDeleted.emit();
-          this.$message.add({
-            severity: "success",
-            summary: "Success",
-            detail: `Product [${product.productName}] has been deleted!`
-          });
-        });
-      },
+    this.$productClient.deleteProductById(this.restaurant.id!, this.deletedProduct.id!).subscribe(() => {
+      this.productDeleted.emit();
+      this.$message.add({
+        severity: "success",
+        summary: "Success",
+        detail: `Product [${this.deletedProduct?.productName}] has been deleted!`
+      });
     });
   }
 

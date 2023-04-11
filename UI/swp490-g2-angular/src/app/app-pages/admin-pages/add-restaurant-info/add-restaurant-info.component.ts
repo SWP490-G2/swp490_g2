@@ -15,7 +15,7 @@ export class AddRestaurantInfoComponent {
   //   //   });
   //   //   this.restaurant.address.specificAddress = this.form.value.specificAddress;
   //   // }
-  //   // this.$restaurantClient.update(this.restaurant).subscribe(() => {
+  //   // this.$restaurant.update(this.restaurant).subscribe(() => {
   //   //   this.$message.add({
   //   //     severity: "success",
   //   //     summary: "Success",

@@ -1,6 +1,6 @@
 <div class="surface-section" *ngIf="initialized">
   <div class="grid -mt-3 -ml-3 -mr-3">
-    <div class="col-6 lg:col-3 mb-5 md:mb-0" *ngFor="let product of products">
+    <div class="col-12 md:col-6 lg:col-4 xl:col-3 mb-5 md:mb-0" *ngFor="let product of products">
       <div class="p-2">
         <div class="relative mb-3">
           <p-carousel
@@ -101,7 +101,7 @@
             label="Delete"
             icon="pi pi-times"
             class="w-full p-button-danger"
-            (click)="delete(product)"
+            (click)="chooseProductToDelete(product)"
           ></button>
         </div>
       </div>
@@ -112,4 +112,7 @@
 <p-confirmDialog
   header="Confirmation"
   icon="pi pi-exclamation-triangle"
+  message="Are you sure to delete this product?"
+  [visible]="deleteProductDialogVisible"
+  (onHide)="deleteProduct($event)"
 ></p-confirmDialog>
