@@ -62,7 +62,12 @@ public class Restaurant extends BaseEntity {
         }
 
         LocalTime now = LocalTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-        return Objects.requireNonNull(DateUtils.toLocalTime(openTime)).isBefore(now)
-                && now.isBefore(DateUtils.toLocalTime(closedTime));
+        if (Objects.requireNonNull(DateUtils.toLocalTime(openTime)).isBefore(now)
+                && now.isBefore(DateUtils.toLocalTime(closedTime))) {
+            return true;
+        }
+
+        return !(Objects.requireNonNull(DateUtils.toLocalTime(closedTime)).isBefore(now)
+                && now.isBefore(DateUtils.toLocalTime(openTime)));
     }
 }

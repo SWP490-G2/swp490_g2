@@ -35,10 +35,6 @@ export class OpenClosedTimeComponent implements OnInit {
       }
     } else {
       if (this.openTimeModel && this.closedTimeModel) {
-        if (this.openTimeModel.getTime() >= this.closedTimeModel.getTime()) {
-          throw new Error("Open time must be before closed time!");
-        }
-
         this.isEditing = false;
         this.restaurant.openTime = DateUtils.fromDateToLocalTimeString(this.openTimeModel);
         this.restaurant.closedTime = DateUtils.fromDateToLocalTimeString(this.closedTimeModel);
@@ -56,7 +52,13 @@ export class OpenClosedTimeComponent implements OnInit {
 
         const nowDate = new Date(intlDateObj.format(new Date()));
         const now = new Date(2023, 0, 1, nowDate.getHours(), nowDate.getMinutes());
-        this.restaurant.opening = this.openTimeModel.getTime() <= now.getTime() && now.getTime() <= this.closedTimeModel.getTime();
+        if(this.openTimeModel.getTime() <= this.closedTimeModel.getTime())
+        {
+          this.restaurant.opening = this.openTimeModel.getTime() <= now.getTime() && now.getTime() <= this.closedTimeModel.getTime();
+        } else {
+          this.restaurant.opening = !(this.closedTimeModel.getTime() <= now.getTime() && now.getTime() <= this.openTimeModel.getTime());
+        }
+        
       }
 
       this.$restaurantClient.update(this.restaurant).subscribe(() => {
