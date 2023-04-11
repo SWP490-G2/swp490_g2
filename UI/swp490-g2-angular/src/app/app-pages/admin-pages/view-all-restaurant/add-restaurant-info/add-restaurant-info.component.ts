@@ -6,6 +6,7 @@ import { AuthService } from "src/app/global/auth.service";
 import {
   AdminClient,
   Restaurant,
+  RestaurantCategoryClient,
   RestaurantClient,
   User,
   UserClient,
@@ -29,8 +30,13 @@ export class AddRestaurantInfoComponent implements OnInit {
   selectedUser: any;
   filteredUsers: any[];
 
+  restaurantCategories: any[];
+  selectedCategory: any;
+  filteredCategories: any[];
+
   constructor(
     private $restaurantClient: RestaurantClient,
+    private $restaurantCategoryClient: RestaurantCategoryClient,
     private $adminClient: AdminClient,
     private $userClient: UserClient,
     private $auth: AuthService,
@@ -43,6 +49,10 @@ export class AddRestaurantInfoComponent implements OnInit {
   ngOnInit() {
     this.$adminClient.getAllUserExceptAdmin().subscribe((users) => {
       this.users = users;
+    });
+
+    this.$restaurantCategoryClient.getAll().subscribe((restaurantCategories) => {
+      this.restaurantCategories = restaurantCategories;
     });
   }
 
@@ -58,6 +68,7 @@ export class AddRestaurantInfoComponent implements OnInit {
       });
       this.restaurant.address.specificAddress = this.form.value.specificAddress;
     }
+    
     this.$adminClient.insertRestaurant(this.restaurant).subscribe(() => {
       this.$message.add({
         severity: "success",
@@ -79,6 +90,20 @@ export class AddRestaurantInfoComponent implements OnInit {
     }
 
     this.filteredUsers = filtered;
+  }
+
+  filterRestaurantCategory(event) {
+    const filtered: any[] = [];
+    const query = event.query;
+
+    for (let i = 0; i < this.restaurantCategories.length; i++) {
+      const restaurantCategory = this.restaurantCategories[i];
+      if (restaurantCategory.restaurantCategoryName.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(restaurantCategory);
+      }
+    }
+
+    this.filteredCategories = filtered;
   }
 
   // ngAfterViewInit(): void {

@@ -29,17 +29,33 @@
   class="surface-section px-2 py-4 md:px-6 lg:px-8"
   (ngSubmit)="submit()"
 >
-  <label for="res.name" class="block text-900 font-medium my-3"
+  <label class="block text-900 font-medium my-3"
     >Restaurant email's Owner</label
   >
   <div class="grid">
-    <div class="col-12">
+    <div class="p-fluid col-12">
       <p-autoComplete
         [(ngModel)]="selectedUser"
         [suggestions]="filteredUsers"
         (completeMethod)="filterUser($event)"
         field="email"
         name="email"
+      ></p-autoComplete>
+    </div>
+  </div>
+
+  <label class="block text-900 font-medium my-3"
+    >Restaurant Category</label
+  >
+  <div class="grid">
+    <div class="p-fluid col-12">
+      <p-autoComplete
+        [(ngModel)]="selectedCategory"
+        [suggestions]="filteredCategories"
+        (completeMethod)="filterRestaurantCategory($event)"
+        [dropdown]="true"
+        field="restaurantCategoryName"
+        name="restaurantCategoryName"
       ></p-autoComplete>
     </div>
   </div>
