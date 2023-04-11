@@ -1,13 +1,13 @@
 <div class="border-2 border-dashed border-300 border-round surface-0 p-4">
   <div
-    class="flex align-items-start sm:align-items-center sm:flex-row surface-border"
+    class="flex align-items-start sm:align-items-center sm:flex-row surface-border flex-wrap gap-5"
   >
     <app-image-attachment
       [url]="restaurant.avatarFile?.filePath"
       width="200px"
       height="200px"
     ></app-image-attachment>
-    <div class="pl-5 flex flex-column gap-2">
+    <div class="flex flex-column gap-2">
       <a
         class="text-900 text-xl font-medium cursor-pointer"
         (click)="onRestaurantNameClick()"

@@ -109,9 +109,9 @@
       </div>
     </div>
 
-    <div class="surface-section px-4 md:px-6 lg:px-8">
-      <div class="flex flex-wrap lg:flex-nowrap">
-        <div class="col-fixed lg:col-2 mr-4 flex p-0 flex-column">
+    <div class="surface-section px-4">
+      <div class="grid m-0">
+        <div class="col-12 lg:col-3 flex flex-column">
           <div class="flex flex-column p-0">
             <p *ngIf="categories.length === 0">No categories</p>
           </div>
@@ -203,7 +203,7 @@
         class="w-full border-2 border-dashed surface-border surface-section mt-3 lg:mt-0"
         style="min-height: 25rem"
       ></div> -->
-        <div class="flex flex-column flex-grow-1 gap-5">
+        <div class="col-12 lg:col-9 flex flex-column flex-grow-1 gap-5">
           <app-sort-by (sortedBy)="onSortByChange($event)"></app-sort-by>
           <app-product-list
             [products]="products"
