@@ -101,7 +101,7 @@
             label="Delete"
             icon="pi pi-times"
             class="w-full p-button-danger"
-            (click)="delete(product)"
+            (click)="chooseProductToDelete(product)"
           ></button>
         </div>
       </div>
@@ -112,4 +112,7 @@
 <p-confirmDialog
   header="Confirmation"
   icon="pi pi-exclamation-triangle"
+  message="Are you sure to delete this product?"
+  [visible]="deleteProductDialogVisible"
+  (onHide)="deleteProduct($event)"
 ></p-confirmDialog>

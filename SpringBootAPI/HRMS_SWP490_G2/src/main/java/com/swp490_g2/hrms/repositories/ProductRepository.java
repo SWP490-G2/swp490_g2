@@ -61,4 +61,10 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
                         
             """, nativeQuery = true)
     void addProductToRestaurant(Long restaurantId, Long productId);
+
+    @Modifying
+    @Query(value = """
+            DELETE FROM `restaurant_product` WHERE (`restaurant_restaurantId` = :restaurantId) and (`products_productId` = :productId);
+            """, nativeQuery = true)
+    void deleteProductFromRestaurant(Long restaurantId, Long productId);
 }

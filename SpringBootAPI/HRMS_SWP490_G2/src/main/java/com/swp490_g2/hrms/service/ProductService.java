@@ -197,8 +197,7 @@ public class ProductService {
 
         Restaurant restaurant = restaurantService.getById(restaurantId);
         if (restaurant != null) {
-            restaurant.getProducts().removeIf(p -> p.getId().equals(productId));
-            restaurantService.update(restaurant);
+            productRepository.deleteProductFromRestaurant(restaurantId, productId);
         }
 
         productRepository.deleteById(productId);
