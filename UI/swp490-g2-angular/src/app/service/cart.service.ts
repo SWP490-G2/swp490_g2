@@ -1,8 +1,14 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, tap } from "rxjs";
-import { Order, OrderClient, OrderProductDetail, Restaurant } from "../ngswag/client";
+import {
+  Order,
+  OrderClient,
+  OrderProductDetail,
+  Restaurant,
+} from "../ngswag/client";
 import { AuthService } from "../global/auth.service";
 import { getLocal, removeLocal, setLocal } from "../utils";
+import { OrderService } from "./order.service";
 
 export interface CartItem {
   id: number;
@@ -20,21 +26,22 @@ export class CartService {
   private CART_STORAGE_KEY = "";
   private RESTAURANT_STORAGE_KEY = "";
 
-  constructor(private $auth: AuthService, private $orderClient: OrderClient) {
+  constructor(
+    private $auth: AuthService,
+    private $orderClient: OrderClient,
+    private $order: OrderService
+  ) {
     $auth.getCurrentUser().subscribe((user) => {
-      if (!user)
-        return;
+      if (!user) return;
 
       this.CART_STORAGE_KEY = `order/${user.id}`;
       this.RESTAURANT_STORAGE_KEY = `order/restaurant/${user.id}`;
-      const order = new Order(getLocal(this.CART_STORAGE_KEY));
-      order.orderProductDetails = order.orderProductDetails?.map(opd => new OrderProductDetail(opd));
+      const order = $order.toOrder(this.CART_STORAGE_KEY);
       this.order$.next(order);
 
       const restaurant = new Restaurant(getLocal(this.RESTAURANT_STORAGE_KEY));
       this.restaurant$.next(restaurant);
     });
-
   }
 
   addToCart(orderProductDetail: OrderProductDetail, restaurant: Restaurant) {
@@ -42,11 +49,10 @@ export class CartService {
     setLocal(this.RESTAURANT_STORAGE_KEY, restaurant.toJSON());
 
     const order = this.order$.value;
-    if (!order.orderProductDetails)
-      order.orderProductDetails = [];
+    if (!order.orderProductDetails) order.orderProductDetails = [];
 
     const existed = order.orderProductDetails.some((opd, index) => {
-      if (opd.productId === orderProductDetail.productId) {
+      if (opd.product?.id === orderProductDetail.product?.id) {
         if (orderProductDetail.quantity) {
           order.orderProductDetails![index] = orderProductDetail.clone();
         } else {
@@ -69,10 +75,11 @@ export class CartService {
 
   removeFromCart(orderProductDetail: OrderProductDetail) {
     const order = this.order$.value;
-    if (!order.orderProductDetails)
-      return;
+    if (!order.orderProductDetails) return;
 
-    const index = order.orderProductDetails.findIndex((i) => i.id === orderProductDetail.id);
+    const index = order.orderProductDetails.findIndex(
+      (i) => i.id === orderProductDetail.id
+    );
     if (index >= 0) {
       order.orderProductDetails.splice(index, 1);
       this.order$.next(order);
@@ -87,8 +94,7 @@ export class CartService {
 
   clearCart() {
     const order = this.order$.value;
-    if (!order.orderProductDetails)
-      return;
+    if (!order.orderProductDetails) return;
 
     order.orderProductDetails.length = 0;
     this.order$.next(order);
@@ -104,10 +110,6 @@ export class CartService {
 
   addOrder(): Observable<string> {
     const order = this.order$.value;
-    return this.$orderClient.insert(order)
-      .pipe(
-        tap(() => this.clearCart())
-      )
-      ;
+    return this.$orderClient.insert(order).pipe(tap(() => this.clearCart()));
   }
 }

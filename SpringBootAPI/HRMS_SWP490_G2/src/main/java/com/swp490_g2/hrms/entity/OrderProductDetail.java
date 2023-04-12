@@ -1,9 +1,6 @@
 package com.swp490_g2.hrms.entity;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -13,11 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "order_product_detail")
-@AttributeOverride(name = "id", column = @Column(name = "orderProductDetail"))
+@AttributeOverride(name = "id", column = @Column(name = "orderProductDetailId"))
 public class OrderProductDetail extends BaseEntity {
-    @Column(nullable = false)
-    private long productId;
-
     @Column(nullable = false)
     private int quantity;
 
@@ -26,4 +20,7 @@ public class OrderProductDetail extends BaseEntity {
 
     @Column
     private String note;
+
+    @ManyToOne(optional = false)
+    private Product product;
 }

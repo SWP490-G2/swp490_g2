@@ -7,7 +7,6 @@ import { HttpClientModule } from "@angular/common/http";
 import { ButtonModule } from "primeng/button";
 import { FileUploadModule } from "primeng/fileupload";
 import { ToastModule } from "primeng/toast";
-import { MessageService, ConfirmationService } from "primeng/api";
 import { HttpErrorHandler } from "src/app/global/http-error-handler";
 
 
@@ -24,8 +23,6 @@ import { HttpErrorHandler } from "src/app/global/http-error-handler";
     ButtonModule
   ],
   providers: [
-    MessageService,
-    ConfirmationService,
     {
       // processes all errors
       provide: ErrorHandler,

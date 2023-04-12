@@ -34,7 +34,7 @@ export class CartPagesComponent implements OnInit {
                     key1: "id",
                     operator: "IN",
                     fieldType: "LONG",
-                    values: order.orderProductDetails?.map(opd => opd.productId),
+                    values: order.orderProductDetails?.map(opd => opd.product?.id),
                   })
                 ]
               }));
@@ -82,7 +82,7 @@ export class CartPagesComponent implements OnInit {
   }
 
   getProduct(detail: OrderProductDetail): Product | undefined {
-    return this.products.find(p => p.id === detail.productId);
+    return this.products.find(p => p.id === detail.product?.id);
   }
 
   remove(detail: OrderProductDetail) {

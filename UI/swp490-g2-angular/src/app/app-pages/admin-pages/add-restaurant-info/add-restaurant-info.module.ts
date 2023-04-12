@@ -5,7 +5,6 @@ import { AddRestaurantInfoRoutingModule } from "./add-restaurant-info-routing.mo
 import { AddRestaurantInfoComponent } from "./add-restaurant-info.component";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
-import { MessageService, ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { CalendarModule } from "primeng/calendar";
 import { CheckboxModule } from "primeng/checkbox";
@@ -41,8 +40,6 @@ import { AccountInformationModule } from "src/app/app-pages/account-information/
     AccountInformationModule,
   ],
   providers: [
-    MessageService,
-    ConfirmationService,
     {
       provide: ErrorHandler,
       useClass: HttpErrorHandler,

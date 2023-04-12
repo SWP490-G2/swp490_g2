@@ -5,7 +5,6 @@ import { UpdateRestaurantInfoApplyRoutingModule } from "./update-restaurant-info
 import { UpdateRestaurantInfoApplyComponent } from "./update-restaurant-info-apply.component";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
-import { MessageService, ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { CalendarModule } from "primeng/calendar";
 import { CheckboxModule } from "primeng/checkbox";
@@ -39,8 +38,6 @@ import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-att
     ImageAttachmentModule,
   ],
   providers: [
-    MessageService,
-    ConfirmationService,
     {
       // processes all errors
       provide: ErrorHandler,

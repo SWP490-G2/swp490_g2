@@ -5,12 +5,17 @@ import {
   Input,
   Output,
   ViewChild,
-  forwardRef,
 } from "@angular/core";
-import { FormGroup, NG_VALUE_ACCESSOR, NgForm, Validators } from "@angular/forms";
+import { FormGroup, NgForm, Validators } from "@angular/forms";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { finalize, of, switchMap } from "rxjs";
-import { Restaurant, RestaurantCategory, RestaurantCategoryClient, RestaurantClient, Ward } from "src/app/ngswag/client";
+import {
+  Restaurant,
+  RestaurantCategory,
+  RestaurantCategoryClient,
+  RestaurantClient,
+  Ward,
+} from "src/app/ngswag/client";
 import { PHONE_NUMBER_PATTERN } from "src/app/utils";
 
 @Component({
@@ -37,7 +42,7 @@ export class RestaurantUpdateInformationComponent implements AfterViewInit {
     private $confirmation: ConfirmationService,
     private $message: MessageService,
     private $restaurantCategoryClient: RestaurantCategoryClient
-  ) { }
+  ) {}
 
   ngAfterViewInit(): void {
     this.$restaurantCategoryClient

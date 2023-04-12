@@ -3,6 +3,9 @@ package com.swp490_g2.hrms.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -17,8 +20,8 @@ public class Notification extends BaseEntity {
     private String message;
 
     @Column
-    private Long userId;
-
-    @Column
     private String url;
+
+    @ManyToMany
+    private List<User> toUsers = new ArrayList<>();
 }

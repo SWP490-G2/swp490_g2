@@ -317,17 +317,6 @@ public class UserService {
         if (user == null)
             return;
 
-        User savedUser = getById(user.getId());
-        if (savedUser.getRequestingRestaurant() == null && user.getRequestingRestaurant() != null
-                && restaurantRepository.existsById(user.getRequestingRestaurant().getId())) {
-            getAllByRoles(List.of(Role.ADMIN)).forEach(u -> {
-                webSocketService.push("/notification", Notification.builder()
-                        .userId(u.getId())
-                        .message("Buyer [%s] wants to become a seller".formatted(user.getEmail()))
-                        .build(), u);
-            });
-        }
-
         userRepository.save(user);
     }
 

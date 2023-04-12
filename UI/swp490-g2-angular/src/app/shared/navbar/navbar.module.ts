@@ -12,9 +12,11 @@ import { SidebarModule } from "primeng/sidebar";
 import { ButtonModule } from "primeng/button";
 import { SideBarsModule } from "../side-bars/side-bars.module";
 import { CartPagesModule } from "src/app/app-pages/cart-pages/cart-pages.module";
+import { NotificationsComponent } from "./notifications/notifications.component";
+import { OverlayPanelModule } from "primeng/overlaypanel";
 
 @NgModule({
-  declarations: [NavbarComponent],
+  declarations: [NavbarComponent, NotificationsComponent],
   exports: [NavbarComponent],
   imports: [
     CommonModule,
@@ -28,7 +30,8 @@ import { CartPagesModule } from "src/app/app-pages/cart-pages/cart-pages.module"
     SidebarModule,
     ButtonModule,
     SideBarsModule,
-    CartPagesModule
+    CartPagesModule,
+    OverlayPanelModule,
   ],
 })
 export class NavbarModule { }

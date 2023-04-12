@@ -41,20 +41,28 @@ public class OrderService {
     public void setRestaurantService(RestaurantService restaurantService) {
         this.restaurantService = restaurantService;
     }
+
+    private WebSocketService webSocketService;
+
+    @Autowired
+    public void setWebSocketService(WebSocketService webSocketService) {
+        this.webSocketService = webSocketService;
+    }
     //////////////////////////////
 
     @Transactional
     public String insert(Order order) {
         User currentUser = userService.getCurrentUser();
-        if(currentUser == null)
+        if (currentUser == null)
             return "\"Current user does not exist!\"";
 
         if (order == null)
             return "\"Order does not exist!\"";
 
+        order.setId(null);
         Restaurant restaurant = null;
         for (OrderProductDetail orderProductDetail : order.getOrderProductDetails()) {
-            Restaurant restaurant2 = restaurantService.getByProductId(orderProductDetail.getProductId());
+            Restaurant restaurant2 = restaurantService.getByProductId(orderProductDetail.getProduct().getId());
             if (restaurant == null)
                 restaurant = restaurant2;
             else if (!restaurant.getId().equals(restaurant2.getId())) {
@@ -63,16 +71,25 @@ public class OrderService {
         }
 
         for (OrderProductDetail orderProductDetail : order.getOrderProductDetails()) {
-            Product product = productService.getById(orderProductDetail.getProductId());
+            Product product = productService.getById(orderProductDetail.getProduct().getId());
             if (product.getProductStatus() == ProductStatus.OUT_OF_STOCK) {
                 return "\"Product [%s] is out of stock!\"".formatted(product.getProductName());
             }
-
-            productService.update(product);
         }
 
         order.setCreatedBy(currentUser.getId());
+        order.setOrderCreator(currentUser);
         orderRepository.save(order);
+
+        assert restaurant != null;
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("")
+                        .message("[%s] made an order!".formatted(currentUser.getFirstName()))
+                        .toUsers(userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId())))
+                        .build()
+        );
         return null;
     }
 
@@ -82,12 +99,12 @@ public class OrderService {
 
     public Restaurant getRestaurantByOrderId(Long orderId) {
         Order order = getById(orderId);
-        if(order == null)
+        if (order == null)
             return null;
 
         Restaurant restaurant = null;
         for (OrderProductDetail orderProductDetail : order.getOrderProductDetails()) {
-            Restaurant restaurant2 = restaurantService.getByProductId(orderProductDetail.getProductId());
+            Restaurant restaurant2 = restaurantService.getByProductId(orderProductDetail.getProduct().getId());
             if (restaurant == null)
                 restaurant = restaurant2;
             else if (!restaurant.getId().equals(restaurant2.getId())) {
@@ -104,11 +121,11 @@ public class OrderService {
             return "Current user does not have permission to do this action!";
 
         Restaurant restaurant = getRestaurantByOrderId(orderId);
-        if(restaurant == null)
+        if (restaurant == null)
             return "Order [id=%d] is not valid!";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
-        if(owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+        if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
             return "Current user does not have permission to do this action!";
 
         if (!orderRepository.existsById(orderId))
@@ -130,11 +147,11 @@ public class OrderService {
             return "Current user does not have permission to do this action!";
 
         Restaurant restaurant = getRestaurantByOrderId(orderId);
-        if(restaurant == null)
+        if (restaurant == null)
             return "Order [id=%d] is not valid!";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
-        if(owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+        if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
             return "Current user does not have permission to do this action!";
 
         if (!orderRepository.existsById(orderId))
@@ -156,11 +173,11 @@ public class OrderService {
             return "Current user does not have permission to do this action!";
 
         Restaurant restaurant = getRestaurantByOrderId(orderId);
-        if(restaurant == null)
+        if (restaurant == null)
             return "Order [id=%d] is not valid!";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
-        if(owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+        if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
             return "Current user does not have permission to do this action!";
 
         if (!orderRepository.existsById(orderId))
@@ -183,11 +200,11 @@ public class OrderService {
             return "Current user does not have permission to do this action!";
 
         Restaurant restaurant = getRestaurantByOrderId(orderId);
-        if(restaurant == null)
+        if (restaurant == null)
             return "Order [id=%d] is not valid!";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
-        if(owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+        if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
             return "Current user does not have permission to do this action!";
 
         if (!orderRepository.existsById(orderId))
@@ -209,11 +226,11 @@ public class OrderService {
             return "Current user does not have permission to do this action!";
 
         Restaurant restaurant = getRestaurantByOrderId(orderId);
-        if(restaurant == null)
+        if (restaurant == null)
             return "Order [id=%d] is not valid!";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
-        if(owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+        if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
             return "Current user does not have permission to do this action!";
 
         if (!orderRepository.existsById(orderId))

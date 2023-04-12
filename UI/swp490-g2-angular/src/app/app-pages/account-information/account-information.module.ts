@@ -9,7 +9,6 @@ import { InputTextModule } from "primeng/inputtext";
 import { ButtonModule } from "primeng/button";
 import { FileUploadModule } from "primeng/fileupload";
 import { HttpClientModule } from "@angular/common/http";
-import { ConfirmationService, MessageService } from "primeng/api";
 import { OpenRestaurantRequestComponent } from "./open-restaurant-request/open-restaurant-request.component";
 import { DialogModule } from "primeng/dialog";
 import { ConfirmPopupModule } from "primeng/confirmpopup";
@@ -46,6 +45,5 @@ import { RestaurantsModule } from "../restaurants/restaurants.module";
     RestaurantsModule,
   ],
   exports: [AddressFieldsComponent],
-  providers: [MessageService, ConfirmationService],
 })
 export class AccountInformationModule {}

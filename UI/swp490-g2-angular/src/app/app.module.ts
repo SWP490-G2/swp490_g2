@@ -19,7 +19,7 @@ import { GoogleMapService } from "./global/google-map.service";
 import { WebsocketService } from "./global/websocket.service";
 import { environment } from "src/environments/environment";
 import { API_BASE_URL } from "./ngswag/client";
-import { ScrollTopModule } from 'primeng/scrolltop';
+import { ScrollTopModule } from "primeng/scrolltop";
 
 @NgModule({
   declarations: [AppComponent],

@@ -15,7 +15,6 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { ToastModule } from "primeng/toast";
 import { AccountInformationModule } from "../../account-information/account-information.module";
-import { MessageService, ConfirmationService } from "primeng/api";
 import { HttpErrorHandler } from "src/app/global/http-error-handler";
 
 
@@ -40,8 +39,6 @@ import { HttpErrorHandler } from "src/app/global/http-error-handler";
     AccountInformationModule,
   ],
   providers: [
-    MessageService,
-    ConfirmationService,
     {
       // processes all errors
       provide: ErrorHandler,
