@@ -10,6 +10,7 @@ import com.swp490_g2.hrms.repositories.UserRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
@@ -59,25 +60,42 @@ public class BuyerService {
         this.webSocketService = webSocketService;
     }
 
-    public void requestOpeningNewRestaurant(Restaurant restaurant) {
+    @Transactional
+    public String requestOpeningNewRestaurant(Restaurant restaurant) {
         User buyer = userService.getCurrentUser();
         if (buyer == null || !buyer.isBuyer()) {
-            return;
+            return "\"You don't have permission to do this action!\"";
         }
 
-        Restaurant createdRestaurant = restaurantService.insert(restaurant);
-        buyer.setRequestingRestaurant(createdRestaurant);
+        Restaurant requestedRestaurant = restaurant;
+        if(restaurant.getId() == null)
+        {
+            requestedRestaurant = restaurantService.insert(restaurant);
+        }
+        else {
+            List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
+
+            // This user doesn't have the required restaurant
+            if(owners.stream().anyMatch(o -> o.getId().equals(buyer.getId())))
+            {
+                return "\"You already have restaurant [%s]\"".formatted(restaurant.getRestaurantName());
+            }
+        }
+
+        buyer.setRequestingRestaurant(requestedRestaurant);
         buyer.setRequestingOpeningRestaurantDate(Instant.now());
         buyer.setRequestingRestaurantStatus(RequestingRestaurantStatus.PENDING);
-        createdRestaurant.setCreatedBy(buyer.getId());
+        requestedRestaurant.setCreatedBy(buyer.getId());
+
         userService.update(buyer);
-        restaurantService.update(createdRestaurant);
 
         webSocketService.push("/notification", Notification.builder()
                 .toUsers(userService.getAllByRoles(List.of(Role.ADMIN)))
-                .message("Buyer [%s] wants to become a seller".formatted(buyer.getEmail()))
+                .message("[%s] requested to open a new restaurant".formatted(buyer.getEmail()))
                 .url("/admin-pages/request-open-list")
                 .build());
+
+        return null;
     }
 
     public List<User> getAllOpeningRestaurantRequests() {

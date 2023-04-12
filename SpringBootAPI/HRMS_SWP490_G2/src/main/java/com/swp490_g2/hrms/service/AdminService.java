@@ -2,6 +2,7 @@ package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.File;
+import com.swp490_g2.hrms.entity.Notification;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
@@ -60,6 +61,13 @@ public class AdminService {
         this.restaurantService = restaurantService;
     }
 
+    private WebSocketService webSocketService;
+
+    @Autowired
+    public void setWebSocketService(WebSocketService webSocketService) {
+        this.webSocketService = webSocketService;
+    }
+
     public List<User> getAllOpeningRestaurantRequests() {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null || !currentUser.isAdmin()) {
@@ -87,10 +95,6 @@ public class AdminService {
         if (requester == null)
             return;
 
-        requester.setRequestingRestaurantStatus(RequestingRestaurantStatus.APPROVED);
-        requester.getRoles().add(Role.SELLER);
-        userService.update(requester);
-
         Restaurant restaurant = restaurantService.getById(requester.getRequestingRestaurant().getId());
         if (restaurant != null) {
             addRestaurantForSeller(requester.getId(), restaurant.getId());
@@ -99,12 +103,27 @@ public class AdminService {
                 restaurantService.update(restaurant);
             }
         }
+
+        requester.setRequestingRestaurantStatus(RequestingRestaurantStatus.APPROVED);
+        requester.getRoles().add(Role.SELLER);
+        requester.setRequestingRestaurant(null);
+        requester.setRequestingOpeningRestaurantDate(null);
+
+        assert restaurant != null;
+        webSocketService.push("/notification", Notification.builder()
+                .toUsers(List.of(requester))
+                .message("Your restaurant [%s] has been approved!".formatted(restaurant.getRestaurantName()))
+                .url("/restaurant/%d".formatted(restaurant.getId()))
+                .build());
+
+        userService.update(requester);
     }
 
     public void addRestaurantForSeller(Long sellerId, Long restaurantId) {
         userRepository.addRestaurantForSeller(sellerId, restaurantId);
     }
 
+    @Transactional
     public void rejectBecomeSeller(Long buyerId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null || !currentUser.isAdmin()) {
@@ -116,7 +135,15 @@ public class AdminService {
             return;
 
         requester.setRequestingRestaurantStatus(RequestingRestaurantStatus.REJECTED);
+        requester.setRequestingRestaurant(null);
+        requester.setRequestingOpeningRestaurantDate(null);
         userService.update(requester);
+
+        webSocketService.push("/notification", Notification.builder()
+                .toUsers(List.of(requester))
+                .message("Your opening restaurant request has been rejected!")
+                .url("/account-information")
+                .build());
     }
 
     public List<Restaurant> getAllRestaurant() {

@@ -37,3 +37,15 @@ git pull
 ./mvnw package -DskipTests
 sudo systemctl restart hrms
 sudo systemctl restart nginx
+
+# Backup sql from server
+
+Server steps:
+  ssh root@66.175.233.233 (login)
+  BS2p@_h609 (login)
+  cd /root/swp490_g2/MySQLDB
+  mysqldump -u root -p hrms_swp490_g2_db > backup.sql
+  Use FileZilla to download to folder MySQLDB on local
+
+Local steps:
+  mysql -u root -p hrms_swp490_g2_db < backup.sql
