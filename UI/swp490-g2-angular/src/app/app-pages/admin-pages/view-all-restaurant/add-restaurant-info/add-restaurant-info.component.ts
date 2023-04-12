@@ -61,6 +61,7 @@ export class AddRestaurantInfoComponent implements OnInit {
   }
 
   submit(): void {
+    
     if (!this.restaurant) return;
     if (this.restaurant.address) {
       this.restaurant.address.ward = new Ward({
@@ -69,6 +70,14 @@ export class AddRestaurantInfoComponent implements OnInit {
       this.restaurant.address.specificAddress = this.form.value.specificAddress;
     }
     
+    const restaurent = {
+    restaurantName: this.restaurant.restaurantName,
+    description: this.restaurant.description,
+    phoneNumber: this.restaurant.phoneNumber,
+    restaurantCategories : this.selectedCategory.id,
+    active: true
+    }
+    console.log(restaurent);
     this.$adminClient.insertRestaurant(this.restaurant).subscribe(() => {
       this.$message.add({
         severity: "success",
