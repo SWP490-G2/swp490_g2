@@ -3,12 +3,18 @@ package com.swp490_g2.hrms.service;
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.OrderStatus;
 import com.swp490_g2.hrms.entity.enums.ProductStatus;
+import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.repositories.OrderRepository;
+import com.swp490_g2.hrms.requests.SearchRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -244,5 +250,35 @@ public class OrderService {
         order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
         return null;
+    }
+
+    public Page<Order> getAllByRole(Role role, SearchRequest searchRequest) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null || !currentUser.getRoles().contains(role))
+            return null;
+
+        List<Order> orders = new ArrayList<>();
+        switch (role) {
+            case USER, BUYER -> orders = orderRepository.findAllByOrderCreatorId(currentUser.getId());
+            case ADMIN -> orders = orderRepository.findAll();
+            case SELLER -> {
+                List<Restaurant> restaurants = restaurantService.getAllBySellerId(currentUser.getId());
+                orders = orderRepository.findAll()
+                        .stream().filter(order -> order.getOrderProductDetails()
+                                .stream().anyMatch(orderProductDetail -> {
+                                    Restaurant restaurant = restaurantService.getByProductId(orderProductDetail.getProduct().getId());
+                                    return restaurants.stream().anyMatch(r -> r.getId().equals(restaurant.getId()));
+                                })).toList();
+            }
+        }
+
+        return new PageImpl<>(orders.subList(
+                searchRequest.getSize() * searchRequest.getPage(),
+                Integer.min(searchRequest.getSize() * searchRequest.getPage()
+                        + searchRequest.getSize(), orders.size())
+        ),
+                PageRequest.of(searchRequest.getPage(),
+                        searchRequest.getSize()),
+                orders.size());
     }
 }

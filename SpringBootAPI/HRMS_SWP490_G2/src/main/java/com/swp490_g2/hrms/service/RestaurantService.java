@@ -160,4 +160,8 @@ public class RestaurantService {
     public Restaurant getByProductId(Long productId) {
         return restaurantRepository.findByProductsIn(List.of(productId));
     }
+
+    public List<Restaurant> getAllBySellerId(Long sellerId) {
+        return restaurantRepository.findBySellerId(sellerId);
+    }
 }
