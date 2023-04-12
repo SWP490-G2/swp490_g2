@@ -138,21 +138,6 @@ public class RestaurantService {
         return restaurantRepository.findAll();
     }
 
-    public void deleteRestaurantById(Long restaurantId) {
-        RestaurantInformationRequest request = getRestaurantById(restaurantId);
-        if (Objects.nonNull(request)) {
-            if (request.getRestaurantCategory() != null || request.getRestaurantCategory().size() > 0) {
-                for (RestaurantCategory category : request.getRestaurantCategory()) {
-                    restaurantRepository.deleteRestaurantCategory(restaurantId, category.getId());
-                }
-            }
-            if (Objects.nonNull(request.getUser())) {
-                restaurantRepository.deleteSellerRestaurant(restaurantId, request.getUser().getId());
-            }
-            restaurantRepository.deleteById(restaurantId);
-        }
-    }
-
     public RestaurantInformationRequest getRestaurantById(Long id) {
         Restaurant restaurant = restaurantRepository.getById(id);
         User user = userService.getByRestaurantId(id);
@@ -162,5 +147,9 @@ public class RestaurantService {
 
     public Restaurant getByProductId(Long productId) {
         return restaurantRepository.findByProductsIn(List.of(productId));
+    }
+
+    public List<Restaurant> getAllBySellerId(Long sellerId) {
+        return restaurantRepository.findBySellerId(sellerId);
     }
 }

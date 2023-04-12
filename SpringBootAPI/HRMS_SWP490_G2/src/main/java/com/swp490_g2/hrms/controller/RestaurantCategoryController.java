@@ -24,4 +24,9 @@ public class RestaurantCategoryController {
     public ResponseEntity<List<RestaurantCategory>> getAll() {
         return ResponseEntity.ok(restaurantCategoryService.getAll());
     }
+
+    @GetMapping("/get-all-restaurant-category-by-restaurant-id/{restaurantId}")
+    public ResponseEntity<List<RestaurantCategory>> getAllRestaurantCategoryByRestaurantId(@PathVariable Long restaurantId) {
+        return ResponseEntity.ok(restaurantCategoryService.getAllRestaurantCategoryByRestaurantId(restaurantId));
+    }
 }

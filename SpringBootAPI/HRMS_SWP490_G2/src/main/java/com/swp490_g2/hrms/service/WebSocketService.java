@@ -32,14 +32,18 @@ public class WebSocketService {
         this.userRepository = userRepository;
     }
 
+    private NotificationService notificationService;
+
+    @Autowired
+    public void setNotificationService(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
+
     //    @Scheduled(fixedRate = 5000)
-    public void push(String destination, Notification notification, User user) {
+    public void push(String destination, Notification notification) {
         // Example: destination = "/message"
-        simpMessagingTemplate.convertAndSend(destination, notification);
-        if (user != null) {
-            user.getNotifications().add(notification);
-            userRepository.save(user);
-        }
+        Notification insertedNotification = this.notificationService.insert(notification);
+        simpMessagingTemplate.convertAndSend(destination, insertedNotification);
     }
 
 

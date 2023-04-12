@@ -11,6 +11,7 @@ import { FormsModule } from "@angular/forms";
 import { InputNumberModule } from "primeng/inputnumber";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 import { ToastModule } from "primeng/toast";
+import { BadgeModule } from "primeng/badge";
 
 @NgModule({
   declarations: [CartPagesComponent],
@@ -31,6 +32,7 @@ import { ToastModule } from "primeng/toast";
     StyleClassModule,
     ImageAttachmentModule,
     ToastModule,
+    BadgeModule,
   ],
   exports: [CartPagesComponent]
 })

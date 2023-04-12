@@ -9,7 +9,6 @@ import { InputTextModule } from "primeng/inputtext";
 import { ButtonModule } from "primeng/button";
 import { FileUploadModule } from "primeng/fileupload";
 import { HttpClientModule } from "@angular/common/http";
-import { ConfirmationService, MessageService } from "primeng/api";
 import { OpenRestaurantRequestComponent } from "./open-restaurant-request/open-restaurant-request.component";
 import { DialogModule } from "primeng/dialog";
 import { ConfirmPopupModule } from "primeng/confirmpopup";
@@ -20,6 +19,7 @@ import { TableModule } from "primeng/table";
 import { AddressFieldsComponent } from "./address-fields/address-fields.component";
 import { RestaurantsModule } from "../restaurants/restaurants.module";
 import { InputTextareaModule } from "primeng/inputtextarea";
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @NgModule({
   declarations: [
@@ -46,8 +46,8 @@ import { InputTextareaModule } from "primeng/inputtextarea";
     TableModule,
     RestaurantsModule,
     InputTextareaModule,
+    AutoCompleteModule
   ],
   exports: [AddressFieldsComponent],
-  providers: [MessageService, ConfirmationService],
 })
 export class AccountInformationModule {}

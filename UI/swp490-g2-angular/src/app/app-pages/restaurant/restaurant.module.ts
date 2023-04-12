@@ -33,6 +33,9 @@ import { AccountInformationModule } from "../account-information/account-informa
 import { InputSwitchModule } from "primeng/inputswitch";
 import { CarouselModule } from "primeng/carousel";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { OpenClosedTimeComponent } from "./open-closed-time/open-closed-time.component";
+import { CalendarModule } from "primeng/calendar";
+import { TagModule } from "primeng/tag";
 
 @NgModule({
   declarations: [
@@ -41,6 +44,7 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
     RestaurantNameComponent,
     RestaurantUpdateInformationComponent,
     SortByComponent,
+    OpenClosedTimeComponent,
   ],
   imports: [
     CommonModule,
@@ -71,6 +75,8 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
     CarouselModule,
     InputSwitchModule,
     ConfirmDialogModule,
+    CalendarModule,
+    TagModule,
   ],
 })
 export class RestaurantModule {}

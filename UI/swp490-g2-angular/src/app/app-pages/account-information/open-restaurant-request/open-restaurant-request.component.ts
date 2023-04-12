@@ -4,7 +4,7 @@ import { Title } from "@angular/platform-browser";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { finalize } from "rxjs";
-import { BuyerClient } from "src/app/ngswag/client";
+import { BuyerClient, RestaurantCategoryClient } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-open-restaurant-request",
@@ -18,22 +18,32 @@ export class OpenRestaurantRequestComponent implements OnInit, AfterViewInit {
     return !!this.form?.invalid || this._submitButtonDisabled;
   }
 
+  restaurantCategories: any[];
+  selectedCategory: any[];
+  filteredCategories: any[];
+
   constructor(
     private $title: Title,
     private $message: MessageService,
     private $buyerClient: BuyerClient,
     private $confirmation: ConfirmationService,
     private $router: Router,
-    private $route: ActivatedRoute
+    private $route: ActivatedRoute,
+    private $restaurantCategoryClient: RestaurantCategoryClient,
   ) {
     $title.setTitle("Open Restaurant Request");
   }
 
-  ngOnInit(): void {}
+  ngOnInit() {
+    this.$restaurantCategoryClient.getAll().subscribe((restaurantCategories) => {
+      this.restaurantCategories = restaurantCategories;
+    });
+  }
   ngAfterViewInit(): void {}
 
   submit(): void {
     console.log(this.form.value);
+    // this.restaurant.restaurantCategories = this.selectedCategory;
     this.$confirmation.confirm({
       message:
         "Request to open a new restaurant cannot be reverted. Are you sure that you want to perform this action?",
@@ -64,6 +74,20 @@ export class OpenRestaurantRequestComponent implements OnInit, AfterViewInit {
           });
       },
     });
+  }
+
+  filterRestaurantCategory(event) {
+    const filtered: any[] = [];
+    const query = event.query;
+
+    for (let i = 0; i < this.restaurantCategories.length; i++) {
+      const restaurantCategory = this.restaurantCategories[i];
+      if (restaurantCategory.restaurantCategoryName.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(restaurantCategory);
+      }
+    }
+
+    this.filteredCategories = filtered;
   }
 
   back() {

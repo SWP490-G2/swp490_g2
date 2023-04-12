@@ -1,9 +1,11 @@
 package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.config.AuthenticationFacade;
+import com.swp490_g2.hrms.entity.Notification;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
+import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +72,12 @@ public class BuyerService {
         createdRestaurant.setCreatedBy(buyer.getId());
         userService.update(buyer);
         restaurantService.update(createdRestaurant);
+
+        webSocketService.push("/notification", Notification.builder()
+                .toUsers(userService.getAllByRoles(List.of(Role.ADMIN)))
+                .message("Buyer [%s] wants to become a seller".formatted(buyer.getEmail()))
+                .url("/admin-pages/request-open-list")
+                .build());
     }
 
     public List<User> getAllOpeningRestaurantRequests() {

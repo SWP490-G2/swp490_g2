@@ -33,12 +33,7 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private String description;
 
-//    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "restaurantId", nullable = false)
-//    @JsonIgnore
-//    private Restaurant restaurant;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "product__product_category",
             joinColumns = @JoinColumn(name = "productId"), inverseJoinColumns = @JoinColumn(name = "productCategoryId"))
     private Set<ProductCategory> categories;

@@ -1,5 +1,4 @@
 <a
-  pRipple
   label="Display"
   icon="pi pi-arrow-left"
   pStyleClass="#slideover-cart-ext"
@@ -11,8 +10,11 @@
   class="cursor-pointer relative h-full inline-flex align-items-center text-600 py-3 lg:py-0 px-3 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 transition-colors transition-duration-150"
   (click)="refresh()"
 >
-  <span class="pi pi-cart-plus mr-2 lg:mr-0"></span>
-  <span *ngIf="hasOrder" class="noti"></span>
+  <span
+    class="pi pi-cart-plus mr-2 lg:mr-0"
+    pBadge
+    [value]="(order.orderProductDetails?.length || 0) + ''"
+  ></span>
   <span class="font-medium inline lg:hidden">Cart</span>
 </a>
 
@@ -123,8 +125,20 @@
             <span> {{ totalPrice | currency : "VND" }} </span>
           </div>
           <div class="flex flex-column mt-4 gap-2">
-            <button pButton pRipple label="Empty Cart" class="w-full p-button-danger" (click)="emptyCart()"></button>
-            <button pButton pRipple label="Place Order" class="w-full" (click)="addOrder()"></button>
+            <button
+              pButton
+              pRipple
+              label="Empty Cart"
+              class="w-full p-button-danger"
+              (click)="emptyCart()"
+            ></button>
+            <button
+              pButton
+              pRipple
+              label="Place Order"
+              class="w-full"
+              (click)="addOrder()"
+            ></button>
           </div>
         </div>
       </div>

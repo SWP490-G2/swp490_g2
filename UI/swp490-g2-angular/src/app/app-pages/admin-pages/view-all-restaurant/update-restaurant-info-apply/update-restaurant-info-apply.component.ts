@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { finalize, forkJoin, of, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
-import { UserClient } from "src/app/ngswag/client";
+import { RestaurantCategoryClient, UserClient } from "src/app/ngswag/client";
 import {
   AdminClient,
   AuthenticationResponse,
@@ -28,8 +28,13 @@ export class UpdateRestaurantInfoApplyComponent
   user?: User;
   uploadUrl: string;
 
+  restaurantCategories: any[];
+  selectedCategory: any[];
+  filteredCategories: any[];
+
   constructor(
     private $restaurantClient: RestaurantClient,
+    private $restaurantCategoryClient: RestaurantCategoryClient,
     private $adminClient: AdminClient,
     private $userClient: UserClient,
     private $auth: AuthService,
@@ -84,6 +89,10 @@ export class UpdateRestaurantInfoApplyComponent
       this.restaurant.address.specificAddress = this.form.value.specificAddress;
     }
 
+    if(this.selectedCategory) {
+      this.restaurant.restaurantCategories = this.selectedCategory;
+    }
+
     this.$restaurantClient.update(this.restaurant).subscribe(() => {
       this.$message.add({
         severity: "success",
@@ -108,7 +117,18 @@ export class UpdateRestaurantInfoApplyComponent
     }, 0);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.$restaurantCategoryClient.getAll().subscribe((restaurantCategories) => {
+      this.restaurantCategories = restaurantCategories;
+    });
+
+    if(this.restaurant) {
+      return;
+    }
+    this.$restaurantCategoryClient.getAllRestaurantCategoryByRestaurantId(this.restaurantId).subscribe((result) => {
+      this.selectedCategory = result;
+    });
+  }
 
   updateAvatar(image: File) {
     if (!this.restaurant) return;
@@ -138,5 +158,19 @@ export class UpdateRestaurantInfoApplyComponent
     if (!(restaurant as any).owners) return "";
 
     return (restaurant as any).owners.map((o) => o.email).join(", ");
+  }
+
+  filterRestaurantCategory(event) {
+    const filtered: any[] = [];
+    const query = event.query;
+
+    for (let i = 0; i < this.restaurantCategories.length; i++) {
+      const restaurantCategory = this.restaurantCategories[i];
+      if (restaurantCategory.restaurantCategoryName.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(restaurantCategory);
+      }
+    }
+
+    this.filteredCategories = filtered;
   }
 }

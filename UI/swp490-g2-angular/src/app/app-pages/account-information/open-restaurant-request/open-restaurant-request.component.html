@@ -37,6 +37,22 @@
       ></div>
     </div>
     <div class="card">
+      <label class="block text-900 font-medium my-3">Restaurant Category</label>
+      <div class="grid">
+        <div class="p-fluid col-12">
+          <p-autoComplete
+            [(ngModel)]="selectedCategory"
+            [suggestions]="filteredCategories"
+            (completeMethod)="filterRestaurantCategory($event)"
+            [dropdown]="true"
+            [multiple]="true"
+            field="restaurantCategoryName"
+            name="restaurantCategories"
+          ></p-autoComplete>
+        </div>
+      </div>
+    </div>
+    <div class="card">
       <label for="email" class="block text-900 font-medium my-3"
         >Phone number*</label
       >
@@ -92,4 +108,3 @@
   icon="pi pi-exclamation-triangle"
 ></p-confirmDialog>
 
-<p-toast></p-toast>

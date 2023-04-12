@@ -20,6 +20,7 @@ import { GoogleMapsModule } from "@angular/google-maps";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 import { RestaurantCardComponent } from "./restaurant-card/restaurant-card.component";
 import { PaginatorModule } from "primeng/paginator";
+import { TagModule } from "primeng/tag";
 
 @NgModule({
   declarations: [RestaurantsComponent, RestaurantCardComponent],
@@ -42,6 +43,7 @@ import { PaginatorModule } from "primeng/paginator";
     GoogleMapsModule,
     ImageAttachmentModule,
     PaginatorModule,
+    TagModule,
   ],
   exports: [RestaurantsComponent, RestaurantCardComponent],
 })

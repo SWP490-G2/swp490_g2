@@ -23,11 +23,14 @@ public class Order extends BaseEntity {
     private List<OrderProductDetail> orderProductDetails = new ArrayList<>();
 
     /**
-     *  PENDING  -> ACCEPTED -> DELIVERING   -> COMPLETED
-     *           |                           |
-     *           -> REJECTED                 -> ABORTED
+     * PENDING  -> ACCEPTED -> DELIVERING   -> COMPLETED
+     * |                           |
+     * -> REJECTED                 -> ABORTED
      */
     @Column(columnDefinition = "nvarchar(16) default 'PENDING'", insertable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+
+    @ManyToOne(optional = false)
+    private User orderCreator;
 }

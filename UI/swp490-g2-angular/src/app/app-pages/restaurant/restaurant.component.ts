@@ -40,7 +40,7 @@ export class RestaurantComponent implements OnInit {
   priceRange: number[] = [0, 0];
   selectedPriceRange: number[] = [0, 0];
   currentPage = 0;
-  private pageSize = 8;
+  private pageSize = 12;
   totalPages = 0;
   private timeout?: number;
   private isFulltextSearching = false;

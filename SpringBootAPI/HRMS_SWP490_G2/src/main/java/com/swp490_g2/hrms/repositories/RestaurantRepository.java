@@ -52,4 +52,12 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long>, J
             """, nativeQuery = true)
     Restaurant findByProductsIn(List<Long> productIds);
 
+    @Query(value = """
+            select r.*
+            from restaurant r
+            	inner join user__restaurant ur on ur.restaurantId = r.restaurantId
+            where ur.userId = :sellerId
+            ;
+            """, nativeQuery = true)
+    List<Restaurant> findBySellerId(Long sellerId);
 }

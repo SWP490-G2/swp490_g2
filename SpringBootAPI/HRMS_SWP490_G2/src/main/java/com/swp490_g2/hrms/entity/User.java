@@ -72,6 +72,7 @@ public class User extends BaseEntity implements UserDetails {
     private File avatarFile;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Address address;
 
     @ElementCollection(targetClass = Role.class)

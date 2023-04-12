@@ -5,7 +5,6 @@ import { UpdateRestaurantInfoApplyRoutingModule } from "./update-restaurant-info
 import { UpdateRestaurantInfoApplyComponent } from "./update-restaurant-info-apply.component";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
-import { MessageService, ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { CalendarModule } from "primeng/calendar";
 import { CheckboxModule } from "primeng/checkbox";
@@ -18,6 +17,7 @@ import { HttpErrorHandler } from "src/app/global/http-error-handler";
 import { DropdownModule } from "primeng/dropdown";
 import { AccountInformationModule } from "src/app/app-pages/account-information/account-information.module";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @NgModule({
   declarations: [UpdateRestaurantInfoApplyComponent],
@@ -37,10 +37,9 @@ import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-att
     DropdownModule,
     AccountInformationModule,
     ImageAttachmentModule,
+    AutoCompleteModule
   ],
   providers: [
-    MessageService,
-    ConfirmationService,
     {
       // processes all errors
       provide: ErrorHandler,

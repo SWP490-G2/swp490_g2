@@ -27,11 +27,11 @@ export class AddRestaurantInfoComponent implements OnInit {
   uploadUrl: string;
 
   users: any[];
-  selectedUser: any;
+  selectedUser: any[];
   filteredUsers: any[];
 
   restaurantCategories: any[];
-  selectedCategory: any;
+  selectedCategory: any[];
   filteredCategories: any[];
 
   constructor(
@@ -62,22 +62,25 @@ export class AddRestaurantInfoComponent implements OnInit {
 
   submit(): void {
     
-    if (!this.restaurant) return;
-    if (this.restaurant.address) {
-      this.restaurant.address.ward = new Ward({
-        id: this.form.value.ward.id,
-      });
-      this.restaurant.address.specificAddress = this.form.value.specificAddress;
-    }
+    // if (!this.restaurant) return;
+    // if (this.restaurant.address) {
+    //   this.restaurant.address.ward = new Ward({
+    //     id: this.form.value.ward.id,
+    //   });
+    //   this.restaurant.address.specificAddress = this.form.value.specificAddress;
+    // }
     
-    const restaurent = {
-    restaurantName: this.restaurant.restaurantName,
-    description: this.restaurant.description,
-    phoneNumber: this.restaurant.phoneNumber,
-    restaurantCategories : this.selectedCategory.id,
-    active: true
-    }
-    console.log(restaurent);
+    // const restaurent = {
+    // address: this.restaurant.address,
+    // owner: this.selectedUser,
+    // restaurantName: this.restaurant.restaurantName,
+    // description: this.restaurant.description,
+    // phoneNumber: this.restaurant.phoneNumber,
+    // restaurantCategories : this.selectedCategory,
+    // active: true
+    // }
+
+    this.restaurant.restaurantCategories = this.selectedCategory;
     this.$adminClient.insertRestaurant(this.restaurant).subscribe(() => {
       this.$message.add({
         severity: "success",

@@ -23,7 +23,7 @@ export class NavbarComponent implements OnInit {
     private $title: Title,
     private $auth: AuthService,
     private $client: Client,
-    private cartService: CartService
+    private cartService: CartService,
   ) {
     $title.setTitle("Home");
   }
