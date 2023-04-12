@@ -28,14 +28,12 @@ export class NotificationsComponent implements OnInit {
     private $webSocket: WebsocketService,
     private $router: Router,
     private $message: MessageService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.$webSocket.connect("/notification", (res) => {
       const notification = Notification.fromJS(JSON.parse(res.body));
-      if (
-        notification.toUsers?.some((u) => u.id === this.currentUser?.id)
-      ) {
+      if (notification.toUsers?.some((u) => u.id === this.currentUser?.id)) {
         if (!notification.modifiedAt)
           (notification.modifiedAt as any) = new Date().getTime();
 
@@ -83,28 +81,32 @@ export class NotificationsComponent implements OnInit {
   getModifiedDate(s: string | undefined): string | undefined {
     if (!s) return undefined;
 
-    return DateUtils.fromDB(s).toLocaleString();
+    return DateUtils.fromDB(s).toString();
   }
 
   read(notification: Notification) {
-    if (!notification.id)
-      return;
+    if (!notification.id) return;
 
-    this.$notificationClient.deleteById(notification.id)
-      .pipe(switchMap(() => { return this.refresh() }),
+    this.$notificationClient
+      .deleteById(notification.id)
+      .pipe(
+        switchMap(() => {
+          return this.refresh();
+        }),
         switchMap(() => {
           this.op.hide();
           if (notification.url) this.$router.navigateByUrl(notification.url);
-          return of(undefined)
-        }))
-      .subscribe()
+          return of(undefined);
+        })
+      )
+      .subscribe();
   }
 
   clear() {
-    if (!this.currentUser?.id)
-      return;
+    if (!this.currentUser?.id) return;
 
-    this.$notificationClient.deleteAllByUserId(this.currentUser?.id)
+    this.$notificationClient
+      .deleteAllByUserId(this.currentUser?.id)
       .pipe(switchMap(() => this.refresh()))
       .subscribe();
   }
