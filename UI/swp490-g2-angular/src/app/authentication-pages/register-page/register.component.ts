@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
       this.form.controls["phoneNumber"].addValidators([
         Validators.required,
-        Validators.pattern("^(0[3|5|7|8|9])+([0-9]{8})$"),
+        Validators.pattern("^(([+]84)|0)|([3|5|7|8|9])+([0-9]{8})$"),
       ]);
       this.form.controls["phoneNumber"].updateValueAndValidity();
     }, 0);
