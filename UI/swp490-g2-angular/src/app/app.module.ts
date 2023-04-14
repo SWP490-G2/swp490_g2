@@ -20,6 +20,7 @@ import { WebsocketService } from "./global/websocket.service";
 import { environment } from "src/environments/environment";
 import { API_BASE_URL } from "./ngswag/client";
 import { ScrollTopModule } from "primeng/scrolltop";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,6 +35,7 @@ import { ScrollTopModule } from "primeng/scrolltop";
     ImageAttachmentModule,
     GoogleMapsModule,
     ScrollTopModule,
+    ConfirmDialogModule,
   ],
   providers: [
     MessageService,

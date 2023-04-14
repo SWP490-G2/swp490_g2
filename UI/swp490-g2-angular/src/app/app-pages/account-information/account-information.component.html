@@ -7,104 +7,91 @@
     <div class="text-center mb-5">
       <div class="text-900 text-3xl font-medium mb-3">Account Information</div>
     </div>
-    <div class="card">
-      <label for="email" class="block text-900 font-medium my-3">Email*</label>
-      <input
-        id="email"
-        type="text"
-        pInputText
-        class="w-full mb-1"
-        name="email"
-        value="{{ getUserDisplay() }}"
-        disabled
-        ngModel
-      />
+    <div class="card flex flex-column gap-3">
+      <div class="flex flex-column gap-2">
+        <label for="email" class="block text-900 font-medium">Email*</label>
+        <input
+          id="email"
+          type="text"
+          pInputText
+          class="w-full"
+          name="email"
+          value="{{ getUserDisplay() }}"
+          readonly
+          ngModel
+        />
+      </div>
 
-      <div class="grid p-fluid">
-        <div class="col-12 md:col-4">
-          <label for="firstName" class="block text-900 font-medium my-2"
-            >First Name*</label
-          >
-          <input
-            id="firstName"
-            type="text"
-            pInputText
-            class="w-full mb-1 capitalize"
-            name="firstName"
-            placeholder="Enter your first name"
-            ngModel
-            required
-          />
-        </div>
-        <div class="col-12 md:col-4">
-          <label for="middleName" class="block text-900 font-medium my-2"
-            >Middle Name</label
-          >
-          <input
-            id="middleName"
-            type="text"
-            pInputText
-            class="w-full mb-1"
-            name="middleName"
-            placeholder="Enter your middle name"
-            ngModel
-          />
-        </div>
-        <div class="col-12 md:col-4">
-          <label for="lastName" class="block text-900 font-medium my-2"
+      <div class="grid my-0">
+        <div class="col-12 md:col-4 flex flex-column gap-2">
+          <label for="lastName" class="block text-900 font-medium"
             >Last Name*</label
           >
           <input
             id="lastName"
             type="text"
             pInputText
-            class="w-full mb-1"
+            class="w-full"
             name="lastName"
             placeholder="Enter your last name"
             ngModel
             required
           />
         </div>
+        <div class="col-12 md:col-4 flex flex-column gap-2">
+          <label for="middleName" class="block text-900 font-medium"
+            >Middle Name</label
+          >
+          <input
+            id="middleName"
+            type="text"
+            pInputText
+            class="w-full"
+            name="middleName"
+            placeholder="Enter your middle name"
+            ngModel
+          />
+        </div>
+        <div class="col-12 md:col-4 flex flex-column gap-2">
+          <label for="firstName" class="block text-900 font-medium"
+            >First Name*</label
+          >
+          <input
+            id="firstName"
+            type="text"
+            pInputText
+            class="w-full capitalize"
+            name="firstName"
+            placeholder="Enter your first name"
+            ngModel
+            required
+          />
+        </div>
       </div>
 
-      <label for="dateOfBirth" class="block text-900 font-medium my-2"
-        >Date of birth*</label
-      >
+      <div class="flex flex-column gap-2">
+        <label for="dateOfBirth" class="block text-900 font-medium"
+          >Date of birth*</label
+        >
 
-      <p-calendar
-        inputId="dateOfBirth"
-        placeholder="dd/mm/yyyy"
-        dateFormat="dd/mm/yy"
-        styleClass="w-full mb-1"
-        name="dateOfBirth"
-        ngModel
-      ></p-calendar>
+        <p-calendar
+          inputId="dateOfBirth"
+          placeholder="dd/mm/yyyy"
+          dateFormat="dd/mm/yy"
+          styleClass="w-full"
+          name="dateOfBirth"
+          ngModel
+        ></p-calendar>
+      </div>
 
       <app-address-fields
         *ngIf="this.user?.id"
         [address]="this.user?.address"
       ></app-address-fields>
 
-      <!--
-            <div class="d-inline-flex p-2">
-                <div class="card w-6 ">
-                    <div class="flex align-items-stretch flex-wrap card-container blue-container">
-                        <p-fileUpload name="demo[]" url="./upload.php" (onUpload)="onUpload($event)" [multiple]="true"
-                            accept="image/*" [maxFileSize]="1000000">
-                            <ng-template pTemplate="content">
-                                <ul *ngIf="uploadedFiles.length">
-                                    <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
-                                </ul>
-                            </ng-template>
-                        </p-fileUpload>
-                    </div>
-                </div>
-            </div> -->
-
       <p-dialog
         header="Do you want to become a seller? Choose now:"
         [(visible)]="display"
-        styleClass="w-full"
         [closable]="true"
         [modal]="true"
       >
@@ -137,31 +124,28 @@
       </p-dialog>
 
       <ng-container *ngIf="isBuyer">
-        <div class="surface-border border-top-1 opacity-50 mt-3 col-12"></div>
-        <p>You are a <strong>buyer</strong>.</p>
-
-        <div class="grid" *ngIf="user && user.requestingRestaurant" class="col">
-          <p>Your request to become a seller is being reviewed.</p>
-          <div class="col">
-            <p-accordion>
-              <p-accordionTab
-                [selected]="true"
-                header="Requesting Restaurant Information"
-              >
-                <app-restaurant-card
-                  [restaurant]="user.requestingRestaurant"
-                  [hasDistance]="false"
-                ></app-restaurant-card>
-              </p-accordionTab>
-            </p-accordion>
-          </div>
+        <div *ngIf="user?.requestingRestaurant" class="flex flex-column gap-2">
+          <strong
+            >Your request to open a new restaurant is being reviewed.</strong
+          >
+          <p-accordion>
+            <p-accordionTab
+              [selected]="true"
+              header="Requesting Restaurant Information"
+            >
+              <app-restaurant-card
+                [restaurant]="user?.requestingRestaurant!"
+                [hasDistance]="false"
+              ></app-restaurant-card>
+            </p-accordionTab>
+          </p-accordion>
         </div>
 
         <button
           *ngIf="!user?.['requestingRestaurant']"
           pButton
           pRipple
-          label="Change role to seller"
+          label="Request to open a restaurant"
           class="w-full"
           type="button"
           (click)="showDialog()"
@@ -183,4 +167,3 @@
     </div>
   </form>
 </div>
-<p-confirmDialog></p-confirmDialog>

@@ -49,6 +49,12 @@ public class RestaurantService {
     public Restaurant insert(Restaurant restaurant) {
         if(restaurant == null)
             return null;
+            
+        restaurant.setId(null);
+
+        User currentUser = userService.getCurrentUser();
+        if(currentUser != null)
+            restaurant.setCreatedBy(currentUser.getId());
         restaurant.setAddress(addressService.populateLatLng(restaurant.getAddress()));
         return restaurantRepository.save(restaurant);
     }
