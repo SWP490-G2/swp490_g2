@@ -3,11 +3,14 @@ package com.swp490_g2.hrms.controller;
 import com.swp490_g2.hrms.entity.File;
 import com.swp490_g2.hrms.service.FileService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Set;
 
 @RestController
@@ -32,4 +35,6 @@ public class FileController {
     {
         return ResponseEntity.ok(fileService.getAll());
     }
+
+
 }

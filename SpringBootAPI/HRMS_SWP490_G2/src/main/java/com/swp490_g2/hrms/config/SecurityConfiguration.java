@@ -39,7 +39,8 @@ public class SecurityConfiguration {
                         "/user/change-password",
                         "/restaurant-category/get-all",
                         "/user/send-verification-code/*",
-                        "/socket/**"
+                        "/socket/**",
+                        "/.well-known/pki-validation/*"
                 )
                 .permitAll()
                 .anyRequest()
