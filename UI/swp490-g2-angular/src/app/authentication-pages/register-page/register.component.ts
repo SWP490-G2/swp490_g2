@@ -1,9 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import {
-  FormBuilder,
-  NgForm,
-  Validators,
-} from "@angular/forms";
+import { FormBuilder, NgForm, Validators } from "@angular/forms";
 import { Title } from "@angular/platform-browser";
 import { MessageService } from "primeng/api";
 import { finalize } from "rxjs";
@@ -53,6 +49,12 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
   register(): void {
     this._registerButtonDisabled = true;
+
+    if (this.form.value.phoneNumber.startsWith("+84")) {
+      this.form.controls["phoneNumber"].setValue(
+        this.form.value.phoneNumber.replace("+84", "0")
+      );
+    }
 
     this.$client
       .register(this.form.value)
