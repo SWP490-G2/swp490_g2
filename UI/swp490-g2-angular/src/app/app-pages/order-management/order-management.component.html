@@ -1,3 +1,35 @@
-<p>
-  order-management works!
-</p>
+<div class="card">
+  <p-table [value]="orderProductDetail" [tableStyle]="{'min-width': '60rem'}">
+    <ng-template pTemplate="caption">
+      <div class="flex align-items-center justify-content-between">
+        Orders
+        <p-button icon="pi pi-refresh"></p-button>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Buyer Name</th>
+        <th>Email</th>
+        <th>Phone number</th>
+        <th>Total Order</th>
+        <th>Total Price</th>
+        <th>Order Status</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-order>
+      <tr>
+        <td>{{order.orderCreator.middleName + ' '+ order.orderCreator.lastName}}</td>
+        <td>{{order.orderCreator.email}}</td>
+        <td>{{order.orderCreator.phoneNumber}}</td>
+        <td>{{order.orderProductDetails.length}}</td>
+        <td>{{order.category}}</td>
+        <td><p-tag [value]="order.inventoryStatus"></p-tag></td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="flex align-items-center justify-content-between">
+        In total there are {{orderProductDetail ? orderProductDetail.length : 0 }} buyers order.
+      </div>
+    </ng-template>
+  </p-table>
+</div>
