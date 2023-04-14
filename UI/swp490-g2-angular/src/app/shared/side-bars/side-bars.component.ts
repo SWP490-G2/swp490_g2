@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { Title } from "@angular/platform-browser";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, RouterLink } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import { Client, User } from "src/app/ngswag/client";
@@ -73,5 +73,9 @@ export class SideBarsComponent implements OnInit {
     this.$router.navigate(["admin-pages", "request-open-list"], {
       relativeTo: this.$route,
     });
+  }
+
+  showAdmin(): boolean {
+    return !this.$router.url.startsWith("/admin-pages");
   }
 }

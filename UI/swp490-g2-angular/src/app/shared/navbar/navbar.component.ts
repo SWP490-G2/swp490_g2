@@ -74,4 +74,12 @@ export class NavbarComponent implements OnInit {
 
     return "";
   }
+
+  userExistedSeller(): string {
+    if (AuthService.isSeller(this.user)) {
+      return "Seller Account";
+    }
+
+    return "";
+  }
 }

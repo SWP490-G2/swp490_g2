@@ -38,7 +38,17 @@ const routes: Routes = [
           roles: ["ADMIN"],
         },
       },
-
+      {
+        path: "seller-pages",
+        loadChildren: () =>
+          import("./seller-pages/seller-pages.module").then(
+            (m) => m.SellerPagesModule
+          ),
+        canActivate: [AuthGuard],
+        data: {
+          roles: ["SELLER"],
+        },
+      },
       {
         path: "feed-page",
         loadChildren: () =>
