@@ -81,7 +81,14 @@ const routes: Routes = [
           import("./order-pages/order-pages.module").then(
             (m) => m.OrderPagesModule
           ),
-      }
+      },
+      {
+        path: "order-management",
+        loadChildren: () =>
+          import("./order-management/order-management.module").then(
+            (m) => m.OrderManagementModule
+          ),
+      },
     ],
   },
 ];
