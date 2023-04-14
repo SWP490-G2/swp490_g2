@@ -30,7 +30,6 @@ export class ProductListComponent implements OnInit {
   @Input() restaurant: Restaurant;
   @Output() productDeleted = new EventEmitter();
   order: Order | undefined;
-  deleteProductDialogVisible = false;
   deletedProduct: Product | undefined;
 
   constructor(
@@ -79,25 +78,23 @@ export class ProductListComponent implements OnInit {
   chooseProductToDelete(product: Product) {
     if (!this.restaurant.id) return;
 
-    this.deleteProductDialogVisible = true;
-    this.deletedProduct = product;
-  }
-
-  deleteProduct(confirmEventType: ConfirmEventType) {
-    this.deleteProductDialogVisible = false;
-    if (confirmEventType !== ConfirmEventType.ACCEPT || !this.deletedProduct)
-      return;
-
-    this.$productClient
-      .deleteProductById(this.restaurant.id!, this.deletedProduct.id!)
-      .subscribe(() => {
-        this.productDeleted.emit();
-        this.$message.add({
-          severity: "success",
-          summary: "Success",
-          detail: `Product [${this.deletedProduct?.productName}] has been deleted!`,
-        });
-      });
+    this.$confirmation.confirm({
+      header: "Confirmation",
+      message: "Are you sure to delete this product?",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => {
+        this.$productClient
+          .deleteProductById(this.restaurant.id!, product.id!)
+          .subscribe(() => {
+            this.productDeleted.emit();
+            this.$message.add({
+              severity: "success",
+              summary: "Success",
+              detail: `Product [${product.productName}] has been deleted!`,
+            });
+          });
+      },
+    });
   }
 
   getProductStatus(product: Product):

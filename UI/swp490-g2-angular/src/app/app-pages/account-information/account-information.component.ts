@@ -112,7 +112,7 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   }
 
   get isBuyer(): boolean {
-    return AuthService.isBuyer(this.user);
+    return !!this.user?.buyer;
   }
 
   getRestaurantName(): string {
@@ -208,11 +208,15 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
       accept: () => {
         const marker = { ...restaurant["marker"] };
         restaurant["marker"] = null;
-        this.$buyerClient.requestOpeningNewRestaurant(restaurant).subscribe(() => {
-          restaurant["marker"] = marker;
-          this.display = false;
-          location.reload();
-        });
+        this.$buyerClient
+          .requestOpeningNewRestaurant(restaurant)
+          .subscribe((errorMessage) => {
+            if (errorMessage) throw new Error(errorMessage);
+
+            restaurant["marker"] = marker;
+            this.display = false;
+            location.reload();
+          });
       },
     });
   }

@@ -320,6 +320,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Deprecated
     public User getByRestaurantId(Long restaurantId) {
         return this.userRepository.findByRestaurantId(restaurantId).orElse(null);
     }

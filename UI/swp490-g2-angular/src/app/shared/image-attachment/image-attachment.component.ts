@@ -42,20 +42,19 @@ export class ImageAttachmentComponent implements OnInit {
   @Input() isRound = true;
   @Input() deletable = false;
   @Output() deleteImageHandler = new EventEmitter();
-  deleteImageDialogVisible = false;
 
   constructor(
     private $auth: AuthService,
     private $fileUpload: FileUploadService,
     private $fileClient: FileClient,
     private $cdRef: ChangeDetectorRef,
-    private $confirmation: ConfirmationService,
-  ) { }
+    private $confirmation: ConfirmationService
+  ) {}
 
   ngOnInit(): void {
     this.imageStyle = {
       height: this.height,
-      width: this.width
+      width: this.width,
     };
 
     this.headers = new HttpHeaders({
@@ -163,11 +162,9 @@ export class ImageAttachmentComponent implements OnInit {
   }
 
   deleteImage() {
-    this.deleteImageDialogVisible = true;
-  }
-
-  onDeleteImageDialogHide() {
-    this.deleteImageDialogVisible = false;
-    this.deleteImageHandler.emit();
+    this.$confirmation.confirm({
+      message: "Do you want to delete this image?",
+      accept: () => this.deleteImageHandler.emit(),
+    });
   }
 }
