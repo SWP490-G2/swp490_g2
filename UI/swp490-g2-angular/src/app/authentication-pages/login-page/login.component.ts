@@ -39,6 +39,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   login() {
     this._loginButtonDisabled = true;
+    if (this.form.value.emailOrPhoneNumber.startsWith("+84")) {
+      this.form.controls["emailOrPhoneNumber"].setValue(
+        this.form.value.emailOrPhoneNumber.replace("+84", "0")
+      );
+    }
 
     this.$auth
       .login(this.form.value)
