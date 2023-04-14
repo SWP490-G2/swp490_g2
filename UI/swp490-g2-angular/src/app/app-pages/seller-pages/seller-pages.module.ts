@@ -11,7 +11,6 @@ import { DropdownModule } from "primeng/dropdown";
 import { InputSwitchModule } from "primeng/inputswitch";
 import { TableModule } from "primeng/table";
 import { TagModule } from "primeng/tag";
-import { ToastModule } from "primeng/toast";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { RestaurantsModule } from "../restaurants/restaurants.module";
 import { HttpClientModule } from "@angular/common/http";
@@ -31,7 +30,6 @@ import { HttpClientModule } from "@angular/common/http";
     TagModule,
     DialogModule,
     ConfirmDialogModule,
-    ToastModule,
     InputSwitchModule,
     ToggleButtonModule,
     RestaurantsModule,

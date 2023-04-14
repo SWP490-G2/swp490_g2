@@ -17,7 +17,6 @@ export class SellerPagesComponent implements OnInit, AfterViewInit{
   display = false;
   user?: User;
   restaurants: Restaurant[];
-  restaurantsShown = true;
   ngOnInit(): void {
   }
   ngAfterViewInit(): void {
@@ -38,19 +37,4 @@ export class SellerPagesComponent implements OnInit, AfterViewInit{
     $title.setTitle("Seller Management");
   }
 
-  selectRestaurant(restaurant: Restaurant) {
-    this.$confirmation.confirm({
-      header: "Confirmation",
-      message: `Are you sure that you want to select restaurant "${restaurant.restaurantName}"?`,
-      accept: () => {
-        const marker = { ...restaurant["marker"] };
-        restaurant["marker"] = null;
-        this.$buyerClient.requestOpeningNewRestaurant(restaurant).subscribe(() => {
-          restaurant["marker"] = marker;
-          this.display = false;
-          location.reload();
-        });
-      },
-    });
-  }
 }

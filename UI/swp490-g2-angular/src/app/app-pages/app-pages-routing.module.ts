@@ -81,7 +81,7 @@ const routes: Routes = [
           import("./order-pages/order-pages.module").then(
             (m) => m.OrderPagesModule
           ),
-      },
+      }
     ],
   },
 ];

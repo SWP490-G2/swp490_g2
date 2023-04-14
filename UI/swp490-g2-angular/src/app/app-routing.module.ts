@@ -15,7 +15,13 @@ const routes: Routes = [
     loadChildren: () =>
       import("./app-pages/app-pages.module").then((m) => m.AppPagesModule),
   },
-  { path: "seller-pages", loadChildren: () => import("./app-pages/seller-pages/seller-pages.module").then(m => m.SellerPagesModule) },
+  {
+    path: "seller-pages",
+    loadChildren: () =>
+      import("./app-pages/seller-pages/seller-pages.module").then(
+        (m) => m.SellerPagesModule
+      ),
+  },
   {
     path: "**",
     redirectTo: "",

@@ -22,12 +22,11 @@
   </div>
 </div>
 <div class="surface-section px-4 py-8 md:px-6 lg:px-8">
-  <div *ngIf="restaurantsShown" class="mt-2">
+  <div class="mt-2">
     <app-restaurants
       [hasCurrentUser]="false"
       [hasPagination]="true"
-      [navigateWhenClick]="false"
-      (restaurantClick)="selectRestaurant($event)"
+      [navigateWhenClick]="true"
     ></app-restaurants>
   </div>
 </div>
