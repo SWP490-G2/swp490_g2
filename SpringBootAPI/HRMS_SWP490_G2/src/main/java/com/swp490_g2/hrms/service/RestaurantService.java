@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.swp490_g2.hrms.common.utils.CommonUtils;
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.repositories.RestaurantRepository;
@@ -50,7 +51,7 @@ public class RestaurantService {
         restaurant.setId(null);
 
         User currentUser = userService.getCurrentUser();
-        if(currentUser != null)
+        if (currentUser != null)
             restaurant.setCreatedBy(currentUser.getId());
 
         return restaurantRepository.save(restaurant);
@@ -79,14 +80,37 @@ public class RestaurantService {
     }
 
     public void update(Restaurant restaurant) {
-        if(restaurant == null)
+        if (restaurant == null)
             return;
 
         restaurant.setAddress(addressService.populateLatLng(restaurant.getAddress()));
         restaurantRepository.save(restaurant);
     }
 
-    public Page<Restaurant> search(Double distance, Long userId, String fullText, Boolean activeIncluded, SearchRestaurantsRequest searchRestaurantsRequest) {
+
+    /**
+     * @param distance
+     * @param userId
+     * @param fullText
+     * @param includeInactive
+     * @param isOwner                  indicate whether the function loads restaurants that belong to the user with [userId]. Therefore,
+     *                                 userId != null when isOwner = true
+     * @param searchRestaurantsRequest
+     * @return
+     */
+    public Page<Restaurant> search(Double distance,
+                                   Long userId,
+                                   String fullText,
+                                   boolean includeInactive,
+                                   Boolean isOwner,
+                                   SearchRestaurantsRequest searchRestaurantsRequest) {
+        List<Restaurant> ownedRestaurants;
+        if (isOwner) {
+            ownedRestaurants = getAll();
+        } else {
+            ownedRestaurants = new ArrayList<>();
+        }
+
         List<Restaurant> restaurants;
         if (fullText == null || fullText.isEmpty())
             restaurants = restaurantRepository.findAll();
@@ -95,7 +119,7 @@ public class RestaurantService {
         User user = userId != null ? userService.getById(userId) : null;
 
         List<Restaurant> filteredRestaurants = restaurants.stream()
-                .filter(restaurant -> activeIncluded == null || activeIncluded.booleanValue() ? restaurant.isActive() : true)
+                .filter(restaurant -> includeInactive || restaurant.isActive())
                 .filter(restaurant -> {
                     if (distance == null || user == null)
                         return true;
@@ -118,6 +142,13 @@ public class RestaurantService {
                             .anyMatch(restaurantCategory -> searchRestaurantsRequest.getRestaurantCategories().stream()
                                     .anyMatch(comparedCategory -> Objects.equals(comparedCategory.getId(), restaurantCategory.getId())));
                 })
+                .filter(restaurant -> {
+                    if (isOwner) {
+                        return ownedRestaurants.stream().anyMatch(or -> or.getId().equals(restaurant.getId()));
+                    }
+
+                    return true;
+                })
                 .sorted(user == null ? Comparator.comparing(Restaurant::getRestaurantName) : Comparator.comparingDouble(restaurant ->
                         CommonUtils.haversine_distance(restaurant.getAddress().getLat(), restaurant.getAddress().getLng(),
                                 user.getAddress().getLat(), user.getAddress().getLng())
@@ -137,8 +168,15 @@ public class RestaurantService {
                 filteredRestaurants.size());
     }
 
-    public List<Restaurant> getAllRestaurant() {
-        return restaurantRepository.findAll();
+    public List<Restaurant> getAll() {
+        User user = userService.getCurrentUser();
+        if (user.isAdmin())
+            return restaurantRepository.findAll();
+
+        if (user.isSeller())
+            return getAllBySellerId(user.getId());
+
+        return null;
     }
 
     public void deleteRestaurantById(Long restaurantId) {

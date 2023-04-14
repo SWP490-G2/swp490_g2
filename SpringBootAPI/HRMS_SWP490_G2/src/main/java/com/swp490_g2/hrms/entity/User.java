@@ -68,7 +68,7 @@ public class User extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private RequestingRestaurantStatus requestingRestaurantStatus = RequestingRestaurantStatus.PENDING;
 
-    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private File avatarFile;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -117,12 +117,12 @@ public class User extends BaseEntity implements UserDetails {
         return true;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "requestingRestaurantId")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Restaurant requestingRestaurant;
 
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
@@ -133,7 +133,7 @@ public class User extends BaseEntity implements UserDetails {
     @Transient
     private List<Restaurant> restaurants = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private List<Notification> notifications = new ArrayList<>();
 
     public boolean isAdmin() {

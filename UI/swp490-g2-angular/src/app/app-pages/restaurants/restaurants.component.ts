@@ -10,10 +10,11 @@ import {
 } from "@angular/core";
 import { Title } from "@angular/platform-browser";
 import { Router } from "@angular/router";
-import { of, switchMap } from "rxjs";
+import { Observable, of, switchMap } from "rxjs";
 import { GoogleMapService } from "src/app/global/google-map.service";
 import {
   Address,
+  PageRestaurant,
   Restaurant,
   RestaurantCategory,
   RestaurantCategoryClient,
@@ -76,6 +77,8 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   @Input() hasPagination = true;
   @Input() navigateWhenClick = true;
   @Output() restaurantClick = new EventEmitter<Restaurant>();
+  @Input() includeInactive = false;
+  @Input() isOwner = false;
 
   constructor(
     private $userClient: UserClient,
@@ -121,34 +124,43 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
     });
 
     this.restaurantMarkers = [];
+    const searchRestaurantsRequest = new SearchRestaurantsRequest({
+      searchRequest: new SearchRequest({
+        page: this.pageIndex,
+        size: this.pageSize,
+      }),
+      restaurantCategories: this.selectedCategories,
+    });
 
-    const searchRestaurants = this.hasCurrentUser
-      ? this.$restaurantClient.search(
-          this.distance.value,
-          <number>this.currentUser?.id,
-          this.restaurantFullText,
-          true,
-          new SearchRestaurantsRequest({
-            restaurantCategories: this.selectedCategories,
-            searchRequest: new SearchRequest({
-              page: this.pageIndex,
-              size: this.pageSize,
-            }),
-          })
-        )
-      : this.$restaurantClient.search(
-          undefined,
-          undefined,
-          this.restaurantFullText,
-          true,
-          new SearchRestaurantsRequest({
-            searchRequest: new SearchRequest({
-              page: this.pageIndex,
-              size: this.pageSize,
-            }),
-            restaurantCategories: this.selectedCategories,
-          })
-        );
+    let searchRestaurants: Observable<PageRestaurant>;
+    if (this.isOwner) {
+      searchRestaurants = this.$restaurantClient.search(
+        undefined,
+        undefined,
+        this.restaurantFullText,
+        this.includeInactive,
+        true,
+        searchRestaurantsRequest
+      );
+    } else {
+      searchRestaurants = this.hasCurrentUser
+        ? this.$restaurantClient.search(
+            this.distance.value,
+            <number>this.currentUser?.id,
+            this.restaurantFullText,
+            this.includeInactive,
+            false,
+            searchRestaurantsRequest
+          )
+        : this.$restaurantClient.search(
+            undefined,
+            undefined,
+            this.restaurantFullText,
+            this.includeInactive,
+            false,
+            searchRestaurantsRequest
+          );
+    }
 
     searchRestaurants
       .pipe(

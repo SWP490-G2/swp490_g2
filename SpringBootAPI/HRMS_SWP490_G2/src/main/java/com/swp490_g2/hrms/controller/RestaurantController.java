@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.entity.RestaurantCategory;
 import com.swp490_g2.hrms.requests.SearchRestaurantsRequest;
@@ -40,9 +41,10 @@ public class RestaurantController {
     public ResponseEntity<Page<Restaurant>> search(@RequestParam(value = "distance", required = false) Double distance,
                                                    @RequestParam(value = "user-id", required = false) Long userId,
                                                    @RequestParam(value = "full-text", required = false) String fullText,
-                                                   @RequestParam(value = "active-included", required = false) Boolean activeIncluded,
+                                                   @RequestParam(value = "include-inactive") boolean includeInactive,
+                                                   @RequestParam(value = "is-owner", required = false) Boolean isOwner,
                                                    @RequestBody SearchRestaurantsRequest searchRestaurantsRequest
     ) {
-        return ResponseEntity.ok(restaurantService.search(distance, userId, fullText, activeIncluded, searchRestaurantsRequest));
+        return ResponseEntity.ok(restaurantService.search(distance, userId, fullText, includeInactive, isOwner, searchRestaurantsRequest));
     }
 }

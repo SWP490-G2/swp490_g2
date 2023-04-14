@@ -19,7 +19,7 @@ import java.util.Set;
 @Table(name = "`order`")
 @AttributeOverride(name = "id", column = @Column(name = "orderId"))
 public class Order extends BaseEntity {
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private List<OrderProductDetail> orderProductDetails = new ArrayList<>();
 
     /**

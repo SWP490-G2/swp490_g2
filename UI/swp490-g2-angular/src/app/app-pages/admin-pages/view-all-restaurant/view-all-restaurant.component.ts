@@ -43,6 +43,7 @@ export class ViewAllRestaurantComponent {
         undefined,
         undefined,
         undefined,
+        true,
         false,
         new SearchRestaurantsRequest()
       )

@@ -118,6 +118,7 @@
             [hasCurrentUser]="false"
             [hasPagination]="true"
             [navigateWhenClick]="false"
+            [includeInactive]="true"
             (restaurantClick)="selectRestaurant($event)"
           ></app-restaurants>
         </div>
@@ -136,6 +137,7 @@
               <app-restaurant-card
                 [restaurant]="user?.requestingRestaurant!"
                 [hasDistance]="false"
+                (restaurantNameClick)="onRestaurantNameClick(user?.requestingRestaurant!)"
               ></app-restaurant-card>
             </p-accordionTab>
           </p-accordion>

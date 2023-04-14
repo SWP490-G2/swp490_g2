@@ -220,4 +220,8 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
       },
     });
   }
+
+  onRestaurantNameClick(restaurant: Restaurant) {
+    this.$router.navigate(["restaurant", restaurant.id]);
+  }
 }

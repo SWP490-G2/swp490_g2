@@ -1,7 +1,6 @@
 package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.config.AuthenticationFacade;
-import com.swp490_g2.hrms.entity.File;
 import com.swp490_g2.hrms.entity.Notification;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.entity.User;
@@ -9,7 +8,6 @@ import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import com.swp490_g2.hrms.repositories.UserRepository;
-import com.swp490_g2.hrms.requests.RestaurantInformationRequest;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -148,7 +145,7 @@ public class AdminService {
 
     public List<Restaurant> getAllRestaurant() {
         allowAdminExecuteAction();
-        return restaurantService.getAllRestaurant();
+        return restaurantService.getAll();
     }
 
     public Restaurant getRestaurantById(Long restaurantId) {
