@@ -27,7 +27,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long>, J
     @Query(value = """
             select distinct r.*
             from restaurant r
-            	inner join product p on p.restaurantId = r.restaurantId
+            	inner join restaurant_product rp on rp.restaurant_restaurantId = r.restaurantId
+                inner join product p on p.productId = rp.products_productId
                 inner join restaurant__restaurant_category rrc on rrc.restaurantId = r.restaurantId
                 inner join restaurant_category rc on rc.restaurantCategoryId = rrc.restaurantCategoryId
             	where (match (r.restaurantName) against (:text IN NATURAL LANGUAGE MODE)
