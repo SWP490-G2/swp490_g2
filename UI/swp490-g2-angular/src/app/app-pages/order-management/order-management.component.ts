@@ -17,11 +17,25 @@ export class OrderManagementComponent implements OnInit {
       this.orderProductDetail = res.content;
       console.log(this.orderProductDetail);
 
-      this.orderProductDetail.forEach(order => {
-        const totalPriceForOrder = order.orderProductDetails.reduce((total, item) => total + item.price, 0);
-        console.log('total price for order:', totalPriceForOrder);
-      });
     });
   }
-
+  getOrderTotalPrice(order: any): number {
+    return order.orderProductDetails.reduce((total, item) => total + item.price, 0);
+  }
+  getSeverity(status: string) {
+    switch (status) {
+      case 'PENDING':
+        return 'warning';
+      case 'DELIVERING':
+        return 'info';
+      case 'COMPLETED':
+        return 'success';
+      case 'ABORTED':
+        return 'warning';
+      case 'REJECTED':
+        return 'danger';
+      default:
+        return '';
+    }
+  }
 }
