@@ -10,12 +10,12 @@ import { User, AuthenticationRequest, UserClient } from "../ngswag/client";
 export class AuthService {
   private readonly JWT_TOKEN = "JWT_TOKEN";
   private _currentUser?: User;
-  private readonly whiteList = ["/restaurants"];
+  private readonly whiteList = ["/restaurants", "/restaurant"];
 
   constructor(private $client: UserClient, private $router: Router) {}
 
   private get inWhiteList(): boolean {
-    return this.whiteList.includes(this.$router.url);
+    return this.whiteList.some((url) => this.$router.url.includes(url));
   }
 
   getCurrentUser(forceRefresh = false): Observable<User | undefined> {
@@ -24,10 +24,10 @@ export class AuthService {
     return this.$client.getCurrentUser().pipe(
       switchMap((user) => {
         if (!user || !user.id) {
-          if (this.inWhiteList) return of();
+          if (this.inWhiteList) return of(undefined);
 
           this.logout(false);
-          return of();
+          return of(undefined);
         }
 
         this._currentUser = user;
@@ -35,7 +35,7 @@ export class AuthService {
       }),
       catchError(() => {
         this.logout(false);
-        return of();
+        return of(undefined);
       })
     );
   }

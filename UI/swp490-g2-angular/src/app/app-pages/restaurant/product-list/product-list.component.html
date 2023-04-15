@@ -64,7 +64,7 @@
             {{ getProductStatus(product)?.name }}
           </span>
         </div>
-        <div class="flex flex-column gap-2">
+        <div class="flex flex-column gap-2" *ngIf="currentUser?.id">
           <div class="p-fluid">
             <p-inputNumber
               #quantity="ngModel"

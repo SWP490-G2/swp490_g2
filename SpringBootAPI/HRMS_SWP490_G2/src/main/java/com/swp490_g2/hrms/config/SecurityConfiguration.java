@@ -40,7 +40,15 @@ public class SecurityConfiguration {
                         "/restaurant-category/get-all",
                         "/user/send-verification-code/*",
                         "/socket/**",
-                        "/.well-known/pki-validation/*"
+                        "/.well-known/pki-validation/*", // For SSL certification
+                        "/restaurant/search",
+                        "/file/load",
+                        "/restaurant/get-by-id/*",
+                        "/user/has-controls-of-restaurant/*",
+                        "/product-category/**",
+                        "/product/get-product-price-ranges-by-restaurant-id/*",
+                        "/address/**",
+                        "/product/search/*"
                 )
                 .permitAll()
                 .anyRequest()

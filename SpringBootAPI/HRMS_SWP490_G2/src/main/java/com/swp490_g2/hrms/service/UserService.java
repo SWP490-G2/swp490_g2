@@ -348,6 +348,9 @@ public class UserService {
 
     public boolean hasControlsOfRestaurant(Long restaurantId) {
         User currentUser = getCurrentUser();
+        if(currentUser == null)
+            return false;
+
         if (currentUser.isAdmin())
             return true;
 

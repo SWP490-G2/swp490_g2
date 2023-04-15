@@ -104,7 +104,9 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       .pipe(
         switchMap((user) => {
           this.currentUser = user;
-          if (!this.currentUser?.id || !this.currentUser?.address) return of();
+          if (!this.currentUser?.id || !this.currentUser?.address)
+            this.hasCurrentUser = false;
+
           this.searchRestaurants();
 
           if (this.hasCurrentUser)

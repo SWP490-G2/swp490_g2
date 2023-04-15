@@ -17,6 +17,8 @@ import {
   Product,
   ProductClient,
   Restaurant,
+  User,
+  UserClient,
 } from "src/app/ngswag/client";
 import { CartService } from "src/app/service/cart.service";
 
@@ -31,15 +33,21 @@ export class ProductListComponent implements OnInit {
   @Output() productDeleted = new EventEmitter();
   order: Order | undefined;
   deletedProduct: Product | undefined;
+  currentUser?: User;
 
   constructor(
     private $cart: CartService,
     private $productClient: ProductClient,
     private $message: MessageService,
     private $confirmation: ConfirmationService,
-    private $zone: NgZone
+    private $zone: NgZone,
+    private $userClient: UserClient
   ) {}
   ngOnInit(): void {
+    this.$userClient
+      .getCurrentUser()
+      .subscribe((user) => (this.currentUser = user));
+      
     this.$cart.getOrderObservable().subscribe((order) => (this.order = order));
   }
   get initialized(): boolean {
