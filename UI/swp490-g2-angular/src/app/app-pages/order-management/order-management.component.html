@@ -22,8 +22,8 @@
         <td>{{order.orderCreator.email}}</td>
         <td>{{order.orderCreator.phoneNumber}}</td>
         <td>{{order.orderProductDetails.length}}</td>
-        <td>{{order.category}}</td>
-        <td><p-tag [value]="order.inventoryStatus"></p-tag></td>
+        <td>{{getOrderTotalPrice(order) | currency: 'VND'}}</td>
+        <td><p-tag [value]="order.orderStatus" [severity]="getSeverity(order.orderStatus)"></p-tag></td>
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
