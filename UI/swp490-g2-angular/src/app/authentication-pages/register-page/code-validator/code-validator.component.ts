@@ -9,6 +9,7 @@ import { NgForm, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { finalize } from "rxjs";
+import { AuthService } from "src/app/global/auth.service";
 import { UserClient } from "src/app/ngswag/client";
 import { CustomValidators } from "src/app/utils";
 
@@ -20,16 +21,18 @@ import { CustomValidators } from "src/app/utils";
 export class CodeValidatorComponent implements OnInit, AfterViewInit {
   @ViewChild("form", { static: false }) form!: NgForm;
   visible = true;
-  @Input() email = "longlunglay5@gmail.com";
+  @Input() email: any;
+  @Input() password: any;
 
   constructor(
     private confirmationService: ConfirmationService,
+    private $auth: AuthService,
     private $client: UserClient,
     private $router: Router,
     private $route: ActivatedRoute
-  ) {}
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -54,14 +57,22 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
         next: (errorMessage) => {
           if (!errorMessage) {
             return this.confirmationService.confirm({
-              message: "Register successfully! Click “YES” to back to login.",
+              message: "Register successfully! Click “YES” to back to home page.",
               header: "Confirmation",
               accept: () => {
-                this.$router.navigate(["..", "login"], {
-                  relativeTo: this.$route,
-                });
+                const requestLogin = {
+                  emailOrPhoneNumber: this.email,
+                  password: this.password
+                }
+                this.$auth
+                  .login(requestLogin)
+                  .subscribe({
+                    next: () => {
+                      this.$router.navigate(["/"]);
+                    },
+                  });
               },
-              reject: () => {},
+              reject: () => { },
             });
           }
 
