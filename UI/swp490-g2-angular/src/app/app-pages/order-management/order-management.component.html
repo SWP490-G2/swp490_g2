@@ -1,5 +1,5 @@
 <div class="card">
-  <p-table [value]="orderProductDetail" [tableStyle]="{'min-width': '60rem'}">
+  <p-table [value]="orderProduct" [tableStyle]="{'min-width': '60rem'}">
     <ng-template pTemplate="caption">
       <div class="flex align-items-center justify-content-between">
         Orders
@@ -14,6 +14,7 @@
         <th>Total Order</th>
         <th>Total Price</th>
         <th>Order Status</th>
+        <th>Action</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-order>
@@ -24,6 +25,7 @@
         <td>{{order.orderProductDetails.length}}</td>
         <td>{{getOrderTotalPrice(order) | currency: 'VND'}}</td>
         <td><p-tag [value]="order.orderStatus" [severity]="getSeverity(order.orderStatus)"></p-tag></td>
+        <td><p-button (click)="showDialog()" icon="pi pi-external-link" label="View detail"></p-button></td>
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
@@ -33,3 +35,10 @@
     </ng-template>
   </p-table>
 </div>
+
+<p-dialog header="Orders detail" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+  <p class="m-0">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  </p>
+</p-dialog>

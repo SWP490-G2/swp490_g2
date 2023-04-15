@@ -5,6 +5,7 @@ import { OrderManagementRoutingModule } from './order-management-routing.module'
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { TagModule } from 'primeng/tag';
     OrderManagementRoutingModule,
     TableModule,
     ButtonModule,
-    TagModule
+    TagModule,
+    DialogModule
   ],
   declarations: [OrderManagementComponent]
 })
