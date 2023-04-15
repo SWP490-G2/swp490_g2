@@ -12,6 +12,8 @@ export class OrderManagementComponent implements OnInit {
   orderProduct: any;
   totalPrice: number = 0;
   visible = false;
+  detailOrder: any;
+  
   constructor(private $orderClient: OrderClient) { }
 
   ngOnInit() {
@@ -21,8 +23,13 @@ export class OrderManagementComponent implements OnInit {
         console.log(this.orderProduct);
       }
       )).subscribe(res => {
-        this.orderProductDetail = this.orderProduct.map(item => item.orderProductDetails);
-        console.log(this.orderProductDetail);
+        this.orderProductDetail = this.orderProduct.map(item => (
+          {
+            id: item.id,
+            order: item.orderProductDetails
+          }
+        ));
+        console.log('order detail', this.orderProductDetail);
 
 
       });
@@ -46,7 +53,10 @@ export class OrderManagementComponent implements OnInit {
         return '';
     }
   }
-  showDialog(): void {
+  showDialog(id: number): void {
     this.visible = true;
+    this.detailOrder = this.orderProductDetail.filter(item =>  item.id === id)
+    .map(order => order.order).flat(1)
+    console.log(this.detailOrder);
   }
 }
