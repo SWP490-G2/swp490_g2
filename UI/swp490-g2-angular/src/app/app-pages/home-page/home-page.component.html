@@ -1,17 +1,86 @@
 <div class="surface-section">
   <div
-    class="surface-section h-30rem bg-no-repeat bg-cover bg-center flex align-items-center"
+    class="surface-section h-45rem bg-no-repeat bg-cover bg-center"
     style="
       background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-        url(./assets/images/slider-01.jpg);
+        url(./assets/images/slider-01-blur.jpg);
     "
   >
-    <div class="px-4 mx-4 lg:px-6 lg:mx-6">
-      <span class="block text-3xl text-white mb-4">Welcome to HRMS</span>
+    <div class="p-6 lg:p-6 text-center">
+      <span class="block text-5xl text-white mb-4">Welcome to HRMS</span>
       <span class="block text-4xl font-medium text-white mb-4"
         >The applications support Buyer and Seller feel comfortable during
         ordering and delivering</span
       >
+      <p-carousel [value]="products" [numVisible]="3" [numScroll]="3" [circular]="true" [responsiveOptions]="responsiveOptions">
+        <ng-template>
+          <div class="surface-section" *ngIf="initialized">
+            <div class="grid -mt-3 -ml-3 -mr-3">
+              <div class="col-12 md:col-6 lg:col-4 xl:col-3 mb-5 md:mb-0" *ngFor="let product of products">
+                <div class="p-2">
+                  <div class="relative mb-3">
+                    <p-carousel
+                      *ngIf="product.images && product.images.length > 1"
+                      [value]="product.images"
+                      [circular]="true"
+                    >
+                      <ng-template let-image pTemplate="item">
+                        <app-image-attachment
+                          [url]="image.filePath"
+                          width="100%"
+                          height="20rem"
+                          [isRound]="false"
+                        ></app-image-attachment>
+                      </ng-template>
+                    </p-carousel>
+
+                    <app-image-attachment
+                      *ngIf="product.images && product.images.length === 1"
+                      [url]="product.images[0].filePath"
+                      width="100%"
+                      height="20rem"
+                      [isRound]="false"
+                    ></app-image-attachment>
+
+                    <div
+                      *ngIf="!product.images || !product.images.length"
+                      style="width: 100%; height: 20rem"
+                      class="border-3 border-dashed border-round"
+                    ></div>
+                  </div>
+                  <span class="text-900 font-medium text-xl">
+                    {{ product.productName }}
+                  </span>
+                  <div class="mb-4">
+                    <span class="font-bold text-900">
+                      {{ product.price | currency : "VND" }}
+                    </span>
+                  </div>
+                  <div class="mb-4">
+                    Status:
+                    <span
+                      class="font-bold text-900"
+                      [ngClass]="getProductStatus(product)?.textColor"
+                    >
+                      {{ getProductStatus(product)?.name }}
+                    </span>
+                  </div>
+                  <div class="flex flex-column gap-2">
+                    <button
+                      pButton
+                      pRipple
+                      label="Add to Cart"
+                      icon="pi pi-shopping-cart"
+                      class="w-full"
+                      [disabled]="product.productStatus === 'OUT_OF_STOCK'"
+                    ></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-carousel>
       <ng-container *ngIf="!userExisted()">
         <button pButton type="button" label="Sign In Now!" icon="pi pi-users" class="p-button-info p-button-raised p-button-rounded mr-2" (click)="navToLogin()"></button>
         <button pButton type="button" label="Register Now!" icon="pi pi-id-card" class="p-button-secondary p-button-raised p-button-rounded" (click)="navToRegister()"></button>
@@ -26,12 +95,10 @@
     </div>
   </div>
 </div>
-
 <div class="surface-section px-4 py-8 md:px-6 lg:px-8">
   <div class="flex justify-content-between flex-wrap">
     <div class="flex align-items-center mb-4 md:mb-0">
       <div class="text-900 font-bold text-3xl">Special Menu</div>
-      <p-badge styleClass="ml-3 bg-gray-200 text-gray-900 p-0 border-circle"></p-badge>
     </div>
     <div>
       <button type="button" pButton icon="pi pi-sort-alt" class="p-button-outlined p-button-secondary w-8rem p-2" iconPos="right" label="Sort By" (click)="menu.toggle($event)" ></button>
@@ -111,6 +178,53 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+<div class="surface-section px-4 py-8 md:px-6 lg:px-8">
+  <div class="flex justify-content-between flex-wrap">
+    <div class="flex align-items-center mb-4 md:mb-0">
+      <div class="text-900 font-bold text-3xl">All Categories</div>
+    </div>
+    <div>
+      <button type="button" pButton icon="pi pi-sort-alt" class="p-button-outlined p-button-secondary w-8rem p-2" iconPos="right" label="Sort By" (click)="menu.toggle($event)" ></button>
+      <p-menu #menu [popup]="true" [model]="items"></p-menu>
+    </div>
+  </div>
+  <p class="text-600 text-xl">
+    View Products By Category Filter
+  </p>
+  <div class="flex justify-content-center pt-5">
+    <div class="surface-card p-4 shadow-2 border-round w-full lg:w-10">
+      <label for="description" class="block text-900 font-medium my-2">
+        Categories
+      </label>
+      <div class="p-fluid mb-1">
+        <p-chips
+          [ngModel]="productCategoryNames"
+          (ngModelChange)="changeProductCategory($event)"
+          [ngModelOptions]="{ standalone: true }"
+        >
+        </p-chips>
+      </div>
+      <ng-container *ngIf="productId">
+        <label class="block text-900 font-medium my-2"> Images </label>
+        <div class="flex flex-wrap gap-5">
+          <app-image-attachment
+            *ngFor="let image of product.images"
+            [url]="image.filePath"
+            [isRound]="false"
+            width="auto"
+            height="10rem"
+            [deletable]="true"
+          ></app-image-attachment>
+          <app-image-attachment
+            [editable]="true"
+            [uploadUrl]="'product/add-image/' + productId"
+            method="PUT"
+          ></app-image-attachment>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>
