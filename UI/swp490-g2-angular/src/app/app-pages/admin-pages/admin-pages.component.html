@@ -50,16 +50,15 @@
   </div>
 </ng-container>
 
-<div class="flex">
+<div class="grid m-0">
   <div
     *ngIf="!isParentPage()"
-    id="app-sidebar-1"
-    class="surface-section h-screen hidden lg:block flex-shrink-0 fixed lg:sticky left-0 top-0 z-1 border-right-1 surface-border select-none"
-    style="width: 280px"
+    class="surface-section z-1 border-right-1 surface-border select-none col xl:col-fixed xl:h-min-screen"
+    style="width: 20rem"
   >
-    <div class="flex flex-column h-full">
+    <div class="flex flex-column sticky top-0">
       <div class="overflow-y-auto">
-        <ul class="list-none p-2 m-0 border-top-1 surface-border">
+        <ul class="list-none p-2 m-0 surface-border">
           <li>
             <div class="p-3 text-500 font-medium">ADMIN MANAGEMENT</div>
           </li>
@@ -78,7 +77,7 @@
     </div>
   </div>
 
-  <div class="flex-grow-1">
+  <div class="col-12 xl:col">
     <router-outlet></router-outlet>
   </div>
 </div>
