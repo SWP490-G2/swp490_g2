@@ -2,9 +2,6 @@
   class="surface-overlay shadow-2 flex align-items-center justify-content-between relative lg:static"
   style="min-height: 42px; padding: 1rem"
 >
-  <p-sidebar [(visible)]="sidebarVisible" styleClass="w-18rem">
-    <app-side-bars [user]="user"></app-side-bars>
-  </p-sidebar>
   <p-button
     (click)="sidebarVisible = true"
     class="p-button-rounded p-button-secondary mr-3"
@@ -188,3 +185,7 @@
     </ul>
   </div>
 </div>
+
+<p-sidebar [(visible)]="sidebarVisible" styleClass="w-18rem">
+  <app-side-bars [user]="user"></app-side-bars>
+</p-sidebar>

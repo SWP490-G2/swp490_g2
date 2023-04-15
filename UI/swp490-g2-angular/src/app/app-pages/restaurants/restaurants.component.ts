@@ -89,7 +89,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
     private $restaurantCategoryClient: RestaurantCategoryClient
   ) {
     this.distance =
-      getLocal(this.$router.url + "/distance") || this.distances[0];
+      getLocal(this.$router.url + "/distance") || this.distances[2];
   }
 
   ngAfterViewInit(): void {
