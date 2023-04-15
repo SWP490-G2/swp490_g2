@@ -6,6 +6,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
+import { CardModule } from 'primeng/card';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { DialogModule } from 'primeng/dialog';
     TableModule,
     ButtonModule,
     TagModule,
-    DialogModule
+    DialogModule,
+    CardModule
   ],
   declarations: [OrderManagementComponent]
 })
