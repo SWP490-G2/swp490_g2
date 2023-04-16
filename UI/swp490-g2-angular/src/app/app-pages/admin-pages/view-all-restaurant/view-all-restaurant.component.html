@@ -115,7 +115,7 @@
         <th style="width: 5rem"></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-resList let-rowIndex="rowIndex">
+    <ng-template pTemplate="body" let-resOpening let-rowIndex="rowIndex">
       <tr class="p-selectable-row">
         <td>
           <span class="p-column-title">#</span>
@@ -123,32 +123,32 @@
         </td>
         <td>
           <span class="p-column-title">Restaurant Name</span>
-          {{ resList.restaurantName }}
+          {{ resOpening.restaurantName }}
         </td>
         <td>
           <span class="p-column-title">Restaurant Owners</span>
-          {{ getOwners(resList) }}
+          {{ getOwners(resOpening) }}
         </td>
         <td>
           <span class="p-column-title">Created Date</span>
-          {{ (resList.createdAt * 1000) | date : "dd/MM/yyyy" }}
+          {{ resOpening.createdAt | date : "dd/MM/yyyy" }}
         </td>
         <td>
           <span class="p-column-title">Phone Number</span>
-          {{ resList.phoneNumber }}
+          {{ resOpening.phoneNumber }}
         </td>
         <td>
           <span class="p-column-title">Status</span>
           <div
             class="flex align-items-center gap-2"
-            *ngIf="resList.active !== null && resList.active !== undefined"
+            *ngIf="resOpening.active !== null && resOpening.active !== undefined"
           >
             <p-toggleButton
               styleClass="w-7rem"
-              [(ngModel)]="resList.active"
+              [(ngModel)]="resOpening.active"
               onLabel="Active"
               offLabel="Inactive"
-              (onChange)="toggleRestaurantStatus(resList, $event)"
+              (onChange)="toggleRestaurantStatus(resOpening, $event)"
             ></p-toggleButton>
           </div>
         </td>
@@ -159,7 +159,7 @@
             type="button"
             icon="pi pi-eye"
             class="btn-action p-button-rounded mr-2"
-            [routerLink]="'view-restaurant-details/' + resList.id"
+            [routerLink]="'view-restaurant-details/' + resOpening.id"
           ></button>
           <!-- <button
             pButton
@@ -167,7 +167,7 @@
             type="button"
             icon="pi pi-trash"
             class="btn-action p-button-rounded p-button-danger"
-            (click)="toggleRestaurantStatus(resList.id)"
+            (click)="toggleRestaurantStatus(resOpening.id)"
           ></button> -->
         </td>
       </tr>

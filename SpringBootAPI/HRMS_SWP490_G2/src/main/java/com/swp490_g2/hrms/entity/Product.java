@@ -45,4 +45,7 @@ public class Product extends BaseEntity {
     @Column(columnDefinition = "nvarchar(16) default 'ACTIVE'", insertable = false)
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus = ProductStatus.ACTIVE;
+
+    @Transient
+    private Restaurant restaurant;
 }

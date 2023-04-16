@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -67,5 +68,10 @@ public class ProductController {
     @DeleteMapping("/delete-image")
     public void deleteImage(@RequestParam("product-id") Long productId, @RequestParam("image-id") Long imageId) {
         productService.deleteImage(productId, imageId);
+    }
+
+    @GetMapping("/get-top-most-ordered/{top}")
+    public ResponseEntity<List<Product>> getTopMostOrdered(@PathVariable Long top) {
+        return ResponseEntity.ok(productService.getTopMostOrdered(top));
     }
 }

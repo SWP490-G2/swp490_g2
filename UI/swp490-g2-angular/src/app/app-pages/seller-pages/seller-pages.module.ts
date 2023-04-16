@@ -11,10 +11,9 @@ import { InputSwitchModule } from "primeng/inputswitch";
 import { TableModule } from "primeng/table";
 import { TagModule } from "primeng/tag";
 import { ToastModule } from "primeng/toast";
-import { ToggleButtonModule } from "primeng/togglebutton";
 import { RestaurantsModule } from "../restaurants/restaurants.module";
+import { ToggleButtonModule } from "primeng/togglebutton";
 import { HttpClientModule } from "@angular/common/http";
-
 
 @NgModule({
   declarations: [

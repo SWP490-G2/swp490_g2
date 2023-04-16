@@ -2,9 +2,8 @@ package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.Restaurant;
-import com.swp490_g2.hrms.entity.User;
-import com.swp490_g2.hrms.requests.RestaurantInformationRequest;
 import com.swp490_g2.hrms.requests.SearchRequest;
+import com.swp490_g2.hrms.response.AdminPagesSummary;
 import com.swp490_g2.hrms.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -59,8 +58,13 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAllUsers(request));
     }
 
-    @GetMapping ("/get-all-user-except-admin")
+    @GetMapping("/get-all-user-except-admin")
     public ResponseEntity<List<User>> getAllUserExceptAdmin() {
         return ResponseEntity.ok(adminService.getAllUserExceptAdmin());
+    }
+
+    @GetMapping("/admin-pages_get-summary")
+    public ResponseEntity<AdminPagesSummary> adminPages_getSummary() {
+        return ResponseEntity.ok(adminService.adminPages_getSummary());
     }
 }

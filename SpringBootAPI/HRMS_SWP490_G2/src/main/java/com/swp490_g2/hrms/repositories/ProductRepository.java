@@ -67,4 +67,16 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             DELETE FROM `restaurant_product` WHERE (`restaurant_restaurantId` = :restaurantId) and (`products_productId` = :productId);
             """, nativeQuery = true)
     void deleteProductFromRestaurant(Long restaurantId, Long productId);
+
+    @Query(value = """
+            select p.*, sum(opd.quantity) `quantity_count`
+            from product p
+            	inner join restaurant_product rp on rp.products_productId = p.productId
+            	left join order_product_detail opd on opd.product_productId = p.productId
+            where p.productStatus = 'ACTIVE'
+            group by p.productId
+            order by `quantity_count` desc, p.productName
+            limit :top
+            """, nativeQuery = true)
+    List<Product> getTopMostOrdered(Long top);
 }

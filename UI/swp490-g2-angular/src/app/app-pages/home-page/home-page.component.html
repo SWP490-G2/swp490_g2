@@ -1,23 +1,102 @@
+<style>
+  .p-carousel .p-carousel-content .p-carousel-prev,
+  .p-carousel .p-carousel-content .p-carousel-next {
+    background: #e9ecef !important;
+  }
+</style>
+
 <div class="surface-section">
   <div
-    class="surface-section h-30rem bg-no-repeat bg-cover bg-center flex align-items-center"
+    class="surface-section h-45rem bg-no-repeat bg-cover bg-center"
     style="
       background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-        url(./assets/images/slider-01.jpg);
+        url(./assets/images/slider-01-blur.jpg);
     "
   >
-    <div class="px-4 mx-4 lg:px-6 lg:mx-6">
-      <span class="block text-3xl text-white mb-4">Welcome to HRMS</span>
+    <div class="p-6 lg:p-6 text-center">
+      <span class="block text-5xl text-white mb-4">Welcome to HRMS</span>
       <span class="block text-4xl font-medium text-white mb-4"
         >The applications support Buyer and Seller feel comfortable during
         ordering and delivering</span
       >
+      <p-carousel
+        [value]="products"
+        [numVisible]="3"
+        [circular]="true"
+        [responsiveOptions]="responsiveOptions"
+        [autoplayInterval]="5000"
+      >
+        <ng-template let-product pTemplate="item">
+          <div class="p-2 lg:p-5">
+            <div
+              class="relative mb-3 cursor-pointer"
+              [pTooltip]="product.restaurant?.restaurantName"
+              tooltipPosition="top"
+              (click)="onProductImageClick(product)"
+            >
+              <app-image-attachment
+                *ngIf="product.images && product.images.length"
+                [url]="product.images[0].filePath"
+                width="100%"
+                height="20rem"
+                [isRound]="false"
+              ></app-image-attachment>
+
+              <div
+                *ngIf="!product.images || !product.images.length"
+                style="width: 100%; height: 20rem"
+                class="border-3 border-dashed border-round"
+              ></div>
+            </div>
+            <span class="text-white font-medium text-xl">
+              {{ product.productName }}
+            </span>
+            <div class="mb-4">
+              <span class="font-bold text-white">
+                {{ product.price | currency : "VND" }}
+              </span>
+            </div>
+            <div class="flex flex-column gap-2">
+              <button
+                pButton
+                pRipple
+                label="Add to Cart"
+                icon="pi pi-shopping-cart"
+                class="w-full"
+                [disabled]="product.productStatus === 'OUT_OF_STOCK'"
+                (click)="addToCart(product)"
+              ></button>
+            </div>
+          </div>
+        </ng-template>
+      </p-carousel>
       <ng-container *ngIf="!userExisted()">
-        <button pButton type="button" label="Sign In Now!" icon="pi pi-users" class="p-button-info p-button-raised p-button-rounded mr-2" (click)="navToLogin()"></button>
-        <button pButton type="button" label="Register Now!" icon="pi pi-id-card" class="p-button-secondary p-button-raised p-button-rounded" (click)="navToRegister()"></button>
+        <button
+          pButton
+          type="button"
+          label="Sign In Now!"
+          icon="pi pi-users"
+          class="p-button-info p-button-raised p-button-rounded mr-2"
+          (click)="navToLogin()"
+        ></button>
+        <button
+          pButton
+          type="button"
+          label="Register Now!"
+          icon="pi pi-id-card"
+          class="p-button-secondary p-button-raised p-button-rounded"
+          (click)="navToRegister()"
+        ></button>
       </ng-container>
       <ng-container *ngIf="userExisted()">
-        <button pButton type="button" label="Go To Feed!" icon="pi pi-bookmark" class="p-button-info p-button-raised p-button-rounded mr-2" (click)="navToFeed()"></button>
+        <button
+          pButton
+          type="button"
+          label="Go To Feed!"
+          icon="pi pi-bookmark"
+          class="p-button-info p-button-raised p-button-rounded mr-2"
+          (click)="navToFeed()"
+        ></button>
       </ng-container>
       <!-- <p-button
         label="Forgot Password"
@@ -26,37 +105,69 @@
     </div>
   </div>
 </div>
-
 <div class="surface-section px-4 py-8 md:px-6 lg:px-8">
   <div class="flex justify-content-between flex-wrap">
     <div class="flex align-items-center mb-4 md:mb-0">
       <div class="text-900 font-bold text-3xl">Special Menu</div>
-      <p-badge styleClass="ml-3 bg-gray-200 text-gray-900 p-0 border-circle"></p-badge>
     </div>
     <div>
-      <button type="button" pButton icon="pi pi-sort-alt" class="p-button-outlined p-button-secondary w-8rem p-2" iconPos="right" label="Sort By" (click)="menu.toggle($event)" ></button>
+      <button
+        type="button"
+        pButton
+        icon="pi pi-sort-alt"
+        class="p-button-outlined p-button-secondary w-8rem p-2"
+        iconPos="right"
+        label="Sort By"
+        (click)="menu.toggle($event)"
+      ></button>
       <p-menu #menu [popup]="true" [model]="items"></p-menu>
     </div>
   </div>
   <p class="text-600 text-xl">
-    Many delicious meals and beverages are waiting for you, with a lot of promotion are very interesting
+    Many delicious meals and beverages are waiting for you, with a lot of
+    promotion are very interesting
   </p>
   <p-divider styleClass="w-full border-gray-200"></p-divider>
   <div class="grid grid-nogutter align-items-center">
-    <p-multiSelect defaultLabel="Restaurant Category" optionLabel="name" styleClass="w-full" selectedItemsLabel="{0} brands selected" class="flex-auto lg:flex-1 mb-3 lg:mt-0 w-full mr-0 lg:mr-4 text-900"></p-multiSelect>
-    <p-multiSelect defaultLabel="Promoting" optionLabel="name" styleClass="w-full" selectedItemsLabel="{0} colors selected" class="flex-auto lg:flex-1 mb-3 lg:mt-0 w-full mr-0 lg:mr-4 text-900"></p-multiSelect>
-    <p-multiSelect defaultLabel="Price" optionLabel="range" styleClass="w-full" selectedItemsLabel="{0} prices selected" class="flex-auto lg:flex-1 mb-3 lg:mt-0 lg:col w-full mr-0 lg:mr-4 text-900"></p-multiSelect>
-    <p-button class="p-button-secondary p-button-raised p-button-rounded text-900"><a pRipple tabindex="0">Clear All</a></p-button>
+    <p-multiSelect
+      defaultLabel="Restaurant Category"
+      optionLabel="name"
+      styleClass="w-full"
+      selectedItemsLabel="{0} brands selected"
+      class="flex-auto lg:flex-1 mb-3 lg:mt-0 w-full mr-0 lg:mr-4 text-900"
+    ></p-multiSelect>
+    <p-multiSelect
+      defaultLabel="Promoting"
+      optionLabel="name"
+      styleClass="w-full"
+      selectedItemsLabel="{0} colors selected"
+      class="flex-auto lg:flex-1 mb-3 lg:mt-0 w-full mr-0 lg:mr-4 text-900"
+    ></p-multiSelect>
+    <p-multiSelect
+      defaultLabel="Price"
+      optionLabel="range"
+      styleClass="w-full"
+      selectedItemsLabel="{0} prices selected"
+      class="flex-auto lg:flex-1 mb-3 lg:mt-0 lg:col w-full mr-0 lg:mr-4 text-900"
+    ></p-multiSelect>
+    <p-button
+      class="p-button-secondary p-button-raised p-button-rounded text-900"
+      ><a pRipple tabindex="0">Clear All</a></p-button
+    >
 
     <div class="col-12">
       <div class="grid mt-4">
         <div class="col-12 md:col-6 lg:col-3 mb-5 lg:mb-0">
           <div class="mb-3 relative">
             <img src="./assets/images/blog-img-05.jpg" class="w-full" />
-            <button type="button" pRipple class="border-1 border-white border-round py-2 px-3 absolute bg-black-alpha-30 text-white inline-flex align-items-center justify-content-center hover:bg-black-alpha-40 transition-colors transition-duration-300 cursor-pointer"
-                style="bottom: 1rem; left: 1rem; width: calc(100% - 2rem)">
-                <i class="pi pi-shopping-cart mr-3 text-base"></i>
-                <span class="text-base">Add to Cart</span>
+            <button
+              type="button"
+              pRipple
+              class="border-1 border-white border-round py-2 px-3 absolute bg-black-alpha-30 text-white inline-flex align-items-center justify-content-center hover:bg-black-alpha-40 transition-colors transition-duration-300 cursor-pointer"
+              style="bottom: 1rem; left: 1rem; width: calc(100% - 2rem)"
+            >
+              <i class="pi pi-shopping-cart mr-3 text-base"></i>
+              <span class="text-base">Add to Cart</span>
             </button>
           </div>
           <div class="flex flex-column align-items-center">
@@ -68,10 +179,14 @@
         <div class="col-12 md:col-6 lg:col-3 mb-5 lg:mb-0">
           <div class="mb-3 relative">
             <img src="./assets/images/blog-img-05.jpg" class="w-full" />
-            <button type="button" pRipple class="border-1 border-white border-round py-2 px-3 absolute bg-black-alpha-30 text-white inline-flex align-items-center justify-content-center hover:bg-black-alpha-40 transition-colors transition-duration-300 cursor-pointer"
-                style="bottom: 1rem; left: 1rem; width: calc(100% - 2rem)">
-                <i class="pi pi-shopping-cart mr-3 text-base"></i>
-                <span class="text-base">Add to Cart</span>
+            <button
+              type="button"
+              pRipple
+              class="border-1 border-white border-round py-2 px-3 absolute bg-black-alpha-30 text-white inline-flex align-items-center justify-content-center hover:bg-black-alpha-40 transition-colors transition-duration-300 cursor-pointer"
+              style="bottom: 1rem; left: 1rem; width: calc(100% - 2rem)"
+            >
+              <i class="pi pi-shopping-cart mr-3 text-base"></i>
+              <span class="text-base">Add to Cart</span>
             </button>
           </div>
           <div class="flex flex-column align-items-center">
@@ -83,10 +198,14 @@
         <div class="col-12 md:col-6 lg:col-3 mb-5 lg:mb-0">
           <div class="mb-3 relative">
             <img src="./assets/images/blog-img-05.jpg" class="w-full" />
-            <button type="button" pRipple class="border-1 border-white border-round py-2 px-3 absolute bg-black-alpha-30 text-white inline-flex align-items-center justify-content-center hover:bg-black-alpha-40 transition-colors transition-duration-300 cursor-pointer"
-                style="bottom: 1rem; left: 1rem; width: calc(100% - 2rem)">
-                <i class="pi pi-shopping-cart mr-3 text-base"></i>
-                <span class="text-base">Add to Cart</span>
+            <button
+              type="button"
+              pRipple
+              class="border-1 border-white border-round py-2 px-3 absolute bg-black-alpha-30 text-white inline-flex align-items-center justify-content-center hover:bg-black-alpha-40 transition-colors transition-duration-300 cursor-pointer"
+              style="bottom: 1rem; left: 1rem; width: calc(100% - 2rem)"
+            >
+              <i class="pi pi-shopping-cart mr-3 text-base"></i>
+              <span class="text-base">Add to Cart</span>
             </button>
           </div>
           <div class="flex flex-column align-items-center">
@@ -98,10 +217,14 @@
         <div class="col-12 md:col-6 lg:col-3 mb-5 lg:mb-0">
           <div class="mb-3 relative">
             <img src="./assets/images/blog-img-05.jpg" class="w-full" />
-            <button type="button" pRipple class="border-1 border-white border-round py-2 px-3 absolute bg-black-alpha-30 text-white inline-flex align-items-center justify-content-center hover:bg-black-alpha-40 transition-colors transition-duration-300 cursor-pointer"
-                style="bottom: 1rem; left: 1rem; width: calc(100% - 2rem)">
-                <i class="pi pi-shopping-cart mr-3 text-base"></i>
-                <span class="text-base">Add to Cart</span>
+            <button
+              type="button"
+              pRipple
+              class="border-1 border-white border-round py-2 px-3 absolute bg-black-alpha-30 text-white inline-flex align-items-center justify-content-center hover:bg-black-alpha-40 transition-colors transition-duration-300 cursor-pointer"
+              style="bottom: 1rem; left: 1rem; width: calc(100% - 2rem)"
+            >
+              <i class="pi pi-shopping-cart mr-3 text-base"></i>
+              <span class="text-base">Add to Cart</span>
             </button>
           </div>
           <div class="flex flex-column align-items-center">
@@ -111,6 +234,25 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+<div class="surface-section px-4 py-8 md:px-6 lg:px-8">
+  <div class="flex justify-content-between flex-wrap">
+    <div class="flex align-items-center mb-4 md:mb-0">
+      <div class="text-900 font-bold text-3xl">All Categories</div>
+    </div>
+    <div>
+      <button
+        type="button"
+        pButton
+        icon="pi pi-sort-alt"
+        class="p-button-outlined p-button-secondary w-8rem p-2"
+        iconPos="right"
+        label="Sort By"
+        (click)="menu.toggle($event)"
+      ></button>
+      <p-menu #menu [popup]="true" [model]="items"></p-menu>
     </div>
   </div>
 </div>

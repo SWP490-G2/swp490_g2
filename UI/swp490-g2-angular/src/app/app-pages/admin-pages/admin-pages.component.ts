@@ -1,15 +1,24 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { AdminClient, AdminPagesSummary } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-admin-pages",
   templateUrl: "./admin-pages.component.html",
 })
-export class AdminPagesComponent {
+export class AdminPagesComponent implements OnInit {
   buttonContents: ButtonContent[] = [];
+  summary: AdminPagesSummary = new AdminPagesSummary();
 
-  constructor(private $router: Router) {
+  constructor(private $router: Router, private $adminClient: AdminClient) {
     this.initButtonContents();
+  }
+
+  ngOnInit(): void {
+    this.$adminClient.adminPages_getSummary().subscribe((summary) => {
+      console.log(summary);
+      this.summary = summary;
+    });
   }
 
   private initButtonContents(): void {

@@ -13,6 +13,10 @@ import { MenuModule } from "primeng/menu";
 import { DividerModule } from "primeng/divider";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { FormsModule } from "@angular/forms";
+import { CarouselModule } from "primeng/carousel";
+import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
+import { ChipsModule } from "primeng/chips";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   declarations: [HomePageComponent],
@@ -29,7 +33,11 @@ import { FormsModule } from "@angular/forms";
     DividerModule,
     MultiSelectModule,
     ToggleButtonModule,
-    FormsModule
+    FormsModule,
+    CarouselModule,
+    ImageAttachmentModule,
+    ChipsModule,
+    TooltipModule,
   ],
 })
 export class HomePageModule {}

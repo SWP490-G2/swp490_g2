@@ -48,7 +48,8 @@ public class SecurityConfiguration {
                         "/product-category/**",
                         "/product/get-product-price-ranges-by-restaurant-id/*",
                         "/address/**",
-                        "/product/search/*"
+                        "/product/search/*",
+                        "/product/get-top-most-ordered/*"
                 )
                 .permitAll()
                 .anyRequest()

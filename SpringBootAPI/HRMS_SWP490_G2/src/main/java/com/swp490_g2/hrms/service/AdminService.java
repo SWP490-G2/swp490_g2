@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.service;
 
+import com.swp490_g2.hrms.common.utils.CommonUtils;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.Notification;
 import com.swp490_g2.hrms.entity.Restaurant;
@@ -9,6 +10,7 @@ import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.SearchRequest;
+import com.swp490_g2.hrms.response.AdminPagesSummary;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -71,8 +73,7 @@ public class AdminService {
             return List.of();
         }
 
-        List<User> list = this.buyerService.getAllOpeningRestaurantRequests();
-        return list;
+        return this.buyerService.getAllOpeningRestaurantRequests();
     }
 
     public Page<User> getAllUsers(SearchRequest request) {
@@ -190,5 +191,16 @@ public class AdminService {
         User currentAdmin = userService.getCurrentUser();
         if (currentAdmin == null)
             throw new AccessDeniedException("This request allows admin only!");
+    }
+
+    public AdminPagesSummary adminPages_getSummary() {
+        allowAdminExecuteAction();
+        Object[] objects = (Object[])userRepository.adminPages_getSummary();
+        return AdminPagesSummary.builder()
+                .totalOrders(CommonUtils.toLong(objects[0]))
+                .totalUsers(CommonUtils.toLong(objects[1]))
+                .totalRestaurants(CommonUtils.toLong(objects[2]))
+                .totalRestaurantOpeningRequests(CommonUtils.toLong(objects[3]))
+                .build();
     }
 }

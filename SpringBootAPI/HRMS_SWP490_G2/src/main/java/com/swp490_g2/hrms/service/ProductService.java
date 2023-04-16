@@ -208,4 +208,17 @@ public class ProductService {
             return;
         productRepository.save(product);
     }
+
+    public List<Product> getTopMostOrdered(Long top) {
+        if(top == null || top <= 0)
+            top = 10L;
+
+        List<Product> topProducts = productRepository.getTopMostOrdered(top);
+        topProducts.forEach(product -> {
+            Restaurant restaurant = restaurantService.getByProductId(product.getId());
+            product.setRestaurant(restaurant);
+        });
+
+        return topProducts;
+    }
 }
