@@ -34,7 +34,7 @@ public class Restaurant extends BaseEntity {
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
     private boolean isActive = false;
 
-    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
     private File avatarFile;
 

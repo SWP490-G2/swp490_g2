@@ -1,10 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { MessageService } from "primeng/api";
-import { map, tap } from "rxjs";
+import { map } from "rxjs";
 import {
   Order,
   OrderClient,
-  OrderProductDetail,
   SearchRequest,
 } from "src/app/ngswag/client";
 
