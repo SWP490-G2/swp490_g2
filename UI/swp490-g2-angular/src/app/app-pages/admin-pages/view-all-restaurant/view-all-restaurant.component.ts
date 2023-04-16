@@ -8,6 +8,7 @@ import {
   SearchRestaurantsRequest,
   UserClient,
 } from "src/app/ngswag/client";
+import { DateUtils } from "src/app/utils";
 import { AllRes } from "src/app/utils/allres";
 
 @Component({
@@ -17,11 +18,10 @@ import { AllRes } from "src/app/utils/allres";
   providers: [MessageService],
 })
 export class ViewAllRestaurantComponent {
-  resOpening: AllRes[];
+  resOpening: AllRes[] = [];
   statuses: any[];
   loading = true;
   activityValues: number[] = [0, 100];
-  // restaurants: RestaurantInformationRequest[] = [];
   restaurants: Restaurant[] = [];
 
   constructor(
@@ -32,6 +32,16 @@ export class ViewAllRestaurantComponent {
     private $userClient: UserClient
   ) {
     this.refresh();
+    this.$adminClient.getAllRestaurant().subscribe((restaurants) => {
+      this.resOpening = restaurants.map((restaurant) => {
+        if (restaurant.createdAt) {
+          restaurant.createdAt = DateUtils.fromDB(
+            restaurant.createdAt
+          );
+        }
+        return restaurant;
+      });
+    });
   }
 
   refresh() {

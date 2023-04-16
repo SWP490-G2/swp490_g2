@@ -9,7 +9,7 @@ import {
   User,
   UserClient,
 } from "src/app/ngswag/client";
-import { getFullAddress } from "src/app/utils";
+import { DateUtils, getFullAddress } from "src/app/utils";
 
 @Component({
   selector: "app-view-restaurant-details",
@@ -21,6 +21,7 @@ export class ViewRestaurantDetailsComponent implements OnInit {
   restaurant?: Restaurant;
   uploadUrl: string;
   user?: User;
+  restaurants: Restaurant[] = [];
 
   constructor(
     private $adminClient: AdminClient,
@@ -57,6 +58,14 @@ export class ViewRestaurantDetailsComponent implements OnInit {
       });
 
     this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
+
+
+    this.$adminClient.getRestaurantById(this.restaurantId).subscribe((restaurant) => {
+      this.restaurant = restaurant;
+      this.restaurant.createdAt = DateUtils.fromDB(
+        this.restaurant.createdAt
+      );
+    });
   }
 
   get fullAddress(): string {
