@@ -131,7 +131,7 @@
         </td>
         <td>
           <span class="p-column-title">Created Date</span>
-          {{ resList.createdAt | date : "dd/MM/yyyy" }}
+          {{ (resList.createdAt * 1000) | date : "dd/MM/yyyy" }}
         </td>
         <td>
           <span class="p-column-title">Phone Number</span>

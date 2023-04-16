@@ -32,7 +32,6 @@ import { RadioButtonModule } from "primeng/radiobutton";
 import { AccountInformationModule } from "../account-information/account-information.module";
 import { InputSwitchModule } from "primeng/inputswitch";
 import { CarouselModule } from "primeng/carousel";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { OpenClosedTimeComponent } from "./open-closed-time/open-closed-time.component";
 import { CalendarModule } from "primeng/calendar";
 import { TagModule } from "primeng/tag";
@@ -74,7 +73,6 @@ import { TagModule } from "primeng/tag";
     AccountInformationModule,
     CarouselModule,
     InputSwitchModule,
-    ConfirmDialogModule,
     CalendarModule,
     TagModule,
   ],

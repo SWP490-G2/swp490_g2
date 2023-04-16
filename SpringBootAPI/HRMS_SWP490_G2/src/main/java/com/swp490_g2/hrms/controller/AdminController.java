@@ -45,8 +45,8 @@ public class AdminController {
     }
 
     @PostMapping("/insert-restaurant")
-    public void insert(@RequestBody Restaurant restaurant) {
-        adminService.insertNewRestaurant(restaurant);
+    public ResponseEntity<String> insertRestaurant(@RequestBody Restaurant restaurant) {
+        return ResponseEntity.ok(adminService.insertNewRestaurant(restaurant));
     }
 
     @PutMapping("/update-restaurant")
@@ -54,13 +54,13 @@ public class AdminController {
         adminService.updateRestaurant(restaurant);
     }
 
-    @DeleteMapping("/delete-restaurant-by-id/{id}")
-    public void deleteRestaurantById(@PathVariable Long id) {
-        adminService.deleteRestaurantById(id);
-    }
-
     @PostMapping("/get-all-users")
     public ResponseEntity<Page<User>> getAllUsers(@RequestBody SearchRequest request) {
         return ResponseEntity.ok(adminService.getAllUsers(request));
+    }
+
+    @GetMapping ("/get-all-user-except-admin")
+    public ResponseEntity<List<User>> getAllUserExceptAdmin() {
+        return ResponseEntity.ok(adminService.getAllUserExceptAdmin());
     }
 }

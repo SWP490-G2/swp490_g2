@@ -1,6 +1,8 @@
 <div class="grid m-0 p-fluid">
   <div class="col-12 md:col-4">
-    <label for="city" class="block text-900 font-medium my-2">Province*</label>
+    <label for="city" class="block text-900 font-medium my-2 required"
+      >Province</label
+    >
     <p-dropdown
       inputId="city"
       [options]="cities"
@@ -23,8 +25,8 @@
   </div>
 
   <div class="col-12 md:col-4">
-    <label for="district" class="block text-900 font-medium my-2"
-      >District*</label
+    <label for="district" class="block text-900 font-medium my-2 required"
+      >District</label
     >
     <p-dropdown
       inputId="district"
@@ -47,7 +49,9 @@
   </div>
 
   <div class="col-12 md:col-4">
-    <label for="ward" class="block text-900 font-medium my-2">Ward*</label>
+    <label for="ward" class="block text-900 font-medium my-2 required"
+      >Ward</label
+    >
     <p-dropdown
       inputId="ward"
       [options]="wards"
@@ -78,9 +82,12 @@
         form.controls['ward']?.value)
     "
   >
-    <label for="specificAddress" class="block text-900 font-medium mb-2"
-      >Specific Address*</label
+    <label
+      for="specificAddress"
+      class="block text-900 font-medium mb-2 required"
     >
+      Specific Address
+    </label>
     <input
       id="specificAddress"
       type="text"

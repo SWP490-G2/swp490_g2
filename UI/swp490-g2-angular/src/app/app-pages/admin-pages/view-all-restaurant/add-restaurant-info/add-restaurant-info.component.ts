@@ -1,11 +1,14 @@
-import { Component, ViewChild } from "@angular/core";
-import { NgForm } from "@angular/forms";
+import { Component, OnInit, ViewChild, Input } from "@angular/core";
+import { NgForm, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
+  Address,
   AdminClient,
   Restaurant,
+  RestaurantCategory,
+  RestaurantCategoryClient,
   RestaurantClient,
   User,
   UserClient,
@@ -17,16 +20,41 @@ import {
   templateUrl: "./add-restaurant-info.component.html",
   styleUrls: ["./add-restaurant-info.component.scss"],
 })
-export class AddRestaurantInfoComponent {
+export class AddRestaurantInfoComponent implements OnInit {
   @ViewChild("form", { static: false }) form!: NgForm;
 
   restaurantId: number;
-  restaurant?: Restaurant;
+  restaurant = new Restaurant({
+    address: new Address({
+      ward: new Ward(),
+    }),
+  });
+
   user?: User;
   uploadUrl: string;
 
+  users: any[];
+  selectedUsers: User[] = [];
+  filteredUsers: User[] = [];
+
+  restaurantCategories: any[];
+  selectedCategories: RestaurantCategory[] = [];
+  filteredCategories: RestaurantCategory[] = [];
+
+  private _submitButtonDisabled = false;
+  get submitButtonDisabled(): boolean {
+    return !!this.form?.invalid || this._submitButtonDisabled;
+  }
+
+  set submitButtonDisabled(value: boolean) {
+    this._submitButtonDisabled = value;
+  }
+
+  @Input() hasOwnersField = true;
+
   constructor(
     private $restaurantClient: RestaurantClient,
+    private $restaurantCategoryClient: RestaurantCategoryClient,
     private $adminClient: AdminClient,
     private $userClient: UserClient,
     private $auth: AuthService,
@@ -36,27 +64,112 @@ export class AddRestaurantInfoComponent {
     this.refresh();
   }
 
+  ngOnInit() {
+    this.$adminClient.getAllUserExceptAdmin().subscribe((users) => {
+      this.users = users;
+      this.filteredUsers = [...users];
+    });
+
+    this.$restaurantCategoryClient
+      .getAll()
+      .subscribe((restaurantCategories) => {
+        this.restaurantCategories = restaurantCategories;
+      });
+  }
+
   refresh() {
     this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
   }
 
   submit(): void {
-    if (!this.restaurant) return;
+    this.restaurant.restaurantCategories = this.selectedCategories;
+    this.restaurant.owners = this.selectedUsers;
+    if (this.restaurant.address?.ward)
+      this.restaurant.address.ward.id = this.form.value.ward.id;
 
-    if (this.restaurant.address) {
-      this.restaurant.address.ward = new Ward({
-        id: this.form.value.ward.id,
-      });
-
+    if (this.restaurant.address)
       this.restaurant.address.specificAddress = this.form.value.specificAddress;
-    }
 
-    this.$restaurantClient.update(this.restaurant).subscribe(() => {
+    if (this.restaurant.phoneNumber?.startsWith("+84"))
+      this.restaurant.phoneNumber.replace("+84", "0");
+
+    this.$adminClient.insertRestaurant(this.restaurant).subscribe(() => {
       this.$message.add({
         severity: "success",
         summary: "Success",
-        detail: "Restaurant's information has changed",
+        detail: "Add new restaurant successfully!",
       });
     });
   }
+
+  filterUser(event) {
+    const filtered: any[] = [];
+    const query = event.query;
+
+    for (let i = 0; i < this.users.length; i++) {
+      const user = this.users[i];
+      if (user.email.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(user);
+      }
+    }
+
+    this.filteredUsers = filtered;
+  }
+
+  filterRestaurantCategory(event) {
+    const filtered: any[] = [];
+    const query = event.query;
+
+    for (let i = 0; i < this.restaurantCategories.length; i++) {
+      const restaurantCategory = this.restaurantCategories[i];
+      if (
+        restaurantCategory.restaurantCategoryName
+          .toLowerCase()
+          .indexOf(query.toLowerCase()) == 0
+      ) {
+        filtered.push(restaurantCategory);
+      }
+    }
+
+    this.filteredCategories = filtered;
+  }
+
+  // ngAfterViewInit(): void {
+  //   setTimeout(() => {
+  //     this.form.controls["phoneNumber"].addValidators([
+  //       Validators.required,
+  //       Validators.pattern("^(0[3|5|7|8|9])+([0-9]{8})$"),
+  //     ]);
+  //     this.form.controls["phoneNumber"].updateValueAndValidity();
+  //     this.form.controls["contact"].addValidators([
+  //       Validators.required,
+  //       Validators.pattern("^(0[3|5|7|8|9])+([0-9]{8})$"),
+  //     ]);
+  //     this.form.controls["contact"].updateValueAndValidity();
+  //   }, 0);
+  // }
+
+  // updateAvatar(image: File) {
+  //   if (!this.restaurant) return;
+
+  //   this.restaurant.avatarFile = image;
+  //   this.$restaurantClient
+  //     .update(this.restaurant)
+  //     .subscribe(() => location.reload());
+  // }
+
+  // get editable(): boolean {
+  //   if (!this.user || !this.user.id) return false;
+  //   if (AuthService.isAdmin(this.user)) return true;
+  //   if (
+  //     AuthService.isSeller(this.user) &&
+  //     this.user.restaurants?.some(
+  //       (restaurant) => restaurant.id === this.restaurant?.id
+  //     )
+  //   ) {
+  //     return true;
+  //   }
+
+  //   return false;
+  // }
 }

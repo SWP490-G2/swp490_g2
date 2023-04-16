@@ -14,7 +14,7 @@ import { AllRes } from "src/app/utils/allres";
   selector: "app-view-all-restaurant",
   templateUrl: "./view-all-restaurant.component.html",
   styleUrls: ["./view-all-restaurant.component.css"],
-  providers: [ConfirmationService, MessageService],
+  providers: [MessageService],
 })
 export class ViewAllRestaurantComponent {
   resOpening: AllRes[];
@@ -26,7 +26,7 @@ export class ViewAllRestaurantComponent {
 
   constructor(
     private $adminClient: AdminClient,
-    private confirmationService: ConfirmationService,
+    private $confirmation: ConfirmationService,
     private messageService: MessageService,
     private $restaurantClient: RestaurantClient,
     private $userClient: UserClient
@@ -78,7 +78,8 @@ export class ViewAllRestaurantComponent {
 
   toggleRestaurantStatus(restaurant: Restaurant, event: any) {
     const intended = event.checked;
-    this.confirmationService.confirm({
+
+    this.$confirmation.confirm({
       message: `Do you want to ${
         intended ? "activate" : "disable"
       } this restaurant?`,

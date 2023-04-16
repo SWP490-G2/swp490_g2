@@ -22,4 +22,8 @@ public class RestaurantCategoryService {
     public List<RestaurantCategory> getAll() {
         return this.restaurantCategoryRepository.findAllByOrderByRestaurantCategoryNameAsc();
     }
+
+    public List<RestaurantCategory> getAllRestaurantCategoryByRestaurantId(Long restaurantId) {
+        return this.restaurantCategoryRepository.getAllRestaurantCategoryByRestaurantId(restaurantId);
+    }
 }

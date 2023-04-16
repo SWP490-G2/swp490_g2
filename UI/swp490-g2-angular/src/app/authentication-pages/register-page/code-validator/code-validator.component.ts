@@ -25,7 +25,7 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
   @Input() password: any;
 
   constructor(
-    private confirmationService: ConfirmationService,
+    private $confirmation: ConfirmationService,
     private $auth: AuthService,
     private $client: UserClient,
     private $router: Router,
@@ -56,7 +56,7 @@ export class CodeValidatorComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (errorMessage) => {
           if (!errorMessage) {
-            return this.confirmationService.confirm({
+            return this.$confirmation.confirm({
               message: "Register successfully! Click “YES” to back to home page.",
               header: "Confirmation",
               accept: () => {

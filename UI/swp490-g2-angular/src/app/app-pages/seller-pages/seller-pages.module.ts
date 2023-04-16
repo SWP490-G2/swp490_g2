@@ -5,7 +5,6 @@ import { SellerPagesRoutingModule } from "./seller-pages-routing.module";
 import { SellerPagesComponent } from "./seller-pages.component";
 import { FormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { DialogModule } from "primeng/dialog";
 import { DropdownModule } from "primeng/dropdown";
 import { InputSwitchModule } from "primeng/inputswitch";
@@ -30,7 +29,6 @@ import { HttpClientModule } from "@angular/common/http";
     ButtonModule,
     TagModule,
     DialogModule,
-    ConfirmDialogModule,
     ToastModule,
     InputSwitchModule,
     ToggleButtonModule,

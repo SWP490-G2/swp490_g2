@@ -71,8 +71,9 @@ public class User extends BaseEntity implements UserDetails {
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private File avatarFile;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
     private Address address;
 
     @ElementCollection(targetClass = Role.class)
@@ -119,7 +120,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "requestingRestaurantId")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
     private Restaurant requestingRestaurant;
 
     @ManyToMany(fetch = FetchType.EAGER,
@@ -129,7 +130,7 @@ public class User extends BaseEntity implements UserDetails {
             })
     @JoinTable(name = "user__restaurant",
             joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "restaurantId"))
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
     @Transient
     private List<Restaurant> restaurants = new ArrayList<>();
 

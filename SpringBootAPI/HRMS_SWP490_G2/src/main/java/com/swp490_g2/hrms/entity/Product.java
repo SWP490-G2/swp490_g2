@@ -39,7 +39,7 @@ public class Product extends BaseEntity {
     private Set<ProductCategory> categories;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
     private List<File> images = new ArrayList<>();
 
     @Column(columnDefinition = "nvarchar(16) default 'ACTIVE'", insertable = false)

@@ -116,7 +116,14 @@ public class AdminService {
         userService.update(requester);
     }
 
+    @Transactional
     public void addRestaurantForSeller(Long sellerId, Long restaurantId) {
+        User user = userService.getById(sellerId);
+        if (!user.getRoles().contains(Role.SELLER)) {
+            user.getRoles().add(Role.SELLER);
+            userService.update(user);
+        }
+
         userRepository.addRestaurantForSeller(sellerId, restaurantId);
     }
 
@@ -153,9 +160,20 @@ public class AdminService {
         return restaurantService.getById(restaurantId);
     }
 
-    public void insertNewRestaurant(Restaurant restaurant) {
+    @Transactional
+    public String insertNewRestaurant(Restaurant restaurant) {
         allowAdminExecuteAction();
-        restaurantService.insert(restaurant);
+
+        if (restaurant.getOwners().isEmpty())
+            return "\"This restaurant must have at least 1 owner!\"";
+
+        restaurant.setActive(true);
+        Restaurant addedRestaurant = restaurantService.insert(restaurant);
+        restaurant.getOwners().forEach(owner -> {
+            addRestaurantForSeller(owner.getId(), addedRestaurant.getId());
+        });
+
+        return null;
     }
 
     public void updateRestaurant(Restaurant restaurant) {
@@ -163,9 +181,9 @@ public class AdminService {
         restaurantService.update(restaurant);
     }
 
-    public void deleteRestaurantById(Long id) {
+    public List<User> getAllUserExceptAdmin() {
         allowAdminExecuteAction();
-        restaurantService.deleteRestaurantById(id);
+        return userService.getAllByRoles(List.of(Role.USER, Role.BUYER, Role.SELLER));
     }
 
     private void allowAdminExecuteAction() {

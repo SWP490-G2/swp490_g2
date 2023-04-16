@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { finalize, forkJoin, of, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
-import { UserClient } from "src/app/ngswag/client";
+import { RestaurantCategoryClient, UserClient } from "src/app/ngswag/client";
 import {
   AdminClient,
   AuthenticationResponse,
@@ -22,35 +22,19 @@ import {
 export class UpdateRestaurantInfoApplyComponent
   implements OnInit, AfterViewInit {
   @ViewChild("form", { static: false }) form!: NgForm;
-  selectedDelivery: any = null;
-  time1: Date;
-  time2: Date;
-  time3: Date;
-  time4: Date;
-  deliveries: any[] = [
-    { name: "Yes", key: "Y" },
-    { name: "No", key: "N" },
-  ];
-
-  uploadedFiles: any[] = [];
-  $addressClient: any;
-  cities: any;
-  address: any;
-  districts: any;
-  wards: any;
-  $client: any;
-  _registerButtonDisabled: boolean;
-  codeValidatorDialogVisible: boolean;
-  selectedGender: any;
-  genders: any;
 
   restaurantId: number;
   restaurant?: Restaurant;
   user?: User;
   uploadUrl: string;
 
+  restaurantCategories: any[];
+  selectedCategory: any[];
+  filteredCategories: any[];
+
   constructor(
     private $restaurantClient: RestaurantClient,
+    private $restaurantCategoryClient: RestaurantCategoryClient,
     private $adminClient: AdminClient,
     private $userClient: UserClient,
     private $auth: AuthService,
@@ -105,6 +89,10 @@ export class UpdateRestaurantInfoApplyComponent
       this.restaurant.address.specificAddress = this.form.value.specificAddress;
     }
 
+    if(this.selectedCategory) {
+      this.restaurant.restaurantCategories = this.selectedCategory;
+    }
+
     this.$restaurantClient.update(this.restaurant).subscribe(() => {
       this.$message.add({
         severity: "success",
@@ -129,37 +117,18 @@ export class UpdateRestaurantInfoApplyComponent
     }, 0);
   }
 
-  onUpload(event) {
-    for (const file of event.files) {
-      this.uploadedFiles.push(file);
-    }
+  ngOnInit() {
+    this.$restaurantCategoryClient.getAll().subscribe((restaurantCategories) => {
+      this.restaurantCategories = restaurantCategories;
+    });
 
-    this.$message.add({
-      severity: "info",
-      summary: "File Uploaded",
-      detail: "",
+    if(this.restaurant) {
+      return;
+    }
+    this.$restaurantCategoryClient.getAllRestaurantCategoryByRestaurantId(this.restaurantId).subscribe((result) => {
+      this.selectedCategory = result;
     });
   }
-
-  updateResInfo(): void {
-    this.$client
-      .updateResInfo(this.form.value)
-      .pipe(
-        finalize(() => {
-          this._registerButtonDisabled = false;
-        })
-      )
-      .subscribe({
-        next: (authenticationResponse: AuthenticationResponse) => {
-          if (authenticationResponse.errorMessage) {
-            throw new Error(authenticationResponse.errorMessage);
-          }
-          this.codeValidatorDialogVisible = true;
-        },
-      });
-  }
-
-  ngOnInit() { }
 
   updateAvatar(image: File) {
     if (!this.restaurant) return;
@@ -189,5 +158,19 @@ export class UpdateRestaurantInfoApplyComponent
     if (!(restaurant as any).owners) return "";
 
     return (restaurant as any).owners.map((o) => o.email).join(", ");
+  }
+
+  filterRestaurantCategory(event) {
+    const filtered: any[] = [];
+    const query = event.query;
+
+    for (let i = 0; i < this.restaurantCategories.length; i++) {
+      const restaurantCategory = this.restaurantCategories[i];
+      if (restaurantCategory.restaurantCategoryName.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(restaurantCategory);
+      }
+    }
+
+    this.filteredCategories = filtered;
   }
 }

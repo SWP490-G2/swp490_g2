@@ -17,7 +17,6 @@ import { LoginComponent } from "./login-page/login.component";
 import { RegisterComponent } from "./register-page/register.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CodeValidatorComponent } from "./register-page/code-validator/code-validator.component";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { PasswordFieldsComponent } from "./register-page/password-fields/password-fields.component";
 
 
@@ -44,8 +43,6 @@ import { PasswordFieldsComponent } from "./register-page/password-fields/passwor
     ToastModule,
     DialogModule,
     ReactiveFormsModule,
-    ConfirmDialogModule,
-
   ],
   providers: [
   ]

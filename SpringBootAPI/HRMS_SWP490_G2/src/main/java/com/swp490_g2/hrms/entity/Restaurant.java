@@ -1,14 +1,16 @@
 package com.swp490_g2.hrms.entity;
 
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.swp490_g2.hrms.common.utils.DateUtils;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -29,25 +31,25 @@ public class Restaurant extends BaseEntity {
     @Column(unique = true)
     private String phoneNumber;
 
-    @Column(nullable = false, columnDefinition = "tinyint(1) default 0", insertable = false)
-    private boolean isActive;
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+    private boolean isActive = false;
 
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
     private File avatarFile;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @Transient
     private Set<Product> products;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
     private Address address;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "restaurant__restaurant_category",
             joinColumns = @JoinColumn(name = "restaurantId"), inverseJoinColumns = @JoinColumn(name = "restaurantCategoryId"))
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
     private List<RestaurantCategory> restaurantCategories;
 
     @Column
@@ -70,4 +72,9 @@ public class Restaurant extends BaseEntity {
         return !(Objects.requireNonNull(DateUtils.toLocalTime(closedTime)).isBefore(now)
                 && now.isBefore(DateUtils.toLocalTime(openTime)));
     }
+
+
+    /// Request fields
+    @Transient
+    private List<User> owners = new ArrayList<>();
 }

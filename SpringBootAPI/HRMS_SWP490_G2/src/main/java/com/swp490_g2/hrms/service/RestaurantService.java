@@ -48,12 +48,14 @@ public class RestaurantService {
     }
 
     public Restaurant insert(Restaurant restaurant) {
+        if(restaurant == null)
+            return null;
         restaurant.setId(null);
 
         User currentUser = userService.getCurrentUser();
         if (currentUser != null)
             restaurant.setCreatedBy(currentUser.getId());
-
+        restaurant.setAddress(addressService.populateLatLng(restaurant.getAddress()));
         return restaurantRepository.save(restaurant);
     }
 
@@ -177,21 +179,6 @@ public class RestaurantService {
             return getAllBySellerId(user.getId());
 
         return null;
-    }
-
-    public void deleteRestaurantById(Long restaurantId) {
-        RestaurantInformationRequest request = getRestaurantById(restaurantId);
-        if (Objects.nonNull(request)) {
-            if (request.getRestaurantCategory() != null || request.getRestaurantCategory().size() > 0) {
-                for (RestaurantCategory category : request.getRestaurantCategory()) {
-                    restaurantRepository.deleteRestaurantCategory(restaurantId, category.getId());
-                }
-            }
-            if (Objects.nonNull(request.getUser())) {
-                restaurantRepository.deleteSellerRestaurant(restaurantId, request.getUser().getId());
-            }
-            restaurantRepository.deleteById(restaurantId);
-        }
     }
 
     public RestaurantInformationRequest getRestaurantById(Long id) {

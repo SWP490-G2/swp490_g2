@@ -12,12 +12,14 @@ import { HttpClientModule } from "@angular/common/http";
 import { OpenRestaurantRequestComponent } from "./open-restaurant-request/open-restaurant-request.component";
 import { DialogModule } from "primeng/dialog";
 import { ConfirmPopupModule } from "primeng/confirmpopup";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ToastModule } from "primeng/toast";
 import { AccordionModule } from "primeng/accordion";
 import { TableModule } from "primeng/table";
 import { AddressFieldsComponent } from "./address-fields/address-fields.component";
 import { RestaurantsModule } from "../restaurants/restaurants.module";
+import { InputTextareaModule } from "primeng/inputtextarea";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { AddRestaurantInfoModule } from "../admin-pages/view-all-restaurant/add-restaurant-info/add-restaurant-info.module";
 
 @NgModule({
   declarations: [
@@ -38,11 +40,12 @@ import { RestaurantsModule } from "../restaurants/restaurants.module";
     HttpClientModule,
     DialogModule,
     ConfirmPopupModule,
-    ConfirmDialogModule,
     ToastModule,
     AccordionModule,
     TableModule,
     RestaurantsModule,
+    InputTextareaModule,
+    AutoCompleteModule,
   ],
   exports: [AddressFieldsComponent],
 })

@@ -1,71 +1,126 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { NgForm } from "@angular/forms";
-import { Title } from "@angular/platform-browser";
-import { Router, ActivatedRoute } from "@angular/router";
-import { ConfirmationService, MessageService } from "primeng/api";
-import { finalize } from "rxjs";
-import { BuyerClient } from "src/app/ngswag/client";
+import { Component, OnInit, ViewChild, Input } from "@angular/core";
+import { NgForm, Validators } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
+import { MessageService } from "primeng/api";
+import { AuthService } from "src/app/global/auth.service";
+import {
+  Address,
+  AdminClient,
+  BuyerClient,
+  Restaurant,
+  RestaurantCategory,
+  RestaurantCategoryClient,
+  RestaurantClient,
+  User,
+  UserClient,
+  Ward,
+} from "src/app/ngswag/client";
 
 @Component({
   selector: "app-open-restaurant-request",
   templateUrl: "./open-restaurant-request.component.html",
   styleUrls: ["./open-restaurant-request.component.scss"],
 })
-export class OpenRestaurantRequestComponent implements OnInit, AfterViewInit {
+export class OpenRestaurantRequestComponent implements OnInit {
   @ViewChild("form", { static: false }) form!: NgForm;
+
+  restaurantId: number;
+  restaurant = new Restaurant({
+    address: new Address({
+      ward: new Ward(),
+    }),
+  });
+
+  user?: User;
+  uploadUrl: string;
+
+  users: any[];
+
+  restaurantCategories: any[];
+  selectedCategories: RestaurantCategory[] = [];
+  filteredCategories: RestaurantCategory[] = [];
+
   private _submitButtonDisabled = false;
   get submitButtonDisabled(): boolean {
     return !!this.form?.invalid || this._submitButtonDisabled;
   }
 
-  constructor(
-    private $title: Title,
-    private $message: MessageService,
-    private $buyerClient: BuyerClient,
-    private $confirmation: ConfirmationService,
-    private $router: Router,
-    private $route: ActivatedRoute
-  ) {
-    $title.setTitle("Open Restaurant Request");
+  set submitButtonDisabled(value: boolean) {
+    this._submitButtonDisabled = value;
   }
 
-  ngOnInit(): void {}
-  ngAfterViewInit(): void {}
+  @Input() hasOwnersField = true;
+
+  constructor(
+    private $restaurantCategoryClient: RestaurantCategoryClient,
+    private $auth: AuthService,
+    private $message: MessageService,
+    private $buyerClient: BuyerClient
+  ) {
+    this.refresh();
+  }
+
+  ngOnInit() {
+    this.$restaurantCategoryClient
+      .getAll()
+      .subscribe((restaurantCategories) => {
+        this.restaurantCategories = restaurantCategories;
+      });
+  }
+
+  refresh() {
+    this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
+  }
 
   submit(): void {
-    this.$confirmation.confirm({
-      message:
-        "Request to open a new restaurant cannot be reverted. Are you sure that you want to perform this action?",
-      accept: () => {
-        let success = false;
-        this._submitButtonDisabled = true;
+    this.restaurant.restaurantCategories = this.selectedCategories;
+    if (this.restaurant.address?.ward)
+      this.restaurant.address.ward.id = this.form.value.ward.id;
 
-        this.$buyerClient
-          .requestOpeningNewRestaurant(this.form.value)
-          .pipe(
-            finalize(() => {
-              if (success) {
-                this.form.control.disable();
-              } else {
-                this._submitButtonDisabled = false;
-              }
-            })
-          )
-          .subscribe({
-            next: () => {
-              success = true;
-              this.$message.add({
-                severity: "success",
-                summary: "Success",
-                detail: "Request to open a new restaurant successfully",
-              });
-            },
-          });
-      },
-    });
+    if (this.restaurant.address)
+      this.restaurant.address.specificAddress = this.form.value.specificAddress;
+
+    if (this.restaurant.phoneNumber?.startsWith("+84"))
+      this.restaurant.phoneNumber.replace("+84", "0");
+
+    this.$buyerClient
+      .requestOpeningNewRestaurant(this.restaurant)
+      .subscribe(() => {
+        this.$message.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Opening a new restaurant request has been sent to admin successfully!",
+        });
+      });
   }
 
-  back() {
-    this.$router.navigate([".."], { relativeTo: this.$route });
+  filterUser(event) {
+    const filtered: any[] = [];
+    const query = event.query;
+
+    for (let i = 0; i < this.users.length; i++) {
+      const user = this.users[i];
+      if (user.email.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(user);
+      }
+    }
+  }
+
+  filterRestaurantCategory(event) {
+    const filtered: any[] = [];
+    const query = event.query;
+
+    for (let i = 0; i < this.restaurantCategories.length; i++) {
+      const restaurantCategory = this.restaurantCategories[i];
+      if (
+        restaurantCategory.restaurantCategoryName
+          .toLowerCase()
+          .indexOf(query.toLowerCase()) == 0
+      ) {
+        filtered.push(restaurantCategory);
+      }
+    }
+
+    this.filteredCategories = filtered;
   }
 }
