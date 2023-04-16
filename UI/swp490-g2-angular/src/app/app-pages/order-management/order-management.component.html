@@ -23,7 +23,7 @@
         <td>{{order.orderCreator.email}}</td>
         <td>{{order.orderCreator.phoneNumber}}</td>
         <td>{{order.orderProductDetails.length}}</td>
-        <td>{{getOrderTotalPrice(order) | currency: 'VND'}}</td>
+        <td>{{order.totalPrice | currency: 'VND'}}</td>
         <td><p-tag [value]="order.orderStatus" [severity]="getSeverity(order.orderStatus)"></p-tag></td>
         <td><p-button (click)="showDialog(order.id)" icon="pi pi-external-link" label="View detail"></p-button></td>
       </tr>
@@ -40,19 +40,20 @@
   [resizable]="false">
   <div class="flex gap-4">
     <ng-container *ngFor="let orderDetail of detailOrder">
-      <p-card [header]="orderDetail.product.productName" [subheader]="orderDetail.price + ' VND'" [style]="{ width: '360px' }">
+      <p-card [header]="orderDetail.product.productName" [subheader]="orderDetail.price + ' VND'"
+        [style]="{ width: '360px' }">
         <ng-template pTemplate="header">
           <img alt="Card" src="https://primefaces.org/cdn/primeng/images/usercard.png" />
         </ng-template>
         <p>
           Quantity: {{orderDetail.quantity}}
         </p>
-        <ng-template pTemplate="footer">
-          <p-button label="Delivery" icon="pi pi-check"></p-button>
-          <p-button label="Abort" icon="pi pi-times" styleClass="p-button-secondary"
-            [style]="{ 'margin-left': '.5em' }"></p-button>
-        </ng-template>
       </p-card>
     </ng-container>
+  </div>
+  <div class="mt-6">
+    <p-button label="Delivery" icon="pi pi-check" (click)="handleAcceptOrder()"></p-button>
+    <p-button label="Abort" icon="pi pi-times" styleClass="p-button-danger" [style]="{ 'margin-left': '.5em' }"
+      (click)="handleAbortOrder()"></p-button>
   </div>
 </p-dialog>

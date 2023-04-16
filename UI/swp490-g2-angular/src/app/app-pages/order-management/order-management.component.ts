@@ -10,33 +10,42 @@ import { OrderClient } from 'src/app/ngswag/client';
 export class OrderManagementComponent implements OnInit {
   orderProductDetail: any;
   orderProduct: any;
-  totalPrice: number = 0;
+  totalPrice: any;
   visible = false;
   detailOrder: any;
-  
+  orderId: number;
+
   constructor(private $orderClient: OrderClient) { }
 
   ngOnInit() {
-    this.$orderClient.getAllByRole('SELLER', { page: 0, size: 15 } as any).pipe(
-      map(res => {
+    this.$orderClient.getAllByRole('SELLER', { page: 0, size: 15 } as any).subscribe(res => {
         this.orderProduct = res.content;
         console.log(this.orderProduct);
-      }
-      )).subscribe(res => {
-        this.orderProductDetail = this.orderProduct.map(item => (
+        
+        this.totalPrice = this.getOrderTotalPrice(this.orderProduct);
+        this.orderProduct = this.orderProduct.map((order, index) => ({ ...order, totalPrice: this.totalPrice[index] }));
+        this.orderProductDetail = this.orderProduct.map((item,index) => (
           {
             id: item.id,
-            order: item.orderProductDetails
+            order: item.orderProductDetails,
           }
         ));
-        console.log('order detail', this.orderProductDetail);
-
-
       });
   }
-  getOrderTotalPrice(order: any): number {
-    return order.orderProductDetails.reduce((total, item) => total + item.price, 0);
+  getOrderTotalPrice(orders: any[]): number[] {
+    if (!orders) {
+      return [];
+    }
+    
+    return orders.map(order => {
+      if (order && order.orderProductDetails) {
+        return order.orderProductDetails.reduce((subtotal, item) => subtotal + item.price * item.quantity, 0);
+      } else {
+        return 0;
+      }
+    });
   }
+  
   getSeverity(status: string): string {
     switch (status) {
       case 'PENDING':
@@ -55,8 +64,17 @@ export class OrderManagementComponent implements OnInit {
   }
   showDialog(id: number): void {
     this.visible = true;
-    this.detailOrder = this.orderProductDetail.filter(item =>  item.id === id)
-    .map(order => order.order).flat(1)
+    this.orderId = id;
+    this.detailOrder = this.orderProductDetail.filter(item => item.id === id)
+      .map(order => order.order).flat(1)
     console.log(this.detailOrder);
+  }
+  handleAcceptOrder(): void {
+    this.$orderClient.accept(this.orderId).subscribe(res => console.log(res)
+    )
+  }
+  handleAbortOrder(): void {
+    this.$orderClient.abort(this.orderId).subscribe(res => console.log(res)
+    )
   }
 }
