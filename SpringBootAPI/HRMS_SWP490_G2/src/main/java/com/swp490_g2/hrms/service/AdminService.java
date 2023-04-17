@@ -2,9 +2,7 @@ package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.common.utils.CommonUtils;
 import com.swp490_g2.hrms.config.AuthenticationFacade;
-import com.swp490_g2.hrms.entity.Notification;
-import com.swp490_g2.hrms.entity.Restaurant;
-import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
@@ -66,6 +64,21 @@ public class AdminService {
     public void setWebSocketService(WebSocketService webSocketService) {
         this.webSocketService = webSocketService;
     }
+
+    private RejectRestaurantOpeningRequestService rejectRestaurantOpeningRequestService;
+
+    @Autowired
+    public void setRejectRestaurantOpeningRequestService(RejectRestaurantOpeningRequestService rejectRestaurantOpeningRequestService) {
+        this.rejectRestaurantOpeningRequestService = rejectRestaurantOpeningRequestService;
+    }
+
+    private RejectRestaurantOpeningRequestReasonService rejectRestaurantOpeningRequestReasonService;
+
+    @Autowired
+    public void setRejectRestaurantOpeningRequestReasonService(RejectRestaurantOpeningRequestReasonService rejectRestaurantOpeningRequestReasonService) {
+        this.rejectRestaurantOpeningRequestReasonService = rejectRestaurantOpeningRequestReasonService;
+    }
+    ////////////
 
     public List<User> getAllOpeningRestaurantRequests() {
         User currentUser = userService.getCurrentUser();
@@ -129,13 +142,13 @@ public class AdminService {
     }
 
     @Transactional
-    public void rejectBecomeSeller(Long buyerId) {
+    public void rejectBecomeSeller(RejectRestaurantOpeningRequest rejectRestaurantOpeningRequest) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null || !currentUser.isAdmin()) {
             return;
         }
 
-        User requester = userService.getById(buyerId);
+        User requester = userService.getById(rejectRestaurantOpeningRequest.getRequester().getId());
         if (requester == null)
             return;
 
@@ -143,6 +156,14 @@ public class AdminService {
         requester.setRequestingRestaurant(null);
         requester.setRequestingOpeningRestaurantDate(null);
         userService.update(requester);
+
+        RejectRestaurantOpeningRequest newRequest = rejectRestaurantOpeningRequestService.insert(rejectRestaurantOpeningRequest);
+        if (newRequest != null) {
+            rejectRestaurantOpeningRequest.getReasons().forEach(r -> {
+                r.setRejectRestaurantOpeningRequest(newRequest);
+                rejectRestaurantOpeningRequestReasonService.insert(r);
+            });
+        }
 
         webSocketService.push("/notification", Notification.builder()
                 .toUsers(List.of(requester))
@@ -195,7 +216,7 @@ public class AdminService {
 
     public AdminPagesSummary adminPages_getSummary() {
         allowAdminExecuteAction();
-        Object[] objects = (Object[])userRepository.adminPages_getSummary();
+        Object[] objects = (Object[]) userRepository.adminPages_getSummary();
         return AdminPagesSummary.builder()
                 .totalOrders(CommonUtils.toLong(objects[0]))
                 .totalUsers(CommonUtils.toLong(objects[1]))

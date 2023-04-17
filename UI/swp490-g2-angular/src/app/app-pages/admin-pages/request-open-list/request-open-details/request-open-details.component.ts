@@ -2,7 +2,13 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { finalize } from "rxjs";
-import { AdminClient, User, UserClient } from "src/app/ngswag/client";
+import {
+  AdminClient,
+  RejectRestaurantOpeningRequest,
+  RejectRestaurantOpeningRequestReason,
+  User,
+  UserClient,
+} from "src/app/ngswag/client";
 import { DateUtils } from "src/app/utils";
 
 @Component({
@@ -10,7 +16,7 @@ import { DateUtils } from "src/app/utils";
   templateUrl: "./request-open-details.component.html",
 })
 export class RequestOpenDetailsComponent implements OnInit {
-  selectedReason: string[] = [];
+  selectedReasons: string[] = [];
   checked = false;
   statuses: any[];
   loading = true;
@@ -21,6 +27,11 @@ export class RequestOpenDetailsComponent implements OnInit {
   displayMaximizable: boolean;
   requester?: User;
   userId: number;
+  reasons = [
+    "This request sent not enough information",
+    "This request does not sent food safety certifications",
+    "This restaurant had banned in the past",
+  ];
 
   constructor(
     private $adminClient: AdminClient,
@@ -44,7 +55,7 @@ export class RequestOpenDetailsComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
   items: MenuItem[];
 
   showModalDialog() {
@@ -56,9 +67,10 @@ export class RequestOpenDetailsComponent implements OnInit {
   }
 
   getStatus() {
-    return !this.requester?.requestingRestaurantStatus
-      || this.requester?.requestingRestaurantStatus === "PENDING"
-      ;
+    return (
+      !this.requester?.requestingRestaurantStatus ||
+      this.requester?.requestingRestaurantStatus === "PENDING"
+    );
   }
 
   approve() {
@@ -76,7 +88,18 @@ export class RequestOpenDetailsComponent implements OnInit {
 
   rejected() {
     this.$adminClient
-      .rejectBecomeSeller(this.userId)
+      .rejectBecomeSeller(
+        new RejectRestaurantOpeningRequest({
+          restaurant: this.requester?.requestingRestaurant,
+          requester: this.requester,
+          reasons: this.selectedReasons.map(
+            (r) =>
+              new RejectRestaurantOpeningRequestReason({
+                reason: r,
+              })
+          ),
+        })
+      )
       .pipe(
         finalize(() => {
           this.displayModal = false;

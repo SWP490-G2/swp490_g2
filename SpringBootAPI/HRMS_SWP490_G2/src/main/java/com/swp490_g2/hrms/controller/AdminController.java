@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.controller;
 
+import com.swp490_g2.hrms.entity.RejectRestaurantOpeningRequest;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.Restaurant;
 import com.swp490_g2.hrms.requests.SearchRequest;
@@ -28,9 +29,9 @@ public class AdminController {
         adminService.approveBecomeSeller(buyerId);
     }
 
-    @PutMapping("/reject-become-seller/{buyerId}")
-    public void rejectBecomeSeller(@PathVariable Long buyerId) {
-        adminService.rejectBecomeSeller(buyerId);
+    @PutMapping("/reject-become-seller")
+    public void rejectBecomeSeller(@RequestBody RejectRestaurantOpeningRequest request) {
+        adminService.rejectBecomeSeller(request);
     }
 
     @GetMapping("/get-all-restaurant")
