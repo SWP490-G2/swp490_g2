@@ -96,4 +96,12 @@ export class RequestOpenDetailsComponent implements OnInit {
         this.refresh();
       });
   }
+
+  get rejectRestaurantOpeningReasons(): string[] {
+    if (!this.requester?.rejectRestaurantOpeningRequestReasons) return [];
+
+    return JSON.parse(
+      JSON.parse(this.requester?.rejectRestaurantOpeningRequestReasons)
+    );
+  }
 }
