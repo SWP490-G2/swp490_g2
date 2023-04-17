@@ -82,6 +82,7 @@
           name="dateOfBirth"
           ngModel
         ></p-calendar>
+        <div *ngIf="isDateOfBirthInvalid" class="text-red-600">Date of birth is invalid</div>
       </div>
 
       <app-address-fields
