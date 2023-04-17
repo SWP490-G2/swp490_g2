@@ -1,5 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { MessageService } from "primeng/api";
+import { catchError, finalize, map, switchMap } from "rxjs";
 import { Restaurant, RestaurantClient } from "src/app/ngswag/client";
 
 @Component({
@@ -24,13 +25,26 @@ export class RestaurantNameComponent {
       this.isEditing = false;
       if (this.restaurant.restaurantName?.length === 0) return;
 
-      this.$restaurantClient.update(this.restaurant).subscribe(() => {
-        this.$message.add({
-          severity: "success",
-          summary: "Success",
-          detail: `Restaurant's name has changed to "${this.restaurant.restaurantName}"`,
-        });
-      });
+      this.$restaurantClient
+        .update(this.restaurant)
+        .pipe(
+          map((errorMessage) => {
+            if (errorMessage) throw new Error(errorMessage);
+
+            this.$message.add({
+              severity: "success",
+              summary: "Success",
+              detail: `Restaurant's name has changed to "${this.restaurant.restaurantName}"`,
+            });
+          }),
+          finalize(() => {
+            this.$restaurantClient
+              .getById(this.restaurant.id!)
+              .pipe(map((restaurant) => (this.restaurant = restaurant)))
+              .subscribe();
+          })
+        )
+        .subscribe();
     }
   }
 }

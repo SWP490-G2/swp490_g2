@@ -32,9 +32,9 @@ public class RestaurantController {
         restaurantService.updateAvatar(id, imageFile);
     }
 
-    @PutMapping("update")
-    public void update(@RequestBody Restaurant restaurant) {
-        restaurantService.update(restaurant);
+    @PutMapping("/update")
+    public ResponseEntity<String> update(@RequestBody Restaurant restaurant) {
+        return ResponseEntity.ok(restaurantService.update(restaurant));
     }
 
     @PostMapping(value = "/search")

@@ -2,8 +2,9 @@
   <span class="text-900 font-medium text-3xl" *ngIf="!isEditing">
     {{ restaurant.restaurantName }}
   </span>
+  <p-tag *ngIf="!restaurant.active" severity="danger" value="Inactive"></p-tag>
   <p-tag
-    *ngIf="!isEditing"
+    *ngIf="restaurant.active && !isEditing"
     [severity]="restaurant.opening ? 'success' : 'danger'"
     [value]="restaurant.opening ? 'Opening' : 'Closed'"
   ></p-tag>
