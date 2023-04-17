@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
-import { finalize, forkJoin, of, switchMap } from "rxjs";
+import { finalize, forkJoin, map, of, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import { RestaurantCategoryClient, UserClient } from "src/app/ngswag/client";
 import {
@@ -20,7 +20,8 @@ import {
   templateUrl: "./update-restaurant-info-apply.component.html",
 })
 export class UpdateRestaurantInfoApplyComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @ViewChild("form", { static: false }) form!: NgForm;
 
   restaurantId: number;
@@ -51,31 +52,33 @@ export class UpdateRestaurantInfoApplyComponent
   }
 
   refresh() {
-    this.$auth.getCurrentUser().pipe(
-      switchMap((user) => {
-        this.user = user;
-        return forkJoin([
-          this.$adminClient.getRestaurantById(this.restaurantId),
-          this.$userClient.hasControlsOfRestaurant(this.restaurantId)
-        ])
-      }),
-      switchMap(([restaurant, hasControlsOfRestaurant]) => {
-        this.restaurant = restaurant;
-        if (this.user && hasControlsOfRestaurant)
-          this.user.restaurants = [restaurant];
-
-        if (restaurant.id) {
-          return this.$userClient.getAllOwnersByRestaurantIds([
-            restaurant.id,
+    this.$auth
+      .getCurrentUser()
+      .pipe(
+        switchMap((user) => {
+          this.user = user;
+          return forkJoin([
+            this.$adminClient.getRestaurantById(this.restaurantId),
+            this.$userClient.hasControlsOfRestaurant(this.restaurantId),
           ]);
-        } else return of(undefined);
-      })
-    ).subscribe((owners) => {
-      if (owners) {
-        (this.restaurant as any).owners = owners;
-      }
-    });
+        }),
+        switchMap(([restaurant, hasControlsOfRestaurant]) => {
+          this.restaurant = restaurant;
+          if (this.user && hasControlsOfRestaurant)
+            this.user.restaurants = [restaurant];
 
+          if (restaurant.id) {
+            return this.$userClient.getAllOwnersByRestaurantIds([
+              restaurant.id,
+            ]);
+          } else return of(undefined);
+        })
+      )
+      .subscribe((owners) => {
+        if (owners) {
+          (this.restaurant as any).owners = owners;
+        }
+      });
   }
 
   submit(): void {
@@ -89,17 +92,24 @@ export class UpdateRestaurantInfoApplyComponent
       this.restaurant.address.specificAddress = this.form.value.specificAddress;
     }
 
-    if(this.selectedCategory) {
+    if (this.selectedCategory) {
       this.restaurant.restaurantCategories = this.selectedCategory;
     }
 
-    this.$restaurantClient.update(this.restaurant).subscribe(() => {
-      this.$message.add({
-        severity: "success",
-        summary: "Success",
-        detail: "Restaurant's information has changed",
-      });
-    });
+    this.$restaurantClient
+      .update(this.restaurant)
+      .pipe(
+        map((errorMessage) => {
+          if (errorMessage) throw new Error(errorMessage);
+
+          this.$message.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Restaurant's information has changed",
+          });
+        })
+      )
+      .subscribe();
   }
 
   ngAfterViewInit(): void {
@@ -118,16 +128,20 @@ export class UpdateRestaurantInfoApplyComponent
   }
 
   ngOnInit() {
-    this.$restaurantCategoryClient.getAll().subscribe((restaurantCategories) => {
-      this.restaurantCategories = restaurantCategories;
-    });
+    this.$restaurantCategoryClient
+      .getAll()
+      .subscribe((restaurantCategories) => {
+        this.restaurantCategories = restaurantCategories;
+      });
 
-    if(this.restaurant) {
+    if (this.restaurant) {
       return;
     }
-    this.$restaurantCategoryClient.getAllRestaurantCategoryByRestaurantId(this.restaurantId).subscribe((result) => {
-      this.selectedCategory = result;
-    });
+    this.$restaurantCategoryClient
+      .getAllRestaurantCategoryByRestaurantId(this.restaurantId)
+      .subscribe((result) => {
+        this.selectedCategory = result;
+      });
   }
 
   updateAvatar(image: File) {
@@ -166,7 +180,11 @@ export class UpdateRestaurantInfoApplyComponent
 
     for (let i = 0; i < this.restaurantCategories.length; i++) {
       const restaurantCategory = this.restaurantCategories[i];
-      if (restaurantCategory.restaurantCategoryName.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+      if (
+        restaurantCategory.restaurantCategoryName
+          .toLowerCase()
+          .indexOf(query.toLowerCase()) == 0
+      ) {
         filtered.push(restaurantCategory);
       }
     }

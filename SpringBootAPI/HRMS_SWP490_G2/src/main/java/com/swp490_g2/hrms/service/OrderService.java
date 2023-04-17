@@ -124,78 +124,108 @@ public class OrderService {
     public String accept(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
-            return "Current user does not have permission to do this action!";
+            return "\"Current user does not have permission to do this action!\"";
 
         Restaurant restaurant = getRestaurantByOrderId(orderId);
         if (restaurant == null)
-            return "Order [id=%d] is not valid!";
+            return "\"Order [id=%d] is not valid!\"";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
         if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
-            return "Current user does not have permission to do this action!";
+            return "\"Current user does not have permission to do this action!\"";
 
         if (!orderRepository.existsById(orderId))
-            return "Order [id=%d] does not exist!".formatted(orderId);
+            return "\"Order [id=%d] does not exist!\"".formatted(orderId);
 
         Order order = getById(orderId);
         if (order.getOrderStatus() != OrderStatus.PENDING)
-            return "Cannot change order status from [%s] to [ACCEPTED]!".formatted(order.getOrderStatus());
+            return "\"Cannot change order status from [%s] to [ACCEPTED]!\"".formatted(order.getOrderStatus());
 
         order.setOrderStatus(OrderStatus.ACCEPTED);
         order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("")
+                        .message("Your order #%d has been accepted!".formatted(order.getId()))
+                        .toUsers(List.of(order.getOrderCreator()))
+                        .build()
+        );
+
         return null;
     }
 
     public String reject(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
-            return "Current user does not have permission to do this action!";
+            return "\"Current user does not have permission to do this action!\"";
 
         Restaurant restaurant = getRestaurantByOrderId(orderId);
         if (restaurant == null)
-            return "Order [id=%d] is not valid!";
+            return "\"Order [id=%d] is not valid!\"";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
         if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
-            return "Current user does not have permission to do this action!";
+            return "\"Current user does not have permission to do this action!\"";
 
         if (!orderRepository.existsById(orderId))
-            return "Order [id=%d] does not exist!".formatted(orderId);
+            return "\"Order [id=%d] does not exist!\"".formatted(orderId);
 
         Order order = getById(orderId);
         if (order.getOrderStatus() != OrderStatus.PENDING)
-            return "Cannot change order status from [%s] to [REJECTED]!".formatted(order.getOrderStatus());
+            return "\"Cannot change order status from [%s] to [REJECTED]!\"".formatted(order.getOrderStatus());
 
         order.setOrderStatus(OrderStatus.REJECTED);
         order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("")
+                        .message("Your order #%d has been rejected!".formatted(order.getId()))
+                        .toUsers(List.of(order.getOrderCreator()))
+                        .build()
+        );
+
         return null;
     }
 
     public String deliver(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
-            return "Current user does not have permission to do this action!";
+            return "\"Current user does not have permission to do this action!\"";
 
         Restaurant restaurant = getRestaurantByOrderId(orderId);
         if (restaurant == null)
-            return "Order [id=%d] is not valid!";
+            return "\"Order [id=%d] is not valid!\"";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
         if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
-            return "Current user does not have permission to do this action!";
+            return "\"Current user does not have permission to do this action!\"";
 
         if (!orderRepository.existsById(orderId))
-            return "Order [id=%d] does not exist!".formatted(orderId);
+            return "\"Order [id=%d] does not exist!\"".formatted(orderId);
 
         Order order = getById(orderId);
         if (order.getOrderStatus() != OrderStatus.ACCEPTED)
-            return "Cannot change order status from [%s] to [DELIVERING]!".formatted(order.getOrderStatus());
+            return "\"Cannot change order status from [%s] to [DELIVERING]!\"".formatted(order.getOrderStatus());
 
         order.setOrderStatus(OrderStatus.DELIVERING);
         order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("")
+                        .message("Your order #%d has been started delivering!".formatted(order.getId()))
+                        .toUsers(List.of(order.getOrderCreator()))
+                        .build()
+        );
+
         return null;
     }
 
@@ -203,52 +233,72 @@ public class OrderService {
     public String complete(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
-            return "Current user does not have permission to do this action!";
+            return "\"Current user does not have permission to do this action!\"";
 
         Restaurant restaurant = getRestaurantByOrderId(orderId);
         if (restaurant == null)
-            return "Order [id=%d] is not valid!";
+            return "\"Order [id=%d] is not valid!\"";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
         if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
-            return "Current user does not have permission to do this action!";
+            return "\"Current user does not have permission to do this action!\"";
 
         if (!orderRepository.existsById(orderId))
-            return "Order [id=%d] does not exist!".formatted(orderId);
+            return "\"Order [id=%d] does not exist!\"".formatted(orderId);
 
         Order order = getById(orderId);
         if (order.getOrderStatus() != OrderStatus.DELIVERING)
-            return "Cannot change order status from [%s] to [COMPLETED]!".formatted(order.getOrderStatus());
+            return "\"Cannot change order status from [%s] to [COMPLETED]!\"".formatted(order.getOrderStatus());
 
         order.setOrderStatus(OrderStatus.COMPLETED);
         order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("")
+                        .message("Your order #%d has been completed!".formatted(order.getId()))
+                        .toUsers(List.of(order.getOrderCreator()))
+                        .build()
+        );
+
         return null;
     }
 
     public String abort(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
-            return "Current user does not have permission to do this action!";
+            return "\"Current user does not have permission to do this action!\"";
 
         Restaurant restaurant = getRestaurantByOrderId(orderId);
         if (restaurant == null)
-            return "Order [id=%d] is not valid!";
+            return "\"Order [id=%d] is not valid!\"";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
         if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
-            return "Current user does not have permission to do this action!";
+            return "\"Current user does not have permission to do this action!\"";
 
         if (!orderRepository.existsById(orderId))
-            return "Order [id=%d] does not exist!".formatted(orderId);
+            return "\"Order [id=%d] does not exist!\"".formatted(orderId);
 
         Order order = getById(orderId);
-        if (order.getOrderStatus() == OrderStatus.DELIVERING)
-            return "Cannot change order status from [%s] to [ABORTED]!".formatted(order.getOrderStatus());
+        if (order.getOrderStatus() != OrderStatus.ACCEPTED && order.getOrderStatus() != OrderStatus.DELIVERING)
+            return "\"Cannot change order status from [%s] to [ABORTED]!\"".formatted(order.getOrderStatus());
 
         order.setOrderStatus(OrderStatus.ABORTED);
         order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("")
+                        .message("Your order #%d has been aborted!".formatted(order.getId()))
+                        .toUsers(List.of(order.getOrderCreator()))
+                        .build()
+        );
+
         return null;
     }
 
@@ -271,6 +321,8 @@ public class OrderService {
                                 })).toList();
             }
         }
+
+        orders = orders.stream().sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt())).toList();
 
         return new PageImpl<>(orders.subList(
                 searchRequest.getSize() * searchRequest.getPage(),

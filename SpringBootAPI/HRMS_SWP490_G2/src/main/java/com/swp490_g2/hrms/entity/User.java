@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "user")
 @AttributeOverride(name = "id", column = @Column(name = "userId"))
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseEntity implements UserDetails, Cloneable {
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -154,5 +154,16 @@ public class User extends BaseEntity implements UserDetails {
             roles = new HashSet<>();
 
         roles.add(role);
+    }
+
+    @Override
+    public User clone() {
+        try {
+            User clone = (User) super.clone();
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

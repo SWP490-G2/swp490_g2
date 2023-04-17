@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { ConfirmationService, MessageService } from "primeng/api";
-import { of, switchMap } from "rxjs";
+import { map, of, switchMap } from "rxjs";
 import {
   AdminClient,
   Restaurant,
@@ -35,9 +35,7 @@ export class ViewAllRestaurantComponent {
     this.$adminClient.getAllRestaurant().subscribe((restaurants) => {
       this.resOpening = restaurants.map((restaurant) => {
         if (restaurant.createdAt) {
-          restaurant.createdAt = DateUtils.fromDB(
-            restaurant.createdAt
-          );
+          restaurant.createdAt = DateUtils.fromDB(restaurant.createdAt);
         }
         return restaurant;
       });
@@ -96,7 +94,14 @@ export class ViewAllRestaurantComponent {
       header: "Toggle Status Confirmation",
       icon: "pi pi-info-circle",
       accept: () => {
-        this.$restaurantClient.update(restaurant).subscribe();
+        this.$restaurantClient
+          .update(restaurant)
+          .pipe(
+            map((errorMessage) => {
+              if (errorMessage) throw new Error(errorMessage);
+            })
+          )
+          .subscribe();
       },
       reject: () => {
         restaurant.active = !intended;
