@@ -19,7 +19,6 @@ import {
   BuyerClient,
   City,
   District,
-  FileClient,
   Restaurant,
   User,
   UserClient,
@@ -53,7 +52,6 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
     private $message: MessageService,
     private $map: GoogleMapService,
     private $confirmation: ConfirmationService,
-    private $fileClient: FileClient,
     private $buyerClient: BuyerClient
   ) {
     $title.setTitle("Account Information");
@@ -64,17 +62,24 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   }
 
   refresh() {
-    this.$auth.getCurrentUser(true).subscribe((user) => {
-      this.user = user;
-      if (!this.user) return;
+    this.$auth
+      .getCurrentUser(true)
+      .pipe(
+        switchMap((user) => {
+          this.user = user;
+          if (!this.user) return of(undefined);
 
-      this.form.controls["firstName"].setValue(this.user.firstName);
-      this.form.controls["middleName"].setValue(this.user.middleName);
-      this.form.controls["lastName"].setValue(this.user.lastName);
-      this.form.controls["dateOfBirth"].setValue(
-        DateUtils.fromDB(this.user.dateOfBirth)
-      );
-    });
+          this.form.controls["firstName"].setValue(this.user.firstName);
+          this.form.controls["middleName"].setValue(this.user.middleName);
+          this.form.controls["lastName"].setValue(this.user.lastName);
+          this.form.controls["dateOfBirth"].setValue(
+            DateUtils.fromDB(this.user.dateOfBirth)
+          );
+
+          return of(undefined);
+        })
+      )
+      .subscribe();
   }
 
   ngAfterViewInit(): void {
@@ -223,5 +228,31 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
 
   onRestaurantNameClick(restaurant: Restaurant) {
     this.$router.navigate(["restaurant", restaurant.id]);
+  }
+
+  get restaurantOpeningRequestHeading(): string {
+    if (!this.user?.requestingRestaurant) return "";
+
+    const result = "Your request to open a new restaurant has been ";
+    switch (this.user.requestingRestaurantStatus) {
+      case "APPROVED":
+        return result + "approved.";
+
+      case "PENDING":
+        return result + "being reviewed.";
+
+      case "REJECTED":
+        return result + "rejected, with reasons:";
+    }
+
+    return "";
+  }
+
+  get rejectRestaurantOpeningReasons(): string[] {
+    if (!this.user?.rejectRestaurantOpeningRequestReasons) return [];
+
+    return JSON.parse(
+      JSON.parse(this.user?.rejectRestaurantOpeningRequestReasons)
+    );
   }
 }

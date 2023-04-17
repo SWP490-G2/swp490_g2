@@ -65,19 +65,6 @@ public class AdminService {
         this.webSocketService = webSocketService;
     }
 
-    private RejectRestaurantOpeningRequestService rejectRestaurantOpeningRequestService;
-
-    @Autowired
-    public void setRejectRestaurantOpeningRequestService(RejectRestaurantOpeningRequestService rejectRestaurantOpeningRequestService) {
-        this.rejectRestaurantOpeningRequestService = rejectRestaurantOpeningRequestService;
-    }
-
-    private RejectRestaurantOpeningRequestReasonService rejectRestaurantOpeningRequestReasonService;
-
-    @Autowired
-    public void setRejectRestaurantOpeningRequestReasonService(RejectRestaurantOpeningRequestReasonService rejectRestaurantOpeningRequestReasonService) {
-        this.rejectRestaurantOpeningRequestReasonService = rejectRestaurantOpeningRequestReasonService;
-    }
     ////////////
 
     public List<User> getAllOpeningRestaurantRequests() {
@@ -142,28 +129,19 @@ public class AdminService {
     }
 
     @Transactional
-    public void rejectBecomeSeller(RejectRestaurantOpeningRequest rejectRestaurantOpeningRequest) {
+    public void rejectBecomeSeller(Long buyerId, String reasons) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null || !currentUser.isAdmin()) {
             return;
         }
 
-        User requester = userService.getById(rejectRestaurantOpeningRequest.getRequester().getId());
+        User requester = userService.getById(buyerId);
         if (requester == null)
             return;
 
         requester.setRequestingRestaurantStatus(RequestingRestaurantStatus.REJECTED);
-        requester.setRequestingRestaurant(null);
-        requester.setRequestingOpeningRestaurantDate(null);
+        requester.setRejectRestaurantOpeningRequestReasons(reasons);
         userService.update(requester);
-
-        RejectRestaurantOpeningRequest newRequest = rejectRestaurantOpeningRequestService.insert(rejectRestaurantOpeningRequest);
-        if (newRequest != null) {
-            rejectRestaurantOpeningRequest.getReasons().forEach(r -> {
-                r.setRejectRestaurantOpeningRequest(newRequest);
-                rejectRestaurantOpeningRequestReasonService.insert(r);
-            });
-        }
 
         webSocketService.push("/notification", Notification.builder()
                 .toUsers(List.of(requester))

@@ -126,9 +126,13 @@
 
       <ng-container *ngIf="isBuyer">
         <div *ngIf="user?.requestingRestaurant" class="flex flex-column gap-2">
-          <strong
-            >Your request to open a new restaurant is being reviewed.</strong
-          >
+          <strong [innerText]="restaurantOpeningRequestHeading"> </strong>
+          <ul *ngIf="user?.requestingRestaurantStatus === 'REJECTED'">
+            <li *ngFor="let reason of rejectRestaurantOpeningReasons">
+              <strong>{{ reason }}.</strong>
+            </li>
+          </ul>
+
           <p-accordion>
             <p-accordionTab
               [selected]="true"
@@ -137,14 +141,15 @@
               <app-restaurant-card
                 [restaurant]="user?.requestingRestaurant!"
                 [hasDistance]="false"
-                (restaurantNameClick)="onRestaurantNameClick(user?.requestingRestaurant!)"
+                (restaurantNameClick)="
+                  onRestaurantNameClick(user?.requestingRestaurant!)
+                "
               ></app-restaurant-card>
             </p-accordionTab>
           </p-accordion>
         </div>
 
         <button
-          *ngIf="!user?.['requestingRestaurant']"
           pButton
           pRipple
           label="Request to open a restaurant"

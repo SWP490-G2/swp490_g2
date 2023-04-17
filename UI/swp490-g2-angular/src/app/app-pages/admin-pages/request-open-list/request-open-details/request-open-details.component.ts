@@ -2,13 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { finalize } from "rxjs";
-import {
-  AdminClient,
-  RejectRestaurantOpeningRequest,
-  RejectRestaurantOpeningRequestReason,
-  User,
-  UserClient,
-} from "src/app/ngswag/client";
+import { AdminClient, User, UserClient } from "src/app/ngswag/client";
 import { DateUtils } from "src/app/utils";
 
 @Component({
@@ -87,19 +81,12 @@ export class RequestOpenDetailsComponent implements OnInit {
   }
 
   rejected() {
+    if (!this.selectedReasons.length) {
+      throw new Error("You must select at least 1 reason!");
+    }
+
     this.$adminClient
-      .rejectBecomeSeller(
-        new RejectRestaurantOpeningRequest({
-          restaurant: this.requester?.requestingRestaurant,
-          requester: this.requester,
-          reasons: this.selectedReasons.map(
-            (r) =>
-              new RejectRestaurantOpeningRequestReason({
-                reason: r,
-              })
-          ),
-        })
-      )
+      .rejectBecomeSeller(this.userId, JSON.stringify(this.selectedReasons))
       .pipe(
         finalize(() => {
           this.displayModal = false;
