@@ -72,7 +72,6 @@ public class User extends BaseEntity implements UserDetails, Cloneable {
     private File avatarFile;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-
     @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
     private Address address;
 
@@ -122,6 +121,9 @@ public class User extends BaseEntity implements UserDetails, Cloneable {
     @JoinColumn(name = "requestingRestaurantId")
     @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
     private Restaurant requestingRestaurant;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String rejectRestaurantOpeningRequestReasons;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
