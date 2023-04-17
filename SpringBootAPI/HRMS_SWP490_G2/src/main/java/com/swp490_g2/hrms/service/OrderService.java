@@ -144,6 +144,16 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.ACCEPTED);
         order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("")
+                        .message("Your order #%d has been accepted!".formatted(order.getId()))
+                        .toUsers(List.of(order.getOrderCreator()))
+                        .build()
+        );
+
         return null;
     }
 
@@ -170,6 +180,16 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.REJECTED);
         order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("")
+                        .message("Your order #%d has been rejected!".formatted(order.getId()))
+                        .toUsers(List.of(order.getOrderCreator()))
+                        .build()
+        );
+
         return null;
     }
 
@@ -196,6 +216,16 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.DELIVERING);
         order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("")
+                        .message("Your order #%d has been started delivering!".formatted(order.getId()))
+                        .toUsers(List.of(order.getOrderCreator()))
+                        .build()
+        );
+
         return null;
     }
 
@@ -223,6 +253,16 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.COMPLETED);
         order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("")
+                        .message("Your order #%d has been completed!".formatted(order.getId()))
+                        .toUsers(List.of(order.getOrderCreator()))
+                        .build()
+        );
+
         return null;
     }
 
@@ -249,6 +289,16 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.ABORTED);
         order.setModifiedBy(currentUser.getId());
         orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("")
+                        .message("Your order #%d has been aborted!".formatted(order.getId()))
+                        .toUsers(List.of(order.getOrderCreator()))
+                        .build()
+        );
+
         return null;
     }
 

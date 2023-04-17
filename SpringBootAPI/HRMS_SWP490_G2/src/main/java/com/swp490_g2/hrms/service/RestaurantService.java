@@ -81,12 +81,20 @@ public class RestaurantService {
         restaurantRepository.save(restaurant);
     }
 
-    public void update(Restaurant restaurant) {
+    public String update(Restaurant restaurant) {
         if (restaurant == null)
-            return;
+            return "\"Invalid restaurant!\"";
+
+        User currentUser = userService.getCurrentUser();
+        if(!currentUser.isAdmin()
+            && !restaurant.isActive()
+        ) {
+            return "\"Ask admin to activate restaurant before making changes!\"";
+        }
 
         restaurant.setAddress(addressService.populateLatLng(restaurant.getAddress()));
         restaurantRepository.save(restaurant);
+        return null;
     }
 
 
