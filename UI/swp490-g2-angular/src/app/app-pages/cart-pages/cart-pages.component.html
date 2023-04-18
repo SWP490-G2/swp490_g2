@@ -7,20 +7,20 @@
   leaveToClass="hidden"
   leaveActiveClass="fadeoutright"
   [hideOnOutsideClick]="true"
-  class="cursor-pointer relative h-full inline-flex align-items-center text-600 py-3 lg:py-0 px-3 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 transition-colors transition-duration-150"
+  class="cursor-pointer relative h-full inline-flex align-items-center text-600 py-3 xl:py-0 px-3 border-left-2 xl:border-left-none xl:border-bottom-2 border-transparent hover:border-500 transition-colors transition-duration-150"
   (click)="refresh()"
 >
   <span
-    class="pi pi-cart-plus mr-2 lg:mr-0"
+    class="pi pi-cart-plus mr-3 xl:mr-0"
     pBadge
     [value]="(order.orderProductDetails?.length || 0) + ''"
   ></span>
-  <span class="font-medium inline lg:hidden">Cart</span>
+  <span class="font-medium inline xl:hidden">Cart</span>
 </a>
 
 <div
   id="slideover-cart-ext"
-  class="hidden surface-overlay absolute right-0 shadow-2 h-full w-full lg:w-max z-1"
+  class="hidden surface-overlay absolute right-0 shadow-2 h-full w-full xl:w-max z-1"
   [style.top.px]="verticalOffset"
   [hidden]="!hasOrder"
 >

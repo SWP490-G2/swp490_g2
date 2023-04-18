@@ -1,13 +1,13 @@
 <a
-  class="cursor-pointer h-full inline-flex align-items-center text-600 py-3 lg:py-0 px-3 border-left-2 lg:border-left-none lg:border-bottom-2 border-transparent hover:border-500 transition-colors transition-duration-150"
+  class="cursor-pointer h-full inline-flex align-items-center text-600 py-3 xl:py-0 px-3 border-left-2 xl:border-left-none xl:border-bottom-2 border-transparent hover:border-500 transition-colors transition-duration-150"
   (click)="show($event)"
 >
   <span
-    class="pi pi-bell mr-2 lg:mr-0"
+    class="pi pi-bell mr-3 xl:mr-0"
     pBadge
     [value]="(notifications.length || 0) + ''"
   ></span>
-  <span class="font-medium inline lg:hidden">Notifications</span>
+  <span class="font-medium inline xl:hidden">Notifications</span>
 </a>
 
 <p-overlayPanel #op>
