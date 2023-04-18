@@ -17,7 +17,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @AttributeOverride(name = "id", column = @Column(name = "addressId"))
 public class Address extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     private String specificAddress;
 
     @ManyToOne(optional = false)
