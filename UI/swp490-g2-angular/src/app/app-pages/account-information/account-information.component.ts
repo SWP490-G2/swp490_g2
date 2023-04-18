@@ -45,6 +45,16 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   restaurantsShown = false;
   dateOfBirthControl!: FormControl;
   isDateOfBirthInvalid = false;
+  maxFieldLengths = {
+    lastName: 50,
+    firstName: 50,
+    middleName: 50
+  };
+  fieldErrors = {
+    lastName: '',
+    firstName: '',
+    middleName: ''
+  };
 
   constructor(
     private $router: Router,
@@ -84,7 +94,7 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
       )
       .subscribe();
   }
-
+  
   ngAfterViewInit(): void {
     const dateOfBirthValidator = (): ValidatorFn => {
       return (control: AbstractControl): { [key: string]: any } | null => {
@@ -100,7 +110,7 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
       this.dateOfBirthControl = this.form.controls["dateOfBirth"] as FormControl;
       this.dateOfBirthControl.setValidators([Validators.required, dateOfBirthValidator()]);
       this.dateOfBirthControl.updateValueAndValidity();
-  
+
       this.dateOfBirthControl.valueChanges.subscribe(() => {
         this.isDateOfBirthInvalid = this.dateOfBirthControl.invalid;
       });
@@ -259,5 +269,20 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
     return JSON.parse(
       JSON.parse(this.user?.rejectRestaurantOpeningRequestReasons)
     );
+  }
+  checkMaxLength(fieldName: string) {
+    const fieldInput = this.form.controls[fieldName];
+    const maxLength = this.maxFieldLengths[fieldName];
+    if (fieldInput.value.length > maxLength) {
+      fieldInput.setErrors({ 'maxlength': true });
+      this.fieldErrors[fieldName] = `Input can not over ${maxLength} characters`;
+    } else {
+      fieldInput.setErrors(null);
+      this.fieldErrors[fieldName] = '';
+    }
+  }
+
+  getErrorMessage(fieldName: string): string {
+    return this.fieldErrors[fieldName];
   }
 }
