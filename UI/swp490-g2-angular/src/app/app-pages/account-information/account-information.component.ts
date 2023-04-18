@@ -7,6 +7,7 @@ import {
 } from "@angular/core";
 import {
   AbstractControl,
+  FormControl,
   NgForm,
   ValidatorFn,
   Validators,
@@ -42,6 +43,8 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   user?: User;
   restaurants: Restaurant[];
   restaurantsShown = false;
+  dateOfBirthControl!: FormControl;
+  isDateOfBirthInvalid = false;
 
   constructor(
     private $router: Router,
@@ -94,11 +97,13 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
     };
 
     setTimeout(() => {
-      this.form.controls["dateOfBirth"].addValidators([
-        Validators.required,
-        dateOfBirthValidator(),
-      ]);
-      this.form.controls["dateOfBirth"].updateValueAndValidity(); // !Important: this line must be added after validators created
+      this.dateOfBirthControl = this.form.controls["dateOfBirth"] as FormControl;
+      this.dateOfBirthControl.setValidators([Validators.required, dateOfBirthValidator()]);
+      this.dateOfBirthControl.updateValueAndValidity();
+  
+      this.dateOfBirthControl.valueChanges.subscribe(() => {
+        this.isDateOfBirthInvalid = this.dateOfBirthControl.invalid;
+      });
     }, 0);
   }
 
