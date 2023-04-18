@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from "@angular/core";
 import { Title } from "@angular/platform-browser";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, of, switchMap } from "rxjs";
 import { GoogleMapService } from "src/app/global/google-map.service";
 import {
@@ -79,6 +79,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   @Output() restaurantClick = new EventEmitter<Restaurant>();
   @Input() includeInactive = false;
   @Input() isOwner = false;
+  restaurantCategoryId?: number;
 
   constructor(
     private $userClient: UserClient,
@@ -86,8 +87,17 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
     private $restaurantClient: RestaurantClient,
     private $title: Title,
     private $router: Router,
+    private $route: ActivatedRoute,
     private $restaurantCategoryClient: RestaurantCategoryClient
   ) {
+    try {
+      this.restaurantCategoryId = Number.parseInt(
+        <string>this.$route.snapshot.paramMap.get("restaurantCategoryId")
+      );
+    } catch (e) {
+      /* empty */
+    }
+
     this.distance =
       getLocal(this.$router.url + "/distance") || this.distances[2];
   }
@@ -188,7 +198,15 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       .pipe(
         switchMap((categories) => {
           this.categories = [...categories];
-          this.selectedCategories = [...this.categories];
+
+          if (this.restaurantCategoryId) {
+            this.selectedCategories = [
+              ...this.categories.filter(
+                (c) => c.id === this.restaurantCategoryId
+              ),
+            ];
+          } else this.selectedCategories = [...this.categories];
+          
           return of();
         })
       )

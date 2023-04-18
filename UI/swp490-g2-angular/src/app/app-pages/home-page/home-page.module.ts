@@ -17,6 +17,7 @@ import { CarouselModule } from "primeng/carousel";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 import { ChipsModule } from "primeng/chips";
 import { TooltipModule } from "primeng/tooltip";
+import { TagModule } from "primeng/tag";
 
 @NgModule({
   declarations: [HomePageComponent],
@@ -38,6 +39,7 @@ import { TooltipModule } from "primeng/tooltip";
     ImageAttachmentModule,
     ChipsModule,
     TooltipModule,
+    TagModule,
   ],
 })
 export class HomePageModule {}

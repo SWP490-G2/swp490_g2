@@ -1,13 +1,7 @@
-import {
-  Component,
-  Input,
-  NgZone,
-  OnInit,
-  ViewEncapsulation,
-} from "@angular/core";
+import { Component, NgZone, OnInit, ViewEncapsulation } from "@angular/core";
 import { Title } from "@angular/platform-browser";
 import { Router, ActivatedRoute } from "@angular/router";
-import { ConfirmationService, MenuItem, MessageService } from "primeng/api";
+import { MenuItem, MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
   Order,
@@ -15,7 +9,8 @@ import {
   Product,
   ProductCategory,
   ProductClient,
-  Restaurant,
+  RestaurantCategory,
+  RestaurantCategoryClient,
   User,
 } from "src/app/ngswag/client";
 import { CartService } from "src/app/service/cart.service";
@@ -31,7 +26,7 @@ export class HomePageComponent implements OnInit {
   productId: number | undefined;
   products: Product[];
 
-  productCategoryNames: string[] = [];
+  restaurantCategories: RestaurantCategory[] = [];
   allCategories: ProductCategory[] = [];
   responsiveOptions: any[];
 
@@ -43,7 +38,8 @@ export class HomePageComponent implements OnInit {
     private $cart: CartService,
     private $productClient: ProductClient,
     private $message: MessageService,
-    private $zone: NgZone
+    private $zone: NgZone,
+    private $restaurantCategoryClient: RestaurantCategoryClient
   ) {
     $title.setTitle("Home");
     $auth.getCurrentUser().subscribe((user) => (this.user = user));
@@ -56,6 +52,10 @@ export class HomePageComponent implements OnInit {
     });
 
     this.$cart.getOrderObservable().subscribe((order) => (this.order = order));
+
+    this.$restaurantCategoryClient.getAll().subscribe((categories) => {
+      this.restaurantCategories = categories;
+    });
   }
 
   get initialized(): boolean {
@@ -137,5 +137,23 @@ export class HomePageComponent implements OnInit {
         detail: `Product [${product.productName}] is added to cart!`,
       });
     });
+  }
+
+  getRestaurantCategoryImage(category: RestaurantCategory) {
+    return `background: linear-gradient(
+              180deg,
+              rgba(0, 0, 0, 0) 50%,
+              rgba(0, 0, 0, 0.5) 100%
+            ),
+            url(assets/images/restaurant-categories/${
+              category.restaurantCategoryName === "Ăn vặt"
+                ? "an-vat"
+                : category.restaurantCategoryName
+            }.jpg);
+            min-width: 15rem;`;
+  }
+
+  goToRestaurantCategory(category: RestaurantCategory) {
+    this.$router.navigate(["restaurants", category.id]);
   }
 }
