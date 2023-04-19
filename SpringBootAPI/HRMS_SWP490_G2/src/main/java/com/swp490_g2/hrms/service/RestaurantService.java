@@ -64,6 +64,13 @@ public class RestaurantService {
         this.restaurantReviewService = restaurantReviewService;
     }
 
+    private WebSocketService webSocketService;
+
+    @Autowired
+    public void setWebSocketService(WebSocketService webSocketService) {
+        this.webSocketService = webSocketService;
+    }
+
     /// Methods
     public Restaurant insert(Restaurant restaurant) {
         if (restaurant == null)
@@ -255,6 +262,12 @@ public class RestaurantService {
             restaurantReviewService.insert(review);
         }
 
+        webSocketService.push("/notification", Notification.builder()
+                .toUsers(userService.getAllOwnersByRestaurantIds(List.of(review.getRestaurant().getId())))
+                .message("A new review for restaurant [%s] has been added!".formatted(review.getRestaurant().getRestaurantName()))
+                .url("/restaurant/%d".formatted(review.getRestaurant().getId()))
+                .build());
+
         return null;
     }
 
@@ -300,6 +313,12 @@ public class RestaurantService {
         }
 
         restaurantReviewService.update(review);
+        webSocketService.push("/notification", Notification.builder()
+                .toUsers(List.of(review.getReviewer()))
+                .message("Your review about restaurant [%s] has been replied by its owner!".formatted(review.getRestaurant().getRestaurantName()))
+                .url("/restaurant/%d".formatted(review.getRestaurant().getId()))
+                .build());
+
         return null;
     }
 
