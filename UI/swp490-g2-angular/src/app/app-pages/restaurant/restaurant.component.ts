@@ -42,7 +42,7 @@ export class RestaurantComponent implements OnInit {
   restaurantReviewForm!: NgForm;
 
   items: MenuItem[];
-  restaurant: Restaurant;
+  restaurant?: Restaurant;
   restaurantId: number;
   uploadUrl: string;
   user?: User;
@@ -434,5 +434,42 @@ export class RestaurantComponent implements OnInit {
     }
 
     this.refreshReviews();
+  }
+
+  get canReply(): boolean {
+    return !!this.user?.restaurants?.length;
+  }
+
+  openReplyPanel(review: RestaurantReview) {
+    review.replySeller = this.user;
+    review["isReplying"] = true;
+  }
+
+  sendReply(review: RestaurantReview) {
+    this.$restaurantClient
+      .replyReview(review)
+      .pipe(
+        switchMap((errorMessage) => {
+          if (errorMessage) throw new Error(errorMessage);
+          return of(undefined);
+        }),
+        finalize(() => {
+          review["isReplying"] = false;
+          this.refresh();
+        })
+      )
+      .subscribe();
+  }
+
+  deleteComment(review: RestaurantReview) {
+    this.$restaurantClient
+      .deleteReviewReply(review)
+      .pipe(
+        finalize(() => {
+          review["isReplying"] = false;
+          this.refresh();
+        })
+      )
+      .subscribe();
   }
 }

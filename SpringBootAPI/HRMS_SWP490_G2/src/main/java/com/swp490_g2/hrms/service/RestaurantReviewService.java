@@ -64,4 +64,8 @@ public class RestaurantReviewService {
                 total5
         };
     }
+
+    public void delete(RestaurantReview review) {
+        restaurantReviewRepository.delete(review);
+    }
 }

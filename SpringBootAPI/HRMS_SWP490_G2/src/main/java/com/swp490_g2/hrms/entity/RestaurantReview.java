@@ -39,9 +39,6 @@ public class RestaurantReview extends BaseEntity {
     @ManyToOne
     private User replySeller;
 
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String replyHeading;
-
     @Column(columnDefinition = "LONGTEXT")
     private String replyComment;
 }

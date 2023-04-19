@@ -1,8 +1,6 @@
 package com.swp490_g2.hrms.controller;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.swp490_g2.hrms.entity.Restaurant;
-import com.swp490_g2.hrms.entity.RestaurantCategory;
 import com.swp490_g2.hrms.entity.RestaurantReview;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.requests.SearchRestaurantsRequest;
@@ -10,13 +8,9 @@ import com.swp490_g2.hrms.response.RestaurantReviewResponse;
 import com.swp490_g2.hrms.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,9 +51,19 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.review(review));
     }
 
+    @PutMapping("/reply-review")
+    public ResponseEntity<String> replyReview(@RequestBody RestaurantReview review) {
+        return ResponseEntity.ok(restaurantService.replyReview(review));
+    }
+
     @PostMapping("/get-reviews-by-restaurant-id/{restaurantId}")
     public ResponseEntity<RestaurantReviewResponse> getReviewsByRestaurantId(@PathVariable Long restaurantId,
                                                                              @RequestBody SearchRequest searchRequest) {
         return ResponseEntity.ok(restaurantService.getReviewsByRestaurantId(restaurantId, searchRequest));
+    }
+
+    @DeleteMapping("/delete-review-reply")
+    public void deleteReviewReply(@RequestBody RestaurantReview review) {
+        restaurantService.deleteReviewReply(review);
     }
 }

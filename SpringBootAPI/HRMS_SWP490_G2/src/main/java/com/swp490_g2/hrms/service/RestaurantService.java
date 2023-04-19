@@ -282,4 +282,37 @@ public class RestaurantService {
                 .restaurantReviewPage(this.restaurantReviewService.search(searchRequest))
                 .build();
     }
+
+    public String replyReview(RestaurantReview review) {
+        if (review == null
+                || review.getReviewer() == null
+                || review.getRestaurant() == null
+                || review.getReplySeller() == null
+                || StringUtils.isEmpty(review.getHeading())
+                || StringUtils.isEmpty(review.getComment())
+                || StringUtils.isEmpty(review.getReplyComment())
+        ) {
+            return "\"Invalid reply!\"";
+        }
+
+        restaurantReviewService.update(review);
+        return null;
+    }
+
+    public void deleteReviewReply(RestaurantReview review) {
+        if (review == null
+                || review.getReviewer() == null
+                || review.getRestaurant() == null
+                || review.getReplySeller() == null
+                || StringUtils.isEmpty(review.getHeading())
+                || StringUtils.isEmpty(review.getComment())
+                || StringUtils.isEmpty(review.getReplyComment())
+        ) {
+            return;
+        }
+
+        review.setReplySeller(null);
+        review.setReplyComment(null);
+        restaurantReviewService.update(review);
+    }
 }
