@@ -44,6 +44,10 @@
           <strong>{{ getRestaurantDistance(restaurant) }}</strong>
         </span>
       </span>
+      <app-open-closed-time
+        [restaurant]="restaurant"
+        [editable]="false"
+      ></app-open-closed-time>
       <!-- <span class="flex align-items-center">
         <i class="pi pi-exclamation-triangle text-600 mr-2"></i>
         <span class="text-600">Only 8 Available.</span>

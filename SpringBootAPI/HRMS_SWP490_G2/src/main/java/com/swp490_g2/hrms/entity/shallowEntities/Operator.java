@@ -1,10 +1,7 @@
 package com.swp490_g2.hrms.entity.shallowEntities;
 
 import com.swp490_g2.hrms.requests.FilterRequest;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Expression;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -15,9 +12,13 @@ public enum Operator {
     EQUAL {
         public <T> Predicate build(Root<T> root, CriteriaBuilder cb, FilterRequest request, Predicate predicate) {
             Object value = request.getFieldType().parse(request.getValue().toString());
-            Expression<?> key = root.get(request.getKey1());
-            if (request.getKey2() != null)
-                key = root.get(request.getKey1()).get(request.getKey2());
+            String[] keys = request.getKey().split("\\.");
+            Path<?> key = root.get(keys[0]);
+            if(keys.length > 1) {
+                for(int i = 1; i < keys.length; ++i) {
+                    key = key.get(keys[i]);
+                }
+            }
 
             return cb.and(cb.equal(key, value), predicate);
         }
@@ -26,14 +27,28 @@ public enum Operator {
     NOT_EQUAL {
         public <T> Predicate build(Root<T> root, CriteriaBuilder cb, FilterRequest request, Predicate predicate) {
             Object value = request.getFieldType().parse(request.getValue().toString());
-            Expression<?> key = root.get(request.getKey1());
+            String[] keys = request.getKey().split("\\.");
+            Path<?> key = root.get(keys[0]);
+            if(keys.length > 1) {
+                for(int i = 1; i < keys.length; ++i) {
+                    key = key.get(keys[i]);
+                }
+            }
+
             return cb.and(cb.notEqual(key, value), predicate);
         }
     },
 
     LIKE {
         public <T> Predicate build(Root<T> root, CriteriaBuilder cb, FilterRequest request, Predicate predicate) {
-            Expression<String> key = root.get(request.getKey1());
+            String[] keys = request.getKey().split("\\.");
+            Path<String> key = root.get(keys[0]);
+            if(keys.length > 1) {
+                for(int i = 1; i < keys.length; ++i) {
+                    key = key.get(keys[i]);
+                }
+            }
+
             return cb.and(cb.like(cb.upper(key), "%" + request.getValue().toString().toUpperCase() + "%"), predicate);
         }
     },
@@ -41,9 +56,15 @@ public enum Operator {
     IN {
         public <T> Predicate build(Root<T> root, CriteriaBuilder cb, FilterRequest request, Predicate predicate) {
             List<Object> values = request.getValues();
-            CriteriaBuilder.In<Object> inClause = cb.in(root.get(request.getKey1()));
-            if (request.getKey2() != null)
-                inClause = cb.in(root.get(request.getKey1()).get(request.getKey2()));
+            String[] keys = request.getKey().split("\\.");
+            Path<?> key = root.get(keys[0]);
+            if(keys.length > 1) {
+                for(int i = 1; i < keys.length; ++i) {
+                    key = key.get(keys[i]);
+                }
+            }
+
+            CriteriaBuilder.In<Object> inClause = cb.in(key);
 
             for (Object value : values) {
                 inClause.value(request.getFieldType().parse(value.toString()));
@@ -56,17 +77,17 @@ public enum Operator {
         public <T> Predicate build(Root<T> root, CriteriaBuilder cb, FilterRequest request, Predicate predicate) {
             Object value = request.getFieldType().parse(request.getValue().toString());
             Object valueTo = request.getFieldType().parse(request.getValueTo().toString());
-//            if (request.getFieldType() == FieldType.DATE) {
-//                LocalDateTime startDate = (LocalDateTime) value;
-//                LocalDateTime endDate = (LocalDateTime) valueTo;
-//                Expression<LocalDateTime> key = root.get(request.getKey());
-//                return cb.and(cb.and(cb.greaterThanOrEqualTo(key, startDate), cb.lessThanOrEqualTo(key, endDate)), predicate);
-//            }
-
             if (request.getFieldType() != FieldType.CHAR && request.getFieldType() != FieldType.BOOLEAN) {
+                String[] keys = request.getKey().split("\\.");
+                Path<Number> key = root.get(keys[0]);
+                if(keys.length > 1) {
+                    for(int i = 1; i < keys.length; ++i) {
+                        key = key.get(keys[i]);
+                    }
+                }
+
                 Number start = (Number) value;
                 Number end = (Number) valueTo;
-                Expression<Number> key = root.get(request.getKey1());
                 return cb.and(cb.and(cb.ge(key, start), cb.le(key, end)), predicate);
             }
 
@@ -77,7 +98,14 @@ public enum Operator {
     }
     ,IS_NOT_NULL {
         public <T> Predicate build(Root<T> root, CriteriaBuilder cb, FilterRequest request, Predicate predicate) {
-            Expression<String> key = root.get(request.getKey1());
+            String[] keys = request.getKey().split("\\.");
+            Path<?> key = root.get(keys[0]);
+            if(keys.length > 1) {
+                for(int i = 1; i < keys.length; ++i) {
+                    key = key.get(keys[i]);
+                }
+            }
+
             return cb.and(cb.isNotNull(key), predicate);
         }
     }

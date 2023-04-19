@@ -73,8 +73,10 @@ public class Restaurant extends BaseEntity {
                 && now.isBefore(DateUtils.toLocalTime(openTime)));
     }
 
-
     /// Request fields
     @Transient
     private List<User> owners = new ArrayList<>();
+
+    @Transient
+    private Float averageStars = 0f;
 }

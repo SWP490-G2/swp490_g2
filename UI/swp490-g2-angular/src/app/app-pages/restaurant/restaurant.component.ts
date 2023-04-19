@@ -1,8 +1,16 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { NgForm } from "@angular/forms";
 import { Title } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
-import { MenuItem } from "primeng/api";
-import { forkJoin, Observable, of, switchMap } from "rxjs";
+import { MenuItem, MessageService } from "primeng/api";
+import {
+  catchError,
+  finalize,
+  forkJoin,
+  Observable,
+  of,
+  switchMap,
+} from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import {
   AdminClient,
@@ -15,12 +23,14 @@ import {
   ProductClient,
   Restaurant,
   RestaurantClient,
+  RestaurantReview,
+  RestaurantReviewResponse,
   SearchRequest,
   SortRequest,
   User,
   UserClient,
 } from "src/app/ngswag/client";
-import { getFullAddress } from "src/app/utils";
+import { DateUtils, getFullAddress, getFullName } from "src/app/utils";
 
 @Component({
   selector: "app-restaurant",
@@ -28,8 +38,11 @@ import { getFullAddress } from "src/app/utils";
   styleUrls: ["./restaurant.component.scss"],
 })
 export class RestaurantComponent implements OnInit {
+  @ViewChild("restaurantReviewForm", { static: false })
+  restaurantReviewForm!: NgForm;
+
   items: MenuItem[];
-  restaurant?: Restaurant;
+  restaurant: Restaurant;
   restaurantId: number;
   uploadUrl: string;
   user?: User;
@@ -53,6 +66,20 @@ export class RestaurantComponent implements OnInit {
     }),
   ];
 
+  restaurantReviewVisible = false;
+  restaurantReview: RestaurantReview = new RestaurantReview();
+  restaurantReviewResponse = new RestaurantReviewResponse({
+    averageStars: 0,
+    starRatios: [0, 0, 0, 0, 0],
+  });
+
+  reviewPagable = new SearchRequest({
+    page: 0,
+    size: 5,
+  });
+
+  totalReviewRecords = 0;
+
   constructor(
     private $route: ActivatedRoute,
     private $restaurantClient: RestaurantClient,
@@ -62,7 +89,8 @@ export class RestaurantComponent implements OnInit {
     private $userClient: UserClient,
     private $adminClient: AdminClient,
     private $title: Title,
-    private router: Router
+    private router: Router,
+    private $message: MessageService
   ) {
     const id: number = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("id")
@@ -88,14 +116,15 @@ export class RestaurantComponent implements OnInit {
           this.user = user;
           return forkJoin([
             this.$restaurantClient.getById(this.restaurantId),
-            this.$userClient.hasControlsOfRestaurant(this.restaurantId)
+            this.$userClient.hasControlsOfRestaurant(this.restaurantId),
           ]);
         }),
         switchMap(([restaurant, hasControlsOfRestaurant]) => {
           if (this.user && hasControlsOfRestaurant)
-            this.user.restaurants = [restaurant]
+            this.user.restaurants = [restaurant];
 
           this.restaurant = restaurant;
+          this.restaurantReview.restaurant = restaurant;
           if (this.restaurant.restaurantName)
             this.$title.setTitle(this.restaurant.restaurantName);
 
@@ -104,12 +133,14 @@ export class RestaurantComponent implements OnInit {
             this.$productClient.getProductPriceRangesByRestaurantId(
               this.restaurantId
             ),
-          ])
+          ]);
         }),
         switchMap(([categories, priceRange]) => {
           this.categories = categories;
           // this.selectedCategoryIds = this.categories.map((c) => c.id!);
-          this.originalSelectedCategoryIds = [...this.categories.map((c) => c.id!)];
+          this.originalSelectedCategoryIds = [
+            ...this.categories.map((c) => c.id!),
+          ];
 
           this.priceRange = priceRange;
           this.selectedPriceRange = [...this.priceRange];
@@ -123,32 +154,54 @@ export class RestaurantComponent implements OnInit {
         })
       )
       .subscribe();
+
+    this.refreshReviews();
+  }
+
+  private refreshReviews() {
+    this.$restaurantClient
+      .getReviewsByRestaurantId(this.restaurantId, this.reviewPagable)
+      .pipe(
+        switchMap((response) => {
+          if (!response.restaurantReviewPage?.totalElements)
+            return of(undefined);
+
+          this.restaurantReviewResponse = response;
+          this.totalReviewRecords = response.restaurantReviewPage.totalElements;
+          return of(undefined);
+        })
+      )
+      .subscribe();
   }
 
   private productSearch(): Observable<PageProduct> {
     const filters: FilterRequest[] = [];
 
     if (this.selectedCategoryIds.length > 0) {
-      filters.push(new FilterRequest({
-        key1: "categories",
-        key2: "id",
-        operator: "IN",
-        fieldType: "LONG",
-        values: this.selectedCategoryIds,
-      }),);
+      filters.push(
+        new FilterRequest({
+          key: "categories.id",
+          operator: "IN",
+          fieldType: "LONG",
+          values: this.selectedCategoryIds,
+        })
+      );
     }
 
-    if (this.selectedPriceRange?.length > 1
-      && this.selectedPriceRange[0]
-      && this.selectedPriceRange[1]
+    if (
+      this.selectedPriceRange?.length > 1 &&
+      this.selectedPriceRange[0] &&
+      this.selectedPriceRange[1]
     ) {
-      filters.push(new FilterRequest({
-        key1: "price",
-        operator: "BETWEEN",
-        fieldType: "DOUBLE",
-        value: this.selectedPriceRange[0],
-        valueTo: this.selectedPriceRange[1],
-      }));
+      filters.push(
+        new FilterRequest({
+          key: "price",
+          operator: "BETWEEN",
+          fieldType: "DOUBLE",
+          value: this.selectedPriceRange[0],
+          valueTo: this.selectedPriceRange[1],
+        })
+      );
     }
 
     return this.$productClient.search(
@@ -254,11 +307,132 @@ export class RestaurantComponent implements OnInit {
   navigateAddItem() {
     this.router.navigate(["restaurant", this.restaurantId, "add-product"]);
   }
-}
 
-/**
- * Toan: 1, 3, 4
- * Long: 1, 2, 5
- * this.restaurant: 3
- * this.user: Toan
- */
+  private _restaurantReviewSubmitButtonDisabled = false;
+  get restaurantReviewSubmitButtonDisabled(): boolean {
+    return (
+      !!this.restaurantReviewForm?.invalid ||
+      this._restaurantReviewSubmitButtonDisabled
+    );
+  }
+
+  set restaurantReviewSubmitButtonDisabled(value: boolean) {
+    this._restaurantReviewSubmitButtonDisabled = value;
+  }
+
+  submitReview() {
+    this._restaurantReviewSubmitButtonDisabled = true;
+    this.$restaurantClient
+      .review(this.restaurantReview)
+      .pipe(
+        switchMap((errorMessage) => {
+          if (errorMessage) throw new Error(errorMessage);
+
+          this.$message.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Your review has been submitted!",
+          });
+
+          return of(undefined);
+        }),
+        finalize(() => {
+          this._restaurantReviewSubmitButtonDisabled = false;
+          this.restaurantReviewVisible = false;
+          this.refresh();
+        })
+      )
+      .subscribe();
+  }
+
+  openRestaurantReviewDialog() {
+    this.restaurantReviewVisible = true;
+  }
+
+  getFullName(user?: User) {
+    return getFullName(user);
+  }
+
+  getDate(date: any) {
+    return new Date(DateUtils.fromDB(date));
+  }
+
+  get totalCountReviews(): number {
+    return (
+      this.restaurantReviewResponse.starCounts?.reduce(
+        (acc, subtotal) => acc + subtotal
+      ) || 0
+    );
+  }
+
+  getReviewRatio(stars: number): number {
+    if (!this.restaurantReviewResponse.starCounts) return 0;
+
+    const num =
+      (this.restaurantReviewResponse.starCounts[stars - 1] * 100) /
+      this.totalCountReviews;
+
+    const num5 =
+      100 -
+      Math.round(
+        (this.restaurantReviewResponse.starCounts[0] * 100) /
+          this.totalCountReviews
+      ) -
+      Math.round(
+        (this.restaurantReviewResponse.starCounts[1] * 100) /
+          this.totalCountReviews
+      ) -
+      Math.round(
+        (this.restaurantReviewResponse.starCounts[2] * 100) /
+          this.totalCountReviews
+      ) -
+      Math.round(
+        (this.restaurantReviewResponse.starCounts[3] * 100) /
+          this.totalCountReviews
+      );
+
+    switch (stars) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+        return Math.round(num);
+
+      case 5:
+        return Math.round(num5);
+    }
+
+    return 0;
+  }
+
+  onReviewPageChange(event: any) {
+    this.reviewPagable.page = event.page;
+    this.reviewPagable.size = event.rows;
+    this.refreshReviews();
+  }
+
+  /**
+   * key?: string;
+    operator?: FilterRequestOperator;
+    fieldType?: FilterRequestFieldType;
+    value?: any;
+    valueTo?: any;
+    values?: any[];
+   */
+  onStarClick(star?: number) {
+    if (star) {
+      this.reviewPagable.filters = [
+        new FilterRequest({
+          key: "stars",
+          operator: "EQUAL",
+          fieldType: "INTEGER",
+          value: star,
+        }),
+      ];
+    } else {
+      this.reviewPagable.filters = [];
+    }
+
+    this.refreshReviews();
+  }
+}

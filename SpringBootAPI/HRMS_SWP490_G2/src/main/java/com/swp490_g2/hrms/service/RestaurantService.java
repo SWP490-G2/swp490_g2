@@ -1,12 +1,15 @@
 package com.swp490_g2.hrms.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.swp490_g2.hrms.common.utils.CommonUtils;
 import com.swp490_g2.hrms.entity.*;
+import com.swp490_g2.hrms.entity.shallowEntities.FieldType;
+import com.swp490_g2.hrms.entity.shallowEntities.Operator;
+import com.swp490_g2.hrms.entity.shallowEntities.SortDirection;
 import com.swp490_g2.hrms.repositories.RestaurantRepository;
-import com.swp490_g2.hrms.requests.SearchRestaurantsRequest;
-import com.swp490_g2.hrms.requests.RestaurantInformationRequest;
+import com.swp490_g2.hrms.requests.*;
+import com.swp490_g2.hrms.response.RestaurantReviewResponse;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -47,8 +50,23 @@ public class RestaurantService {
         this.addressService = addressService;
     }
 
+    private RestaurantService restaurantService;
+
+    @Autowired
+    public void setRestaurantService(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+    }
+
+    private RestaurantReviewService restaurantReviewService;
+
+    @Autowired
+    public void setRestaurantReviewService(RestaurantReviewService restaurantReviewService) {
+        this.restaurantReviewService = restaurantReviewService;
+    }
+
+    /// Methods
     public Restaurant insert(Restaurant restaurant) {
-        if(restaurant == null)
+        if (restaurant == null)
             return null;
         restaurant.setId(null);
 
@@ -60,7 +78,16 @@ public class RestaurantService {
     }
 
     public Restaurant getById(Long id) {
-        return restaurantRepository.findById(id).orElse(null);
+        Restaurant restaurant = restaurantRepository.findById(id).orElse(null);
+        if (restaurant == null)
+            return null;
+//
+//        if (!restaurant.getReviews().isEmpty()) {
+//            long total = restaurant.getReviews().stream().mapToLong(RestaurantReview::getStars).sum();
+//            restaurant.setAverageStars(total * 1f / restaurant.getReviews().size());
+//        }
+
+        return restaurant;
     }
 
     public void updateAvatar(Long id, MultipartFile imageFile) {
@@ -86,8 +113,8 @@ public class RestaurantService {
             return "\"Invalid restaurant!\"";
 
         User currentUser = userService.getCurrentUser();
-        if(!currentUser.isAdmin()
-            && !restaurant.isActive()
+        if (!currentUser.isAdmin()
+                && !restaurant.isActive()
         ) {
             return "\"Ask admin to activate restaurant before making changes!\"";
         }
@@ -202,5 +229,57 @@ public class RestaurantService {
 
     public List<Restaurant> getAllBySellerId(Long sellerId) {
         return restaurantRepository.findBySellerId(sellerId);
+    }
+
+    public String review(RestaurantReview review) {
+        User reviewer = userService.getCurrentUser();
+        if (review == null
+                || reviewer == null
+                || review.getRestaurant() == null
+                || StringUtils.isEmpty(review.getHeading())
+                || StringUtils.isEmpty(review.getComment())
+        ) {
+            return "\"Invalid review!\"";
+        }
+
+        review.setReviewer(reviewer);
+        RestaurantReview existedReview = restaurantReviewService.getByReviewerAndRestaurant(reviewer, review.getRestaurant());
+        if (existedReview != null) {
+            review.setId(existedReview.getId());
+            restaurantReviewService.update(review);
+        } else {
+            restaurantReviewService.insert(review);
+        }
+
+        return null;
+    }
+
+    public RestaurantReviewResponse getReviewsByRestaurantId(Long restaurantId, SearchRequest request) {
+        List<FilterRequest> filters = new ArrayList<>(List.of(
+                FilterRequest.builder()
+                        .key("restaurant.id")
+                        .fieldType(FieldType.LONG)
+                        .operator(Operator.EQUAL)
+                        .value(restaurantId)
+                        .build()
+        ));
+
+        request.getFilters().stream().filter(f -> f.getKey().equals("stars")).findFirst().ifPresent(filters::add);
+
+        SearchRequest searchRequest = SearchRequest.builder()
+                .filters(filters)
+                .page(request.getPage())
+                .size(request.getSize())
+                .sorts(List.of(SortRequest.builder()
+                        .key("createdAt")
+                        .direction(SortDirection.DESC)
+                        .build()))
+                .build();
+
+        return RestaurantReviewResponse.builder()
+                .averageStars(this.restaurantReviewService.getAverageStarsByRestaurantId(restaurantId))
+                .starCounts(this.restaurantReviewService.getStarCounts(restaurantId))
+                .restaurantReviewPage(this.restaurantReviewService.search(searchRequest))
+                .build();
     }
 }

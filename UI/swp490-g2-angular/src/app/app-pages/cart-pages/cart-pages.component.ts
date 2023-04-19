@@ -31,7 +31,7 @@ export class CartPagesComponent implements OnInit {
               new SearchRequest({
                 filters: [
                   new FilterRequest({
-                    key1: "id",
+                    key: "id",
                     operator: "IN",
                     fieldType: "LONG",
                     values: order.orderProductDetails?.map(opd => opd.product?.id),

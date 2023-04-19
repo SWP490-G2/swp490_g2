@@ -25,9 +25,7 @@ public class FilterRequest implements Serializable {
     @Serial
     private static final long serialVersionUID = 6293344849078612450L;
 
-    private String key1;
-
-    private String key2;
+    private String key;
 
     private Operator operator;
 

@@ -21,6 +21,7 @@ import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-att
 import { RestaurantCardComponent } from "./restaurant-card/restaurant-card.component";
 import { PaginatorModule } from "primeng/paginator";
 import { TagModule } from "primeng/tag";
+import { OpenClosedTimeModule } from "../restaurant/open-closed-time/open-closed-time.module";
 
 @NgModule({
   declarations: [RestaurantsComponent, RestaurantCardComponent],
@@ -44,6 +45,7 @@ import { TagModule } from "primeng/tag";
     ImageAttachmentModule,
     PaginatorModule,
     TagModule,
+    OpenClosedTimeModule
   ],
   exports: [RestaurantsComponent, RestaurantCardComponent],
 })

@@ -32,9 +32,12 @@ import { RadioButtonModule } from "primeng/radiobutton";
 import { AccountInformationModule } from "../account-information/account-information.module";
 import { InputSwitchModule } from "primeng/inputswitch";
 import { CarouselModule } from "primeng/carousel";
-import { OpenClosedTimeComponent } from "./open-closed-time/open-closed-time.component";
 import { CalendarModule } from "primeng/calendar";
 import { TagModule } from "primeng/tag";
+import { OpenClosedTimeModule } from "./open-closed-time/open-closed-time.module";
+import { RatingModule } from "primeng/rating";
+import { ProgressBarModule } from "primeng/progressbar";
+import { PaginatorModule } from "primeng/paginator";
 
 @NgModule({
   declarations: [
@@ -43,7 +46,6 @@ import { TagModule } from "primeng/tag";
     RestaurantNameComponent,
     RestaurantUpdateInformationComponent,
     SortByComponent,
-    OpenClosedTimeComponent,
   ],
   imports: [
     CommonModule,
@@ -75,6 +77,10 @@ import { TagModule } from "primeng/tag";
     InputSwitchModule,
     CalendarModule,
     TagModule,
+    OpenClosedTimeModule,
+    RatingModule,
+    ProgressBarModule,
+    PaginatorModule,
   ],
 })
 export class RestaurantModule {}

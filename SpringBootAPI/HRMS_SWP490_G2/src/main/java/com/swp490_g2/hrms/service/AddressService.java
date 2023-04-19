@@ -69,8 +69,7 @@ public class AddressService {
 
     public List<District> getDistrictsByCityId(Long cityId) {
         FilterRequest filterRequest = FilterRequest.builder()
-                .key1("city")
-                .key2("id")
+                .key("city.id")
                 .operator(Operator.EQUAL)
                 .fieldType(FieldType.LONG)
                 .value(cityId)
@@ -87,8 +86,7 @@ public class AddressService {
 
     public List<Ward> getWardsByDistrictId(Long districtId) {
         FilterRequest filterRequest = FilterRequest.builder()
-                .key1("district")
-                .key2("id")
+                .key("district.id")
                 .operator(Operator.EQUAL)
                 .fieldType(FieldType.LONG)
                 .value(districtId)
