@@ -11,6 +11,7 @@ import {
   ConfirmationService,
   MessageService,
 } from "primeng/api";
+import { AuthService } from "src/app/global/auth.service";
 import {
   Order,
   OrderProductDetail,
@@ -34,6 +35,7 @@ export class ProductListComponent implements OnInit {
   order: Order | undefined;
   deletedProduct: Product | undefined;
   currentUser?: User;
+  isVisible = false;
 
   constructor(
     private $cart: CartService,
@@ -41,13 +43,16 @@ export class ProductListComponent implements OnInit {
     private $message: MessageService,
     private $confirmation: ConfirmationService,
     private $zone: NgZone,
-    private $userClient: UserClient
+    private $userClient: UserClient,
+    private $auth: AuthService,
   ) {}
   ngOnInit(): void {
     this.$userClient
       .getCurrentUser()
-      .subscribe((user) => (this.currentUser = user));
-      
+      .subscribe((user) => {
+        this.currentUser = user;
+        if (AuthService.isSeller(this.currentUser) || AuthService.isAdmin(this.currentUser)) this.isVisible = true;
+      });
     this.$cart.getOrderObservable().subscribe((order) => (this.order = order));
   }
   get initialized(): boolean {
@@ -107,9 +112,9 @@ export class ProductListComponent implements OnInit {
 
   getProductStatus(product: Product):
     | {
-        name: string;
-        textColor: string;
-      }
+      name: string;
+      textColor: string;
+    }
     | undefined {
     switch (product.productStatus) {
       case "ACTIVE":

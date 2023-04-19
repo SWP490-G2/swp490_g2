@@ -65,7 +65,7 @@ export class RestaurantComponent implements OnInit {
       direction: "ASC",
     }),
   ];
-
+  isVisible = false;
   restaurantReviewVisible = false;
   restaurantReview: RestaurantReview = new RestaurantReview();
   restaurantReviewResponse = new RestaurantReviewResponse({
@@ -106,6 +106,8 @@ export class RestaurantComponent implements OnInit {
       { label: "Add New", icon: "pi pi-fw pi-plus" },
       { label: "Remove", icon: "pi pi-fw pi-minus" },
     ];
+
+   
   }
 
   refresh() {
@@ -114,6 +116,7 @@ export class RestaurantComponent implements OnInit {
       .pipe(
         switchMap((user) => {
           this.user = user;
+          if (AuthService.isSeller(this.user) || AuthService.isAdmin(this.user)) this.isVisible = true;
           return forkJoin([
             this.$restaurantClient.getById(this.restaurantId),
             this.$userClient.hasControlsOfRestaurant(this.restaurantId),
@@ -377,19 +380,19 @@ export class RestaurantComponent implements OnInit {
       100 -
       Math.round(
         (this.restaurantReviewResponse.starCounts[0] * 100) /
-          this.totalCountReviews
+        this.totalCountReviews
       ) -
       Math.round(
         (this.restaurantReviewResponse.starCounts[1] * 100) /
-          this.totalCountReviews
+        this.totalCountReviews
       ) -
       Math.round(
         (this.restaurantReviewResponse.starCounts[2] * 100) /
-          this.totalCountReviews
+        this.totalCountReviews
       ) -
       Math.round(
         (this.restaurantReviewResponse.starCounts[3] * 100) /
-          this.totalCountReviews
+        this.totalCountReviews
       );
 
     switch (stars) {
