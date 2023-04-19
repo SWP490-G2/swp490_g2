@@ -366,7 +366,8 @@ export class RestaurantComponent implements OnInit {
   }
 
   getReviewRatio(stars: number): number {
-    if (!this.restaurantReviewResponse.starCounts) return 0;
+    if (!this.restaurantReviewResponse.starCounts || !this.totalCountReviews)
+      return 0;
 
     const num =
       (this.restaurantReviewResponse.starCounts[stars - 1] * 100) /
@@ -411,14 +412,6 @@ export class RestaurantComponent implements OnInit {
     this.refreshReviews();
   }
 
-  /**
-   * key?: string;
-    operator?: FilterRequestOperator;
-    fieldType?: FilterRequestFieldType;
-    value?: any;
-    valueTo?: any;
-    values?: any[];
-   */
   onStarClick(star?: number) {
     if (star) {
       this.reviewPagable.filters = [

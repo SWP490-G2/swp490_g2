@@ -192,6 +192,10 @@ public class RestaurantService {
                 ))
                 .toList();
 
+        filteredRestaurants.forEach(r -> {
+            r.setAverageStars(restaurantReviewService.getAverageStarsByRestaurantId(r.getId()));
+        });
+
         if (searchRestaurantsRequest == null || searchRestaurantsRequest.getSearchRequest() == null)
             return new PageImpl<>(filteredRestaurants);
 

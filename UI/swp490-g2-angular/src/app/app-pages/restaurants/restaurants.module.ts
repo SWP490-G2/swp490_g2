@@ -22,6 +22,7 @@ import { RestaurantCardComponent } from "./restaurant-card/restaurant-card.compo
 import { PaginatorModule } from "primeng/paginator";
 import { TagModule } from "primeng/tag";
 import { OpenClosedTimeModule } from "../restaurant/open-closed-time/open-closed-time.module";
+import { RatingModule } from "primeng/rating";
 
 @NgModule({
   declarations: [RestaurantsComponent, RestaurantCardComponent],
@@ -45,7 +46,8 @@ import { OpenClosedTimeModule } from "../restaurant/open-closed-time/open-closed
     ImageAttachmentModule,
     PaginatorModule,
     TagModule,
-    OpenClosedTimeModule
+    OpenClosedTimeModule,
+    RatingModule
   ],
   exports: [RestaurantsComponent, RestaurantCardComponent],
 })

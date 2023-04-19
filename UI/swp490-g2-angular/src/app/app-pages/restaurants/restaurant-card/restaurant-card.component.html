@@ -29,6 +29,11 @@
           {{ restaurant.restaurantName }}
         </a>
       </div>
+      <p-rating
+        [ngModel]="restaurant.averageStars"
+        [readonly]="true"
+        [cancel]="false"
+      ></p-rating>
       <span class="text-600">
         {{ getRestaurantFullAddress(restaurant) }}
       </span>
