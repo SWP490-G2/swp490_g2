@@ -163,7 +163,7 @@ export class RestaurantComponent implements OnInit {
       .getReviewsByRestaurantId(this.restaurantId, this.reviewPagable)
       .pipe(
         switchMap((response) => {
-          if (!response.restaurantReviewPage?.totalElements)
+          if (response.restaurantReviewPage?.totalElements === undefined)
             return of(undefined);
 
           this.restaurantReviewResponse = response;
