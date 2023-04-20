@@ -91,7 +91,7 @@ public class OrderService {
         webSocketService.push(
                 "/notification",
                 Notification.builder()
-                        .url("")
+                        .url("/order-management")
                         .message("[%s] made an order!".formatted(currentUser.getFirstName()))
                         .toUsers(userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId())))
                         .build()
@@ -148,7 +148,7 @@ public class OrderService {
         webSocketService.push(
                 "/notification",
                 Notification.builder()
-                        .url("")
+                        .url("/buyer-orders")
                         .message("Your order #%d has been accepted!".formatted(order.getId()))
                         .toUsers(List.of(order.getOrderCreator()))
                         .build()
@@ -184,7 +184,7 @@ public class OrderService {
         webSocketService.push(
                 "/notification",
                 Notification.builder()
-                        .url("")
+                        .url("/buyer-orders")
                         .message("Your order #%d has been rejected!".formatted(order.getId()))
                         .toUsers(List.of(order.getOrderCreator()))
                         .build()
@@ -220,7 +220,7 @@ public class OrderService {
         webSocketService.push(
                 "/notification",
                 Notification.builder()
-                        .url("")
+                        .url("/buyer-orders")
                         .message("Your order #%d has been started delivering!".formatted(order.getId()))
                         .toUsers(List.of(order.getOrderCreator()))
                         .build()
@@ -257,7 +257,7 @@ public class OrderService {
         webSocketService.push(
                 "/notification",
                 Notification.builder()
-                        .url("")
+                        .url("/buyer-orders")
                         .message("Your order #%d has been completed!".formatted(order.getId()))
                         .toUsers(List.of(order.getOrderCreator()))
                         .build()
@@ -293,7 +293,7 @@ public class OrderService {
         webSocketService.push(
                 "/notification",
                 Notification.builder()
-                        .url("")
+                        .url("/buyer-orders")
                         .message("Your order #%d has been aborted!".formatted(order.getId()))
                         .toUsers(List.of(order.getOrderCreator()))
                         .build()

@@ -36,11 +36,8 @@
             placeholder="Enter your last name"
             ngModel
             required
-            (input)="checkMaxLength('lastName')"
+            maxlength="50"
           />
-          <span *ngIf="getErrorMessage('lastName')" class="text-red-500">
-            {{ getErrorMessage('lastName') }}
-          </span>
         </div>
         <div class="col-12 md:col-4 flex flex-column gap-2">
           <label for="middleName" class="block text-900 font-medium"
@@ -54,11 +51,8 @@
             name="middleName"
             placeholder="Enter your middle name"
             ngModel
-            (input)="checkMaxLength('middleName')"
+            maxlength="50"
           />
-          <span *ngIf="getErrorMessage('middleName')" class="text-red-500">
-            {{ getErrorMessage('middleName') }}
-          </span>
         </div>
         <div class="col-12 md:col-4 flex flex-column gap-2">
           <label for="firstName" class="block text-900 font-medium required">
@@ -73,11 +67,8 @@
             placeholder="Enter your first name"
             ngModel
             required
-            (input)="checkMaxLength('firstName')"
+            maxlength="50"
           />
-          <span *ngIf="getErrorMessage('firstName')" class="text-red-500">
-            {{ getErrorMessage('firstName') }}
-          </span>
         </div>
       </div>
 

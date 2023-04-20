@@ -20,6 +20,7 @@ import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-att
     CardModule,
     ImageAttachmentModule,
   ],
-  declarations: [OrderManagementComponent]
+  declarations: [OrderManagementComponent],
+  exports: [OrderManagementComponent],
 })
-export class OrderManagementModule { }
+export class OrderManagementModule {}

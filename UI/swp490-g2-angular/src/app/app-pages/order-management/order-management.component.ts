@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { MessageService } from "primeng/api";
 import { map } from "rxjs";
 import {
@@ -25,6 +25,8 @@ export class OrderManagementComponent implements OnInit {
   totalRecords = 0;
   loading = true;
 
+  @Input() isBuyer = false;
+
   constructor(
     private $orderClient: OrderClient,
     private $message: MessageService
@@ -37,7 +39,7 @@ export class OrderManagementComponent implements OnInit {
   refresh() {
     this.loading = true;
     return this.$orderClient
-      .getAllByRole("SELLER", this.searchRequest)
+      .getAllByRole(this.isBuyer ? "BUYER" : "SELLER", this.searchRequest)
       .pipe(
         map((res) => {
           this.totalRecords = res.totalElements!;
