@@ -4,7 +4,6 @@ import { Title } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MenuItem, MessageService } from "primeng/api";
 import {
-  catchError,
   finalize,
   forkJoin,
   Observable,

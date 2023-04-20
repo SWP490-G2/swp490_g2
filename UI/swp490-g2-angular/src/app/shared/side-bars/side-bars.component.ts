@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { Title } from "@angular/platform-browser";
-import { Router, ActivatedRoute, RouterLink } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import { Client, User } from "src/app/ngswag/client";

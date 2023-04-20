@@ -1,18 +1,14 @@
 import { Component, OnInit, ViewChild, Input } from "@angular/core";
-import { NgForm, Validators } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { NgForm } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
   Address,
-  AdminClient,
   BuyerClient,
   Restaurant,
   RestaurantCategory,
   RestaurantCategoryClient,
-  RestaurantClient,
   User,
-  UserClient,
   Ward,
 } from "src/app/ngswag/client";
 

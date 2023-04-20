@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { MessageService } from "primeng/api";
-import { catchError, finalize, map, switchMap } from "rxjs";
+import { finalize, map } from "rxjs";
 import { Restaurant, RestaurantClient } from "src/app/ngswag/client";
 
 @Component({

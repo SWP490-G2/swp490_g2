@@ -7,7 +7,6 @@ import {
   Output,
 } from "@angular/core";
 import {
-  ConfirmEventType,
   ConfirmationService,
   MessageService,
 } from "primeng/api";
@@ -47,7 +46,7 @@ export class ProductListComponent implements OnInit {
     this.$userClient
       .getCurrentUser()
       .subscribe((user) => (this.currentUser = user));
-      
+
     this.$cart.getOrderObservable().subscribe((order) => (this.order = order));
   }
   get initialized(): boolean {

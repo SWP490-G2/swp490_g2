@@ -17,7 +17,7 @@ import { HttpErrorHandler } from "src/app/global/http-error-handler";
 import { DropdownModule } from "primeng/dropdown";
 import { AccountInformationModule } from "src/app/app-pages/account-information/account-information.module";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
-import { AutoCompleteModule } from 'primeng/autocomplete';
+import { AutoCompleteModule } from "primeng/autocomplete";
 
 @NgModule({
   declarations: [UpdateRestaurantInfoApplyComponent],

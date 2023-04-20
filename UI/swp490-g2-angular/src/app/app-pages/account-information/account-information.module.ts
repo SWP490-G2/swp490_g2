@@ -19,7 +19,6 @@ import { AddressFieldsComponent } from "./address-fields/address-fields.componen
 import { RestaurantsModule } from "../restaurants/restaurants.module";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { AutoCompleteModule } from "primeng/autocomplete";
-import { AddRestaurantInfoModule } from "../admin-pages/view-all-restaurant/add-restaurant-info/add-restaurant-info.module";
 
 @NgModule({
   declarations: [

@@ -51,9 +51,9 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
     middleName: 50
   };
   fieldErrors = {
-    lastName: '',
-    firstName: '',
-    middleName: ''
+    lastName: "",
+    firstName: "",
+    middleName: ""
   };
 
   constructor(
@@ -274,11 +274,11 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
     const fieldInput = this.form.controls[fieldName];
     const maxLength = this.maxFieldLengths[fieldName];
     if (fieldInput.value.length > maxLength) {
-      fieldInput.setErrors({ 'maxlength': true });
+      fieldInput.setErrors({ "maxlength": true });
       this.fieldErrors[fieldName] = `Input can not over ${maxLength} characters`;
     } else {
       fieldInput.setErrors(null);
-      this.fieldErrors[fieldName] = '';
+      this.fieldErrors[fieldName] = "";
     }
   }
 

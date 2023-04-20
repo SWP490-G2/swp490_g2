@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input } from "@angular/core";
-import { NgForm, Validators } from "@angular/forms";
+import { NgForm } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";

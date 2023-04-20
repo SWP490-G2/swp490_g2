@@ -2,12 +2,11 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
-import { finalize, forkJoin, map, of, switchMap } from "rxjs";
+import { forkJoin, map, of, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import { RestaurantCategoryClient, UserClient } from "src/app/ngswag/client";
 import {
   AdminClient,
-  AuthenticationResponse,
   File,
   Restaurant,
   RestaurantClient,
