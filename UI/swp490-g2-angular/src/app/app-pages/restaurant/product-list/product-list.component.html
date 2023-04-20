@@ -92,7 +92,8 @@
             (click)="addToCart(product, quantity.value)"
             [disabled]="product.productStatus === 'OUT_OF_STOCK'"
           ></button>
-          <a
+          <a 
+          *ngIf="isVisible"
             pButton
             pRipple
             label="Edit"
@@ -101,6 +102,7 @@
             [routerLink]="['product', product.id]"
           ></a>
           <button
+          *ngIf="isVisible"
             pButton
             pRipple
             label="Delete"
