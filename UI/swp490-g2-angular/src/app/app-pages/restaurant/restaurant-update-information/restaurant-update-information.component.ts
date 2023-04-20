@@ -1,8 +1,10 @@
+import { HttpClient } from "@angular/common/http";
 import {
   AfterViewInit,
   Component,
   EventEmitter,
   Input,
+  OnInit,
   Output,
   ViewChild,
 } from "@angular/core";
@@ -10,6 +12,7 @@ import { FormGroup, NgForm, Validators } from "@angular/forms";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { finalize, of, switchMap } from "rxjs";
 import {
+  BankDetail,
   Restaurant,
   RestaurantCategory,
   RestaurantCategoryClient,
@@ -23,7 +26,9 @@ import { PHONE_NUMBER_PATTERN } from "src/app/utils";
   templateUrl: "./restaurant-update-information.component.html",
   styleUrls: ["./restaurant-update-information.component.scss"],
 })
-export class RestaurantUpdateInformationComponent implements AfterViewInit {
+export class RestaurantUpdateInformationComponent
+  implements OnInit, AfterViewInit
+{
   @Input() restaurant: Restaurant;
   @Input() editable: boolean;
   @ViewChild("form", { static: false }) form!: NgForm;
@@ -37,12 +42,35 @@ export class RestaurantUpdateInformationComponent implements AfterViewInit {
     return !!this.form?.invalid || this._submitButtonDisabled;
   }
 
+  banksData: any[] = [];
+  selectedBank?: any;
+  acqIds: number[] = [];
+
   constructor(
     private $restaurantClient: RestaurantClient,
     private $confirmation: ConfirmationService,
     private $message: MessageService,
-    private $restaurantCategoryClient: RestaurantCategoryClient
+    private $restaurantCategoryClient: RestaurantCategoryClient,
+    private $http: HttpClient
   ) {}
+
+  ngOnInit(): void {
+    if (!this.restaurant.bankDetail)
+      this.restaurant.bankDetail = new BankDetail();
+
+    this.$http
+      .get("https://api.vietqr.io/v2/banks")
+      .pipe(
+        switchMap((res: any) => {
+          if (!res?.data) return of(undefined);
+
+          this.banksData = res.data;
+
+          return of(undefined);
+        })
+      )
+      .subscribe();
+  }
 
   ngAfterViewInit(): void {
     this.$restaurantCategoryClient
@@ -79,6 +107,10 @@ export class RestaurantUpdateInformationComponent implements AfterViewInit {
       });
 
       this.restaurant.address.specificAddress = this.form.value.specificAddress;
+    }
+
+    if (this.selectedBank && this.restaurant.bankDetail) {
+      this.restaurant.bankDetail.acqId = parseInt(this.selectedBank.bin);
     }
 
     this.$restaurantClient

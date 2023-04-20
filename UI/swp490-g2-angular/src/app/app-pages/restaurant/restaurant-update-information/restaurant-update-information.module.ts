@@ -7,6 +7,7 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { DialogModule } from "primeng/dialog";
 import { CalendarModule } from "primeng/calendar";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { InputNumberModule } from "primeng/inputnumber";
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     CalendarModule,
     FormsModule,
     ReactiveFormsModule,
+    InputNumberModule,
   ],
   exports: [
     RestaurantUpdateInformationComponent

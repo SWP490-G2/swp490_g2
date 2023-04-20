@@ -1,9 +1,12 @@
+import { HttpClient } from "@angular/common/http";
 import { Component, Input, OnInit } from "@angular/core";
 import { MessageService } from "primeng/api";
-import { map } from "rxjs";
+import { map, of, switchMap } from "rxjs";
 import {
   Order,
   OrderClient,
+  Restaurant,
+  RestaurantClient,
   SearchRequest,
 } from "src/app/ngswag/client";
 
@@ -26,10 +29,15 @@ export class OrderManagementComponent implements OnInit {
   loading = true;
 
   @Input() isBuyer = false;
+  selectedRestaurant?: Restaurant;
+  qrData?: string;
+  bankImagePath?: string;
 
   constructor(
     private $orderClient: OrderClient,
-    private $message: MessageService
+    private $message: MessageService,
+    private $restaurantClient: RestaurantClient,
+    private $http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -53,7 +61,7 @@ export class OrderManagementComponent implements OnInit {
 
   getOrderTotalPrice(order: any): number {
     return order.orderProductDetails.reduce(
-      (total, item) => total + item.price,
+      (total, item) => total + item.price * item.quantity,
       0
     );
   }
@@ -77,6 +85,53 @@ export class OrderManagementComponent implements OnInit {
   showDialog(id: number): void {
     this.visible = true;
     this.selectedOrder = this.orders.find((item) => item.id === id);
+    if (
+      this.selectedOrder?.orderProductDetails?.length &&
+      this.selectedOrder.orderProductDetails[0].product?.id
+    ) {
+      this.$restaurantClient
+        .getByProductId(this.selectedOrder.orderProductDetails[0].product.id)
+        .pipe(
+          switchMap((r) => {
+            this.selectedRestaurant = r;
+            if (
+              r.bankDetail?.accountName &&
+              r.bankDetail?.accountNumber &&
+              r.bankDetail?.acqId
+            ) {
+              return this.$http.post<any>(
+                "https://api.vietqr.io/v2/generate",
+                {
+                  accountNo: r.bankDetail.accountNumber + "",
+                  accountName: r.bankDetail.accountName,
+                  acqId: r.bankDetail.acqId + "",
+                  addInfo: `Order ${this.selectedOrder?.id}`,
+                  amount: this.getOrderTotalPrice(this.selectedOrder) + "",
+                  template: "compact",
+                },
+                {
+                  headers: {
+                    "x-client-id": "4949cfcc-9672-4606-8482-d76dd49eddf0",
+                    "x-api-key": "6bc45654-fcd3-48ab-b312-3925213c0193",
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+            }
+
+            return of(undefined);
+          }),
+          switchMap((res) => {
+            if (!res) return of(undefined);
+
+            if (res?.data?.qrCode) this.qrData = res.data.qrCode;
+            this.bankImagePath = res.data.qrDataURL;
+
+            return of(undefined);
+          })
+        )
+        .subscribe();
+    }
   }
 
   onPage(event: { first: number; rows: number }) {
@@ -194,5 +249,13 @@ export class OrderManagementComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  get showQr(): boolean {
+    return !!(
+      this.selectedRestaurant?.bankDetail?.accountName &&
+      this.selectedRestaurant?.bankDetail?.accountNumber &&
+      this.selectedRestaurant?.bankDetail?.acqId
+    );
   }
 }

@@ -60,13 +60,41 @@
 </div>
 
 <p-dialog
-  header="Orders detail"
+  [header]="
+    selectedRestaurant?.restaurantName
+      ? 'Orders #' +
+        selectedOrder?.id +
+        ' [' +
+        selectedRestaurant?.restaurantName +
+        ']'
+      : 'Order detail'
+  "
   [(visible)]="visible"
   [modal]="true"
   [style]="{ 'min-width': '50vw' }"
   [draggable]="false"
   [resizable]="false"
 >
+  <div class="flex justify-content-center align-items-center" *ngIf="showQr">
+    <img width="300px" [src]="bankImagePath" />
+    <div>
+      <div>
+        <strong>Account Number: </strong>
+        <span> {{ selectedRestaurant?.bankDetail?.accountNumber }} </span>
+      </div>
+      <div>
+        <strong>Account Name: </strong>
+        <span> {{ selectedRestaurant?.bankDetail?.accountName }} </span>
+      </div>
+      <div>
+        <strong>Total amount: </strong>
+        <span>
+          {{ getOrderTotalPrice(selectedOrder) | currency : "VND" }}
+        </span>
+      </div>
+    </div>
+  </div>
+
   <div class="flex flex-column gap-4 align-items-center">
     <div class="flex gap-2 overflow-y-auto p-5" style="max-width: 50rem">
       <div *ngFor="let orderDetail of selectedOrder?.orderProductDetails">

@@ -9,14 +9,11 @@
   <div class="flex justify-content-center align-items-center">
     <form
       #form="ngForm"
-      class="row-gap-0 p-4 shadow-2 zborder-round w-full"
+      class="row-gap-0 p-2 lg:p-4 shadow-2 zborder-round w-full"
       (ngSubmit)="submit()"
     >
       <div class="col">
-        <label
-          for="restaurantName"
-          class="block text-900 font-medium my-3 required"
-        >
+        <label for="restaurantName" class="block text-900 font-medium required">
           Restaurant Name
         </label>
         <input
@@ -25,7 +22,7 @@
           [(ngModel)]="restaurant.restaurantName"
           type="text"
           pInputText
-          class="w-full mb-1"
+          class="w-full"
           placeholder="Enter name for restaurant ..."
           required
         />
@@ -33,10 +30,7 @@
 
       <div class="col">
         <div class="flex align-items-center gap-2 flex-wrap">
-          <label
-            for="categories"
-            class="block text-900 font-medium my-3 required"
-          >
+          <label for="categories" class="block text-900 font-medium required">
             Categories
           </label>
           <p-multiSelect
@@ -52,10 +46,7 @@
       </div>
 
       <div class="col">
-        <label
-          for="description"
-          class="block text-900 font-medium my-3 required"
-        >
+        <label for="description" class="block text-900 font-medium required">
           Description
         </label>
         <textarea
@@ -72,10 +63,7 @@
 
       <div class="grid m-0">
         <div class="col">
-          <label
-            for="phoneNumber"
-            class="block text-900 font-medium my-3 required"
-          >
+          <label for="phoneNumber" class="block text-900 font-medium required">
             Phone Number
           </label>
           <input
@@ -84,7 +72,7 @@
             [(ngModel)]="restaurant.phoneNumber"
             type="text"
             pInputText
-            class="w-full mb-1"
+            class="w-full"
             ngModel
             required
           />
@@ -92,6 +80,64 @@
       </div>
 
       <app-address-fields [address]="restaurant.address"></app-address-fields>
+
+      <p-divider></p-divider>
+
+      <h1>Bank Details</h1>
+      <div class="col">
+        <label
+          for="bankDetail_accountNumber"
+          class="block text-900 font-medium"
+        >
+          Account Number
+        </label>
+        <input
+          id="bankDetail_accountNumber"
+          name="bankDetail_accountNumber"
+          [(ngModel)]="restaurant.bankDetail!.accountNumber"
+          type="number"
+          pInputText
+          class="w-full"
+        />
+      </div>
+
+      <div class="col">
+        <label for="bankDetail_accountName" class="block text-900 font-medium">
+          Account Name
+        </label>
+        <input
+          id="bankDetail_accountName"
+          name="bankDetail_accountName"
+          [(ngModel)]="restaurant.bankDetail!.accountName"
+          type="text"
+          pInputText
+          class="w-full uppercase"
+        />
+      </div>
+
+      <div class="col">
+        <label for="bankDetail_acqId" class="block text-900 font-medium">
+          Bank Name
+        </label>
+        <p-dropdown
+          [options]="banksData"
+          [(ngModel)]="selectedBank"
+          name="bankDetail_acqId"
+          optionLabel="name"
+          [filter]="true"
+          filterBy="shortName,name"
+          tooltipPosition="top"
+        >
+          <ng-template pTemplate="selectedItem">
+            <div *ngIf="selectedBank">
+              {{ selectedBank.shortName }} - {{ selectedBank.name }}
+            </div>
+          </ng-template>
+          <ng-template let-bank pTemplate="item">
+            <div>{{ bank.shortName }} - {{ bank.name }}</div>
+          </ng-template>
+        </p-dropdown>
+      </div>
 
       <div class="col text-center" *ngIf="editable">
         <button

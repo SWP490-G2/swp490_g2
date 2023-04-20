@@ -58,6 +58,10 @@ public class Restaurant extends BaseEntity {
     @Column
     private String closedTime;
 
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
+    private BankDetail bankDetail;
+
     public boolean isOpening() {
         if (openTime == null || closedTime == null) {
             return false;

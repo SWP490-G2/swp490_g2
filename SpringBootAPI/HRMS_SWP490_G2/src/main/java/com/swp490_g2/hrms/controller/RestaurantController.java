@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/restaurant")
@@ -65,5 +67,10 @@ public class RestaurantController {
     @DeleteMapping("/delete-review-reply")
     public void deleteReviewReply(@RequestBody RestaurantReview review) {
         restaurantService.deleteReviewReply(review);
+    }
+
+    @GetMapping("/get-by-product-id/{productId}")
+    public ResponseEntity<Restaurant> getByProductId(@PathVariable Long productId) {
+        return ResponseEntity.ok(restaurantService.getByProductId(productId));
     }
 }
