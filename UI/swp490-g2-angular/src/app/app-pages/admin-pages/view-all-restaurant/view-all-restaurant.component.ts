@@ -18,7 +18,6 @@ import { AllRes } from "src/app/utils/allres";
   providers: [MessageService],
 })
 export class ViewAllRestaurantComponent {
-  resOpening: AllRes[] = [];
   statuses: any[];
   loading = true;
   activityValues: number[] = [0, 100];
@@ -32,20 +31,9 @@ export class ViewAllRestaurantComponent {
     private $userClient: UserClient
   ) {
     this.refresh();
-    this.$adminClient.getAllRestaurant().subscribe((restaurants) => {
-      this.resOpening = restaurants.map((restaurant) => {
-        if (restaurant.createdAt) {
-          restaurant.createdAt = DateUtils.fromDB(restaurant.createdAt);
-        }
-        return restaurant;
-      });
-    });
   }
 
   refresh() {
-    // this.$adminClient.getAllRestaurant().subscribe((restaurants) => {
-    //   this.restaurants = restaurants;
-    // });
     this.$restaurantClient
       .search(
         undefined,
@@ -59,30 +47,13 @@ export class ViewAllRestaurantComponent {
         switchMap((page) => {
           if (page.content) {
             this.restaurants = page.content;
-            return this.$userClient.getAllOwnersByRestaurantIds(
-              this.restaurants.map((r) => r.id!)
-            );
           }
 
           return of(undefined);
         })
       )
-      .subscribe((owners) => {
-        if (owners) {
-          this.restaurants.map((r) => {
-            (r as any).owners = owners.filter((o) =>
-              o.restaurants?.some((r1) => r1.id === r.id)
-            );
-          });
-        }
-      });
+      .subscribe();
   }
-
-  // deleteRestaurant(id: number) {
-  //   this.$adminClient
-  //     .deleteRestaurantById(id)
-  //     .subscribe(() => location.reload());
-  // }
 
   toggleRestaurantStatus(restaurant: Restaurant, event: any) {
     const intended = event.checked;

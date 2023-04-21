@@ -35,7 +35,7 @@
   </div>
   <p-table
     #dt
-    [value]="resOpening"
+    [value]="restaurants"
     dataKey="id"
     [rowHover]="true"
     [rows]="10"
@@ -44,75 +44,50 @@
     [paginator]="true"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [filterDelay]="0"
-    [value]="restaurants"
+    [responsive]="true"
   >
     <ng-template pTemplate="caption">
       <div class="table-header flex align-items-center justify-content-between">
-        <div>
-          <p-button
-            label="Add new restaurant"
-            [routerLink]="'add-restaurant-info'"
-          ></p-button>
-        </div>
-        <div>
-          <input
-            id="search"
-            type="text"
-            pInputText
-            class="w-full mb-1 surface-card p-2 shadow-2 border-round"
-            style="min-width: 15.5rem"
-            name="search"
-            ngModel
-            placeholder="Search"
-          />
-        </div>
+        <p-button
+          label="Add new restaurant"
+          [routerLink]="'add-restaurant-info'"
+        ></p-button>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th pSortableColumn="id" style="min-width: 5.5rem">
-          <div class="flex justify-content-between align-items-center">
-            #
-            <p-sortIcon field="id"></p-sortIcon>
-          </div>
+        <th>
+          <div class="flex justify-content-between align-items-center">#</div>
         </th>
-        <th pSortableColumn="resName" style="min-width: 16rem">
+        <th pSortableColumn="restaurantName">
           <div class="flex justify-content-between align-items-center">
             Restaurant Name
-            <p-sortIcon field="resName"></p-sortIcon>
+            <p-sortIcon field="restaurantName"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="resOwner" style="min-width: 16rem">
-          <div class="flex justify-content-between align-items-center">
-            Restaurant Owner
-            <p-sortIcon field="resOwner"></p-sortIcon>
-          </div>
-        </th>
-        <th pSortableColumn="creDate" style="min-width: 10rem">
+        <th pSortableColumn="createdAt">
           <div class="flex justify-content-between align-items-center">
             Created Date
-            <p-sortIcon field="creDate"></p-sortIcon>
+            <p-sortIcon field="createdAt"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="phoneNo" style="min-width: 10rem">
+        <th>
           <div class="flex justify-content-between align-items-center">
             Phone Number
-            <p-sortIcon field="phoneNo"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="status" style="min-width: 10rem">
+        <th pSortableColumn="active">
           <div class="flex justify-content-between align-items-center">
             Status
-            <p-sortIcon field="status"></p-sortIcon>
+            <p-sortIcon field="active"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="activity" style="min-width: 10rem">
+        <th>
           <div class="flex justify-content-between align-items-center">
             Action
-            <p-sortIcon field="activity"></p-sortIcon>
           </div>
         </th>
-        <th style="width: 5rem"></th>
+        <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-resOpening let-rowIndex="rowIndex">
@@ -126,12 +101,8 @@
           {{ resOpening.restaurantName }}
         </td>
         <td>
-          <span class="p-column-title">Restaurant Owners</span>
-          {{ getOwners(resOpening) }}
-        </td>
-        <td>
           <span class="p-column-title">Created Date</span>
-          {{ resOpening.createdAt | date : "dd/MM/yyyy" }}
+          {{ resOpening.createdAt * 1000 | date : "dd/MM/yyyy" }}
         </td>
         <td>
           <span class="p-column-title">Phone Number</span>
@@ -141,7 +112,9 @@
           <span class="p-column-title">Status</span>
           <div
             class="flex align-items-center gap-2"
-            *ngIf="resOpening.active !== null && resOpening.active !== undefined"
+            *ngIf="
+              resOpening.active !== null && resOpening.active !== undefined
+            "
           >
             <p-toggleButton
               styleClass="w-7rem"
