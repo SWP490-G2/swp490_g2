@@ -6,7 +6,9 @@ import com.swp490_g2.hrms.entity.Token;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
+import com.swp490_g2.hrms.requests.ChangePasswordRequest;
 import com.swp490_g2.hrms.requests.RegisterRequest;
+import com.swp490_g2.hrms.security.AuthenticationRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
 import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -23,6 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -32,8 +40,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -54,6 +61,12 @@ class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
+
+    @Mock
+    private User user;
+
+    @Mock
+    private AuthenticationManager authenticationManager;
 
     @BeforeEach
     void setUp() {
@@ -124,10 +137,59 @@ class UserServiceTest {
 
     @Test
     void getByEmailOrPhoneNumber() {
+
     }
 
     @Test
-    void login() {
+    // truong hop thong tin email va phone number cua user khong ton tai
+    void login1() {
+        String email = "khanhnq123@gmail.com";
+        String phoneNumber = "0983190570";
+        String password = "Jan@a1b2c3";
+        User user = User.builder()
+                .email("fdfdf")
+                .phoneNumber("phoneNumber")
+                .build();
+        AuthenticationRequest authenticationRequest = AuthenticationRequest.builder()
+                .emailOrPhoneNumber(phoneNumber)
+                .build();
+        when(userRepository.findByEmail(authenticationRequest.getEmailOrPhoneNumber())).thenReturn(Optional.empty());
+        when(userRepository.findByPhoneNumber(authenticationRequest.getEmailOrPhoneNumber())).thenReturn(Optional.empty());
+        AuthenticationResponse response = userService.login(authenticationRequest);
+        assertEquals("User is not existed!", response.getErrorMessage());
+
+
+    }
+
+    @Test
+        // truong hop thong tin email cua user ton tai
+    void login2() {
+        String email = "khanhnq123@gmail.com";
+        String password = "Jan@a1b2c3";
+        User user = User.builder()
+                .email(email)
+                .password(password)
+                .isActive(false)
+                .build();
+        AuthenticationRequest authenticationRequest = AuthenticationRequest.builder()
+                .emailOrPhoneNumber(email)
+                .password(password)
+                .build();
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                user.getEmail(),
+                authenticationRequest.getPassword()
+        );
+        when(userRepository.findByEmail(authenticationRequest.getEmailOrPhoneNumber())).thenReturn(Optional.of(user));
+        verify(authenticationManager).authenticate(usernamePasswordAuthenticationToken);
+        String jwtToken = "jwtToken";
+        when(jwtService.generateToken(isA(User.class))).thenReturn(jwtToken);
+        when(tokenRepository.save(isA(Token.class))).thenReturn(isA(Token.class));
+
+
+
+        AuthenticationResponse response = userService.login(authenticationRequest);
+        assertEquals(jwtToken, response.getToken());
+
     }
 
     @Test

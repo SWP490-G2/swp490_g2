@@ -125,7 +125,7 @@ public class ProductService {
         return productImage;
     }
 
-    private void checkValidUserForRestaurant(Long restaurantId) {
+    public void checkValidUserForRestaurant(Long restaurantId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null) {
             throw new AccessDeniedException("This request allows seller or admin only.");
