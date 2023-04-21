@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, tap } from "rxjs";
+import { BehaviorSubject, Observable, of, switchMap, tap } from "rxjs";
 import {
   Order,
   OrderClient,
@@ -110,6 +110,14 @@ export class CartService {
 
   addOrder(): Observable<string> {
     const order = this.order$.value;
-    return this.$orderClient.insert(order).pipe(tap(() => this.clearCart()));
+    return this.$orderClient.insert(order).pipe(
+      switchMap((errorMessage) => {
+        if (!errorMessage) {
+          this.clearCart();
+        }
+
+        return of(errorMessage);
+      })
+    );
   }
 }

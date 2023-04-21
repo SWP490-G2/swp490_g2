@@ -1,5 +1,6 @@
 package com.swp490_g2.hrms.service;
 
+import com.swp490_g2.hrms.common.utils.DateUtils;
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.OrderStatus;
 import com.swp490_g2.hrms.entity.enums.ProductStatus;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +77,17 @@ public class OrderService {
             else if (!restaurant.getId().equals(restaurant2.getId())) {
                 return "\"Order must include products from a SINGLE restaurant!\"";
             }
+        }
+
+        if(restaurant == null)
+            return "\"This order does not belong to any restaurant!\"";
+
+        if(!restaurant.isActive())
+            return "\"Cannot order in this restaurant because it is inactive!\"";
+
+        if(restaurant.getOpenTime() != null && restaurant.getClosedTime() != null) {
+            if(!restaurant.isOpening())
+                return "\"This restaurant is currently closed, please wait until it is open!\"";
         }
 
         for (OrderProductDetail orderProductDetail : order.getOrderProductDetails()) {

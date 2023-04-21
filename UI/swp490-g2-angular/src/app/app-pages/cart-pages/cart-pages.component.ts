@@ -106,7 +106,7 @@ export class CartPagesComponent implements OnInit {
           detail: "Order has been placed!"
         });
 
-        return of();
+        return of(undefined);
       })
     ).subscribe();
   }
