@@ -6,6 +6,7 @@ import com.swp490_g2.hrms.entity.Token;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
+import com.swp490_g2.hrms.requests.ChangePasswordRequest;
 import com.swp490_g2.hrms.requests.RegisterRequest;
 import com.swp490_g2.hrms.security.AuthenticationResponse;
 import org.junit.Before;
@@ -136,6 +137,54 @@ class UserServiceTest {
 
     @Test
     void changePassword() {
+        String email = "khanhnq123@gmail.com";
+        String phoneNumber = "0983190570";
+        String password = "Jan@a1b2c3";
+        User user = User.builder()
+                .email("fdfdf")
+                .phoneNumber("phoneNumber")
+                .build();
+        ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.builder()
+                .emailOrPhoneNumber(phoneNumber)
+                .build();
+        when(userRepository.findByEmail(changePasswordRequest.getEmailOrPhoneNumber())).thenReturn(Optional.empty());
+        when(userRepository.findByPhoneNumber(changePasswordRequest.getEmailOrPhoneNumber())).thenReturn(Optional.empty());
+        AuthenticationResponse response = userService.changePassword(changePasswordRequest);
+        assertEquals("\"User not existed\"", response.getErrorMessage());
+    }
+
+    @Test
+    void changePassword1() {
+        String email = "khanhnq123@gmail.com";
+        String phoneNumber = "0983190570";
+        String password = "Jan@a1b2c3";
+        User user = User.builder()
+                .email("khanhnq123@gmail.com")
+                .phoneNumber("0983190570")
+                .build();
+        ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.builder()
+                .emailOrPhoneNumber(phoneNumber)
+                .build();
+        when(userRepository.findByEmail(changePasswordRequest.getEmailOrPhoneNumber())).thenReturn(Optional.empty());
+        when(userRepository.findByPhoneNumber(changePasswordRequest.getEmailOrPhoneNumber())).thenReturn(Optional.empty());
+        AuthenticationResponse response = userService.changePassword(changePasswordRequest);
+    }
+
+    @Test
+    void changePassword2() {
+        String email = "khanhnq123@gmail.com";
+        String phoneNumber = "0983190570";
+        String password = "Jan@a1b2c3";
+        User user = User.builder()
+                .email("khanhnq123@gmail.com")
+                .phoneNumber("0983190570")
+                .build();
+        ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.builder()
+                .emailOrPhoneNumber(phoneNumber)
+                .build();
+        when(userRepository.findByEmail(changePasswordRequest.getEmailOrPhoneNumber())).thenReturn(Optional.empty());
+        when(userRepository.findByPhoneNumber(changePasswordRequest.getEmailOrPhoneNumber())).thenReturn(Optional.empty());
+        AuthenticationResponse response = userService.changePassword(changePasswordRequest);
     }
 
     @Test
