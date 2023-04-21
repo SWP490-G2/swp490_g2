@@ -16,6 +16,7 @@
     <ng-template pTemplate="header">
       <tr>
         <th>Order #</th>
+        <th>Created At</th>
         <ng-container *ngIf="!isBuyer">
           <th>Buyer Name</th>
           <th>Email</th>
@@ -31,6 +32,9 @@
       <tr>
         <td>
           {{ order.id }}
+        </td>
+        <td>
+          {{ order.createdAt * 1000 | date : "dd/MM/yyyy hh:mm" }}
         </td>
         <ng-container *ngIf="!isBuyer">
           <td>
