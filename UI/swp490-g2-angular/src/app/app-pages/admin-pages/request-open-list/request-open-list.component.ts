@@ -15,15 +15,7 @@ export class RequestOpenListComponent implements OnInit {
 
   constructor(private $adminClient: AdminClient) {
     this.$adminClient.getAllOpeningRestaurantRequests().subscribe((buyers) => {
-      this.requestingUsers = buyers.map((buyer) => {
-        if (buyer.requestingOpeningRestaurantDate) {
-          buyer.requestingOpeningRestaurantDate = DateUtils.fromDB(
-            buyer.requestingOpeningRestaurantDate
-          );
-        }
-
-        return buyer;
-      });
+      this.requestingUsers = buyers;
     });
   }
 
