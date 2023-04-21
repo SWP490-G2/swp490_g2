@@ -84,6 +84,8 @@ export class OrderManagementComponent implements OnInit {
   }
   showDialog(id: number): void {
     this.visible = true;
+    this.bankImagePath = undefined;
+    this.qrData = undefined;
     this.selectedOrder = this.orders.find((item) => item.id === id);
     if (
       this.selectedOrder?.orderProductDetails?.length &&

@@ -6,6 +6,14 @@
     >
       <div class="p-2">
         <div class="relative mb-3">
+          <div class="absolute top-0 right-0 z-1 pt-2 pr-2" *ngIf="false">
+            <p-toggleButton
+              onIcon="pi pi-star-fill"
+              offIcon="pi pi-star"
+              styleClass="p-button-rounded"
+            ></p-toggleButton>
+          </div>
+
           <p-carousel
             *ngIf="product.images && product.images.length > 1"
             [value]="product.images"
@@ -92,8 +100,8 @@
             (click)="addToCart(product, quantity.value)"
             [disabled]="product.productStatus === 'OUT_OF_STOCK'"
           ></button>
-          <a 
-          *ngIf="isVisible"
+          <a
+            *ngIf="isVisible"
             pButton
             pRipple
             label="Edit"
@@ -102,7 +110,7 @@
             [routerLink]="['product', product.id]"
           ></a>
           <button
-          *ngIf="isVisible"
+            *ngIf="isVisible"
             pButton
             pRipple
             label="Delete"

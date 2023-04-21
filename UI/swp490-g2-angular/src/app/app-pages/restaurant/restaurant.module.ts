@@ -81,6 +81,7 @@ import { PaginatorModule } from "primeng/paginator";
     RatingModule,
     ProgressBarModule,
     PaginatorModule,
+    ToggleButtonModule,
   ],
 })
 export class RestaurantModule {}
