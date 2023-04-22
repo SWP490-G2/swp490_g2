@@ -22,9 +22,9 @@ export class BanUserComponent implements OnInit {
   ];
 
   sellerReasons: string[] = [
-    "seller reason 1",
-    "seller reason 2",
-    "seller reason 3",
+    "Seller violates regulations of business",
+    "Seller give the price not reasonable",
+    "Seller's Restaurant too many violates regulations",
   ];
 
   constructor(
