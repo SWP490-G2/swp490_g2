@@ -8,7 +8,6 @@ import { TagModule } from "primeng/tag";
 import { DialogModule } from "primeng/dialog";
 import { CardModule } from "primeng/card";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
-import { QRCodeModule } from "angularx-qrcode";
 
 @NgModule({
   imports: [
@@ -20,7 +19,6 @@ import { QRCodeModule } from "angularx-qrcode";
     DialogModule,
     CardModule,
     ImageAttachmentModule,
-    QRCodeModule,
   ],
   declarations: [OrderManagementComponent],
   exports: [OrderManagementComponent],
