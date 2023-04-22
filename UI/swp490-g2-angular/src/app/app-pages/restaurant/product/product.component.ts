@@ -83,7 +83,7 @@ export class ProductComponent implements OnInit {
           summary: "Success",
           detail: `Product [${this.product.productName}] has been successfully ${this.productId ? "updated" : "added"}!`
         });
-
+        this.$router.navigate([`/restaurant/${this.restaurantId}`])
         return of();
       }),
       finalize(() => {
