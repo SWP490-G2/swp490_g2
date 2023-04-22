@@ -1,2 +1,6 @@
-<p-tag *ngIf="active" [value]="active.text" [severity]="active.severity">
+<p-tag
+  *ngIf="statusObject"
+  [value]="statusObject.text"
+  [severity]="statusObject.severity"
+>
 </p-tag>

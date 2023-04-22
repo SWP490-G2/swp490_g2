@@ -109,7 +109,7 @@
         </td>
         <td>
           <span class="p-column-title">Status</span>
-          <app-user-status [users]="user"></app-user-status>
+          <app-user-status [user]="user"></app-user-status>
         </td>
         <td class="flex gap-1">
           <button
@@ -122,13 +122,26 @@
             [routerLink]="'view-user-details/' + user.id"
           ></button>
           <button
+            *ngIf="user.userStatus !== 'BANNED'"
             pButton
             type="button"
             class="p-button-rounded p-button-danger"
-            icon="pi pi-ban"
+            icon="pi pi-lock"
             pTooltip="Ban"
             tooltipPosition="top"
             [routerLink]="'ban-user/' + user.id"
+            [disabled]="user.admin"
+          ></button>
+          <button
+            *ngIf="user.userStatus === 'BANNED'"
+            pButton
+            type="button"
+            class="p-button-rounded p-button-info"
+            icon="pi pi-unlock"
+            pTooltip="Unban"
+            tooltipPosition="top"
+            [disabled]="user.admin"
+            (click)="unban(user)"
           ></button>
           <button
             pButton
@@ -138,6 +151,7 @@
             pTooltip="Update Role"
             tooltipPosition="top"
             [routerLink]="'change-role/' + user.id"
+            [disabled]="user.admin"
           ></button>
         </td>
       </tr>

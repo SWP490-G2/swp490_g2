@@ -5,6 +5,7 @@ import com.swp490_g2.hrms.config.JwtService;
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.entity.Notification;
+import com.swp490_g2.hrms.entity.enums.UserStatus;
 import com.swp490_g2.hrms.entity.shallowEntities.TokenType;
 import com.swp490_g2.hrms.repositories.RestaurantRepository;
 import com.swp490_g2.hrms.repositories.TokenRepository;
@@ -123,28 +124,29 @@ public class UserService {
         return String.format("%06d", number);
     }
 
+    @Deprecated
     private boolean isPhoneNumberExisted(String phoneNumber) {
         User user = userRepository.findByPhoneNumber(phoneNumber).orElse(null);
-        return user != null && user.isActive();
+        return user != null;
     }
 
     public AuthenticationResponse registerNewUserAccount(RegisterRequest registerRequest) {
         User user = userRepository.findByEmail(registerRequest.getEmail()).orElse(null);
-        if (user != null && user.isActive()) {
+
+        if (user != null) {
             return AuthenticationResponse.builder()
-                    .errorMessage("User existed")
+                    .errorMessage("Email existed, please use a different email!")
                     .build();
         }
 
-        if (isPhoneNumberExisted(registerRequest.getPhoneNumber()))
+        user = getByEmailOrPhoneNumber(registerRequest.getPhoneNumber());
+        if (user != null) {
             return AuthenticationResponse.builder()
-                    .errorMessage("Phone number existed")
+                    .errorMessage("Phone number existed, please use a different phone number!")
                     .build();
-
-        if (user == null) {
-            user = new User();
         }
 
+        user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.addRole(Role.USER);
@@ -231,9 +233,15 @@ public class UserService {
         );
 
 
-        if (!user.isActive()) {
+        if (user.getUserStatus() == UserStatus.INACTIVE) {
             return AuthenticationResponse.builder()
                     .errorMessage("User has not been activated!")
+                    .build();
+        }
+
+        if (user.getUserStatus() == UserStatus.BANNED) {
+            return AuthenticationResponse.builder()
+                    .errorMessage("User has been banned, please contact with admin for details!")
                     .build();
         }
 
@@ -314,7 +322,7 @@ public class UserService {
     }
 
     public void update(User user) {
-        if (user == null)
+        if (user == null || user.getId() == null)
             return;
 
         userRepository.save(user);
@@ -348,7 +356,7 @@ public class UserService {
 
     public boolean hasControlsOfRestaurant(Long restaurantId) {
         User currentUser = getCurrentUser();
-        if(currentUser == null)
+        if (currentUser == null)
             return false;
 
         if (currentUser.isAdmin())
@@ -360,5 +368,20 @@ public class UserService {
         }
 
         return false;
+    }
+
+
+    /**
+     * @return a list of admins (hide sensitive information)
+     */
+    public List<User> getAdminContacts() {
+        List<User> admins = getAllByRoles(List.of(Role.ADMIN));
+        return admins.stream().map(x -> User.builder()
+                .email(x.getEmail())
+                .firstName(x.getFirstName())
+                .middleName(x.getMiddleName())
+                .lastName(x.getLastName())
+                .phoneNumber(x.getPhoneNumber())
+                .build()).toList();
     }
 }

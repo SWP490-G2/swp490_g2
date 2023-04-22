@@ -9,6 +9,7 @@ import { CheckboxModule } from "primeng/checkbox";
 import { DropdownModule } from "primeng/dropdown";
 import { InputTextModule } from "primeng/inputtext";
 import { TableModule } from "primeng/table";
+import { DividerModule } from "primeng/divider";
 
 @NgModule({
   declarations: [BanUserComponent],
@@ -21,6 +22,7 @@ import { TableModule } from "primeng/table";
     CheckboxModule,
     ButtonModule,
     InputTextModule,
+    DividerModule,
   ],
 })
 export class BanUserModule {}

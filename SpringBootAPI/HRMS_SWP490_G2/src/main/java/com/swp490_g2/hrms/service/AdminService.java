@@ -5,6 +5,7 @@ import com.swp490_g2.hrms.config.AuthenticationFacade;
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import com.swp490_g2.hrms.entity.enums.Role;
+import com.swp490_g2.hrms.entity.enums.UserStatus;
 import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.SearchRequest;
@@ -201,5 +202,39 @@ public class AdminService {
                 .totalRestaurants(CommonUtils.toLong(objects[2]))
                 .totalRestaurantOpeningRequests(CommonUtils.toLong(objects[3]))
                 .build();
+    }
+
+    public String banUser(User user) {
+        allowAdminExecuteAction();
+        User existedUser = userService.getById(user.getId());
+        if (existedUser == null) {
+            return "\"User not existed!\"";
+        }
+
+        if (existedUser.isAdmin()) {
+            return "\"Admin cannot be banned!\"";
+        }
+
+        existedUser.setUserStatus(UserStatus.BANNED);
+        existedUser.setBannedReasons(user.getBannedReasons());
+        userService.update(existedUser);
+        return null;
+    }
+
+    public String unbanUser(User user) {
+        allowAdminExecuteAction();
+        User existedUser = userService.getById(user.getId());
+        if (existedUser == null) {
+            return "\"User not existed!\"";
+        }
+
+        if (existedUser.isAdmin()) {
+            return "\"Admin cannot be unbanned!\"";
+        }
+
+        existedUser.setUserStatus(UserStatus.ACTIVE);
+        existedUser.setBannedReasons(null);
+        userService.update(existedUser);
+        return null;
     }
 }

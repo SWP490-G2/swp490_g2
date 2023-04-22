@@ -80,5 +80,10 @@ public class UserController {
     public ResponseEntity<Boolean> hasControlsOfRestaurant(@PathVariable Long restaurantId) {
         return ResponseEntity.ok(userService.hasControlsOfRestaurant(restaurantId));
     }
+
+    @GetMapping("/get-admin-contacts")
+    public ResponseEntity<List<User>> getAdminContacts() {
+        return ResponseEntity.ok(userService.getAdminContacts());
+    }
 }
 

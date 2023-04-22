@@ -50,7 +50,8 @@ public class SecurityConfiguration {
                         "/address/**",
                         "/product/search/*",
                         "/product/get-top-most-ordered/*",
-                        "/restaurant/get-reviews-by-restaurant-id/*"
+                        "/restaurant/get-reviews-by-restaurant-id/*",
+                        "/user/get-admin-contacts"
                 )
                 .permitAll()
                 .anyRequest()

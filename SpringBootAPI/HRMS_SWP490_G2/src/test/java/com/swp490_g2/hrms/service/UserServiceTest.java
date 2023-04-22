@@ -4,6 +4,7 @@ import com.swp490_g2.hrms.HrmsSwp490G2Application;
 import com.swp490_g2.hrms.config.JwtService;
 import com.swp490_g2.hrms.entity.Token;
 import com.swp490_g2.hrms.entity.User;
+import com.swp490_g2.hrms.entity.enums.UserStatus;
 import com.swp490_g2.hrms.repositories.TokenRepository;
 import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.ChangePasswordRequest;
@@ -74,12 +75,12 @@ class UserServiceTest {
 
         User user = User.builder()
                 .email(email)
-                .isActive(true)
+                .userStatus(UserStatus.ACTIVE)
                 .build();
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         AuthenticationResponse response = userService.registerNewUserAccount(registerRequest);
-        assertEquals("User existed", response.getErrorMessage());
+        assertEquals("Email existed, please use a different email!", response.getErrorMessage());
 
         // Inactive user
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
@@ -88,7 +89,7 @@ class UserServiceTest {
         user.setPhoneNumber(phoneNumber);
         registerRequest.setPhoneNumber(phoneNumber);
         response = userService.registerNewUserAccount(registerRequest);
-        assertEquals("Phone number existed", response.getErrorMessage());
+        assertEquals("Phone number existed, please use a different phone number!", response.getErrorMessage());
 
         // FindByEmail return null
         String password = "password";

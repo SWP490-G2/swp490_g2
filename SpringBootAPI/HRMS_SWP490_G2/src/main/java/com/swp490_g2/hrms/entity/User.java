@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import com.swp490_g2.hrms.entity.enums.Role;
+import com.swp490_g2.hrms.entity.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -35,8 +36,13 @@ public class User extends BaseEntity implements UserDetails, Cloneable {
     @Column(nullable = false, unique = true)
     private String phoneNumber;
 
+    @Deprecated
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0", insertable = false)
     private boolean isActive;
+
+    @Column(columnDefinition = "nvarchar(16) default 'INACTIVE'", insertable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus = UserStatus.INACTIVE;
 
     @Column(columnDefinition = "VARCHAR(6)")
     private String verificationCode;
@@ -138,6 +144,11 @@ public class User extends BaseEntity implements UserDetails, Cloneable {
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private List<Notification> notifications = new ArrayList<>();
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String bannedReasons;
+
+    /// methods
 
     public boolean isAdmin() {
         return roles != null && roles.stream().anyMatch(role -> role == Role.ADMIN);

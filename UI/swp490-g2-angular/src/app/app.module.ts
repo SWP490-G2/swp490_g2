@@ -20,6 +20,7 @@ import { environment } from "src/environments/environment";
 import { API_BASE_URL } from "./ngswag/client";
 import { ScrollTopModule } from "primeng/scrolltop";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { OverlayPanelModule } from "primeng/overlaypanel";
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +36,7 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
     GoogleMapsModule,
     ScrollTopModule,
     ConfirmDialogModule,
+    OverlayPanelModule,
   ],
   providers: [
     MessageService,

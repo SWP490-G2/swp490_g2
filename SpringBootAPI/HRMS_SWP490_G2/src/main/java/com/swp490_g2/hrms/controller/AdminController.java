@@ -67,4 +67,14 @@ public class AdminController {
     public ResponseEntity<AdminPagesSummary> adminPages_getSummary() {
         return ResponseEntity.ok(adminService.adminPages_getSummary());
     }
+
+    @PutMapping("/ban-user")
+    public ResponseEntity<String> banUser(@RequestBody User user) {
+        return ResponseEntity.ok(adminService.banUser(user));
+    }
+
+    @PutMapping("/unban-user")
+    public ResponseEntity<String> unbanUser(@RequestBody User user) {
+        return ResponseEntity.ok(adminService.unbanUser(user));
+    }
 }

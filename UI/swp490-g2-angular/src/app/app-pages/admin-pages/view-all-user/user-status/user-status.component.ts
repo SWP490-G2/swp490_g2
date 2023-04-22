@@ -7,22 +7,28 @@ import { User } from "src/app/ngswag/client";
   styleUrls: ["./user-status.component.scss"],
 })
 export class UserStatusComponent {
-  @Input() users?: User;
+  @Input() user?: User;
 
-  get active():
+  get statusObject():
     | {
         text: string;
         severity: "success" | "danger";
       }
     | undefined {
-    switch (this.users?.active) {
-      case true:
+    switch (this.user?.userStatus) {
+      case "ACTIVE":
         return {
-          text: "Activated",
+          text: "Active",
           severity: "success",
         };
 
-      case false:
+      case "INACTIVE":
+        return {
+          text: "Inactive",
+          severity: "danger",
+        };
+
+      case "BANNED":
         return {
           text: "Banned",
           severity: "danger",

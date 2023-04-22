@@ -10,7 +10,7 @@ import { DateUtils } from "src/app/utils";
 })
 export class ViewUserDetailsComponent implements OnInit {
   userId: number;
-  users?: User;
+  user?: User;
   constructor(
     private $adminClient: AdminClient,
     private $route: ActivatedRoute,
@@ -25,12 +25,24 @@ export class ViewUserDetailsComponent implements OnInit {
   }
   refresh() {
     this.$userClient.getById(this.userId).subscribe((users) => {
-      this.users = users;
-      this.users.dateOfBirth = DateUtils.fromDB(this.users.dateOfBirth);
-      this.users.createdAt = DateUtils.fromDB(this.users.createdAt);
+      this.user = users;
+      this.user.dateOfBirth = DateUtils.fromDB(this.user.dateOfBirth);
+      this.user.createdAt = DateUtils.fromDB(this.user.createdAt);
     });
   }
 
   ngOnInit(): void {}
   items: MenuItem[];
+
+  get bannedReasons(): string[] {
+    if (!this.user || this.user.userStatus !== "BANNED") {
+      return [];
+    }
+
+    try {
+      return JSON.parse(this.user.bannedReasons!);
+    } catch (error) {
+      return [];
+    }
+  }
 }
