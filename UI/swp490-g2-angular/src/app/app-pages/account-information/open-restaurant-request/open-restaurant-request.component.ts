@@ -19,7 +19,6 @@ import {
 })
 export class OpenRestaurantRequestComponent implements OnInit {
   @ViewChild("form", { static: false }) form!: NgForm;
-
   restaurantId: number;
   restaurant = new Restaurant({
     address: new Address({
@@ -35,7 +34,7 @@ export class OpenRestaurantRequestComponent implements OnInit {
   restaurantCategories: any[];
   selectedCategories: RestaurantCategory[] = [];
   filteredCategories: RestaurantCategory[] = [];
-
+  showError = false;
   private _submitButtonDisabled = false;
   get submitButtonDisabled(): boolean {
     return !!this.form?.invalid || this._submitButtonDisabled;
@@ -62,8 +61,8 @@ export class OpenRestaurantRequestComponent implements OnInit {
       .subscribe((restaurantCategories) => {
         this.restaurantCategories = restaurantCategories;
       });
-  }
 
+  }
   refresh() {
     this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
   }

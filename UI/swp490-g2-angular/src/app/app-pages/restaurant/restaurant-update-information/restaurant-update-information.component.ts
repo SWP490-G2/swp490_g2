@@ -45,7 +45,7 @@ export class RestaurantUpdateInformationComponent
   banksData: any[] = [];
   selectedBank?: any;
   acqIds: number[] = [];
-
+  showError = false;
   constructor(
     private $restaurantClient: RestaurantClient,
     private $confirmation: ConfirmationService,
@@ -70,9 +70,14 @@ export class RestaurantUpdateInformationComponent
         })
       )
       .subscribe();
+    
+      
   }
 
   ngAfterViewInit(): void {
+    this.form.valueChanges!.subscribe(() => {
+      this.showError = !this.form.valid;
+    });
     this.$restaurantCategoryClient
       .getAll()
       .pipe(
