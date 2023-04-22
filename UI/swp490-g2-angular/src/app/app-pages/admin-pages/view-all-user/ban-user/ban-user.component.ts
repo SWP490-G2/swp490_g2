@@ -17,14 +17,17 @@ export class BanUserComponent implements OnInit {
 
   buyerReasons: string[] = [
     "This account violates the website's information security policy",
-    "This account is no longer active",
     "This account frequently uses inappropriate language",
+    "This account has repeatedly failed to pay for orders or has a history of non-payment",
   ];
 
   sellerReasons: string[] = [
-    "Seller violates regulations of business",
-    "Seller give the price not reasonable",
-    "Seller's Restaurant too many violates regulations",
+    "Seller is failed to obtain the necessary permits or licenses",
+    "Seller violates the Food Safety Standards",
+    "Seller attempts to manipulate buyer reviews",
+    "Seller engages in abusive behavior towards buyers",
+    "Seller is found to be engaged in money laundering",
+    "Seller is found to be engaged in tax evasion",
   ];
 
   constructor(
