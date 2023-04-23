@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { Title } from "@angular/platform-browser";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -17,13 +17,13 @@ import { CustomValidators } from "src/app/utils";
   templateUrl: "./forgot-pass-page.component.html",
   styleUrls: ["./forgot-pass-page.component.scss"],
 })
-export class ForgotPassPageComponent implements AfterViewInit {
+export class ForgotPassPageComponent implements AfterViewInit, OnInit {
   @ViewChild("form", { static: false }) form!: NgForm;
   codeValidatorDialogVisible = true;
   user?: User;
   verificationCodeShown = false;
   passwordsShown = false;
-
+  path: string;
   // To change title, we need to import title service
   constructor(
     $title: Title,
@@ -33,8 +33,12 @@ export class ForgotPassPageComponent implements AfterViewInit {
     private $message: MessageService
   ) {
     $title.setTitle("Forgot Password");
-  }
 
+  }
+  ngOnInit(): void {
+     this.path = this.$router.url;
+    console.log(this.path);
+  }
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.form.controls["emailOrPhoneNumber"].addValidators([
@@ -42,9 +46,10 @@ export class ForgotPassPageComponent implements AfterViewInit {
       ]);
       this.form.controls["emailOrPhoneNumber"].updateValueAndValidity();
     }, 0);
+
   }
 
-  async forgotPassword(): Promise<void> {}
+  async forgotPassword(): Promise<void> { }
 
   private _fgtPassButtonDisabled = false;
   get fgtPassButtonDisabled(): boolean {
@@ -72,7 +77,7 @@ export class ForgotPassPageComponent implements AfterViewInit {
           password: this.form.value.password,
         })
       )
-      .pipe(finalize(() => {}))
+      .pipe(finalize(() => { }))
       .subscribe((response: AuthenticationResponse) => {
         if (response.errorMessage) {
           this.$message.add({
