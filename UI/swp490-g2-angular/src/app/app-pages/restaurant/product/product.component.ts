@@ -23,6 +23,10 @@ export class ProductComponent implements OnInit {
   productCategoryNames: string[] = [];
   allCategories: ProductCategory[] = [];
 
+  countries: any[];
+  selectedProduct: any;
+  filteredProduct: any[];
+
   constructor(
     private $router: Router,
     private $route: ActivatedRoute,
@@ -141,5 +145,17 @@ export class ProductComponent implements OnInit {
     })
 
     this.productCategoryNames = [...this.product.categories.map(c => c.productCategoryName!)];
+  }
+
+  filterProducts(event){
+    let filtered: any[] = [];
+    let query = event.query;
+    for (let i = 0; i < this.allCategories.length; i++) {
+      let productCate = this.allCategories[i];
+      if (productCate.productCategoryName?.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+          filtered.push(productCate.productCategoryName);
+      }
+  }
+  this.filteredProduct = filtered;
   }
 }

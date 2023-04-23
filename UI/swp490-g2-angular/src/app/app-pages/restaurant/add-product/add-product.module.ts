@@ -6,17 +6,22 @@ import { ButtonModule } from "primeng/button";
 import { RippleModule } from "primeng/ripple";
 import { AddProductComponent } from "./add-product.component";
 import { AddProductRoutingModule } from "./add-product-routing.module";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { BrowserModule } from "@angular/platform-browser";
 
 @NgModule({
   declarations: [AddProductComponent],
   imports: [
     CommonModule,
+    BrowserModule,
+    FormsModule,
     ImageAttachmentModule,
     ButtonModule,
     RippleModule,
     AddProductRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AutoCompleteModule
   ],
 })
-export class AddProductModule {}
+export class AddProductModule { }

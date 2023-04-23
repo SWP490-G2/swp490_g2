@@ -114,13 +114,14 @@
       Categories
     </label>
     <div class="p-fluid mb-1">
-      <p-chips
-        [ngModel]="productCategoryNames"
-        (ngModelChange)="changeProductCategory($event)"
-        [ngModelOptions]="{ standalone: true }"
-      >
-      </p-chips>
+      <p-autoComplete [(ngModel)]="selectedProduct" 
+     [dropdown]="true" 
+     [suggestions]="filteredProduct"
+     name="name"
+    (completeMethod)="filterProducts($event)" >
+     </p-autoComplete>
     </div>
+
 
     <ng-container *ngIf="productId">
       <label class="block text-900 font-medium my-2"> Images </label>

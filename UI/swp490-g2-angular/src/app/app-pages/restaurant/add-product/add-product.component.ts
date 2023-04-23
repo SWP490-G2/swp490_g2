@@ -25,6 +25,8 @@ export class AddProductComponent implements OnInit {
   productForm: FormGroup;
   productImages: File[] = [];
   selectedCategories: any[] = [];
+
+
   constructor(
     private fb: FormBuilder,
     private $productClient: ProductClient,
@@ -50,7 +52,7 @@ export class AddProductComponent implements OnInit {
       .subscribe((categories) => {
         this.productCategories = categories;
         console.log(this.productCategories);
-        
+
         const categoryFormArray = this.productForm.get(
           "productCategories"
         ) as FormArray;
@@ -82,7 +84,7 @@ export class AddProductComponent implements OnInit {
             };
           },
         }));
-  
+
       // const productInformationRequest = this.productForm.value;
       const body = {
         productName: this.productForm.value.productName,
@@ -93,11 +95,12 @@ export class AddProductComponent implements OnInit {
       };
       console.log(body);
       this.$productClient
-        .addNewProduct(this.restaurantId ,new Product(body as any))
+        .addNewProduct(this.restaurantId, new Product(body as any))
         .subscribe((res) => console.log(res));
-    }else{
+    } else {
       console.log("Please fill out all required fields and ensure that the price and quantity are valid.");
     }
 
   }
+ 
 }

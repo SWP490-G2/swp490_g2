@@ -13,6 +13,7 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { InputNumberModule } from "primeng/inputnumber";
 import { ChipsModule } from "primeng/chips";
 import { RadioButtonModule } from "primeng/radiobutton";
+import { AutoCompleteModule } from "primeng/autocomplete";
 
 @NgModule({
   declarations: [ProductComponent],
@@ -28,7 +29,8 @@ import { RadioButtonModule } from "primeng/radiobutton";
     InputTextareaModule,
     InputNumberModule,
     ChipsModule,
-    RadioButtonModule
+    RadioButtonModule,
+    AutoCompleteModule,
   ],
   providers: [
   ]
