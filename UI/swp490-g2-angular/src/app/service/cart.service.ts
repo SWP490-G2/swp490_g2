@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, of, switchMap, tap } from "rxjs";
+import { BehaviorSubject, Observable, of, switchMap } from "rxjs";
 import {
   Order,
   OrderClient,

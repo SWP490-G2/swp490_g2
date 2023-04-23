@@ -10,6 +10,7 @@ import { ButtonModule } from "primeng/button";
 import { DialogModule } from "primeng/dialog";
 import { CheckboxModule } from "primeng/checkbox";
 import { RequestOpenListModule } from "../request-open-list.module";
+import { InputTextModule } from "primeng/inputtext";
 
 @NgModule({
   declarations: [RequestOpenDetailsComponent],
@@ -23,6 +24,7 @@ import { RequestOpenListModule } from "../request-open-list.module";
     DialogModule,
     CheckboxModule,
     RequestOpenListModule,
+    InputTextModule
   ],
 })
 export class RequestOpenDetailsModule {}

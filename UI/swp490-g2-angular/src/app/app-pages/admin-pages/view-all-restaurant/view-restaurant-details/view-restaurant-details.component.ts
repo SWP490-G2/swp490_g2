@@ -59,13 +59,12 @@ export class ViewRestaurantDetailsComponent implements OnInit {
 
     this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
 
-
-    this.$adminClient.getRestaurantById(this.restaurantId).subscribe((restaurant) => {
-      this.restaurant = restaurant;
-      this.restaurant.createdAt = DateUtils.fromDB(
-        this.restaurant.createdAt
-      );
-    });
+    this.$adminClient
+      .getRestaurantById(this.restaurantId)
+      .subscribe((restaurant) => {
+        this.restaurant = restaurant;
+        this.restaurant.createdAt = DateUtils.fromDB(this.restaurant.createdAt);
+      });
   }
 
   get fullAddress(): string {
@@ -85,5 +84,11 @@ export class ViewRestaurantDetailsComponent implements OnInit {
     if (!(restaurant as any).owners) return "";
 
     return (restaurant as any).owners.map((o) => o.email).join(", ");
+  }
+
+  getDeactivateReasons(): string[] {
+    if (!this.restaurant?.deactivateReasons) return [];
+
+    return JSON.parse(this.restaurant?.deactivateReasons);
   }
 }

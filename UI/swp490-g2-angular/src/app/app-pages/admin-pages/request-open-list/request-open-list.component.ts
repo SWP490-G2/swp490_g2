@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { AdminClient, Restaurant, User } from "src/app/ngswag/client";
-import { DateUtils } from "src/app/utils";
 
 @Component({
   selector: "app-request-open-list",

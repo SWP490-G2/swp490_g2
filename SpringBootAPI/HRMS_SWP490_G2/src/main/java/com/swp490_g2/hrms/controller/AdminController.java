@@ -95,4 +95,9 @@ public class AdminController {
     public ResponseEntity<String> promoteUserToAdmin(@PathVariable Long userId) {
         return ResponseEntity.ok(adminService.promoteUserToAdmin(userId));
     }
+
+    @PostMapping("/promote-user-to-buyer/{userId}")
+    public ResponseEntity<String> promoteUserToBuyer(@PathVariable Long userId) {
+        return ResponseEntity.ok(adminService.promoteUserToBuyer(userId));
+    }
 }

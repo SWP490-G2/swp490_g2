@@ -285,4 +285,17 @@ public class AdminService {
         userService.update(existedUser);
         return null;
     }
+
+    public String promoteUserToBuyer(Long userId) {
+        allowAdminExecuteAction();
+        User existedUser = userService.getById(userId);
+        if (existedUser == null) {
+            return "\"User not existed!\"";
+        }
+
+        existedUser.getRoles().add(Role.BUYER);
+        existedUser.setUserStatus(UserStatus.ACTIVE);
+        userService.update(existedUser);
+        return null;
+    }
 }

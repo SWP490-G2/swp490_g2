@@ -30,6 +30,8 @@ export class BanUserComponent implements OnInit {
     "Seller is found to be engaged in tax evasion",
   ];
 
+  otherReason = "";
+
   constructor(
     private $adminClient: AdminClient,
     private $route: ActivatedRoute,
@@ -74,5 +76,17 @@ export class BanUserComponent implements OnInit {
           .subscribe();
       },
     });
+  }
+
+  onOtherReasonChange(otherReason: string) {
+    this.selectedReasons = this.selectedReasons.filter(
+      (r) => r !== this.otherReason
+    );
+
+    if (otherReason) {
+      this.selectedReasons.push(otherReason);
+    }
+
+    this.otherReason = otherReason;
   }
 }

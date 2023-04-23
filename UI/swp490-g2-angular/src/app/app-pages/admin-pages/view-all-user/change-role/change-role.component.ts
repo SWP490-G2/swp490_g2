@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { finalize, of, switchMap } from "rxjs";
-import { RestaurantsComponent } from "src/app/app-pages/restaurants/restaurants.component";
 import {
   AdminClient,
   Restaurant,
@@ -40,6 +39,10 @@ export class ChangeRoleComponent implements OnInit {
     });
   }
   ngOnInit(): void {}
+
+  get isBuyer(): boolean {
+    return !!this.user?.roles?.includes("BUYER");
+  }
 
   get isSeller(): boolean {
     return !!this.user?.roles?.includes("SELLER");
@@ -109,15 +112,45 @@ export class ChangeRoleComponent implements OnInit {
           "Are you sure to promote this user to admin, this action cannot be undone?",
         accept: () => {
           if (!this.user?.id) return;
-          this.$adminClient.promoteUserToAdmin(this.user.id).subscribe(() => {
-            this.$message.add({
-              severity: "success",
-              summary: "Success",
-              detail: `Promote user [${this.user?.firstName}] to admin successfully!`,
-            });
+          this.$adminClient
+            .promoteUserToAdmin(this.user.id)
+            .subscribe((errorMessage) => {
+              if (errorMessage) throw new Error(errorMessage);
 
-            this.refresh();
-          });
+              this.$message.add({
+                severity: "success",
+                summary: "Success",
+                detail: `Promote user [${this.user?.firstName}] to admin successfully!`,
+              });
+
+              this.refresh();
+            });
+        },
+      });
+    }
+  }
+
+  openConfirmBuyer() {
+    if (!this.isBuyer) {
+      this.$confirmation.confirm({
+        header: "Confirmation",
+        message:
+          "Are you sure to activate this user to become buyer, this action cannot be undone?",
+        accept: () => {
+          if (!this.user?.id) return;
+          this.$adminClient
+            .promoteUserToBuyer(this.user.id)
+            .subscribe((errorMessage) => {
+              if (errorMessage) throw new Error(errorMessage);
+
+              this.$message.add({
+                severity: "success",
+                summary: "Success",
+                detail: `Promote user [${this.user?.firstName}] to buyer successfully!`,
+              });
+
+              this.refresh();
+            });
         },
       });
     }

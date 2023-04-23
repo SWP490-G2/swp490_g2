@@ -70,6 +70,25 @@
             </label>
           </div>
         </ng-container>
+
+        <p-divider></p-divider>
+
+        <div class="field-checkbox flex gap-2">
+          <p-checkbox
+            [value]="!!otherReason"
+            [ngModel]="[true]"
+            [readonly]="true"
+          ></p-checkbox>
+          <input
+            type="text"
+            pInputText
+            class="w-full"
+            placeholder="Other reason"
+            [ngModel]="otherReason"
+            (ngModelChange)="onOtherReasonChange($event)"
+          />
+        </div>
+
         <button
           [disabled]="!selectedReasons.length"
           pButton

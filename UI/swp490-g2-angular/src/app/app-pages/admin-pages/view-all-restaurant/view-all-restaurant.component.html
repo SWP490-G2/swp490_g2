@@ -152,3 +152,55 @@
     </ng-template>
   </p-table>
 </div>
+
+<p-dialog
+  header="Header"
+  [(visible)]="deactivateDialogVisible"
+  [modal]="true"
+  [style]="{ 'min-width': '50vw' }"
+  (onHide)="refresh()"
+>
+  <label for="reason" class="block text-900 font-medium my-4">
+    {{
+      "Why do you want to deactivate restaurant [" +
+        restaurant?.restaurantName +
+        "]?"
+    }}
+  </label>
+  <div
+    class="field-checkbox"
+    *ngFor="let reason of deactivateReasons; let i = index"
+  >
+    <p-checkbox
+      [value]="reason"
+      [(ngModel)]="selectedDeactivateReasons"
+      [inputId]="'deactivateReason' + i"
+    ></p-checkbox>
+    <label [for]="'deactivateReason' + i">
+      {{ reason }}
+    </label>
+  </div>
+  <div class="field-checkbox flex gap-2">
+    <p-checkbox
+      [value]="!!otherReason"
+      [ngModel]="[true]"
+      [readonly]="true"
+    ></p-checkbox>
+    <input
+      type="text"
+      pInputText
+      class="w-full"
+      placeholder="Other reason"
+      [ngModel]="otherReason"
+      (ngModelChange)="onOtherReasonChange($event)"
+    />
+  </div>
+  <button
+    pButton
+    pRipple
+    type="button"
+    label="Deactivate"
+    (click)="deactivateRestaurant()"
+    [disabled]="!selectedDeactivateReasons.length"
+  ></button>
+</p-dialog>

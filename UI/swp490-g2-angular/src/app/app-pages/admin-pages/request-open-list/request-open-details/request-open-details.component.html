@@ -118,6 +118,22 @@
                 ></p-checkbox>
                 <label [for]="'reason_' + i"> {{ reason }} </label>
               </div>
+
+              <div class="field-checkbox flex gap-2">
+                <p-checkbox
+                  [value]="!!otherReason"
+                  [ngModel]="[true]"
+                  [readonly]="true"
+                ></p-checkbox>
+                <input
+                  type="text"
+                  pInputText
+                  class="w-full"
+                  placeholder="Other reason"
+                  [ngModel]="otherReason"
+                  (ngModelChange)="onOtherReasonChange($event)"
+                />
+              </div>
             </div>
 
             <ng-template pTemplate="footer">

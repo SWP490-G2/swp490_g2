@@ -27,6 +27,8 @@ export class RequestOpenDetailsComponent implements OnInit {
     "This restaurant had banned in the past",
   ];
 
+  otherReason = "";
+
   constructor(
     private $adminClient: AdminClient,
     private $route: ActivatedRoute,
@@ -103,5 +105,17 @@ export class RequestOpenDetailsComponent implements OnInit {
     return JSON.parse(
       JSON.parse(this.requester?.rejectRestaurantOpeningRequestReasons)
     );
+  }
+
+  onOtherReasonChange(otherReason: string) {
+    this.selectedReasons = this.selectedReasons.filter(
+      (r) => r !== this.otherReason
+    );
+
+    if (otherReason) {
+      this.selectedReasons.push(otherReason);
+    }
+
+    this.otherReason = otherReason;
   }
 }

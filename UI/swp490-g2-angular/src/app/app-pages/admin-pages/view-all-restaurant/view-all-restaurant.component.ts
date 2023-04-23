@@ -1,15 +1,11 @@
-import { Component } from "@angular/core";
+import { Component, NgZone } from "@angular/core";
 import { ConfirmationService, MessageService } from "primeng/api";
-import { map, of, switchMap } from "rxjs";
+import { of, switchMap } from "rxjs";
 import {
-  AdminClient,
   Restaurant,
   RestaurantClient,
   SearchRestaurantsRequest,
-  UserClient,
 } from "src/app/ngswag/client";
-import { DateUtils } from "src/app/utils";
-import { AllRes } from "src/app/utils/allres";
 
 @Component({
   selector: "app-view-all-restaurant",
@@ -22,13 +18,25 @@ export class ViewAllRestaurantComponent {
   loading = true;
   activityValues: number[] = [0, 100];
   restaurants: Restaurant[] = [];
+  deactivateDialogVisible = false;
+  restaurant?: Restaurant;
+  selectedDeactivateReasons: string[] = [];
+  deactivateReasons: string[] = [
+    "Restaurant is failed to obtain the necessary permits or licenses",
+    "Restaurant violates the Food Safety Standards",
+    "Restaurant attempts to manipulate buyer reviews",
+    "Restaurant engages in abusive behavior towards buyers",
+    "Restaurant is found to be engaged in money laundering",
+    "Restaurant is found to be engaged in tax evasion",
+  ];
+
+  otherReason = "";
 
   constructor(
-    private $adminClient: AdminClient,
     private $confirmation: ConfirmationService,
-    private messageService: MessageService,
     private $restaurantClient: RestaurantClient,
-    private $userClient: UserClient
+    private $message: MessageService,
+    private $zone: NgZone
   ) {
     this.refresh();
   }
@@ -59,19 +67,32 @@ export class ViewAllRestaurantComponent {
 
     this.$confirmation.confirm({
       message: `Do you want to ${
-        intended ? "activate" : "disable"
+        intended ? "activate" : "deactivate"
       } this restaurant?`,
       header: "Toggle Status Confirmation",
       icon: "pi pi-info-circle",
       accept: () => {
-        this.$restaurantClient
-          .update(restaurant)
-          .pipe(
-            map((errorMessage) => {
-              if (errorMessage) throw new Error(errorMessage);
-            })
-          )
-          .subscribe();
+        if (!intended) {
+          this.deactivateDialogVisible = true;
+          this.restaurant = restaurant;
+        } else {
+          this.$restaurantClient
+            .update(restaurant)
+            .pipe(
+              switchMap((errorMessage) => {
+                if (errorMessage) throw new Error(errorMessage);
+
+                this.$message.add({
+                  severity: "success",
+                  summary: "Success",
+                  detail: "Restaurant activated successfully!",
+                });
+
+                return of(undefined);
+              })
+            )
+            .subscribe();
+        }
       },
       reject: () => {
         restaurant.active = !intended;
@@ -79,9 +100,49 @@ export class ViewAllRestaurantComponent {
     });
   }
 
+  deactivateRestaurant() {
+    if (!this.restaurant) return;
+
+    this.restaurant.active = false;
+    this.restaurant.deactivateReasons = JSON.stringify(
+      this.selectedDeactivateReasons
+    );
+
+    this.$restaurantClient
+      .update(this.restaurant)
+      .pipe(
+        switchMap((errorMessage) => {
+          if (errorMessage) throw new Error(errorMessage);
+
+          this.$message.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Restaurant deactivated successfully!",
+          });
+
+          this.deactivateDialogVisible = false;
+          this.refresh();
+          return of(undefined);
+        })
+      )
+      .subscribe();
+  }
+
   getOwners(restaurant: Restaurant): string {
     if (!(restaurant as any).owners) return "";
 
     return (restaurant as any).owners.map((o) => o.email).join(", ");
+  }
+
+  onOtherReasonChange(otherReason: string) {
+    this.selectedDeactivateReasons = this.selectedDeactivateReasons.filter(
+      (r) => r !== this.otherReason
+    );
+
+    if (otherReason) {
+      this.selectedDeactivateReasons.push(otherReason);
+    }
+
+    this.otherReason = otherReason;
   }
 }

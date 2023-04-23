@@ -62,6 +62,11 @@ public class Restaurant extends BaseEntity {
     @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
     private BankDetail bankDetail;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String deactivateReasons;
+
+    /// Methods
+
     public boolean isOpening() {
         if (openTime == null || closedTime == null) {
             return false;
