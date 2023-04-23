@@ -84,19 +84,22 @@ public class AdminService {
     }
 
     @Transactional
-    public void approveBecomeSeller(Long buyerId) {
+    public String approveBecomeSeller(Long buyerId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null || !currentUser.isAdmin()) {
-            return;
+            return "\"Current user is not admin!\"";
         }
 
         User requester = userService.getById(buyerId);
         if (requester == null)
-            return;
+            return "\"Invalid requester!\"";
 
         Restaurant restaurant = restaurantService.getById(requester.getRequestingRestaurant().getId());
         if (restaurant != null) {
-            addRestaurantForSeller(requester.getId(), restaurant.getId());
+            String errorMessage = addRestaurantForSeller(requester.getId(), restaurant.getId());
+            if (errorMessage != null)
+                return errorMessage;
+
             if (!requester.getRequestingRestaurant().isActive()) {
                 restaurant.setActive(true);
                 restaurantService.update(restaurant);
@@ -116,17 +119,23 @@ public class AdminService {
                 .build());
 
         userService.update(requester);
+        return null;
     }
 
     @Transactional
-    public void addRestaurantForSeller(Long sellerId, Long restaurantId) {
+    public String addRestaurantForSeller(Long sellerId, Long restaurantId) {
         User user = userService.getById(sellerId);
         if (!user.getRoles().contains(Role.SELLER)) {
             user.getRoles().add(Role.SELLER);
             userService.update(user);
         }
 
+        List<Restaurant> ownedRestaurants = restaurantService.getAllBySellerId(sellerId);
+        if (ownedRestaurants.stream().anyMatch(r -> r.getId().equals(restaurantId)))
+            return "\"The seller already owned this restaurant\"";
+
         userRepository.addRestaurantForSeller(sellerId, restaurantId);
+        return null;
     }
 
     @Transactional
@@ -170,9 +179,11 @@ public class AdminService {
 
         restaurant.setActive(true);
         Restaurant addedRestaurant = restaurantService.insert(restaurant);
-        restaurant.getOwners().forEach(owner -> {
-            addRestaurantForSeller(owner.getId(), addedRestaurant.getId());
-        });
+        for (User owner : restaurant.getOwners()) {
+            String errorMessage = addRestaurantForSeller(owner.getId(), addedRestaurant.getId());
+            if (errorMessage != null)
+                return errorMessage;
+        }
 
         return null;
     }
@@ -234,6 +245,43 @@ public class AdminService {
 
         existedUser.setUserStatus(UserStatus.ACTIVE);
         existedUser.setBannedReasons(null);
+        userService.update(existedUser);
+        return null;
+    }
+
+    @Transactional
+    public String removeRestaurantsByRestaurantIdsForSeller(Long sellerId, boolean removeAll, List<Long> restaurantIds) {
+        allowAdminExecuteAction();
+        User user = userService.getById(sellerId);
+        if (!user.getRoles().contains(Role.SELLER)) {
+            return "\"This user is not a seller!\"";
+        }
+
+        if (!removeAll) {
+            List<Restaurant> ownedRestaurants = restaurantService.getAllBySellerId(sellerId);
+            if (ownedRestaurants.stream().allMatch(r -> restaurantIds.contains(r.getId()))) {
+                user.getRoles().removeIf(r -> r.equals(Role.SELLER));
+                userService.update(user);
+            }
+
+            userRepository.removeRestaurantsByRestaurantIdsForSeller(sellerId, restaurantIds);
+        } else {
+            user.getRoles().removeIf(r -> r.equals(Role.SELLER));
+            userService.update(user);
+            userRepository.removeAllRestaurantsForSeller(sellerId);
+        }
+
+        return null;
+    }
+
+    public String promoteUserToAdmin(Long userId) {
+        allowAdminExecuteAction();
+        User existedUser = userService.getById(userId);
+        if (existedUser == null) {
+            return "\"User not existed!\"";
+        }
+
+        existedUser.getRoles().add(Role.ADMIN);
         userService.update(existedUser);
         return null;
     }

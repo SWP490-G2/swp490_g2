@@ -24,8 +24,8 @@ public class AdminController {
     }
 
     @PutMapping("/approve-become-seller/{buyerId}")
-    public void approveBecomeSeller(@PathVariable Long buyerId) {
-        adminService.approveBecomeSeller(buyerId);
+    public ResponseEntity<String> approveBecomeSeller(@PathVariable Long buyerId) {
+        return ResponseEntity.ok(adminService.approveBecomeSeller(buyerId));
     }
 
     @PutMapping("/reject-become-seller/{buyerId}")
@@ -76,5 +76,23 @@ public class AdminController {
     @PutMapping("/unban-user")
     public ResponseEntity<String> unbanUser(@RequestBody User user) {
         return ResponseEntity.ok(adminService.unbanUser(user));
+    }
+
+    @PostMapping("/add-restaurant-for-seller")
+    public ResponseEntity<String> addRestaurantForSeller(@RequestParam("seller-id") Long sellerId,
+                                                         @RequestParam("restaurant-id") Long restaurantId) {
+        return ResponseEntity.ok(adminService.addRestaurantForSeller(sellerId, restaurantId));
+    }
+
+    @DeleteMapping("/remove-restaurants-by-restaurant-ids-for-seller/{sellerId}")
+    public ResponseEntity<String> removeRestaurantsByRestaurantIdsForSeller(@PathVariable Long sellerId,
+                                                                            @RequestParam("remove-all") boolean removeAll,
+                                                                            @RequestBody List<Long> restaurantIds) {
+        return ResponseEntity.ok(adminService.removeRestaurantsByRestaurantIdsForSeller(sellerId, removeAll, restaurantIds));
+    }
+
+    @PostMapping("/promote-user-to-admin/{userId}")
+    public ResponseEntity<String> promoteUserToAdmin(@PathVariable Long userId) {
+        return ResponseEntity.ok(adminService.promoteUserToAdmin(userId));
     }
 }

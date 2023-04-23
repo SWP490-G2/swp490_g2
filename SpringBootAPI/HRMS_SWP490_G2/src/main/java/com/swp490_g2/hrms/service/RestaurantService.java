@@ -137,8 +137,6 @@ public class RestaurantService {
      * @param userId
      * @param fullText
      * @param includeInactive
-     * @param isOwner                  indicate whether the function loads restaurants that belong to the user with [userId]. Therefore,
-     *                                 userId != null when isOwner = true
      * @param searchRestaurantsRequest
      * @return
      */
@@ -146,11 +144,12 @@ public class RestaurantService {
                                    Long userId,
                                    String fullText,
                                    boolean includeInactive,
-                                   Boolean isOwner,
                                    SearchRestaurantsRequest searchRestaurantsRequest) {
         List<Restaurant> ownedRestaurants;
+
+        boolean isOwner = searchRestaurantsRequest != null && searchRestaurantsRequest.getOwner() != null;
         if (isOwner) {
-            ownedRestaurants = getAll();
+            ownedRestaurants = getAllBySellerId(searchRestaurantsRequest.getOwner().getId());
         } else {
             ownedRestaurants = new ArrayList<>();
         }

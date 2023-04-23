@@ -78,7 +78,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   @Input() navigateWhenClick = true;
   @Output() restaurantClick = new EventEmitter<Restaurant>();
   @Input() includeInactive = false;
-  @Input() isOwner = false;
+  @Input() owner?: User;
   restaurantCategoryId?: number;
 
   constructor(
@@ -142,16 +142,16 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
         size: this.pageSize,
       }),
       restaurantCategories: this.selectedCategories,
+      owner: this.owner,
     });
 
     let searchRestaurants: Observable<PageRestaurant>;
-    if (this.isOwner) {
+    if (this.owner) {
       searchRestaurants = this.$restaurantClient.search(
         undefined,
         undefined,
         this.restaurantFullText,
         this.includeInactive,
-        true,
         searchRestaurantsRequest
       );
     } else {
@@ -161,7 +161,6 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
             <number>this.currentUser?.id,
             this.restaurantFullText,
             this.includeInactive,
-            false,
             searchRestaurantsRequest
           )
         : this.$restaurantClient.search(
@@ -169,7 +168,6 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
             undefined,
             this.restaurantFullText,
             this.includeInactive,
-            false,
             searchRestaurantsRequest
           );
     }
@@ -177,7 +175,13 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
     searchRestaurants
       .pipe(
         switchMap((restaurants) => {
-          if (!restaurants.content || !restaurants.totalElements) return of();
+          if (
+            !restaurants.content ||
+            restaurants.totalElements === undefined ||
+            restaurants.totalElements === null
+          ) {
+            return of();
+          }
 
           this.restaurants = restaurants.content;
           this.totalRestaurants = restaurants.totalElements;
@@ -206,7 +210,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
               ),
             ];
           } else this.selectedCategories = [...this.categories];
-          
+
           return of();
         })
       )

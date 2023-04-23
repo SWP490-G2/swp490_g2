@@ -22,11 +22,11 @@
       </div>
     </div>
   </div>
-  <div *ngIf="restaurantsShown" class="mt-2">
+  <div *ngIf="user" class="mt-2">
     <app-restaurants
       [hasCurrentUser]="false"
       [hasPagination]="true"
-      [isOwner]="true"
+      [owner]="user"
       [includeInactive]="true"
     ></app-restaurants>
   </div>

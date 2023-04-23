@@ -42,10 +42,9 @@ public class RestaurantController {
                                                    @RequestParam(value = "user-id", required = false) Long userId,
                                                    @RequestParam(value = "full-text", required = false) String fullText,
                                                    @RequestParam(value = "include-inactive") boolean includeInactive,
-                                                   @RequestParam(value = "is-owner", required = false) Boolean isOwner,
                                                    @RequestBody SearchRestaurantsRequest searchRestaurantsRequest
     ) {
-        return ResponseEntity.ok(restaurantService.search(distance, userId, fullText, includeInactive, isOwner, searchRestaurantsRequest));
+        return ResponseEntity.ok(restaurantService.search(distance, userId, fullText, includeInactive, searchRestaurantsRequest));
     }
 
     @PutMapping("/review")

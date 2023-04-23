@@ -40,7 +40,6 @@ export class ViewAllRestaurantComponent {
         undefined,
         undefined,
         true,
-        false,
         new SearchRestaurantsRequest()
       )
       .pipe(

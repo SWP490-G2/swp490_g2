@@ -1,146 +1,157 @@
-<div class="surface-section px-6 py-5">
-  <button
-    pButton
-    pRipple
-    type="button"
-    label="Back"
-    icon="pi pi-arrow-left"
-    class="p-button-rounded p-button-info"
-    routerLink="../.."
-  ></button>
-</div>
-<div class="surface-section px-4 py-5 md:px-6 lg:px-8">
+<div class="surface-section flex flex-column gap-5 p-2 lg:p-5" *ngIf="user">
+  <div>
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Back"
+      icon="pi pi-arrow-left"
+      class="p-button-rounded p-button-info"
+      routerLink="../.."
+    ></button>
+  </div>
   <div
     class="flex align-items-start bg-gray-200 flex-column lg:flex-row lg:justify-content-between"
   >
     <div class="flex align-items-start flex-column md:flex-row">
       <div class="p-5">
         <span class="text-900 font-medium text-3xl">
-          Select Role For User {{ users?.firstName }} {{ users?.middleName }}
-          {{ users?.lastName }}</span
+          Select Role For User {{ user.firstName }} {{ user.middleName }}
+          {{ user.lastName }}</span
         >
         <div class="flex align-items-center flex-wrap text-sm">
           <div class="mr-5 mt-3">
             <span class="font-medium text-500"
-              >Select new Role for User {{ users?.firstName }}
-              {{ users?.middleName }} {{ users?.lastName }} to Update</span
+              >Select new Role for User {{ user.firstName }}
+              {{ user.middleName }} {{ user.lastName }} to Update</span
             >
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<div class="surface-section px-4 py-8 md:px-6 lg:px-8">
-  <div class="w-full">
+  <div class="flex flex-column gap-4">
     <div
-      class="surface-border border-1 p-3 border-round-top flex align-items-center cursor-pointer"
-      [ngClass]="{
-        'surface-card': username !== 0,
-        'bg-primary': username === 0
-      }"
-      (click)="username = 0"
+      class="surface-border border-1 p-3 border-round flex align-items-center cursor-pointer bg-primary"
     >
-      <p-radioButton
-        name="username"
-        [value]="0"
-        [(ngModel)]="username"
+      <p-checkbox
+        [value]="true"
+        [ngModel]="[true]"
         styleClass="mr-3"
-      ></p-radioButton>
+        [readonly]="true"
+      ></p-checkbox>
       <div class="mr-4 md:mr-8">
-        <div
-          class="font-medium mb-1"
-          [ngClass]="{
-            'text-900': username !== 0,
-            'bg-primary': username === 0
-          }"
-        >
-          Buyer
-        </div>
-        <span
-          class="text-sm"
-          [ngClass]="{
-            'text-600': username !== 0,
-            'bg-primary': username === 0
-          }"
-          >The person can only view all information of restaurant, meal in
-          restaurant, feedback to restaurant.</span
-        >
+        <div class="font-medium mb-1 bg-primary">Buyer</div>
+        <span class="text-sm bg-primary">
+          The person can only view all information of restaurant, meal in
+          restaurant, feedback to restaurant.
+        </span>
       </div>
       <div
-        class="border-round border-1 p-1 ml-auto flex flex-nowrap"
-        [ngClass]="{
-          'surface-50 text-600 surface-border': username !== 0,
-          'bg-primary-reverse': username === 0
-        }"
+        class="border-round border-1 p-1 ml-auto flex flex-nowrap bg-primary-reverse"
       >
         <i class="pi pi-shopping-bag"></i>
       </div>
     </div>
-    <div
-      class="surface-border border-1 border-top-none p-3 flex align-items-center cursor-pointer"
-      [ngClass]="{
-        'surface-card': username !== 1,
-        'bg-primary': username === 1
-      }"
-      (click)="username = 1"
-    >
-      <p-radioButton
-        name="username"
-        [value]="1"
-        [(ngModel)]="username"
-        styleClass="mr-3"
-      ></p-radioButton>
-      <div class="mr-4 md:mr-8">
-        <div
-          class="font-medium mb-1"
-          [ngClass]="{
-            'text-900': username !== 1,
-            'bg-primary': username === 1
-          }"
-        >
-          Seller
-        </div>
-        <span
-          class="text-sm"
-          [ngClass]="{
-            'text-600': username !== 1,
-            'bg-primary': username === 1
-          }"
-          >The person who can manage the restaurant which they owner, view all
-          order, feedback from buyers.</span
-        >
-      </div>
+
+    <!-- Seller Role -->
+    <div class="flex flex-column gap-2">
       <div
-        class="border-round border-1 p-1 ml-auto flex flex-nowrap"
+        class="surface-border border-1 border-round p-3 flex align-items-center cursor-pointer"
         [ngClass]="{
-          'surface-50 text-600 surface-border': username !== 1,
-          'bg-primary-reverse': username === 1
+          'surface-card': !isSeller,
+          'bg-primary': isSeller
         }"
+        (click)="openConfirmSeller()"
       >
-        <i class="pi pi-send"></i>
+        <p-checkbox
+          value="SELLER"
+          [(ngModel)]="user.roles"
+          styleClass="mr-3"
+          [readonly]="true"
+        ></p-checkbox>
+        <div class="mr-4 md:mr-8">
+          <div
+            class="font-medium mb-1"
+            [ngClass]="{
+              'text-900': !isSeller,
+              'bg-primary': isSeller
+            }"
+          >
+            Seller
+          </div>
+          <span
+            class="text-sm"
+            [ngClass]="{
+              'text-600': !isSeller,
+              'bg-primary': isSeller
+            }"
+          >
+            The person who can manage the restaurant which they owner, view all
+            order, feedback from buyers.
+          </span>
+        </div>
+        <div
+          class="border-round border-1 p-1 ml-auto flex flex-nowrap"
+          [ngClass]="{
+            'surface-50 text-600 surface-border': !isSeller,
+            'bg-primary-reverse': isSeller
+          }"
+        >
+          <i class="pi pi-send"></i>
+        </div>
       </div>
+
+      <p-accordion *ngIf="isSeller">
+        <p-accordionTab header="Owned restaurants">
+          <div class="p-2 flex flex-column gap-5">
+            <div class="flex flex-wrap gap-5">
+              <button
+                pButton
+                pRipple
+                label="Add restaurant"
+                (click)="openConfirmSeller(true)"
+              ></button>
+              <button
+                pButton
+                pRipple
+                label="Remove restaurant"
+                class="p-button-danger"
+                (click)="openConfirmSellerDeleteRestaurant()"
+              ></button>
+            </div>
+            <app-restaurants
+              [hasCurrentUser]="false"
+              [hasPagination]="true"
+              [owner]="user"
+              [includeInactive]="true"
+            ></app-restaurants>
+          </div>
+        </p-accordionTab>
+      </p-accordion>
     </div>
+
+    <!-- Admin -->
     <div
-      class="surface-border border-1 border-top-none p-3 border-round-bottom flex align-items-center cursor-pointer"
+      class="surface-border border-1 border-round p-3 border-round-bottom flex align-items-center cursor-pointer"
       [ngClass]="{
-        'surface-card': username !== 2,
-        'bg-primary': username === 2
+        'surface-card': !isAdmin,
+        'bg-primary': isAdmin
       }"
-      (click)="username = 2"
+      (click)="openConfirmAdmin()"
     >
-      <p-radioButton
-        name="username"
-        [value]="2"
-        [(ngModel)]="username"
+      <p-checkbox
+        value="ADMIN"
+        [(ngModel)]="user.roles"
         styleClass="mr-3"
-      ></p-radioButton>
+        [readonly]="true"
+      ></p-checkbox>
       <div class="mr-4 md:mr-8">
         <div
           class="font-medium mb-1"
           [ngClass]="{
-            'text-900': username !== 2,
-            'bg-primary': username === 2
+            'text-900': !isAdmin,
+            'bg-primary': isAdmin
           }"
         >
           Administrator
@@ -148,8 +159,8 @@
         <span
           class="text-sm"
           [ngClass]="{
-            'text-600': username !== 2,
-            'bg-primary': username === 2
+            'text-600': !isAdmin,
+            'bg-primary': isAdmin
           }"
           >The person who has the highest permission in the system.
           Administrators can track all for lower actors.</span
@@ -158,19 +169,50 @@
       <div
         class="border-round border-1 p-1 ml-auto flex flex-nowrap"
         [ngClass]="{
-          'surface-50 text-600 surface-border': username !== 2,
-          'bg-primary-reverse': username === 2
+          'surface-50 text-600 surface-border': !isAdmin,
+          'bg-primary-reverse': isAdmin
         }"
       >
         <i class="pi pi-shield"></i>
       </div>
     </div>
+    <button
+      pButton
+      pRipple
+      label="Save Changes"
+      icon="pi pi-check"
+      class="w-full"
+    ></button>
   </div>
-  <button
-    pButton
-    pRipple
-    label="Save Changes"
-    icon="pi pi-check"
-    class="w-full mt-4"
-  ></button>
 </div>
+
+<p-dialog
+  header="Choose a restaurant"
+  [(visible)]="displayRestaurantList"
+  [closable]="true"
+  [modal]="true"
+>
+  <app-restaurants
+    [hasCurrentUser]="false"
+    [hasPagination]="true"
+    [navigateWhenClick]="false"
+    [includeInactive]="true"
+    (restaurantClick)="selectRestaurant($event)"
+  ></app-restaurants>
+</p-dialog>
+
+<p-dialog
+  header="Choose a restaurant to delete"
+  [(visible)]="displayRestaurantListToDelete"
+  [closable]="true"
+  [modal]="true"
+>
+  <app-restaurants
+    [hasCurrentUser]="false"
+    [hasPagination]="true"
+    [owner]="user"
+    [navigateWhenClick]="false"
+    [includeInactive]="true"
+    (restaurantClick)="deleteRestaurant($event)"
+  ></app-restaurants>
+</p-dialog>

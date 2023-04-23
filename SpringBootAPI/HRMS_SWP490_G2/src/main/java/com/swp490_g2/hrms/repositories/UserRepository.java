@@ -49,4 +49,18 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             limit 1
             """, nativeQuery = true)
     Object adminPages_getSummary();
+
+    @Modifying
+    @Query(value = """
+            delete from user__restaurant
+            where userId = :sellerId and restaurantId in :restaurantIds
+            """, nativeQuery = true)
+    void removeRestaurantsByRestaurantIdsForSeller(Long sellerId, List<Long> restaurantIds);
+
+    @Modifying
+    @Query(value = """
+            delete from user__restaurant
+            where userId = :sellerId
+            """, nativeQuery = true)
+    void removeAllRestaurantsForSeller(Long sellerId);
 }
