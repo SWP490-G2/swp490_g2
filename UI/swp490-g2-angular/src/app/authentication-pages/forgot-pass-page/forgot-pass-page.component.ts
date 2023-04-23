@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { Title } from "@angular/platform-browser";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -23,7 +29,8 @@ export class ForgotPassPageComponent implements AfterViewInit, OnInit {
   user?: User;
   verificationCodeShown = false;
   passwordsShown = false;
-  path: string;
+  @Input() isChangingPassword = false;
+
   // To change title, we need to import title service
   constructor(
     $title: Title,
@@ -33,23 +40,28 @@ export class ForgotPassPageComponent implements AfterViewInit, OnInit {
     private $message: MessageService
   ) {
     $title.setTitle("Forgot Password");
-
   }
   ngOnInit(): void {
-     this.path = this.$router.url;
-    console.log(this.path);
+    if (this.isChangingPassword) {
+      this.verificationCodeShown = false;
+      this.passwordsShown = true;
+
+      this.$userClient.getCurrentUser().subscribe((user) => (this.user = user));
+    }
   }
+
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.form.controls["emailOrPhoneNumber"].addValidators([
-        Validators.required,
-      ]);
-      this.form.controls["emailOrPhoneNumber"].updateValueAndValidity();
+      if (!this.isChangingPassword) {
+        this.form.controls["emailOrPhoneNumber"].addValidators([
+          Validators.required,
+        ]);
+        this.form.controls["emailOrPhoneNumber"].updateValueAndValidity();
+      }
     }, 0);
-
   }
 
-  async forgotPassword(): Promise<void> { }
+  async forgotPassword(): Promise<void> {}
 
   private _fgtPassButtonDisabled = false;
   get fgtPassButtonDisabled(): boolean {
@@ -72,12 +84,15 @@ export class ForgotPassPageComponent implements AfterViewInit, OnInit {
     this.$userClient
       .changePassword(
         new ChangePasswordRequest({
-          emailOrPhoneNumber:
-            this.form.controls["emailOrPhoneNumber"].getRawValue(),
+          emailOrPhoneNumber: this.isChangingPassword
+            ? this.user?.email
+            : this.form.controls["emailOrPhoneNumber"].getRawValue(),
           password: this.form.value.password,
+          currentPasswordRequired: this.isChangingPassword,
+          currentPassword: this.form.value.currentPassword,
         })
       )
-      .pipe(finalize(() => { }))
+      .pipe(finalize(() => {}))
       .subscribe((response: AuthenticationResponse) => {
         if (response.errorMessage) {
           this.$message.add({
@@ -95,6 +110,9 @@ export class ForgotPassPageComponent implements AfterViewInit, OnInit {
           });
 
           this.form.control.disable();
+          this.$router.navigate([
+            this.isChangingPassword ? "/" : "/auth/login",
+          ]);
         }
       });
   }

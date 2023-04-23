@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { Title } from "@angular/platform-browser";
 import { Router, ActivatedRoute } from "@angular/router";
-import { finalize } from "rxjs";
+import { finalize, of, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import { User } from "src/app/ngswag/client";
 
@@ -48,15 +48,19 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this.$auth
       .login(this.form.value)
       .pipe(
+        switchMap((response) => {
+          if(response?.errorMessage) {
+            throw new Error(response.errorMessage)
+          }
+
+          this.$router.navigate(["/"]);
+          return of(undefined);
+        }),
         finalize(() => {
           this._loginButtonDisabled = false;
         })
       )
-      .subscribe({
-        next: () => {
-          this.$router.navigate(["/"]);
-        },
-      });
+      .subscribe();
   }
 
   private _loginButtonDisabled = false;

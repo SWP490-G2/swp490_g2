@@ -1,5 +1,12 @@
-import { AfterViewInit, Component } from "@angular/core";
-import { AbstractControl, ControlContainer, NgForm, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import { AfterViewInit, Component, Input } from "@angular/core";
+import {
+  AbstractControl,
+  ControlContainer,
+  NgForm,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from "@angular/forms";
 import { CustomValidators } from "src/app/utils";
 
 @Component({
@@ -9,13 +16,14 @@ import { CustomValidators } from "src/app/utils";
   viewProviders: [
     {
       provide: ControlContainer,
-      useExisting: NgForm
-    }
-  ]
+      useExisting: NgForm,
+    },
+  ],
 })
 export class PasswordFieldsComponent implements AfterViewInit {
-  constructor(public form: NgForm) {
-  }
+  @Input() isChangingPassword = false;
+
+  constructor(public form: NgForm) {}
 
   private initConfirmPasswordValidator(): void {
     /**

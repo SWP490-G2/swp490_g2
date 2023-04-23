@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -225,12 +226,18 @@ public class UserService {
                     .build();
         }
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        user.getEmail(),
-                        request.getPassword()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            user.getEmail(),
+                            request.getPassword()
+                    )
+            );
+        } catch (Exception e) {
+            return AuthenticationResponse.builder()
+                    .errorMessage("Invalid email or password!")
+                    .build();
+        }
 
 
         if (user.getUserStatus() == UserStatus.INACTIVE) {
@@ -282,11 +289,26 @@ public class UserService {
         User user = getByEmailOrPhoneNumber(request.getEmailOrPhoneNumber());
         if (user == null) {
             return AuthenticationResponse.builder()
-                    .errorMessage("\"User not existed\"")
+                    .errorMessage("User not existed!")
                     .build();
         }
 
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        String encodedNewPassword = passwordEncoder.encode(request.getPassword());
+        if (request.isCurrentPasswordRequired()) {
+            if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+                return AuthenticationResponse.builder()
+                        .errorMessage("Wrong current password!")
+                        .build();
+            }
+        }
+
+        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return AuthenticationResponse.builder()
+                    .errorMessage("The new password must be different from the current password!")
+                    .build();
+        }
+
+        user.setPassword(encodedNewPassword);
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         saveUserToken(savedUser, jwtToken);

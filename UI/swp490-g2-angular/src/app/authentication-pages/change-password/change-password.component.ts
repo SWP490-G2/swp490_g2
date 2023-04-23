@@ -1,16 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-change-password',
-  templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.scss']
+  selector: "app-change-password",
+  templateUrl: "./change-password.component.html",
+  styleUrls: ["./change-password.component.scss"],
 })
 export class ChangePasswordComponent implements OnInit {
+  constructor(private $router: Router) {}
 
-  constructor(private router: Router) { }
-
-  ngOnInit( ) {
-  }
-  
+  ngOnInit() {}
 }
