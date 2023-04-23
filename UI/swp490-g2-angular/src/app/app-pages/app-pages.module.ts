@@ -10,6 +10,7 @@ import { RestaurantModule } from "./restaurant/restaurant.module";
 import { AccountInformationModule } from "./account-information/account-information.module";
 import { CartPagesModule } from "./cart-pages/cart-pages.module";
 import { ToastModule } from "primeng/toast";
+import { ChangePasswordModule } from "../authentication-pages/change-password/change-password.module";
 
 @NgModule({
   declarations: [AppPagesComponent],

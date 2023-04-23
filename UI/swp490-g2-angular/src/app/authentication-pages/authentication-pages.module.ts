@@ -18,15 +18,15 @@ import { RegisterComponent } from "./register-page/register.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CodeValidatorComponent } from "./register-page/code-validator/code-validator.component";
 import { PasswordFieldsComponent } from "./register-page/password-fields/password-fields.component";
+import { ForgotPassPageModule } from "./forgot-pass-page/forgot-pass-page.module";
+import { PasswordFieldsModule } from "./register-page/password-fields/password-fields.module";
 
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegisterComponent,
-    ForgotPassPageComponent,
     CodeValidatorComponent,
-    PasswordFieldsComponent,
   ],
   imports: [
     CommonModule,
@@ -43,6 +43,8 @@ import { PasswordFieldsComponent } from "./register-page/password-fields/passwor
     ToastModule,
     DialogModule,
     ReactiveFormsModule,
+    ForgotPassPageModule,
+    PasswordFieldsModule
   ],
   providers: [
   ]

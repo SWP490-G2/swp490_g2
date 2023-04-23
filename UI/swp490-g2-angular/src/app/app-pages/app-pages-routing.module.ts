@@ -28,6 +28,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: "change-password",
+        loadChildren: () =>
+          import("../authentication-pages/change-password/change-password.module").then(
+            (m) => m.ChangePasswordModule
+          ),
+      },
+      {
         path: "admin-pages",
         loadChildren: () =>
           import("./admin-pages/admin-pages.module").then(
