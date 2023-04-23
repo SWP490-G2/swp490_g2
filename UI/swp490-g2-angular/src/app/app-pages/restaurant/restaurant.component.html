@@ -218,18 +218,28 @@
         style="min-height: 25rem"
       ></div> -->
         <div class="col-12 lg:col-9 flex flex-column flex-grow-1 gap-5">
-          <app-sort-by (sortedBy)="onSortByChange($event)"></app-sort-by>
+          <div class="flex justify-content-between">
+              <app-sort-by (sortedBy)="onSortByChange($event)"></app-sort-by>
+          <p-button
+          label="Manage revenue"
+          class="align-self-center"
+          routerLink="statistic"
+        ></p-button>
+          </div>
+        
           <app-product-list
             [products]="products"
             [restaurant]="restaurant"
             (productDeleted)="refresh()"
           ></app-product-list>
+          
           <p-button
             label="Load more"
             class="align-self-center"
             (onClick)="loadMore()"
             *ngIf="loadMoreShown"
           ></p-button>
+        
         </div>
       </div>
       <!-- <app-add-product></app-add-product> -->
