@@ -22,6 +22,13 @@ const routes: Routes = [
             (m) => m.AddProductModule
           ),
       },
+      {
+        path: "statistic",
+        loadChildren: () =>
+          import("./chart-revenue/chart-revenue.module").then(
+            (m) => m.ChartRevenueModule
+          ),
+      },
     ],
   },
 ];
