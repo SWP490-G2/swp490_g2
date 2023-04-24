@@ -152,6 +152,11 @@ public class ProductService {
             return "\"This product with name [" + product.getProductName() + "] is already existed.\"";
         }
 
+        for (ProductCategory category : product.getCategories()) {
+            ProductCategory savedCategory = productCategoryRepository.save(category);
+            category.setId(savedCategory.getId());
+        }
+
         Product addedProduct = productRepository.save(product);
         productRepository.addProductToRestaurant(restaurantId, addedProduct.getId());
         return null;
@@ -210,7 +215,7 @@ public class ProductService {
     }
 
     public List<Product> getTopMostOrdered(Long top) {
-        if(top == null || top <= 0)
+        if (top == null || top <= 0)
             top = 10L;
 
         List<Product> topProducts = productRepository.getTopMostOrdered(top);

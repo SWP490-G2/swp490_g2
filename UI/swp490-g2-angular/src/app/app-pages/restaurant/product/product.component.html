@@ -110,14 +110,27 @@
       <small class="text-danger"> Enter a valid product description </small>
     </div>
 
-    <label for="description" class="block text-900 font-medium my-2">
+    <label class="block text-900 font-medium my-2"> Existed Categories </label>
+
+    <div class="card flex align-items-center gap-2 flex-wrap">
+      <p-chip
+        *ngFor="let category of allCategories"
+        [label]="category.productCategoryName!"
+        pDraggable
+        (onDragStart)="dragStart(category)"
+        (onDragEnd)="dragEnd()"
+      ></p-chip>
+    </div>
+
+    <label for="description" class="block text-900 font-medium my-2 required">
       Categories
     </label>
-    <div class="p-fluid mb-1">
+    <div class="p-fluid mb-1" pDroppable (onDrop)="drop()">
       <p-chips
         [ngModel]="productCategoryNames"
         (ngModelChange)="changeProductCategory($event)"
         [ngModelOptions]="{ standalone: true }"
+        [required]="true"
       >
       </p-chips>
     </div>

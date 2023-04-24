@@ -3,7 +3,13 @@ import { NgForm } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { finalize, of, switchMap } from "rxjs";
-import { File, Product, ProductCategory, ProductCategoryClient, ProductClient } from "src/app/ngswag/client";
+import {
+  File,
+  Product,
+  ProductCategory,
+  ProductCategoryClient,
+  ProductClient,
+} from "src/app/ngswag/client";
 
 @Component({
   selector: "app-product",
@@ -17,11 +23,12 @@ export class ProductComponent implements OnInit {
   product: Product = new Product({
     categories: [],
     images: [],
-    productStatus: "ACTIVE"
+    productStatus: "ACTIVE",
   });
 
   productCategoryNames: string[] = [];
   allCategories: ProductCategory[] = [];
+  draggedProductCategory?: ProductCategory;
 
   constructor(
     private $router: Router,
@@ -44,11 +51,15 @@ export class ProductComponent implements OnInit {
       this.$productClient.getById(this.productId).subscribe((product) => {
         this.product = product;
         if (this.product.categories)
-          this.productCategoryNames = this.product.categories?.map(c => c.productCategoryName!);
+          this.productCategoryNames = this.product.categories?.map(
+            (c) => c.productCategoryName!
+          );
       });
     }
 
-    this.$productCategoryClient.getAllByRestaurantId(this.restaurantId).subscribe(categories => this.allCategories = categories);
+    this.$productCategoryClient
+      .getAllByRestaurantId(this.restaurantId)
+      .subscribe((categories) => (this.allCategories = categories));
   }
 
   ngOnInit(): void {
@@ -66,52 +77,56 @@ export class ProductComponent implements OnInit {
     this._submitButtonDisabled = true;
 
     const apiCall = this.productId
-      ? this.$productClient.update(this.product)
-        .pipe(switchMap(() => {
-          return of("");
-        }))
+      ? this.$productClient.update(this.product).pipe(
+          switchMap(() => {
+            return of("");
+          })
+        )
       : this.$productClient.addNewProduct(this.restaurantId, this.product);
 
+    apiCall
+      .pipe(
+        switchMap((errorMessage: string | undefined) => {
+          if (errorMessage) throw new Error(errorMessage);
 
-    apiCall.pipe(
-      switchMap((errorMessage: string | undefined) => {
-        if (errorMessage)
-          throw new Error(errorMessage);
-
-        this.$message.add({
-          severity: "success",
-          summary: "Success",
-          detail: `Product [${this.product.productName}] has been successfully ${this.productId ? "updated" : "added"}!`
-        });
-        this.$router.navigate([`/restaurant/${this.restaurantId}`])
-        return of();
-      }),
-      finalize(() => {
-        this._submitButtonDisabled = false;
-      })
-    ).subscribe();
-
+          this.$message.add({
+            severity: "success",
+            summary: "Success",
+            detail: `Product [${
+              this.product.productName
+            }] has been successfully ${this.productId ? "updated" : "added"}!`,
+          });
+          this.$router.navigate([`/restaurant/${this.restaurantId}`]);
+          return of();
+        }),
+        finalize(() => {
+          this._submitButtonDisabled = false;
+        })
+      )
+      .subscribe();
   }
 
   private _submitButtonDisabled = false;
   get submitButtonDisabled(): boolean {
-    return !!this.form?.invalid || this._submitButtonDisabled;
+    return (
+      !this.productCategoryNames.length ||
+      !!this.form?.invalid ||
+      this._submitButtonDisabled
+    );
   }
 
   deleteImage(image: File) {
-    if (!this.productId || !image.id)
-      return;
+    if (!this.productId || !image.id) return;
 
-    this.$productClient.deleteImage(this.productId, image.id)
-      .subscribe(() => {
-        this.$message.add({
-          severity: "success",
-          summary: "Success",
-          detail: "Image has been deleted successfully!"
-        });
-
-        this.refresh();
+    this.$productClient.deleteImage(this.productId, image.id).subscribe(() => {
+      this.$message.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Image has been deleted successfully!",
       });
+
+      this.refresh();
+    });
   }
 
   changeProductCategory(productCategoryNames: string[]) {
@@ -119,27 +134,56 @@ export class ProductComponent implements OnInit {
       return;
     }
 
-    this.product.categories.forEach(c => {
-      if (productCategoryNames.every(pcn => pcn !== c.productCategoryName)) {
-        this.product.categories = this.product.categories?.filter(c2 => c2.id !== c.id);
+    this.product.categories.forEach((c) => {
+      if (productCategoryNames.every((pcn) => pcn !== c.productCategoryName)) {
+        this.product.categories = this.product.categories?.filter(
+          (c2) => c2.id !== c.id
+        );
       }
     });
 
-    productCategoryNames.forEach(pcn => {
-      const category = this.allCategories?.find(c => c.productCategoryName === pcn)
+    productCategoryNames.forEach((pcn) => {
+      const category = this.allCategories?.find(
+        (c) => c.productCategoryName === pcn
+      );
       if (category) {
-        if (this.product.categories?.every(c => c.id !== category.id)) {
+        if (this.product.categories?.every((c) => c.id !== category.id)) {
           this.product.categories.push(category);
         }
       } else {
-        if (this.product.categories?.every(c => c.productCategoryName !== pcn)) {
-          this.product.categories?.push(new ProductCategory({
-            productCategoryName: pcn
-          }));
+        if (
+          this.product.categories?.every((c) => c.productCategoryName !== pcn)
+        ) {
+          this.product.categories?.push(
+            new ProductCategory({
+              productCategoryName: pcn,
+            })
+          );
         }
       }
-    })
+    });
 
-    this.productCategoryNames = [...this.product.categories.map(c => c.productCategoryName!)];
+    this.productCategoryNames = [
+      ...this.product.categories.map((c) => c.productCategoryName!),
+    ];
+  }
+
+  dragStart(category: ProductCategory) {
+    this.draggedProductCategory = category;
+  }
+
+  drop() {
+    if (
+      this.draggedProductCategory &&
+      !this.productCategoryNames.includes(this.draggedProductCategory.productCategoryName!)
+    ) {
+      this.productCategoryNames.push(this.draggedProductCategory.productCategoryName!);
+      this.changeProductCategory(this.productCategoryNames);
+      this.draggedProductCategory = undefined;
+    }
+  }
+
+  dragEnd() {
+    this.draggedProductCategory = undefined;
   }
 }
