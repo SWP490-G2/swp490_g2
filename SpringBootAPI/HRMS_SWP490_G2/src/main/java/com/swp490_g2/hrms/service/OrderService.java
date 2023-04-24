@@ -1,10 +1,11 @@
 package com.swp490_g2.hrms.service;
 
-import com.swp490_g2.hrms.common.utils.DateUtils;
 import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.OrderStatus;
 import com.swp490_g2.hrms.entity.enums.ProductStatus;
 import com.swp490_g2.hrms.entity.enums.Role;
+import com.swp490_g2.hrms.entity.enums.TimeLine;
+import com.swp490_g2.hrms.response.ReportIncomeOverTime;
 import com.swp490_g2.hrms.repositories.OrderRepository;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import lombok.Getter;
@@ -15,8 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,14 +78,14 @@ public class OrderService {
             }
         }
 
-        if(restaurant == null)
+        if (restaurant == null)
             return "\"This order does not belong to any restaurant!\"";
 
-        if(!restaurant.isActive())
+        if (!restaurant.isActive())
             return "\"Cannot order in this restaurant because it is inactive!\"";
 
-        if(restaurant.getOpenTime() != null && restaurant.getClosedTime() != null) {
-            if(!restaurant.isOpening())
+        if (restaurant.getOpenTime() != null && restaurant.getClosedTime() != null) {
+            if (!restaurant.isOpening())
                 return "\"This restaurant is currently closed, please wait until it is open!\"";
         }
 
@@ -346,5 +345,27 @@ public class OrderService {
                 PageRequest.of(searchRequest.getPage(),
                         searchRequest.getSize()),
                 orders.size());
+    }
+
+    public List<ReportIncomeOverTime> getReportIncomeOverTimeByRestaurantId(Long restaurantId, TimeLine timeLine, int offset) {
+        Restaurant restaurant = restaurantService.getById(restaurantId);
+        if (restaurant == null)
+            return null;
+
+        List<ReportIncomeOverTime> results = new ArrayList<>();
+        List<Object> sqlResults = new ArrayList<>();
+        if (timeLine == TimeLine.WEEK) {
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByWeek(restaurantId, offset);
+            sqlResults.forEach(sqlResult -> {
+                Object[] array = (Object[]) sqlResult;
+                results.add(ReportIncomeOverTime.builder()
+                        .totalOrders((Long) array[0])
+                        .totalSales((Double) array[1])
+                        .label(array[2].toString())
+                        .build());
+            });
+        }
+
+        return results;
     }
 }

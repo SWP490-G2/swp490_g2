@@ -1,5 +1,21 @@
-<h1 class="text-center p-3">Total revenue of the year</h1>
-<div class="px-8 py-3">
-  
-  <p-chart type="bar" [data]="basicData" [options]="basicOptions"></p-chart>
+<h1 class="text-center p-3">Income Over Time</h1>
+<div class="px-8 py-3 flex flex-column gap-5">
+  <p-chart type="line" [data]="data" [options]="options"></p-chart>
+
+  <div class="w-full flex justify-content-between">
+    <button
+      pButton
+      pRipple
+      label="Previous Week"
+      type="button"
+      (click)="prev()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      label="Next Week"
+      type="button"
+      (click)="next()"
+    ></button>
+  </div>
 </div>

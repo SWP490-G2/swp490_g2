@@ -2,6 +2,8 @@ package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.Order;
 import com.swp490_g2.hrms.entity.enums.Role;
+import com.swp490_g2.hrms.entity.enums.TimeLine;
+import com.swp490_g2.hrms.response.ReportIncomeOverTime;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,5 +58,12 @@ public class OrderController {
     @PostMapping("/get-all-by-role/{role}")
     public ResponseEntity<Page<Order>> getAllByRole(@PathVariable String role, @RequestBody SearchRequest searchRequest) {
         return ResponseEntity.ok(orderService.getAllByRole(Role.valueOf(role), searchRequest));
+    }
+
+    @GetMapping("/get-report-income-over-time/{restaurantId}")
+    public ResponseEntity<List<ReportIncomeOverTime>> getReportIncomeOverTimeByRestaurantId(@PathVariable Long restaurantId,
+                                                                                            @RequestParam TimeLine timeLine,
+                                                                                            @RequestParam int offset) {
+        return ResponseEntity.ok(orderService.getReportIncomeOverTimeByRestaurantId(restaurantId, timeLine, offset));
     }
 }
