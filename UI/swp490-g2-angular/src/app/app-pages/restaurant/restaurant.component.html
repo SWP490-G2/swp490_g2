@@ -61,6 +61,7 @@
                     *ngIf="fullAddress"
                   >
                     <div class="mr-5 mt-3">
+                      <i class="pi pi-map-marker"></i>
                       <span class="font-medium text-500">
                         {{ fullAddress }}
                       </span>
@@ -73,7 +74,7 @@
                   >
                     <div class="mr-5 mt-3">
                       <span class="font-medium text-500">
-                        Phone Number:
+                        <i class="pi pi-phone"></i>
                         <a [href]="'tel:' + restaurant.phoneNumber">
                           {{ restaurant.phoneNumber }}</a
                         >
