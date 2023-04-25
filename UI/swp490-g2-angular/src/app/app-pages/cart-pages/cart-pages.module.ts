@@ -12,6 +12,8 @@ import { InputNumberModule } from "primeng/inputnumber";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 import { ToastModule } from "primeng/toast";
 import { BadgeModule } from "primeng/badge";
+import { AccordionModule } from "primeng/accordion";
+import { InputTextareaModule } from "primeng/inputtextarea";
 
 @NgModule({
   declarations: [CartPagesComponent],
@@ -33,7 +35,9 @@ import { BadgeModule } from "primeng/badge";
     ImageAttachmentModule,
     ToastModule,
     BadgeModule,
+    AccordionModule,
+    InputTextareaModule,
   ],
-  exports: [CartPagesComponent]
+  exports: [CartPagesComponent],
 })
-export class CartPagesModule { }
+export class CartPagesModule {}

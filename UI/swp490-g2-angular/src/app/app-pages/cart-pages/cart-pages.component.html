@@ -80,7 +80,22 @@
             <div
               class="flex align-items-center justify-content-between mt-2 gap-5"
             >
-              <i class="pi pi-file-edit">Note</i>
+              <div class="mt-4">
+                <p-accordion>
+                  <p-accordionTab header="Note">
+                    <span class="p-float-label">
+                      <textarea
+                        id="float-input"
+                        rows="5"
+                        cols="30"
+                        pInputTextarea
+                      ></textarea>
+                      <label for="float-input">Summary</label>
+                    </span>
+                  </p-accordionTab>
+                </p-accordion>
+              </div>
+
               <p-inputNumber
                 [showButtons]="true"
                 buttonLayout="horizontal"
