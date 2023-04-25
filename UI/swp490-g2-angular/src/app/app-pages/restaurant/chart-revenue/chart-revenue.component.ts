@@ -54,7 +54,7 @@ export class ChartRevenueComponent implements OnInit {
         },
         {
           type: "bar",
-          label: "# of Orders",
+          label: "Number of Orders",
           backgroundColor: documentStyle.getPropertyValue("--green-500"),
           data: [21, 84, 24, 75, 37, 65, 34],
           borderColor: "white",
