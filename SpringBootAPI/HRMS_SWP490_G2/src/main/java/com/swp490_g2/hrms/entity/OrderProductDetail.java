@@ -18,9 +18,12 @@ public class OrderProductDetail extends BaseEntity {
     @Column(nullable = false)
     private double price;
 
-    @Column
+    @Column(columnDefinition = "LONGTEXT")
     private String note;
 
     @ManyToOne(optional = false)
     private Product product;
+
+
+
 }
