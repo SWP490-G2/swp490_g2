@@ -5,9 +5,9 @@ import com.swp490_g2.hrms.entity.enums.OrderStatus;
 import com.swp490_g2.hrms.entity.enums.ProductStatus;
 import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.entity.enums.TimeLine;
-import com.swp490_g2.hrms.response.ReportIncomeOverTime;
 import com.swp490_g2.hrms.repositories.OrderRepository;
 import com.swp490_g2.hrms.requests.SearchRequest;
+import com.swp490_g2.hrms.response.ReportIncomeOverTime;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -367,5 +368,19 @@ public class OrderService {
         }
 
         return results;
+    }
+
+    public boolean checkUserEverOrderedInRestaurant(Long userId, Long restaurantId) {
+        boolean result = false;
+        List<Order> orderList = orderRepository.getOrderByUSerIdAndRestaurantId(userId, restaurantId);
+        if(!CollectionUtils.isEmpty(orderList)) {
+            for (Order order: orderList) {
+                if(order.getOrderStatus() == OrderStatus.COMPLETED) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 }

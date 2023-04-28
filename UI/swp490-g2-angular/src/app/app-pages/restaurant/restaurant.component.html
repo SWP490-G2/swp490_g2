@@ -259,11 +259,12 @@
 <div class="surface-section px-4 py-8 md:px-6 lg:px-8 mt-5">
   <div class="grid">
     <div class="col-12 lg:col-4">
-      <ng-container *ngIf="user">
+      <ng-container *ngIf="user && canReview">
         <div class="font-medium text-xl text-900 mb-3">
           Share your experience
         </div>
         <button
+        
           pButton
           pRipple
           label="Write a review"

@@ -66,4 +66,10 @@ public class OrderController {
                                                                                             @RequestParam int offset) {
         return ResponseEntity.ok(orderService.getReportIncomeOverTimeByRestaurantId(restaurantId, timeLine, offset));
     }
+
+    @GetMapping("/check-user-ever-ordered-in-restaurant")
+    public boolean checkUserEverOrderedInRestaurant(@RequestParam Long userId, @RequestParam Long restaurantId) {
+        return orderService.checkUserEverOrderedInRestaurant(userId, restaurantId);
+    }
+
 }

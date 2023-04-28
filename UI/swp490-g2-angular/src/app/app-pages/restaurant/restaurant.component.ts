@@ -15,6 +15,7 @@ import {
   AdminClient,
   File,
   FilterRequest,
+  OrderClient,
   PageProduct,
   Product,
   ProductCategory,
@@ -78,6 +79,7 @@ export class RestaurantComponent implements OnInit {
   });
 
   totalReviewRecords = 0;
+  canReview = false;
 
   constructor(
     private $route: ActivatedRoute,
@@ -87,6 +89,7 @@ export class RestaurantComponent implements OnInit {
     private $productClient: ProductClient,
     private $userClient: UserClient,
     private $adminClient: AdminClient,
+    private $orderClient: OrderClient,
     private $title: Title,
     private router: Router,
     private $message: MessageService
@@ -105,8 +108,6 @@ export class RestaurantComponent implements OnInit {
       { label: "Add New", icon: "pi pi-fw pi-plus" },
       { label: "Remove", icon: "pi pi-fw pi-minus" },
     ];
-
-   
   }
 
   refresh() {
@@ -158,6 +159,13 @@ export class RestaurantComponent implements OnInit {
       .subscribe();
 
     this.refreshReviews();
+
+    if(this.user) {
+      this.$orderClient.checkUserEverOrderedInRestaurant(this.user?.id!, this.restaurantId)
+      .subscribe((result) => {
+        this.canReview = result;
+      });
+    }
   }
 
   private refreshReviews() {
