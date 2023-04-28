@@ -11,14 +11,14 @@ import lombok.*;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "bank_detail")
-@AttributeOverride(name = "id", column = @Column(name = "bankDetail"))
+@AttributeOverride(name = "id", column = @Column(name = "bankDetailId"))
 public class BankDetail extends BaseEntity{
     @Column(nullable = false)
-    private Long accountNumber;
+    private String accountNumber;
 
     @Column(nullable = false)
     private String accountName;
 
     @Column(nullable = false)
-    private Long acqId;
+    private String acqId;
 }

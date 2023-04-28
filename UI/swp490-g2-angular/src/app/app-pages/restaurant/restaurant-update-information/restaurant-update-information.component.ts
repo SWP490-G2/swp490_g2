@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  NgZone,
   OnInit,
   Output,
   ViewChild,
@@ -51,7 +52,8 @@ export class RestaurantUpdateInformationComponent
     private $confirmation: ConfirmationService,
     private $message: MessageService,
     private $restaurantCategoryClient: RestaurantCategoryClient,
-    private $http: HttpClient
+    private $http: HttpClient,
+    private $zone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -65,13 +67,20 @@ export class RestaurantUpdateInformationComponent
           if (!res?.data) return of(undefined);
 
           this.banksData = res.data;
+          // console.log(this.banksData);
+
+          if (this.restaurant.bankDetail?.acqId) {
+            setTimeout(() => {
+              this.selectedBank = this.banksData.find(
+                (x) => x.bin === this.restaurant.bankDetail?.acqId
+              );
+            });
+          }
 
           return of(undefined);
         })
       )
       .subscribe();
-    
-      
   }
 
   ngAfterViewInit(): void {
@@ -115,7 +124,7 @@ export class RestaurantUpdateInformationComponent
     }
 
     if (this.selectedBank && this.restaurant.bankDetail) {
-      this.restaurant.bankDetail.acqId = parseInt(this.selectedBank.bin);
+      this.restaurant.bankDetail.acqId = this.selectedBank.bin;
     }
 
     this.$restaurantClient
