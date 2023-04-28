@@ -144,8 +144,10 @@ public class OrderService {
             return "\"Order [id=%d] is not valid!\"";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
-        if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
-            return "\"Current user does not have permission to do this action!\"";
+        if (!currentUser.isAdmin()) {
+            if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+                return "\"Current user does not have permission to do this action!\"";
+        }
 
         if (!orderRepository.existsById(orderId))
             return "\"Order [id=%d] does not exist!\"".formatted(orderId);
@@ -170,6 +172,44 @@ public class OrderService {
         return null;
     }
 
+    public String cancel(Long orderId) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null)
+            return "\"Current user does not have permission to do this action!\"";
+
+        Restaurant restaurant = getRestaurantByOrderId(orderId);
+        if (restaurant == null)
+            return "\"Order [id=%d] is not valid!\"";
+
+        List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
+//        if (!currentUser.isAdmin()) {
+//            if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+//                return "\"Current user does not have permission to do this action!\"";
+//        }
+
+        if (!orderRepository.existsById(orderId))
+            return "\"Order [id=%d] does not exist!\"".formatted(orderId);
+
+        Order order = getById(orderId);
+        if (order.getOrderStatus() != OrderStatus.PENDING)
+            return "\"Cannot change order status from [%s] to [REJECTED]!\"".formatted(order.getOrderStatus());
+
+        order.setOrderStatus(OrderStatus.CANCELLED);
+        order.setModifiedBy(currentUser.getId());
+        orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("/order-management")
+                        .message("Order #%d has been cancelled by buyer [%s]!".formatted(order.getId(), currentUser.getFullName()))
+                        .toUsers(owners)
+                        .build()
+        );
+
+        return null;
+    }
+
     public String reject(Long orderId) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
@@ -180,8 +220,10 @@ public class OrderService {
             return "\"Order [id=%d] is not valid!\"";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
-        if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
-            return "\"Current user does not have permission to do this action!\"";
+        if (!currentUser.isAdmin()) {
+            if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+                return "\"Current user does not have permission to do this action!\"";
+        }
 
         if (!orderRepository.existsById(orderId))
             return "\"Order [id=%d] does not exist!\"".formatted(orderId);
@@ -216,8 +258,10 @@ public class OrderService {
             return "\"Order [id=%d] is not valid!\"";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
-        if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
-            return "\"Current user does not have permission to do this action!\"";
+        if (!currentUser.isAdmin()) {
+            if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+                return "\"Current user does not have permission to do this action!\"";
+        }
 
         if (!orderRepository.existsById(orderId))
             return "\"Order [id=%d] does not exist!\"".formatted(orderId);
@@ -253,8 +297,10 @@ public class OrderService {
             return "\"Order [id=%d] is not valid!\"";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
-        if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
-            return "\"Current user does not have permission to do this action!\"";
+        if (!currentUser.isAdmin()) {
+            if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+                return "\"Current user does not have permission to do this action!\"";
+        }
 
         if (!orderRepository.existsById(orderId))
             return "\"Order [id=%d] does not exist!\"".formatted(orderId);
@@ -289,8 +335,10 @@ public class OrderService {
             return "\"Order [id=%d] is not valid!\"";
 
         List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
-        if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
-            return "\"Current user does not have permission to do this action!\"";
+        if (!currentUser.isAdmin()) {
+            if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+                return "\"Current user does not have permission to do this action!\"";
+        }
 
         if (!orderRepository.existsById(orderId))
             return "\"Order [id=%d] does not exist!\"".formatted(orderId);
@@ -336,6 +384,9 @@ public class OrderService {
         }
 
         orders = orders.stream().sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt())).toList();
+        orders.forEach(order -> {
+            order.setRestaurant(restaurantService.getByProductId(order.getOrderProductDetails().get(0).getProduct().getId()));
+        });
 
         return new PageImpl<>(orders.subList(
                 searchRequest.getSize() * searchRequest.getPage(),

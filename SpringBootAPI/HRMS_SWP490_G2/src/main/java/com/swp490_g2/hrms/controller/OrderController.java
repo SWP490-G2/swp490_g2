@@ -50,6 +50,11 @@ public class OrderController {
         return ResponseEntity.ok(orderService.reject(orderId));
     }
 
+    @PutMapping("/cancel/{orderId}")
+    public ResponseEntity<String> cancel(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.cancel(orderId));
+    }
+
     @PutMapping("/deliver/{orderId}")
     public ResponseEntity<String> delivering(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.deliver(orderId));

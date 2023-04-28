@@ -25,6 +25,7 @@
         <th>Total Order</th>
         <th>Total Price</th>
         <th>Order Status</th>
+        <th>Restaurant</th>
         <th>Action</th>
       </tr>
     </ng-template>
@@ -57,6 +58,7 @@
             [severity]="getSeverity(order.orderStatus)"
           ></p-tag>
         </td>
+        <td>{{ order?.restaurant?.restaurantName }}</td>
         <td>
           <p-button
             (click)="showDialog(order.id)"
@@ -77,11 +79,11 @@
 
 <p-dialog
   [header]="
-    selectedRestaurant?.restaurantName
+    selectedOrder?.restaurant?.restaurantName
       ? 'Orders #' +
         selectedOrder?.id +
         ' [' +
-        selectedRestaurant?.restaurantName +
+        selectedOrder?.restaurant?.restaurantName +
         ']'
       : 'Order detail'
   "
@@ -96,11 +98,13 @@
     <div>
       <div>
         <strong>Account Number: </strong>
-        <span> {{ selectedRestaurant?.bankDetail?.accountNumber }} </span>
+        <span>
+          {{ selectedOrder?.restaurant?.bankDetail?.accountNumber }}
+        </span>
       </div>
       <div>
         <strong>Account Name: </strong>
-        <span> {{ selectedRestaurant?.bankDetail?.accountName }} </span>
+        <span> {{ selectedOrder?.restaurant?.bankDetail?.accountName }} </span>
       </div>
       <div>
         <strong>Total amount: </strong>
@@ -146,6 +150,16 @@
       </div>
     </div>
 
+    <div class="grid w-full">
+      <div class="col">
+        <p-button
+          label="Cancel"
+          icon="pi pi-times"
+          styleClass="p-button-danger w-full"
+          (onClick)="cancel()"
+        ></p-button>
+      </div>
+    </div>
     <div class="grid w-full" *ngIf="!isBuyer">
       <ng-container *ngIf="selectedOrder?.orderStatus === 'PENDING'">
         <div class="col">

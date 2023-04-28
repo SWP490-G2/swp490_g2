@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, Input, OnInit } from "@angular/core";
-import { MessageService } from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { map, of, switchMap } from "rxjs";
 import {
   Order,
@@ -8,6 +8,8 @@ import {
   Restaurant,
   RestaurantClient,
   SearchRequest,
+  User,
+  UserClient,
 } from "src/app/ngswag/client";
 
 @Component({
@@ -29,15 +31,17 @@ export class OrderManagementComponent implements OnInit {
   loading = true;
 
   @Input() isBuyer = false;
-  selectedRestaurant?: Restaurant;
   qrData?: string;
   bankImagePath?: string;
+  currentUser?: User;
 
   constructor(
     private $orderClient: OrderClient,
     private $message: MessageService,
     private $restaurantClient: RestaurantClient,
-    private $http: HttpClient
+    private $http: HttpClient,
+    private $userClient: UserClient,
+    private $confirmation: ConfirmationService
   ) {}
 
   ngOnInit() {
@@ -46,9 +50,22 @@ export class OrderManagementComponent implements OnInit {
 
   refresh() {
     this.loading = true;
-    return this.$orderClient
-      .getAllByRole(this.isBuyer ? "BUYER" : "SELLER", this.searchRequest)
+
+    this.$userClient
+      .getCurrentUser()
       .pipe(
+        switchMap((user) => {
+          this.currentUser = user;
+
+          let role: string;
+          if (this.isBuyer) role = "BUYER";
+          else {
+            if (this.currentUser.admin) role = "ADMIN";
+            else role = "SELLER";
+          }
+
+          return this.$orderClient.getAllByRole(role, this.searchRequest);
+        }),
         map((res) => {
           this.totalRecords = res.totalElements!;
           if (res.content) this.orders = res.content;
@@ -78,6 +95,8 @@ export class OrderManagementComponent implements OnInit {
         return "danger";
       case "REJECTED":
         return "danger";
+      case "CANCELLED":
+        return "warning";
       default:
         return "";
     }
@@ -91,48 +110,45 @@ export class OrderManagementComponent implements OnInit {
       this.selectedOrder?.orderProductDetails?.length &&
       this.selectedOrder.orderProductDetails[0].product?.id
     ) {
-      this.$restaurantClient
-        .getByProductId(this.selectedOrder.orderProductDetails[0].product.id)
-        .pipe(
-          switchMap((r) => {
-            this.selectedRestaurant = r;
-            if (
-              r.bankDetail?.accountName &&
-              r.bankDetail?.accountNumber &&
-              r.bankDetail?.acqId
-            ) {
-              return this.$http.post<any>(
-                "https://api.vietqr.io/v2/generate",
-                {
-                  accountNo: r.bankDetail.accountNumber + "",
-                  accountName: r.bankDetail.accountName,
-                  acqId: r.bankDetail.acqId + "",
-                  addInfo: `Order ${this.selectedOrder?.id}`,
-                  amount: this.getOrderTotalPrice(this.selectedOrder) + "",
-                  template: "compact",
-                },
-                {
-                  headers: {
-                    "x-client-id": "4949cfcc-9672-4606-8482-d76dd49eddf0",
-                    "x-api-key": "6bc45654-fcd3-48ab-b312-3925213c0193",
-                    "Content-Type": "application/json",
-                  },
-                }
-              );
+      const r = this.selectedOrder.restaurant;
+      if (!r) return;
+
+      if (
+        r.bankDetail?.accountName &&
+        r.bankDetail?.accountNumber &&
+        r.bankDetail?.acqId
+      ) {
+        this.$http
+          .post<any>(
+            "https://api.vietqr.io/v2/generate",
+            {
+              accountNo: r.bankDetail.accountNumber + "",
+              accountName: r.bankDetail.accountName,
+              acqId: r.bankDetail.acqId + "",
+              addInfo: `Order ${this.selectedOrder?.id}`,
+              amount: this.getOrderTotalPrice(this.selectedOrder) + "",
+              template: "compact",
+            },
+            {
+              headers: {
+                "x-client-id": "4949cfcc-9672-4606-8482-d76dd49eddf0",
+                "x-api-key": "6bc45654-fcd3-48ab-b312-3925213c0193",
+                "Content-Type": "application/json",
+              },
             }
+          )
+          .pipe(
+            switchMap((res) => {
+              if (!res) return of(undefined);
 
-            return of(undefined);
-          }),
-          switchMap((res) => {
-            if (!res) return of(undefined);
+              if (res?.data?.qrCode) this.qrData = res.data.qrCode;
+              this.bankImagePath = res.data.qrDataURL;
 
-            if (res?.data?.qrCode) this.qrData = res.data.qrCode;
-            this.bankImagePath = res.data.qrDataURL;
-
-            return of(undefined);
-          })
-        )
-        .subscribe();
+              return of(undefined);
+            })
+          )
+          .subscribe();
+      }
     }
   }
 
@@ -144,120 +160,189 @@ export class OrderManagementComponent implements OnInit {
   }
 
   accept() {
-    if (!this.selectedOrder?.id) return;
+    this.$confirmation.confirm({
+      message: "Do you want to accept this order?",
+      header: "Accept",
+      accept: () => {
+        if (!this.selectedOrder?.id) return;
 
-    this.$orderClient
-      .accept(this.selectedOrder.id)
-      .pipe(
-        map((errorMessage) => {
-          if (errorMessage) throw new Error(errorMessage);
+        this.$orderClient
+          .accept(this.selectedOrder.id)
+          .pipe(
+            map((errorMessage) => {
+              if (errorMessage) throw new Error(errorMessage);
 
-          this.$message.add({
-            severity: "success",
-            summary: "Accepted",
-            detail: `Order #${this.selectedOrder?.id} has been accepted!`,
-          });
+              this.$message.add({
+                severity: "success",
+                summary: "Accepted",
+                detail: `Order #${this.selectedOrder?.id} has been accepted!`,
+              });
 
-          this.visible = false;
-          this.refresh();
-        })
-      )
-      .subscribe();
+              this.visible = false;
+              this.refresh();
+            })
+          )
+          .subscribe();
+      },
+    });
   }
 
   reject() {
-    if (!this.selectedOrder?.id) return;
+    this.$confirmation.confirm({
+      message: "Do you want to reject this order?",
+      header: "Reject",
+      accept: () => {
+        if (!this.selectedOrder?.id) return;
 
-    this.$orderClient
-      .reject(this.selectedOrder.id)
-      .pipe(
-        map((errorMessage) => {
-          if (errorMessage) throw new Error(errorMessage);
+        this.$orderClient
+          .reject(this.selectedOrder.id)
+          .pipe(
+            map((errorMessage) => {
+              if (errorMessage) throw new Error(errorMessage);
 
-          this.$message.add({
-            severity: "warn",
-            summary: "Rejected",
-            detail: `Order #${this.selectedOrder?.id} has been rejected!`,
-          });
+              this.$message.add({
+                severity: "warn",
+                summary: "Rejected",
+                detail: `Order #${this.selectedOrder?.id} has been rejected!`,
+              });
 
-          this.visible = false;
-          this.refresh();
-        })
-      )
-      .subscribe();
+              this.visible = false;
+              this.refresh();
+            })
+          )
+          .subscribe();
+      },
+    });
+  }
+
+  cancel() {
+    this.$confirmation.confirm({
+      message: "Do you want to cancel this order?",
+      header: "Cancel",
+      accept: () => {
+        if (!this.selectedOrder?.id) return;
+
+        this.$orderClient
+          .cancel(this.selectedOrder.id)
+          .pipe(
+            map((errorMessage) => {
+              if (errorMessage) throw new Error(errorMessage);
+
+              this.$message.add({
+                severity: "warn",
+                summary: "Cancelled",
+                detail: `Order #${this.selectedOrder?.id} has been cancelled!`,
+              });
+
+              this.visible = false;
+              this.refresh();
+            })
+          )
+          .subscribe();
+      },
+    });
   }
 
   startDelivery() {
-    if (!this.selectedOrder?.id) return;
+    this.$confirmation.confirm({
+      message: "Do you want to start delivering this order?",
+      header: "Start Delivering",
+      accept: () => {
+        if (!this.selectedOrder?.id) return;
 
-    this.$orderClient
-      .deliver(this.selectedOrder.id)
-      .pipe(
-        map((errorMessage) => {
-          if (errorMessage) throw new Error(errorMessage);
+        this.$orderClient
+          .deliver(this.selectedOrder.id)
+          .pipe(
+            map((errorMessage) => {
+              if (errorMessage) throw new Error(errorMessage);
 
-          this.$message.add({
-            severity: "success",
-            summary: "Delivery started",
-            detail: `Order #${this.selectedOrder?.id} has been started delivering!`,
-          });
+              this.$message.add({
+                severity: "success",
+                summary: "Delivery started",
+                detail: `Order #${this.selectedOrder?.id} has been started delivering!`,
+              });
 
-          this.visible = false;
-          this.refresh();
-        })
-      )
-      .subscribe();
+              this.visible = false;
+              this.refresh();
+            })
+          )
+          .subscribe();
+      },
+    });
   }
 
   abort() {
-    if (!this.selectedOrder?.id) return;
+    this.$confirmation.confirm({
+      message: "Do you want to abort this order?",
+      header: "Abort",
+      accept: () => {
+        if (!this.selectedOrder?.id) return;
 
-    this.$orderClient
-      .abort(this.selectedOrder.id)
-      .pipe(
-        map((errorMessage) => {
-          if (errorMessage) throw new Error(errorMessage);
+        this.$orderClient
+          .abort(this.selectedOrder.id)
+          .pipe(
+            map((errorMessage) => {
+              if (errorMessage) throw new Error(errorMessage);
 
-          this.$message.add({
-            severity: "warn",
-            summary: "Delivery aborted",
-            detail: `Delivery of order #${this.selectedOrder?.id} has been aborted!`,
-          });
+              this.$message.add({
+                severity: "warn",
+                summary: "Delivery aborted",
+                detail: `Delivery of order #${this.selectedOrder?.id} has been aborted!`,
+              });
 
-          this.visible = false;
-          this.refresh();
-        })
-      )
-      .subscribe();
+              this.visible = false;
+              this.refresh();
+            })
+          )
+          .subscribe();
+      },
+    });
   }
 
   complete() {
-    if (!this.selectedOrder?.id) return;
+    this.$confirmation.confirm({
+      message: "Do you want to complete this order?",
+      header: "Complete",
+      accept: () => {
+        if (!this.selectedOrder?.id) return;
 
-    this.$orderClient
-      .complete(this.selectedOrder.id)
-      .pipe(
-        map((errorMessage) => {
-          if (errorMessage) throw new Error(errorMessage);
+        this.$orderClient
+          .complete(this.selectedOrder.id)
+          .pipe(
+            map((errorMessage) => {
+              if (errorMessage) throw new Error(errorMessage);
 
-          this.$message.add({
-            severity: "success",
-            summary: "Delivery completed",
-            detail: `Delivery of order #${this.selectedOrder?.id} has been completed!`,
-          });
+              this.$message.add({
+                severity: "success",
+                summary: "Delivery completed",
+                detail: `Delivery of order #${this.selectedOrder?.id} has been completed!`,
+              });
 
-          this.visible = false;
-          this.refresh();
-        })
-      )
-      .subscribe();
+              this.visible = false;
+              this.refresh();
+            })
+          )
+          .subscribe();
+      },
+    });
   }
 
   get showQr(): boolean {
+    if (!this.isBuyer) return false;
+
+    if (
+      this.selectedOrder?.orderStatus === "ABORTED" ||
+      this.selectedOrder?.orderStatus === "PENDING" ||
+      this.selectedOrder?.orderStatus === "REJECTED" ||
+      !this.selectedOrder?.restaurant
+    ) {
+      return false;
+    }
+
     return !!(
-      this.selectedRestaurant?.bankDetail?.accountName &&
-      this.selectedRestaurant?.bankDetail?.accountNumber &&
-      this.selectedRestaurant?.bankDetail?.acqId
+      this.selectedOrder.restaurant?.bankDetail?.accountName &&
+      this.selectedOrder.restaurant?.bankDetail?.accountNumber &&
+      this.selectedOrder.restaurant?.bankDetail?.acqId
     );
   }
 }

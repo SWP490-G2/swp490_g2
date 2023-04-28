@@ -179,4 +179,14 @@ public class User extends BaseEntity implements UserDetails, Cloneable {
             throw new AssertionError();
         }
     }
+
+    public String getFullName() {
+        if (firstName != null && middleName != null && lastName != null)
+            return "%s %s %s".formatted(lastName, middleName, firstName);
+
+        if (firstName != null && lastName != null)
+            return "%s %s".formatted(lastName, firstName);
+
+        return null;
+    }
 }

@@ -30,4 +30,9 @@ public class Order extends BaseEntity {
 
     @ManyToOne(optional = false)
     private User orderCreator;
+
+    /// Transient fields
+
+    @Transient
+    private Restaurant restaurant;
 }
