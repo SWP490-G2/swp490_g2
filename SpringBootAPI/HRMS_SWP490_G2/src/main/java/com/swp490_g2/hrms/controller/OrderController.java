@@ -6,6 +6,8 @@ import com.swp490_g2.hrms.entity.enums.TimeLine;
 import com.swp490_g2.hrms.response.ReportIncomeOverTime;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.service.OrderService;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,8 +28,13 @@ public class OrderController {
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<String> insert(@RequestBody Order order) {
-        return ResponseEntity.ok(orderService.insert(order));
+    public ResponseEntity<String> insert(
+            @Valid @RequestBody Order order) {
+        try {
+            return ResponseEntity.ok(orderService.insert(order));
+        } catch (ConstraintViolationException e) {
+            return ResponseEntity.ok("\"%s\"".formatted(e.getConstraintViolations().stream().findFirst().get().getMessage()));
+        }
     }
 
     @PutMapping("/accept/{orderId}")

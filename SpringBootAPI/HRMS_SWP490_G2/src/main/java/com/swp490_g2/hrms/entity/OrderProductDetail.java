@@ -1,6 +1,9 @@
 package com.swp490_g2.hrms.entity;
 
+import com.swp490_g2.hrms.common.exception.BusinessException;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 @Entity
@@ -13,6 +16,8 @@ import lombok.*;
 @AttributeOverride(name = "id", column = @Column(name = "orderProductDetailId"))
 public class OrderProductDetail extends BaseEntity {
     @Column(nullable = false)
+    @Min(1)
+    @Max(999)
     private int quantity;
 
     @Column(nullable = false)
@@ -23,7 +28,4 @@ public class OrderProductDetail extends BaseEntity {
 
     @ManyToOne(optional = false)
     private Product product;
-
-
-
 }
