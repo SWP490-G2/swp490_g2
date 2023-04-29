@@ -405,16 +405,96 @@ public class OrderService {
             return null;
 
         List<ReportIncomeOverTime> results = new ArrayList<>();
-        List<Object> sqlResults = new ArrayList<>();
+        List<Object> sqlResults;
         if (timeLine == TimeLine.WEEK) {
-            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByWeek(restaurantId, offset);
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByWeekAndOrderStatus(restaurantId, offset, OrderStatus.COMPLETED.toString());
             sqlResults.forEach(sqlResult -> {
                 Object[] array = (Object[]) sqlResult;
                 results.add(ReportIncomeOverTime.builder()
-                        .totalOrders((Long) array[0])
+                        .totalCompletedOrders((Long) array[0])
                         .totalSales((Double) array[1])
                         .label(array[2].toString())
                         .build());
+            });
+
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByWeekAndOrderStatus(restaurantId, offset, OrderStatus.ABORTED.toString());
+            sqlResults.forEach(sqlResult -> {
+                Object[] array = (Object[]) sqlResult;
+                ReportIncomeOverTime reportIncomeOverTime = ReportIncomeOverTime.builder()
+                        .totalAbortedOrders((Long) array[0])
+                        .label(array[2].toString())
+                        .build();
+
+                ReportIncomeOverTime existedReportIncomeOvertime = results.stream()
+                        .filter(r -> r.getLabel().equals(reportIncomeOverTime.getLabel()))
+                        .findAny()
+                        .orElse(null);
+
+                if (existedReportIncomeOvertime != null) {
+                    existedReportIncomeOvertime.setTotalAbortedOrders(reportIncomeOverTime.getTotalAbortedOrders());
+                } else {
+                    results.add(reportIncomeOverTime);
+                }
+            });
+        } else if (timeLine == TimeLine.MONTH) {
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByMonthAndOrderStatus(restaurantId, offset, OrderStatus.COMPLETED.toString());
+            sqlResults.forEach(sqlResult -> {
+                Object[] array = (Object[]) sqlResult;
+                results.add(ReportIncomeOverTime.builder()
+                        .totalCompletedOrders((Long) array[0])
+                        .totalSales((Double) array[1])
+                        .label(array[2].toString())
+                        .build());
+            });
+
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByMonthAndOrderStatus(restaurantId, offset, OrderStatus.ABORTED.toString());
+            sqlResults.forEach(sqlResult -> {
+                Object[] array = (Object[]) sqlResult;
+                ReportIncomeOverTime reportIncomeOverTime = ReportIncomeOverTime.builder()
+                        .totalAbortedOrders((Long) array[0])
+                        .label(array[2].toString())
+                        .build();
+
+                ReportIncomeOverTime existedReportIncomeOvertime = results.stream()
+                        .filter(r -> r.getLabel().equals(reportIncomeOverTime.getLabel()))
+                        .findAny()
+                        .orElse(null);
+
+                if (existedReportIncomeOvertime != null) {
+                    existedReportIncomeOvertime.setTotalAbortedOrders(reportIncomeOverTime.getTotalAbortedOrders());
+                } else {
+                    results.add(reportIncomeOverTime);
+                }
+            });
+        } else if (timeLine == TimeLine.YEAR) {
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByYearAndOrderStatus(restaurantId, offset, OrderStatus.COMPLETED.toString());
+            sqlResults.forEach(sqlResult -> {
+                Object[] array = (Object[]) sqlResult;
+                results.add(ReportIncomeOverTime.builder()
+                        .totalCompletedOrders((Long) array[0])
+                        .totalSales((Double) array[1])
+                        .label(array[2].toString())
+                        .build());
+            });
+
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByYearAndOrderStatus(restaurantId, offset, OrderStatus.ABORTED.toString());
+            sqlResults.forEach(sqlResult -> {
+                Object[] array = (Object[]) sqlResult;
+                ReportIncomeOverTime reportIncomeOverTime = ReportIncomeOverTime.builder()
+                        .totalAbortedOrders((Long) array[0])
+                        .label(array[2].toString())
+                        .build();
+
+                ReportIncomeOverTime existedReportIncomeOvertime = results.stream()
+                        .filter(r -> r.getLabel().equals(reportIncomeOverTime.getLabel()))
+                        .findAny()
+                        .orElse(null);
+
+                if (existedReportIncomeOvertime != null) {
+                    existedReportIncomeOvertime.setTotalAbortedOrders(reportIncomeOverTime.getTotalAbortedOrders());
+                } else {
+                    results.add(reportIncomeOverTime);
+                }
             });
         }
 
@@ -424,9 +504,9 @@ public class OrderService {
     public boolean checkUserEverOrderedInRestaurant(Long userId, Long restaurantId) {
         boolean result = false;
         List<Order> orderList = orderRepository.getOrderByUSerIdAndRestaurantId(userId, restaurantId);
-        if(!CollectionUtils.isEmpty(orderList)) {
-            for (Order order: orderList) {
-                if(order.getOrderStatus() == OrderStatus.COMPLETED) {
+        if (!CollectionUtils.isEmpty(orderList)) {
+            for (Order order : orderList) {
+                if (order.getOrderStatus() == OrderStatus.COMPLETED) {
                     result = true;
                     break;
                 }
