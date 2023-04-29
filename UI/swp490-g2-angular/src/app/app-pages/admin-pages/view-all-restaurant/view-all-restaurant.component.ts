@@ -145,4 +145,8 @@ export class ViewAllRestaurantComponent {
 
     this.otherReason = otherReason;
   }
+
+  getTotalRestaurantsByStatus(active: boolean): number {
+    return this.restaurants.filter(r => r.active === active).length;
+  }
 }

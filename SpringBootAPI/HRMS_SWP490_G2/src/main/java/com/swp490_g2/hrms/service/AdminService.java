@@ -109,7 +109,6 @@ public class AdminService {
         requester.setRequestingRestaurantStatus(RequestingRestaurantStatus.APPROVED);
         requester.getRoles().add(Role.SELLER);
         requester.setRequestingRestaurant(null);
-        requester.setRequestingOpeningRestaurantDate(null);
 
         assert restaurant != null;
         webSocketService.push("/notification", Notification.builder()

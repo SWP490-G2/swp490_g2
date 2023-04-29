@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ConfirmationService } from "primeng/api";
 import { switchMap, of, finalize } from "rxjs";
-import { AdminClient, SearchRequest, User } from "src/app/ngswag/client";
+import { AdminClient, SearchRequest, User, UserStatus } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-view-all-user",
@@ -50,5 +50,9 @@ export class ViewAllUserComponent implements OnInit {
           .subscribe();
       },
     });
+  }
+
+  getTotalUsersByStatus(userStatus: UserStatus) {
+    return this.userList.filter(u => u.userStatus === userStatus).length;
   }
 }

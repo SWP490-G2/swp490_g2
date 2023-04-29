@@ -23,15 +23,21 @@
           </div>
           <div class="mr-5 mt-3">
             <span class="font-medium text-500">ACTIVE</span>
-            <div class="text-700 mt-2">8</div>
+            <div class="text-700 mt-2">
+              {{ getTotalUsersByStatus("ACTIVE") }}
+            </div>
           </div>
           <div class="mr-5 mt-3">
             <span class="font-medium text-500">INACTIVE</span>
-            <div class="text-700 mt-2">2</div>
+            <div class="text-700 mt-2">
+              {{ getTotalUsersByStatus("INACTIVE") }}
+            </div>
           </div>
           <div class="mr-5 mt-3">
             <span class="font-medium text-500">BANNED</span>
-            <div class="text-700 mt-2">1</div>
+            <div class="text-700 mt-2">
+              {{ getTotalUsersByStatus("BANNED") }}
+            </div>
           </div>
         </div>
       </div>

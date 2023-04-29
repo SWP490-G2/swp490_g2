@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { AdminClient, Restaurant, User } from "src/app/ngswag/client";
+import { AdminClient, Restaurant, User, UserRequestingRestaurantStatus } from "src/app/ngswag/client";
 
 @Component({
   selector: "app-request-open-list",
@@ -19,4 +19,8 @@ export class RequestOpenListComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  getTotalRequestsByStatus(status: UserRequestingRestaurantStatus) {
+    return this.requestingUsers.filter(r => r.requestingRestaurantStatus === status).length;
+  }
 }
