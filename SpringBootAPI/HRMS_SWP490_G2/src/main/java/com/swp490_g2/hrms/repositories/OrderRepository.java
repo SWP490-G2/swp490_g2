@@ -3,6 +3,7 @@ package com.swp490_g2.hrms.repositories;
 import com.swp490_g2.hrms.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -32,4 +33,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             ;
             """, nativeQuery = true)
     List<Object> getReportIncomeOverTimeByRestaurantIdByWeek(Long restaurantId, int offset);
+
+    @Query(value = "SELECT o.* FROM `order` o JOIN user u\n" +
+            "ON o.orderCreator_userId = u.userId JOIN order_order_product_detail oopd\n" +
+            "ON o.orderId = oopd.order_orderId JOIN order_product_detail opd \n" +
+            "ON oopd.orderProductDetails_orderProductDetailId = opd.orderProductDetailId JOIN product p\n" +
+            "ON opd.product_productId = p.productId JOIN restaurant_product rp\n" +
+            "ON p.productId = rp.products_productId JOIN restaurant r\n" +
+            "ON rp.restaurant_restaurantId = r.restaurantId\n" +
+            "WHERE u.userId = :userId AND r.restaurantId = :restaurantId", nativeQuery = true)
+    List<Order> getOrderByUSerIdAndRestaurantId(@Param("userId") Long userId, @Param("restaurantId") Long restaurantId);
 }
