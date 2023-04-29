@@ -198,6 +198,7 @@ public class UserService {
         if (!verifyCodeOnly) {
             user.setActive(true);
             user.addRole(Role.BUYER);
+            user.setUserStatus(UserStatus.ACTIVE);
         }
 
         user.setVerificationCode(generateVerificationCode());
