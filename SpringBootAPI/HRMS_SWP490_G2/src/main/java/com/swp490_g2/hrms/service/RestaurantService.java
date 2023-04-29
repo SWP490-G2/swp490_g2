@@ -161,6 +161,13 @@ public class RestaurantService {
 
         User user = userId != null ? userService.getById(userId) : null;
 
+        if (searchRestaurantsRequest != null
+                && searchRestaurantsRequest.getDestinationAddress() != null
+                && searchRestaurantsRequest.getDestinationAddress().isValid()
+        ) {
+            searchRestaurantsRequest.setDestinationAddress(addressService.populateLatLng(searchRestaurantsRequest.getDestinationAddress()));
+        }
+
         List<Restaurant> filteredRestaurants = restaurants.stream()
                 .filter(restaurant -> includeInactive || restaurant.isActive())
                 .filter(restaurant -> {
@@ -170,8 +177,15 @@ public class RestaurantService {
                     if (restaurant.getAddress() == null)
                         return false;
 
+                    if (searchRestaurantsRequest == null
+                            || searchRestaurantsRequest.getDestinationAddress() == null
+                            || !searchRestaurantsRequest.getDestinationAddress().isValid()
+                    ) {
+                        return false;
+                    }
+
                     return CommonUtils.haversine_distance(restaurant.getAddress().getLat(), restaurant.getAddress().getLng(),
-                            user.getAddress().getLat(), user.getAddress().getLng()) < distance;
+                            searchRestaurantsRequest.getDestinationAddress().getLat(), searchRestaurantsRequest.getDestinationAddress().getLng()) < distance;
                 })
                 .filter(restaurant -> {
                     if (searchRestaurantsRequest == null
@@ -192,9 +206,14 @@ public class RestaurantService {
 
                     return true;
                 })
-                .sorted(user == null ? Comparator.comparing(Restaurant::getRestaurantName) : Comparator.comparingDouble(restaurant ->
+                .sorted(user == null
+                        || searchRestaurantsRequest == null
+                        || searchRestaurantsRequest.getDestinationAddress() == null
+                        || !searchRestaurantsRequest.getDestinationAddress().isValid()
+                        ? Comparator.comparing(Restaurant::getRestaurantName)
+                        : Comparator.comparingDouble(restaurant ->
                         CommonUtils.haversine_distance(restaurant.getAddress().getLat(), restaurant.getAddress().getLng(),
-                                user.getAddress().getLat(), user.getAddress().getLng())
+                                searchRestaurantsRequest.getDestinationAddress().getLat(), searchRestaurantsRequest.getDestinationAddress().getLng())
                 ))
                 .toList();
 

@@ -161,7 +161,7 @@ export class RestaurantComponent implements OnInit {
     this.refreshReviews();
 
     if(this.user) {
-      this.$orderClient.checkUserEverOrderedInRestaurant(this.user?.id!, this.restaurantId)
+      this.$orderClient.checkUserEverOrderedInRestaurant(this.user.id!, this.restaurantId)
       .subscribe((result) => {
         this.canReview = result;
       });

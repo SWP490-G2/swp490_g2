@@ -38,6 +38,7 @@ import { OpenClosedTimeModule } from "./open-closed-time/open-closed-time.module
 import { RatingModule } from "primeng/rating";
 import { ProgressBarModule } from "primeng/progressbar";
 import { PaginatorModule } from "primeng/paginator";
+import { AddressFieldsModule } from "../account-information/address-fields/address-fields.module";
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { PaginatorModule } from "primeng/paginator";
     ProgressBarModule,
     PaginatorModule,
     ToggleButtonModule,
+    AddressFieldsModule,
   ],
 })
 export class RestaurantModule {}

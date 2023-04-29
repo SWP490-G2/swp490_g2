@@ -15,18 +15,13 @@ import { ConfirmPopupModule } from "primeng/confirmpopup";
 import { ToastModule } from "primeng/toast";
 import { AccordionModule } from "primeng/accordion";
 import { TableModule } from "primeng/table";
-import { AddressFieldsComponent } from "./address-fields/address-fields.component";
 import { RestaurantsModule } from "../restaurants/restaurants.module";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { AutoCompleteModule } from "primeng/autocomplete";
+import { AddressFieldsModule } from "./address-fields/address-fields.module";
 
 @NgModule({
-  declarations: [
-    AccountInformationComponent,
-    OpenRestaurantRequestComponent,
-    AddressFieldsComponent,
-    // ListOfRestaurantsComponent,
-  ],
+  declarations: [AccountInformationComponent, OpenRestaurantRequestComponent],
   imports: [
     CommonModule,
     BuyerInformationRoutingModule,
@@ -45,7 +40,7 @@ import { AutoCompleteModule } from "primeng/autocomplete";
     RestaurantsModule,
     InputTextareaModule,
     AutoCompleteModule,
+    AddressFieldsModule,
   ],
-  exports: [AddressFieldsComponent],
 })
 export class AccountInformationModule {}

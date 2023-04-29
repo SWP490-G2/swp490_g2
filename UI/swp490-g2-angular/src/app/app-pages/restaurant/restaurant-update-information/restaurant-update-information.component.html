@@ -1,5 +1,5 @@
 <p-dialog
-  header="Update Information Restaurant"
+  [header]="(editable ? 'Update ' : '') + 'Restaurant Information'"
   [(visible)]="displayModal"
   styleClass="w-full xl:w-5"
   [closable]="true"

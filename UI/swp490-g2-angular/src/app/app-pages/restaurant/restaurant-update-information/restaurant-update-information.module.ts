@@ -8,12 +8,10 @@ import { DialogModule } from "primeng/dialog";
 import { CalendarModule } from "primeng/calendar";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { InputNumberModule } from "primeng/inputnumber";
-
+import { AddressFieldsModule } from "../../account-information/address-fields/address-fields.module";
 
 @NgModule({
-  declarations: [
-    RestaurantUpdateInformationComponent
-  ],
+  declarations: [RestaurantUpdateInformationComponent],
   imports: [
     CommonModule,
     RestaurantUpdateInformationRoutingModule,
@@ -23,9 +21,8 @@ import { InputNumberModule } from "primeng/inputnumber";
     FormsModule,
     ReactiveFormsModule,
     InputNumberModule,
+    AddressFieldsModule,
   ],
-  exports: [
-    RestaurantUpdateInformationComponent
-  ]
+  exports: [RestaurantUpdateInformationComponent],
 })
-export class RestaurantUpdateInformationModule { }
+export class RestaurantUpdateInformationModule {}

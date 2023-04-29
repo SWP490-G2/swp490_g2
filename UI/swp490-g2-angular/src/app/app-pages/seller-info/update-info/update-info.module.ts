@@ -14,8 +14,8 @@ import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { ToastModule } from "primeng/toast";
-import { AccountInformationModule } from "../../account-information/account-information.module";
 import { HttpErrorHandler } from "src/app/global/http-error-handler";
+import { AddressFieldsModule } from "../../account-information/address-fields/address-fields.module";
 
 
 @NgModule({
@@ -36,7 +36,7 @@ import { HttpErrorHandler } from "src/app/global/http-error-handler";
     HttpClientModule,
     ToastModule,
     DropdownModule,
-    AccountInformationModule,
+    AddressFieldsModule,
   ],
   providers: [
     {

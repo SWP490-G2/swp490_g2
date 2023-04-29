@@ -86,7 +86,7 @@
                     <app-open-closed-time
                       [restaurant]="restaurant"
                       [editable]="editable"
-                      F
+                      (saveChanges)="refresh()"
                     ></app-open-closed-time>
                     <!-- <div class="mr-5 mt-3">
                       <span class="font-medium text-500">COLLECTIONS</span>
@@ -99,7 +99,7 @@
                   </div>
                 </div>
               </div>
-              <div class="mt-3 lg:mt-0" *ngIf="editable">
+              <div class="mt-3 lg:mt-0">
                 <!-- <button
                   pButton
                   pRipple
@@ -264,7 +264,6 @@
           Share your experience
         </div>
         <button
-        
           pButton
           pRipple
           label="Write a review"

@@ -23,6 +23,8 @@ import { PaginatorModule } from "primeng/paginator";
 import { TagModule } from "primeng/tag";
 import { OpenClosedTimeModule } from "../restaurant/open-closed-time/open-closed-time.module";
 import { RatingModule } from "primeng/rating";
+import { AddressFieldsModule } from "../account-information/address-fields/address-fields.module";
+import { OverlayPanelModule } from "primeng/overlaypanel";
 
 @NgModule({
   declarations: [RestaurantsComponent, RestaurantCardComponent],
@@ -47,7 +49,9 @@ import { RatingModule } from "primeng/rating";
     PaginatorModule,
     TagModule,
     OpenClosedTimeModule,
-    RatingModule
+    RatingModule,
+    AddressFieldsModule,
+    OverlayPanelModule
   ],
   exports: [RestaurantsComponent, RestaurantCardComponent],
 })

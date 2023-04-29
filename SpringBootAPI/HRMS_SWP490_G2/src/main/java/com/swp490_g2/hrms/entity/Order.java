@@ -31,6 +31,9 @@ public class Order extends BaseEntity {
     @ManyToOne(optional = false)
     private User orderCreator;
 
+    @ManyToOne(optional = false)
+    private Address destinationAddress;
+
     /// Transient fields
 
     @Transient

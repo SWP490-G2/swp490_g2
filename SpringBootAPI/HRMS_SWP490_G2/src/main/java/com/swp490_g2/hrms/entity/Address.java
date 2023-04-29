@@ -3,6 +3,7 @@ package com.swp490_g2.hrms.entity;
 import com.google.maps.GeocodingApi;
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -36,5 +37,9 @@ public class Address extends BaseEntity {
             return null;
 
         return "%s, %s, %s, %s".formatted(specificAddress, ward.getWardName(), ward.getDistrict().getDistrictName(), ward.getDistrict().getCity().getCityName());
+    }
+
+    public boolean isValid() {
+        return !StringUtils.isEmpty(specificAddress) && ward != null && ward.getId() != null && ward.getId() != 0;
     }
 }

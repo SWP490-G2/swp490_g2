@@ -15,9 +15,9 @@ import { RadioButtonModule } from "primeng/radiobutton";
 import { ToastModule } from "primeng/toast";
 import { HttpErrorHandler } from "src/app/global/http-error-handler";
 import { DropdownModule } from "primeng/dropdown";
-import { AccountInformationModule } from "src/app/app-pages/account-information/account-information.module";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 import { AutoCompleteModule } from "primeng/autocomplete";
+import { AddressFieldsModule } from "src/app/app-pages/account-information/address-fields/address-fields.module";
 
 @NgModule({
   declarations: [UpdateRestaurantInfoApplyComponent],
@@ -35,7 +35,7 @@ import { AutoCompleteModule } from "primeng/autocomplete";
     HttpClientModule,
     ToastModule,
     DropdownModule,
-    AccountInformationModule,
+    AddressFieldsModule,
     ImageAttachmentModule,
     AutoCompleteModule
   ],

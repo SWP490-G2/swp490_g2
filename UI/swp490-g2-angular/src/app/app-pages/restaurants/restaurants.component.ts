@@ -10,10 +10,13 @@ import {
 } from "@angular/core";
 import { Title } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
+import { MessageService } from "primeng/api";
 import { Observable, of, switchMap } from "rxjs";
 import { GoogleMapService } from "src/app/global/google-map.service";
 import {
   Address,
+  City,
+  District,
   PageRestaurant,
   Restaurant,
   RestaurantCategory,
@@ -23,7 +26,9 @@ import {
   SearchRestaurantsRequest,
   User,
   UserClient,
+  Ward,
 } from "src/app/ngswag/client";
+import { AddressService } from "src/app/shared/services/address.service";
 import { getFullAddress, getLocal, setLocal } from "src/app/utils";
 
 @Component({
@@ -80,6 +85,15 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   @Input() includeInactive = false;
   @Input() owner?: User;
   restaurantCategoryId?: number;
+  destinationAddress: Address = new Address({
+    ward: new Ward({
+      district: new District({
+        city: new City(),
+      }),
+    }),
+  });
+
+  destinationAddressLoaded = false;
 
   constructor(
     private $userClient: UserClient,
@@ -88,7 +102,9 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
     private $title: Title,
     private $router: Router,
     private $route: ActivatedRoute,
-    private $restaurantCategoryClient: RestaurantCategoryClient
+    private $restaurantCategoryClient: RestaurantCategoryClient,
+    private $address: AddressService,
+    private $message: MessageService
   ) {
     try {
       this.restaurantCategoryId = Number.parseInt(
@@ -114,8 +130,28 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       .pipe(
         switchMap((user) => {
           this.currentUser = user;
-          if (!this.currentUser?.id || !this.currentUser?.address)
-            this.hasCurrentUser = false;
+          if (!this.currentUser?.id) this.hasCurrentUser = false;
+
+          const destinationAddress = getLocal(
+            "destinationAddress/" + this.currentUser.id
+          );
+
+          if (destinationAddress) {
+            this.destinationAddress = new Address(destinationAddress);
+            this.destinationAddress.ward = new Ward(this.destinationAddress.ward);
+            this.destinationAddress.ward.district = new District(
+              this.destinationAddress.ward.district
+            );
+            this.destinationAddress.ward.district.city = new District(
+              this.destinationAddress.ward.district.city
+            );
+          }
+
+          if (!this.$address.isValid(this.destinationAddress) && user.address) {
+            this.destinationAddress = user.address;
+          }
+
+          this.destinationAddressLoaded = true;
 
           this.searchRestaurants();
 
@@ -143,6 +179,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       }),
       restaurantCategories: this.selectedCategories,
       owner: this.owner,
+      destinationAddress: this.destinationAddress,
     });
 
     let searchRestaurants: Observable<PageRestaurant>;
@@ -285,6 +322,39 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
       this.$router.navigate(["restaurant", restaurant.id]);
     } else {
       this.restaurantClick.emit(restaurant);
+    }
+  }
+
+  get fullDestinationAddress(): string {
+    return this.$address.isValid(this.destinationAddress)
+      ? getFullAddress(this.destinationAddress)
+      : "You have to either update your address in settings or update your temporary shipping address by clicking \"Update Shipping Address\" button";
+  }
+
+  updateShippingAddress(destinationAddress: any) {
+    if (!this.currentUser?.id) return;
+
+    try {
+      const specificAddress = destinationAddress.specificAddress;
+      const ward = destinationAddress.ward;
+      const newAddress = new Address({
+        specificAddress: specificAddress,
+        ward: ward,
+      });
+
+      if (!this.$address.isValid(newAddress)) {
+        throw new Error("Invalid Address!");
+      }
+
+      this.destinationAddress = newAddress;
+      setLocal(
+        "destinationAddress/" + this.currentUser.id,
+        this.destinationAddress.toJSON()
+      );
+
+      this.searchRestaurants();
+    } catch (e) {
+      throw new Error("Invalid Address!");
     }
   }
 }

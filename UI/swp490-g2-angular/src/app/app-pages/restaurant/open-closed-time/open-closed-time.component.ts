@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { MessageService } from "primeng/api";
 import { map } from "rxjs";
 import { Restaurant, RestaurantClient } from "src/app/ngswag/client";
@@ -15,6 +15,7 @@ export class OpenClosedTimeComponent implements OnInit {
   isEditing = false;
   openTimeModel?: Date;
   closedTimeModel?: Date;
+  @Output() saveChanges = new EventEmitter();
 
   constructor(
     private $restaurantClient: RestaurantClient,
@@ -86,6 +87,8 @@ export class OpenClosedTimeComponent implements OnInit {
               summary: "Success",
               detail: "Open/closed time has been changed!",
             });
+
+            this.saveChanges.emit();
           })
         )
         .subscribe();
