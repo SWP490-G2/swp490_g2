@@ -48,7 +48,7 @@
             }}
           </td>
           <td>{{ order.orderCreator.email }}</td>
-          <td>{{ order.orderCreator.phoneNumber }}</td>
+          <td>{{ order.phoneNumber || order.orderCreator.phoneNumber }}</td>
         </ng-container>
         <td>{{ order.orderProductDetails.length }}</td>
         <td>{{ getOrderTotalPrice(order) | currency : "VND" }}</td>
@@ -102,23 +102,50 @@
   [draggable]="false"
   [resizable]="false"
 >
-  <div class="flex justify-content-center align-items-center" *ngIf="showQr">
-    <img width="300px" [src]="bankImagePath" />
+  <div class="flex justify-content-center align-items-center">
+    <ng-container *ngIf="showQr">
+      <img width="300px" [src]="bankImagePath" />
+      <div>
+        <div>
+          <strong>Account Number: </strong>
+          <span>
+            {{ selectedOrder?.restaurant?.bankDetail?.accountNumber }}
+          </span>
+        </div>
+        <div>
+          <strong>Account Name: </strong>
+          <span>
+            {{ selectedOrder?.restaurant?.bankDetail?.accountName }}
+          </span>
+        </div>
+        <div>
+          <strong>Total amount: </strong>
+          <span>
+            {{ getOrderTotalPrice(selectedOrder) | currency : "VND" }}
+          </span>
+        </div>
+      </div>
+    </ng-container>
     <div>
       <div>
-        <strong>Account Number: </strong>
+        <strong> Buyer Name: </strong>
         <span>
-          {{ selectedOrder?.restaurant?.bankDetail?.accountNumber }}
+          {{ getFullName(selectedOrder?.orderCreator) }}
         </span>
       </div>
       <div>
-        <strong>Account Name: </strong>
-        <span> {{ selectedOrder?.restaurant?.bankDetail?.accountName }} </span>
+        <strong> Buyer Phone Number: </strong>
+        <span>
+          {{
+            selectedOrder?.phoneNumber ||
+              selectedOrder?.orderCreator?.phoneNumber
+          }}
+        </span>
       </div>
       <div>
-        <strong>Total amount: </strong>
+        <strong> Buyer Shipping Address: </strong>
         <span>
-          {{ getOrderTotalPrice(selectedOrder) | currency : "VND" }}
+          {{ getFullAddress(selectedOrder?.destinationAddress) }}
         </span>
       </div>
     </div>
@@ -159,7 +186,10 @@
       </div>
     </div>
 
-    <div class="grid w-full" *ngIf="isBuyer && selectedOrder?.orderStatus === 'PENDING'">
+    <div
+      class="grid w-full"
+      *ngIf="isBuyer && selectedOrder?.orderStatus === 'PENDING'"
+    >
       <div class="col">
         <p-button
           label="Cancel"

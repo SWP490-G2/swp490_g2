@@ -83,13 +83,6 @@ const routes: Routes = [
           ),
       },
       {
-        path: "order-pages",
-        loadChildren: () =>
-          import("./order-pages/order-pages.module").then(
-            (m) => m.OrderPagesModule
-          ),
-      },
-      {
         path: "order-management",
         loadChildren: () =>
           import("./order-management/order-management.module").then(
@@ -101,6 +94,13 @@ const routes: Routes = [
         loadChildren: () =>
           import("./buyer-orders/buyer-orders.module").then(
             (m) => m.BuyerOrdersModule
+          ),
+      },
+      {
+        path: "cart-pages",
+        loadChildren: () =>
+          import("./cart-pages/cart-pages.module").then(
+            (m) => m.CartPagesModule
           ),
       },
     ],

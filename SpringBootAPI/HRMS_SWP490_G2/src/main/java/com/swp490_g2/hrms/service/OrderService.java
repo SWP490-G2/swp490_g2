@@ -57,6 +57,13 @@ public class OrderService {
     public void setWebSocketService(WebSocketService webSocketService) {
         this.webSocketService = webSocketService;
     }
+
+    private AddressService addressService;
+
+    @Autowired
+    public void setAddressService(AddressService addressService) {
+        this.addressService = addressService;
+    }
     //////////////////////////////
 
     @Transactional
@@ -99,6 +106,7 @@ public class OrderService {
 
         order.setCreatedBy(currentUser.getId());
         order.setOrderCreator(currentUser);
+        order.setDestinationAddress(addressService.populateLatLng(order.getDestinationAddress()));
         orderRepository.save(order);
 
         assert restaurant != null;

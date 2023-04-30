@@ -14,6 +14,7 @@ import { ToastModule } from "primeng/toast";
 import { BadgeModule } from "primeng/badge";
 import { AccordionModule } from "primeng/accordion";
 import { InputTextareaModule } from "primeng/inputtextarea";
+import { OrderInformationModule } from "./order-information/order-information.module";
 
 @NgModule({
   declarations: [CartPagesComponent],

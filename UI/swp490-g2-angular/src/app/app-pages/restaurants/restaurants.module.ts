@@ -25,6 +25,7 @@ import { OpenClosedTimeModule } from "../restaurant/open-closed-time/open-closed
 import { RatingModule } from "primeng/rating";
 import { AddressFieldsModule } from "../account-information/address-fields/address-fields.module";
 import { OverlayPanelModule } from "primeng/overlaypanel";
+import { UpdateShippingAddressModule } from "./update-shipping-address/update-shipping-address.module";
 
 @NgModule({
   declarations: [RestaurantsComponent, RestaurantCardComponent],
@@ -51,7 +52,8 @@ import { OverlayPanelModule } from "primeng/overlaypanel";
     OpenClosedTimeModule,
     RatingModule,
     AddressFieldsModule,
-    OverlayPanelModule
+    OverlayPanelModule,
+    UpdateShippingAddressModule
   ],
   exports: [RestaurantsComponent, RestaurantCardComponent],
 })

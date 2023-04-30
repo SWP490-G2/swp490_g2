@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, of, switchMap } from "rxjs";
 import {
+  Address,
   Order,
   OrderClient,
   OrderProductDetail,
@@ -21,7 +22,7 @@ export interface CartItem {
   providedIn: "root",
 })
 export class CartService {
-  private order$ = new BehaviorSubject<Order>(new Order());
+  order$ = new BehaviorSubject<Order>(new Order());
   restaurant$ = new BehaviorSubject<Restaurant | undefined>(undefined);
   private CART_STORAGE_KEY = "";
   private RESTAURANT_STORAGE_KEY = "";
@@ -31,17 +32,26 @@ export class CartService {
     private $orderClient: OrderClient,
     private $order: OrderService
   ) {
-    $auth.getCurrentUser().subscribe((user) => {
-      if (!user) return;
+    this.refresh().subscribe();
+  }
 
-      this.CART_STORAGE_KEY = `order/${user.id}`;
-      this.RESTAURANT_STORAGE_KEY = `order/restaurant/${user.id}`;
-      const order = $order.toOrder(this.CART_STORAGE_KEY);
-      this.order$.next(order);
+  refresh() {
+    return this.$auth.getCurrentUser().pipe(
+      switchMap((user) => {
+        if (!user) return of(undefined);
 
-      const restaurant = new Restaurant(getLocal(this.RESTAURANT_STORAGE_KEY));
-      this.restaurant$.next(restaurant);
-    });
+        this.CART_STORAGE_KEY = `order/${user.id}`;
+        this.RESTAURANT_STORAGE_KEY = `order/restaurant/${user.id}`;
+        const order = this.$order.toOrder(getLocal(this.CART_STORAGE_KEY));
+        this.order$.next(order);
+
+        const restaurant = new Restaurant(
+          getLocal(this.RESTAURANT_STORAGE_KEY)
+        );
+        this.restaurant$.next(restaurant);
+        return of(undefined);
+      })
+    );
   }
 
   addToCart(orderProductDetail: OrderProductDetail, restaurant: Restaurant) {
@@ -69,6 +79,7 @@ export class CartService {
       order.orderProductDetails.push(orderProductDetail);
     }
 
+    order.destinationAddress = Address.fromJS(order.destinationAddress);
     this.order$.next(order);
     setLocal(this.CART_STORAGE_KEY, order.toJSON());
   }

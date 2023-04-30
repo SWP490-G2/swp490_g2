@@ -74,4 +74,9 @@ public class ProductController {
     public ResponseEntity<List<Product>> getTopMostOrdered(@PathVariable Long top) {
         return ResponseEntity.ok(productService.getTopMostOrdered(top));
     }
+
+    @GetMapping("get-products-by-orderId/{orderId}")
+    public ResponseEntity<List<Product>> getProductsByOrderId(@PathVariable Long orderId){
+        return ResponseEntity.ok(productService.getProductsByOrderId(orderId));
+    }
 }

@@ -2,6 +2,7 @@ package com.swp490_g2.hrms.entity;
 
 import com.swp490_g2.hrms.entity.enums.OrderStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -31,8 +32,12 @@ public class Order extends BaseEntity {
     @ManyToOne(optional = false)
     private User orderCreator;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Address destinationAddress;
+
+    @Column(nullable = false)
+    @Pattern(regexp = "^(0[3|5|7|8|9])+([0-9]{8})$", flags = Pattern.Flag.UNICODE_CASE)
+    private String phoneNumber;
 
     /// Transient fields
 

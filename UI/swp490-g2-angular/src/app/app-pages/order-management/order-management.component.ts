@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { map, of, switchMap } from "rxjs";
 import {
+  Address,
   Order,
   OrderClient,
   OrderProductDetail,
@@ -14,6 +15,8 @@ import {
   UserClient,
 } from "src/app/ngswag/client";
 import { CartService } from "src/app/service/cart.service";
+import { AddressService } from "src/app/shared/services/address.service";
+import { getFullAddress, getFullName } from "src/app/utils";
 
 @Component({
   selector: "app-order-management",
@@ -47,7 +50,8 @@ export class OrderManagementComponent implements OnInit {
     private $restaurantClient: RestaurantClient,
     private $http: HttpClient,
     private $userClient: UserClient,
-    private $confirmation: ConfirmationService
+    private $confirmation: ConfirmationService,
+    private $address: AddressService
   ) { }
 
   ngOnInit() {
@@ -377,10 +381,18 @@ export class OrderManagementComponent implements OnInit {
       this.$message.add({
         severity: "success",
         summary: "Success",
-        detail: `Order is added to cart again!`,
+        detail: "Order is added to cart again!",
       });
     });
 
     this.$router.navigateByUrl(`/restaurant/${order.restaurant?.id}`);
+  }
+
+  getFullName(user?: User) {
+    return getFullName(user);
+  }
+
+  getFullAddress(address?: Address) {
+    return getFullAddress(address);
   }
 }
