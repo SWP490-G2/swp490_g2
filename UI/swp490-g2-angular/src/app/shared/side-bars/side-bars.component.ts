@@ -51,8 +51,20 @@ export class SideBarsComponent implements OnInit {
     });
   }
 
+  navToNotifications() {
+    this.$router.navigate(["navbar", "notifications"], {
+      relativeTo: this.$route,
+    });
+  }
+
   navToRestaurant() {
     this.$router.navigate(["restaurants"], {
+      relativeTo: this.$route,
+    });
+  }
+
+  navToMyOrders() {
+    this.$router.navigate(["buyer-orders"], {
       relativeTo: this.$route,
     });
   }
