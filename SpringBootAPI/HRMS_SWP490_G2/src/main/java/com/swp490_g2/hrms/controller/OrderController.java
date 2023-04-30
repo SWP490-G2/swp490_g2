@@ -84,4 +84,8 @@ public class OrderController {
         return orderService.checkUserEverOrderedInRestaurant(userId, restaurantId);
     }
 
+    @GetMapping("/get-order-by-id/{id}")
+    public Order getOrderById(@PathVariable Long id) {
+        return orderService.getOrderById(id);
+    }
 }

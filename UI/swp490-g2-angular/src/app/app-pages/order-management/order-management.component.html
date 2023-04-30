@@ -65,6 +65,14 @@
             icon="pi pi-external-link"
             label="View detail"
           ></p-button>
+          <button
+            pButton
+            pRipple
+            label="Order again"
+            icon="pi pi-shopping-cart"
+            class="ml-2"
+            (click)="addToCart(order)"
+          ></button>
         </td>
       </tr>
     </ng-template>
@@ -150,7 +158,7 @@
       </div>
     </div>
 
-    <div class="grid w-full" *ngIf="isBuyer">
+    <div class="grid w-full" *ngIf="isBuyer && selectedOrder?.orderStatus === 'PENDING'">
       <div class="col">
         <p-button
           label="Cancel"

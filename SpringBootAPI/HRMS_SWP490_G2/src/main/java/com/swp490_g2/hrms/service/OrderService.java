@@ -5,6 +5,7 @@ import com.swp490_g2.hrms.entity.enums.OrderStatus;
 import com.swp490_g2.hrms.entity.enums.ProductStatus;
 import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.entity.enums.TimeLine;
+import com.swp490_g2.hrms.repositories.OrderProductDetailRepository;
 import com.swp490_g2.hrms.repositories.OrderRepository;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.response.ReportIncomeOverTime;
@@ -28,6 +29,13 @@ public class OrderService {
     @Autowired
     public void setOrderRepository(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
+    }
+
+    private OrderProductDetailRepository orderProductDetailRepository;
+
+    @Autowired
+    public void setOrderProductDetailRepository(OrderProductDetailRepository orderProductDetailRepository) {
+        this.orderProductDetailRepository = orderProductDetailRepository;
     }
 
     private ProductService productService;
@@ -513,5 +521,10 @@ public class OrderService {
             }
         }
         return result;
+    }
+
+    public Order getOrderById(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        return order;
     }
 }
