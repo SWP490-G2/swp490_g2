@@ -30,9 +30,7 @@ export class OrderInformationComponent implements OnInit {
   totalRecords = 0;
   products: Product[] = [];
 
-  newOrder: Order = new Order({
-    destinationAddress: new Address(),
-  });
+  newOrder: Order = Order.fromJS({});
 
   constructor(
     private $userClient: UserClient,

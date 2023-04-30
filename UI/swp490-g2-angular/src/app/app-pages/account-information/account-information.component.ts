@@ -48,12 +48,12 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
   maxFieldLengths = {
     lastName: 50,
     firstName: 50,
-    middleName: 50
+    middleName: 50,
   };
   fieldErrors = {
     lastName: "",
     firstName: "",
-    middleName: ""
+    middleName: "",
   };
 
   constructor(
@@ -94,7 +94,7 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
       )
       .subscribe();
   }
-  
+
   ngAfterViewInit(): void {
     const dateOfBirthValidator = (): ValidatorFn => {
       return (control: AbstractControl): { [key: string]: any } | null => {
@@ -107,8 +107,13 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
     };
 
     setTimeout(() => {
-      this.dateOfBirthControl = this.form.controls["dateOfBirth"] as FormControl;
-      this.dateOfBirthControl.setValidators([Validators.required, dateOfBirthValidator()]);
+      this.dateOfBirthControl = this.form.controls[
+        "dateOfBirth"
+      ] as FormControl;
+      this.dateOfBirthControl.setValidators([
+        Validators.required,
+        dateOfBirthValidator(),
+      ]);
       this.dateOfBirthControl.updateValueAndValidity();
 
       this.dateOfBirthControl.valueChanges.subscribe(() => {
@@ -172,22 +177,7 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
     const formValue = this.form.value;
 
     this.$map
-      .getAddressDetails(
-        getFullAddress(
-          new Address({
-            specificAddress: formValue.specificAddress,
-            ward: new Ward({
-              wardName: formValue.ward.wardName,
-              district: new District({
-                districtName: formValue.ward.district.districtName,
-                city: new City({
-                  cityName: formValue.ward.district.city.cityName,
-                }),
-              }),
-            }),
-          })
-        )
-      )
+      .getAddressDetails(getFullAddress(Address.fromJS(formValue)))
       .pipe(
         switchMap((res) => {
           const loc = res?.geometry.location;
@@ -274,8 +264,10 @@ export class AccountInformationComponent implements OnInit, AfterViewInit {
     const fieldInput = this.form.controls[fieldName];
     const maxLength = this.maxFieldLengths[fieldName];
     if (fieldInput.value.length > maxLength) {
-      fieldInput.setErrors({ "maxlength": true });
-      this.fieldErrors[fieldName] = `Input can not over ${maxLength} characters`;
+      fieldInput.setErrors({ maxlength: true });
+      this.fieldErrors[
+        fieldName
+      ] = `Input can not over ${maxLength} characters`;
     } else {
       fieldInput.setErrors(null);
       this.fieldErrors[fieldName] = "";

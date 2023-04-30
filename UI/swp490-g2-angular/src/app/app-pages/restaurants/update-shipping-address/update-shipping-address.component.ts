@@ -43,16 +43,7 @@ export class UpdateShippingAddressComponent implements OnInit {
           );
 
           if (destinationAddress) {
-            this.destinationAddress = new Address(destinationAddress);
-            this.destinationAddress.ward = new Ward(
-              this.destinationAddress.ward
-            );
-            this.destinationAddress.ward.district = new District(
-              this.destinationAddress.ward.district
-            );
-            this.destinationAddress.ward.district.city = new City(
-              this.destinationAddress.ward.district.city
-            );
+            this.destinationAddress = Address.fromJS(destinationAddress);
           }
 
           if (!this.$address.isValid(this.destinationAddress) && user.address) {
@@ -77,12 +68,7 @@ export class UpdateShippingAddressComponent implements OnInit {
     if (!this.currentUser?.id) return;
 
     try {
-      const specificAddress = destinationAddress.specificAddress;
-      const ward = destinationAddress.ward;
-      const newAddress = new Address({
-        specificAddress: specificAddress,
-        ward: ward,
-      });
+      const newAddress = Address.fromJS(destinationAddress);
 
       if (!this.$address.isValid(newAddress)) {
         throw new Error("Invalid Address!");

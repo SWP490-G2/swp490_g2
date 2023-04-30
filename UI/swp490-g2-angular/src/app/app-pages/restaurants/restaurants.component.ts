@@ -85,13 +85,7 @@ export class RestaurantsComponent implements OnInit, AfterViewInit {
   @Input() includeInactive = false;
   @Input() owner?: User;
   restaurantCategoryId?: number;
-  destinationAddress: Address = new Address({
-    ward: new Ward({
-      district: new District({
-        city: new City(),
-      }),
-    }),
-  });
+  destinationAddress: Address = Address.fromJS({});
 
   destinationAddressLoaded = false;
 
