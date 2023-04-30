@@ -21,6 +21,7 @@
             <span class="font-medium text-500">TOTAL RESTAURANT</span>
             <div class="text-700 mt-2">{{ restaurants.length }}</div>
           </div>
+
           <div class="mr-5 mt-3">
             <span class="font-medium text-500">ACTIVE</span>
             <div class="text-700 mt-2">
@@ -123,8 +124,8 @@
             <p-toggleButton
               styleClass="w-7rem"
               [(ngModel)]="resOpening.active"
-              onLabel="Active"
-              offLabel="Inactive"
+              onLabel="Inactive"
+              offLabel="Active"
               (onChange)="toggleRestaurantStatus(resOpening, $event)"
             ></p-toggleButton>
           </div>
