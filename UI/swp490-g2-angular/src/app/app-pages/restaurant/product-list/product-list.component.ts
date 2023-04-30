@@ -10,8 +10,10 @@ import {
   ConfirmationService,
   MessageService,
 } from "primeng/api";
+import { switchMap, forkJoin, of } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import {
+  AdminClient,
   Order,
   OrderProductDetail,
   Product,
@@ -34,7 +36,6 @@ export class ProductListComponent implements OnInit {
   order: Order | undefined;
   deletedProduct: Product | undefined;
   currentUser?: User;
-  isVisible = false;
 
   constructor(
     private $cart: CartService,
@@ -44,18 +45,58 @@ export class ProductListComponent implements OnInit {
     private $zone: NgZone,
     private $userClient: UserClient,
     private $auth: AuthService,
+    private $adminClient: AdminClient,
   ) {}
-  ngOnInit(): void {
-    this.$userClient
+
+  refresh() {
+    this.$auth
       .getCurrentUser()
-      .subscribe((user) => {
-        this.currentUser = user;
-        if (AuthService.isSeller(this.currentUser) || AuthService.isAdmin(this.currentUser)) this.isVisible = true;
+      .pipe(
+        switchMap((user) => {
+          this.currentUser = user;
+          return forkJoin([
+            this.$adminClient.getRestaurantById(this.restaurant.id!),
+            this.$userClient.hasControlsOfRestaurant(this.restaurant.id!),
+          ]);
+        }),
+        switchMap(([restaurant, hasControlsOfRestaurant]) => {
+          this.restaurant = restaurant;
+          if (this.currentUser && hasControlsOfRestaurant)
+            this.currentUser.restaurants = [restaurant];
+
+          if (restaurant.id) {
+            return this.$userClient.getAllOwnersByRestaurantIds([
+              restaurant.id,
+            ]);
+          } else return of(undefined);
+        })
+      )
+      .subscribe((owners) => {
+        if (owners) {
+          (this.restaurant as any).owners = owners;
+        }
       });
+
     this.$cart.getOrderObservable().subscribe((order) => (this.order = order));
   }
-  get initialized(): boolean {
-    return true;
+
+  get editable(): boolean {
+    if (!this.currentUser || !this.currentUser.id) return false;
+    if (AuthService.isAdmin(this.currentUser)) return true;
+    if (
+      AuthService.isSeller(this.currentUser) &&
+      this.currentUser.restaurants?.some(
+        (restaurant) => restaurant.id === this.restaurant?.id
+      )
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  ngOnInit(): void {
+    this.refresh();
   }
 
   addToCart(product: Product, quantity: number): void {
