@@ -79,4 +79,13 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             limit :top
             """, nativeQuery = true)
     List<Product> getTopMostOrdered(Long top);
+
+    @Query(value = "" +
+            "select p.* from product as p " +
+            "inner join order_product_detail as opd " +
+            "on p.productId = opd.product_productId " +
+            "inner join order_order_product_detail as oopd " +
+            "on opd.orderProductDetailId = oopd.orderProductDetails_orderProductDetailId " +
+            "where oopd.order_orderId = :orderId", nativeQuery = true)
+    List<Product> getProductsByOrderId(Long orderId);
 }

@@ -103,6 +103,13 @@ const routes: Routes = [
             (m) => m.BuyerOrdersModule
           ),
       },
+      {
+        path: "cart-pages",
+        loadChildren: () =>
+          import("./cart-pages/cart-pages.module").then(
+            (m) => m.CartPagesModule
+          ),
+      },
     ],
   },
 ];

@@ -3,6 +3,7 @@ import { MessageService } from "primeng/api";
 import { of, switchMap } from "rxjs";
 import { FilterRequest, Order, OrderProductDetail, Product, ProductClient, Restaurant, SearchRequest } from "src/app/ngswag/client";
 import { CartService } from "src/app/service/cart.service";
+import { Router, ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-cart-pages",
@@ -16,7 +17,13 @@ export class CartPagesComponent implements OnInit {
   verticalOffset = 0;
   products: Product[] = [];
 
-  constructor(private $cart: CartService, private $productClient: ProductClient, private $message: MessageService) { }
+  constructor(
+    private $router: Router,
+    private $route: ActivatedRoute,
+    private $cart: CartService, 
+    private $productClient: ProductClient, 
+    private $message: MessageService,
+    ) { }
 
   refresh() {
     this.$cart.getOrderObservable()
@@ -114,4 +121,13 @@ export class CartPagesComponent implements OnInit {
   get restaurant(): Restaurant | undefined {
     return this.$cart.restaurant$.value;
   }
+
+  navToOrderInformation() {
+    this.$router.navigate(["order-information"], {
+      relativeTo: this.$route,
+    });
+  }
+
+  
+
 }

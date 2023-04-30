@@ -226,4 +226,8 @@ public class ProductService {
 
         return topProducts;
     }
+
+    public List<Product> getProductsByOrderId(Long orderId){
+        return productRepository.getProductsByOrderId(orderId);
+    }
 }
