@@ -125,7 +125,9 @@
     <label for="description" class="block text-900 font-medium my-2 required">
       Categories
     </label>
-    <p><small>Note:Drag and drop the above categories down here</small></p>
+    <p>
+      <small>*Note: Drag and drop the above existed categories down here</small>
+    </p>
     <div class="p-fluid mb-1" pDroppable (onDrop)="drop()">
       <p-chips
         [ngModel]="productCategoryNames"
