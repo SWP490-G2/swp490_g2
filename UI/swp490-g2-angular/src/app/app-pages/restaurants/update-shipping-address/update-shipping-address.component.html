@@ -16,7 +16,14 @@
         *ngIf="destinationAddressLoaded"
         [address]="destinationAddress"
       ></app-address-fields>
-      <div>
+      <div class="flex flex-wrap gap-2">
+        <button
+          type="button"
+          label="Reset"
+          pButton
+          class="p-button-secondary"
+          (click)="resetShippingAddress()"
+        ></button>
         <button
           type="button"
           label="Update"
