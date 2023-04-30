@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "bank_detail")
-@AttributeOverride(name = "id", column = @Column(name = "bankDetail"))
+@AttributeOverride(name = "id", column = @Column(name = "bankDetailId"))
 public class BankDetail extends BaseEntity{
     @Column(nullable = false)
     private String accountNumber;
