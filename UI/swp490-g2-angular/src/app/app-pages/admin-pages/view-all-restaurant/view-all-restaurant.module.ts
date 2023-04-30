@@ -14,6 +14,7 @@ import { InputSwitchModule } from "primeng/inputswitch";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   declarations: [ViewAllRestaurantComponent],
@@ -30,7 +31,8 @@ import { InputTextModule } from "primeng/inputtext";
     InputSwitchModule,
     ToggleButtonModule,
     CheckboxModule,
-    InputTextModule
+    InputTextModule,
+    TooltipModule,
   ],
 })
 export class ViewAllRestaurantModule {}
