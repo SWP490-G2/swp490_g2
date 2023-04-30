@@ -1,15 +1,15 @@
-<div class="surface-section px-6 py-5">
-  <button
-    pButton
-    pRipple
-    type="button"
-    label="Back"
-    icon="pi pi-arrow-left"
-    class="p-button-rounded p-button-info"
-    routerLink=".."
-  ></button>
-</div>
-<div class="surface-section px-4 py-5 md:px-6 lg:px-8">
+<div class="surface-section flex flex-column gap-5 p-2 lg:p-5">
+  <div>
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Back"
+      icon="pi pi-arrow-left"
+      class="p-button-rounded p-button-info"
+      routerLink=".."
+    ></button>
+  </div>
   <div
     class="flex align-items-start bg-gray-200 flex-column lg:flex-row lg:justify-content-between"
   >
@@ -22,12 +22,11 @@
       </div>
     </div>
   </div>
-  <div *ngIf="user" class="mt-2">
-    <app-restaurants
-      [hasCurrentUser]="false"
-      [hasPagination]="true"
-      [owner]="user"
-      [includeInactive]="true"
-    ></app-restaurants>
-  </div>
+  <app-restaurants
+    *ngIf="user"
+    [hasCurrentUser]="false"
+    [hasPagination]="true"
+    [owner]="user"
+    [includeInactive]="true"
+  ></app-restaurants>
 </div>

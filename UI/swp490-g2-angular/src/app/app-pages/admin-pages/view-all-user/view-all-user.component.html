@@ -161,7 +161,7 @@
             pTooltip="Update Role"
             tooltipPosition="top"
             [routerLink]="'change-role/' + user.id"
-            [disabled]="user.admin"
+            [disabled]="!canChangeRole(user)"
           ></button>
         </td>
       </tr>

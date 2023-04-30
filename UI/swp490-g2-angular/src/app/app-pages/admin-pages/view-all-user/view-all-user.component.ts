@@ -1,7 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { ConfirmationService } from "primeng/api";
 import { switchMap, of, finalize } from "rxjs";
-import { AdminClient, SearchRequest, User, UserStatus } from "src/app/ngswag/client";
+import {
+  AdminClient,
+  SearchRequest,
+  User,
+  UserClient,
+  UserStatus,
+} from "src/app/ngswag/client";
 
 @Component({
   selector: "app-view-all-user",
@@ -15,10 +21,12 @@ export class ViewAllUserComponent implements OnInit {
   userList: User[] = [];
   request: SearchRequest;
   users?: User;
+  currentUser?: User;
 
   constructor(
     private $adminClient: AdminClient,
-    private $confirmation: ConfirmationService
+    private $confirmation: ConfirmationService,
+    private $userClient: UserClient
   ) {
     this.refresh();
   }
@@ -28,6 +36,10 @@ export class ViewAllUserComponent implements OnInit {
       if (!res.content) return;
       this.userList = res.content;
     });
+
+    this.$userClient
+      .getCurrentUser()
+      .subscribe((user) => (this.currentUser = user));
   }
 
   unban(user: User) {
@@ -53,6 +65,14 @@ export class ViewAllUserComponent implements OnInit {
   }
 
   getTotalUsersByStatus(userStatus: UserStatus) {
-    return this.userList.filter(u => u.userStatus === userStatus).length;
+    return this.userList.filter((u) => u.userStatus === userStatus).length;
+  }
+
+  canChangeRole(user: User): boolean {
+    if (user.admin) {
+      return user.id === this.currentUser?.id;
+    }
+
+    return true;
   }
 }
