@@ -514,4 +514,9 @@ public class OrderService {
         }
         return result;
     }
+
+    public Order getOrderById(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        return order;
+    }
 }

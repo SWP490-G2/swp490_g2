@@ -1,16 +1,19 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, NgZone, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { map, of, switchMap } from "rxjs";
 import {
   Order,
   OrderClient,
+  OrderProductDetail,
   Restaurant,
   RestaurantClient,
   SearchRequest,
   User,
   UserClient,
 } from "src/app/ngswag/client";
+import { CartService } from "src/app/service/cart.service";
 
 @Component({
   selector: "app-order-management",
@@ -36,13 +39,16 @@ export class OrderManagementComponent implements OnInit {
   currentUser?: User;
 
   constructor(
+    private $router: Router,
+    private $cart: CartService,
+    private $zone: NgZone,
     private $orderClient: OrderClient,
     private $message: MessageService,
     private $restaurantClient: RestaurantClient,
     private $http: HttpClient,
     private $userClient: UserClient,
     private $confirmation: ConfirmationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.refresh();
@@ -344,5 +350,37 @@ export class OrderManagementComponent implements OnInit {
       this.selectedOrder.restaurant?.bankDetail?.accountNumber &&
       this.selectedOrder.restaurant?.bankDetail?.acqId
     );
+  }
+
+  addToCart(order: Order): void {
+    console.log(order?.restaurant?.id);
+    console.log(this.$cart.restaurant$.value?.id);
+    if (
+      this.$cart.restaurant$.value?.id !== undefined &&
+      this.$cart.restaurant$.value?.id !== order?.restaurant?.id
+    ) {
+      throw new Error("You need to empty the cart before do this action!");
+    }
+
+    order.orderProductDetails?.map((o) => {
+      const orderProductDetail: OrderProductDetail = new OrderProductDetail({
+        product: o.product,
+        quantity: 1,
+        price: o.product?.price,
+      });
+
+      if (order.restaurant)
+        this.$cart.addToCart(orderProductDetail, order.restaurant);
+    });
+
+    this.$zone.run(() => {
+      this.$message.add({
+        severity: "success",
+        summary: "Success",
+        detail: `Order is added to cart again!`,
+      });
+    });
+
+    this.$router.navigateByUrl(`/restaurant/${order.restaurant?.id}`);
   }
 }
