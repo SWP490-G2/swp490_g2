@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { of, switchMap } from "rxjs";
+import { NgForm, Validators } from "@angular/forms";
 import {
   Order,
   Restaurant,
@@ -31,6 +32,7 @@ export class OrderInformationComponent implements OnInit {
   products: Product[] = [];
 
   newOrder: Order = Order.fromJS({});
+  @ViewChild("form", { static: false }) form!: NgForm;
 
   constructor(
     private $userClient: UserClient,
@@ -38,6 +40,16 @@ export class OrderInformationComponent implements OnInit {
     private $cart: CartService,
     private $message: MessageService
   ) {}
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.form.controls["phoneNumber"].addValidators([
+        Validators.required,
+        Validators.pattern("^(([+]84)[3|5|7|8|9]|0[3|5|7|8|9])+([0-9]{8})$"),
+      ]);
+      this.form.controls["phoneNumber"].updateValueAndValidity();
+    }, 1000);
+  }
 
   ngOnInit() {
     this.refresh();

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input } from "@angular/core";
-import { NgForm } from "@angular/forms";
+import { NgForm, Validators } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
@@ -49,6 +49,16 @@ export class OpenRestaurantRequestComponent implements OnInit {
     private $buyerClient: BuyerClient
   ) {
     this.refresh();
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.form.controls["phoneNumber"].addValidators([
+        Validators.required,
+        Validators.pattern("^(([+]84)[3|5|7|8|9]|0[3|5|7|8|9])+([0-9]{8})$"),
+      ]);
+      this.form.controls["phoneNumber"].updateValueAndValidity();
+    }, 1000);
   }
 
   ngOnInit() {

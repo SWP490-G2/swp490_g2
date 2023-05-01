@@ -52,7 +52,7 @@ export function haversineDistance(
   );
 }
 
-export const PHONE_NUMBER_PATTERN = "^(([+]84)|0)|([3|5|7|8|9])+([0-9]{8})$";
+export const PHONE_NUMBER_PATTERN = "^(([+]84)[3|5|7|8|9]|0[3|5|7|8|9])+([0-9]{8})$";
 
 export function getLocal(key: string): any {
   const value = localStorage.getItem(key);
