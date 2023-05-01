@@ -125,8 +125,8 @@ public class AddressService {
         return address;
     }
 
-    public void update(Address address) {
+    public Address update(Address address) {
         address = populateLatLng(address);
-        addressRepository.save(address);
+        return addressRepository.save(address);
     }
 }

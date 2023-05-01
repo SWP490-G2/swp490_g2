@@ -104,7 +104,8 @@ public class OrderService {
 
         order.setCreatedBy(currentUser.getId());
         order.setOrderCreator(currentUser);
-        order.setDestinationAddress(addressService.populateLatLng(order.getDestinationAddress()));
+        Address newAddress = addressService.update(order.getDestinationAddress());
+        order.setDestinationAddress(newAddress);
         orderRepository.save(order);
 
         assert restaurant != null;

@@ -13,6 +13,8 @@ import {
 import { Router } from "@angular/router";
 import { CartService } from "src/app/service/cart.service";
 import { MessageService } from "primeng/api";
+import { GoogleMapService } from "src/app/global/google-map.service";
+import { getFullAddress, haversineDistance } from "src/app/utils";
 
 @Component({
   selector: "app-order-information",
@@ -36,7 +38,8 @@ export class OrderInformationComponent implements OnInit {
     private $userClient: UserClient,
     private $router: Router,
     private $cart: CartService,
-    private $message: MessageService
+    private $message: MessageService,
+    private $googleMap: GoogleMapService
   ) {}
 
   ngOnInit() {
@@ -100,9 +103,38 @@ export class OrderInformationComponent implements OnInit {
     ];
 
     this.$cart.order$.next(this.newOrder);
-    this.$cart
-      .addOrder()
+
+    const oldAddress = this.newOrder.destinationAddress?.clone();
+    if (
+      !this.restaurant ||
+      !this.restaurant.address ||
+      !this.restaurant.address.lat ||
+      !this.restaurant.address.lng
+    ) {
+      return;
+    }
+
+    this.$googleMap
+      .getAddressDetails(getFullAddress(this.newOrder.destinationAddress))
       .pipe(
+        switchMap((res) => {
+          const loc = res?.geometry.location;
+          const distance = haversineDistance(
+            loc!.lat(),
+            loc!.lng(),
+            this.restaurant?.address?.lat as any,
+            this.restaurant?.address?.lng as any
+          );
+
+          if (distance > 10) {
+            this.newOrder.destinationAddress = oldAddress?.clone();
+            throw new Error(
+              "Your new address is too far from the restaurant, please choose another address"
+            );
+          }
+
+          return this.$cart.addOrder();
+        }),
         switchMap((errorMessage) => {
           if (errorMessage) {
             throw new Error(errorMessage);
