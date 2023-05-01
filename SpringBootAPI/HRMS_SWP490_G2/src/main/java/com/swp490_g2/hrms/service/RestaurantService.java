@@ -126,6 +126,15 @@ public class RestaurantService {
             return "\"Ask admin to activate restaurant before making changes!\"";
         }
 
+        if (restaurant.getBankDetail() != null) {
+            if (StringUtils.isEmpty(restaurant.getBankDetail().getAccountName())
+                    || StringUtils.isEmpty(restaurant.getBankDetail().getAccountName())
+                    || StringUtils.isEmpty(restaurant.getBankDetail().getAcqId())
+            ) {
+                restaurant.setBankDetail(null);
+            }
+        }
+
         restaurant.setAddress(addressService.populateLatLng(restaurant.getAddress()));
         restaurantRepository.save(restaurant);
         return null;

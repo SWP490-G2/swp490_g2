@@ -86,61 +86,66 @@
 
       <p-divider></p-divider>
 
-      <h1>Bank Details</h1>
-      <div class="col">
-        <label
-          for="bankDetail_accountNumber"
-          class="block text-900 font-medium"
-        >
-          Account Number
-        </label>
-        <input
-          id="bankDetail_accountNumber"
-          name="bankDetail_accountNumber"
-          [(ngModel)]="restaurant.bankDetail!.accountNumber"
-          type="text"
-          pInputText
-          class="w-full"
-        />
-      </div>
+      <ng-container *ngIf="restaurant.bankDetail">
+        <h1>Bank Details</h1>
+        <div class="col">
+          <label
+            for="bankDetail_accountNumber"
+            class="block text-900 font-medium"
+          >
+            Account Number
+          </label>
+          <input
+            id="bankDetail_accountNumber"
+            name="bankDetail_accountNumber"
+            [(ngModel)]="restaurant.bankDetail.accountNumber"
+            type="text"
+            pInputText
+            class="w-full"
+          />
+        </div>
 
-      <div class="col">
-        <label for="bankDetail_accountName" class="block text-900 font-medium">
-          Account Name
-        </label>
-        <input
-          id="bankDetail_accountName"
-          name="bankDetail_accountName"
-          [(ngModel)]="restaurant.bankDetail!.accountName"
-          type="text"
-          pInputText
-          class="w-full uppercase"
-        />
-      </div>
+        <div class="col">
+          <label
+            for="bankDetail_accountName"
+            class="block text-900 font-medium"
+          >
+            Account Name
+          </label>
+          <input
+            id="bankDetail_accountName"
+            name="bankDetail_accountName"
+            [(ngModel)]="restaurant.bankDetail.accountName"
+            type="text"
+            pInputText
+            class="w-full uppercase"
+          />
+        </div>
 
-      <div class="col">
-        <label for="bankDetail_acqId" class="block text-900 font-medium">
-          Bank Name
-        </label>
-        <p-dropdown
-          [options]="banksData"
-          [(ngModel)]="selectedBank"
-          name="bankDetail_acqId"
-          optionLabel="name"
-          [filter]="true"
-          filterBy="shortName,name"
-          tooltipPosition="top"
-        >
-          <ng-template pTemplate="selectedItem">
-            <div *ngIf="selectedBank">
-              {{ selectedBank.shortName }} - {{ selectedBank.name }}
-            </div>
-          </ng-template>
-          <ng-template let-bank pTemplate="item">
-            <div>{{ bank.shortName }} - {{ bank.name }}</div>
-          </ng-template>
-        </p-dropdown>
-      </div>
+        <div class="col">
+          <label for="bankDetail_acqId" class="block text-900 font-medium">
+            Bank Name
+          </label>
+          <p-dropdown
+            [options]="banksData"
+            [(ngModel)]="selectedBank"
+            name="bankDetail_acqId"
+            optionLabel="name"
+            [filter]="true"
+            filterBy="shortName,name"
+            tooltipPosition="top"
+          >
+            <ng-template pTemplate="selectedItem">
+              <div *ngIf="selectedBank">
+                {{ selectedBank.shortName }} - {{ selectedBank.name }}
+              </div>
+            </ng-template>
+            <ng-template let-bank pTemplate="item">
+              <div>{{ bank.shortName }} - {{ bank.name }}</div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </ng-container>
 
       <div class="col text-center" *ngIf="editable">
         <button

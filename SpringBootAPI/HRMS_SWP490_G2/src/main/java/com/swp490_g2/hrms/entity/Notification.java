@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "notification")
 @AttributeOverride(name = "id", column = @Column(name = "notificationId"))
 public class Notification extends BaseEntity {
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String message;
 
     @Column
