@@ -62,8 +62,8 @@ export class ViewAllRestaurantComponent {
       .subscribe();
   }
 
-  toggleRestaurantStatus(restaurant: Restaurant, event: any) {
-    const intended = event.checked;
+  toggleRestaurantStatus(restaurant: Restaurant, activate: boolean) {
+    const intended = activate;
 
     this.$confirmation.confirm({
       message: `Do you want to ${
@@ -76,6 +76,7 @@ export class ViewAllRestaurantComponent {
           this.deactivateDialogVisible = true;
           this.restaurant = restaurant;
         } else {
+          restaurant.active = true;
           this.$restaurantClient
             .update(restaurant)
             .pipe(

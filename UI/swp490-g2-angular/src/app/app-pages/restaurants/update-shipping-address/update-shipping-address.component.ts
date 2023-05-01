@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { MessageService } from "primeng/api";
 import { switchMap, of } from "rxjs";
 import {
   Address,
@@ -25,7 +26,8 @@ export class UpdateShippingAddressComponent implements OnInit {
 
   constructor(
     private $address: AddressService,
-    private $userClient: UserClient
+    private $userClient: UserClient,
+    private $message: MessageService
   ) {}
 
   ngOnInit() {
@@ -41,16 +43,7 @@ export class UpdateShippingAddressComponent implements OnInit {
           );
 
           if (destinationAddress) {
-            this.destinationAddress = new Address(destinationAddress);
-            this.destinationAddress.ward = new Ward(
-              this.destinationAddress.ward
-            );
-            this.destinationAddress.ward.district = new District(
-              this.destinationAddress.ward.district
-            );
-            this.destinationAddress.ward.district.city = new City(
-              this.destinationAddress.ward.district.city
-            );
+            this.destinationAddress = Address.fromJS(destinationAddress);
           }
 
           if (!this.$address.isValid(this.destinationAddress) && user.address) {
@@ -71,16 +64,11 @@ export class UpdateShippingAddressComponent implements OnInit {
       : "You have to either update your address in settings or update your temporary shipping address by clicking \"Update Shipping Address\" button";
   }
 
-  updateShippingAddress(destinationAddress: any) {
+  updateShippingAddress(destinationAddress: Address) {
     if (!this.currentUser?.id) return;
 
     try {
-      const specificAddress = destinationAddress.specificAddress;
-      const ward = destinationAddress.ward;
-      const newAddress = new Address({
-        specificAddress: specificAddress,
-        ward: ward,
-      });
+      const newAddress = Address.fromJS(destinationAddress);
 
       if (!this.$address.isValid(newAddress)) {
         throw new Error("Invalid Address!");
@@ -93,8 +81,35 @@ export class UpdateShippingAddressComponent implements OnInit {
       );
 
       this.destinationAddressChange.emit(this.destinationAddress);
+      this.$message.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Shipping address updated successfully!",
+      });
     } catch (e) {
       throw new Error("Invalid Address!");
     }
+  }
+
+  resetShippingAddress() {
+    this.$userClient
+      .getCurrentUser()
+      .pipe(
+        switchMap((user) => {
+          this.currentUser = user;
+          if (!this.currentUser?.id) return of(undefined);
+
+          if (user.address && this.$address.isValid(user.address)) {
+            this.destinationAddress = user.address;
+          } else {
+            this.destinationAddress = Address.fromJS({});
+          }
+
+          this.updateShippingAddress(this.destinationAddress);
+          location.reload();
+          return of(undefined);
+        })
+      )
+      .subscribe();
   }
 }

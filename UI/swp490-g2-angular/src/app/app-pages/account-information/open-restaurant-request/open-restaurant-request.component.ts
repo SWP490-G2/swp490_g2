@@ -20,11 +20,7 @@ import {
 export class OpenRestaurantRequestComponent implements OnInit {
   @ViewChild("form", { static: false }) form!: NgForm;
   restaurantId: number;
-  restaurant = new Restaurant({
-    address: new Address({
-      ward: new Ward(),
-    }),
-  });
+  restaurant = Restaurant.fromJS({});
 
   user?: User;
   uploadUrl: string;

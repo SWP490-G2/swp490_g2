@@ -22,7 +22,7 @@ export interface CartItem {
   providedIn: "root",
 })
 export class CartService {
-  order$ = new BehaviorSubject<Order>(new Order());
+  order$ = new BehaviorSubject<Order>(Order.fromJS({}));
   restaurant$ = new BehaviorSubject<Restaurant | undefined>(undefined);
   private CART_STORAGE_KEY = "";
   private RESTAURANT_STORAGE_KEY = "";
@@ -42,8 +42,7 @@ export class CartService {
 
         this.CART_STORAGE_KEY = `order/${user.id}`;
         this.RESTAURANT_STORAGE_KEY = `order/restaurant/${user.id}`;
-        const order = this.$order.toOrder(getLocal(this.CART_STORAGE_KEY));
-        this.order$.next(order);
+        this.order$.next(Order.fromJS(getLocal(this.CART_STORAGE_KEY)));
 
         const restaurant = new Restaurant(
           getLocal(this.RESTAURANT_STORAGE_KEY)

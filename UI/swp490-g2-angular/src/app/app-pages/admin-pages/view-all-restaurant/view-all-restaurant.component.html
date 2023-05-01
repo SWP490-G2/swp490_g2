@@ -21,7 +21,6 @@
             <span class="font-medium text-500">TOTAL RESTAURANT</span>
             <div class="text-700 mt-2">{{ restaurants.length }}</div>
           </div>
-
           <div class="mr-5 mt-3">
             <span class="font-medium text-500">ACTIVE</span>
             <div class="text-700 mt-2">
@@ -115,20 +114,11 @@
         </td>
         <td>
           <span class="p-column-title">Status</span>
-          <div
-            class="flex align-items-center gap-2"
-            *ngIf="
-              resOpening.active !== null && resOpening.active !== undefined
-            "
+          <p-tag
+            [value]="resOpening.active ? 'Active' : 'Inactive'"
+            [severity]="resOpening.active ? 'success' : 'danger'"
           >
-            <p-toggleButton
-              styleClass="w-7rem"
-              [(ngModel)]="resOpening.active"
-              onLabel="Inactive"
-              offLabel="Active"
-              (onChange)="toggleRestaurantStatus(resOpening, $event)"
-            ></p-toggleButton>
-          </div>
+          </p-tag>
         </td>
         <td style="text-align: center">
           <button
@@ -136,8 +126,20 @@
             pRipple
             type="button"
             icon="pi pi-eye"
-            class="btn-action p-button-rounded mr-2"
+            class="p-button-rounded p-button-large mr-2"
             [routerLink]="'view-restaurant-details/' + resOpening.id"
+          ></button>
+          <button
+            pButton
+            pRipple
+            class="p-button-rounded"
+            [ngClass]="
+              !resOpening.active ? 'p-button-primary' : 'p-button-danger'
+            "
+            [icon]="!resOpening.active ? 'pi pi-check' : 'pi pi-times'"
+            (click)="toggleRestaurantStatus(resOpening, !resOpening.active)"
+            [pTooltip]="resOpening.active ? 'Deactivate' : 'Activate'"
+            tooltipPosition="right"
           ></button>
           <!-- <button
             pButton
