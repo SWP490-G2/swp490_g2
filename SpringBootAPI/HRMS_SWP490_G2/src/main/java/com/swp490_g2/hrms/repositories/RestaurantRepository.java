@@ -61,4 +61,14 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long>, J
             ;
             """, nativeQuery = true)
     List<Restaurant> findBySellerId(Long sellerId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from user__restaurant where restaurantId = :restaurantId", nativeQuery = true)
+    void deleteOwnersRestaurantByRestaurantId(@Param("restaurantId") Long restaurantId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from restaurant_product where restaurant_restaurantId = :restaurantId", nativeQuery = true)
+    void deleteProductsByRestaurantId(@Param("restaurantId") Long restaurantId);
 }

@@ -132,7 +132,7 @@
           <button
             pButton
             pRipple
-            class="p-button-rounded"
+            class="p-button-rounded ml-2"
             [ngClass]="
               !resOpening.active ? 'p-button-primary' : 'p-button-danger'
             "
@@ -141,14 +141,15 @@
             [pTooltip]="resOpening.active ? 'Deactivate' : 'Activate'"
             tooltipPosition="right"
           ></button>
-          <!-- <button
+          <button
+            *ngIf="!resOpening.active" 
             pButton
             pRipple
             type="button"
             icon="pi pi-trash"
-            class="btn-action p-button-rounded p-button-danger"
-            (click)="toggleRestaurantStatus(resOpening.id)"
-          ></button> -->
+            class="btn-action p-button-rounded p-button-danger ml-2"
+            (click)="toggleDeleteRestaurantInactive(resOpening.id)"
+          ></button>
         </td>
       </tr>
     </ng-template>
@@ -211,3 +212,4 @@
     [disabled]="!selectedDeactivateReasons.length"
   ></button>
 </p-dialog>
+<p-toast></p-toast>

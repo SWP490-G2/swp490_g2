@@ -192,6 +192,11 @@ public class AdminService {
         restaurantService.update(restaurant);
     }
 
+    public void deleteRestaurantInactive(Long restaurantId) {
+        allowAdminExecuteAction();
+        restaurantService.deleteRestaurantInactive(restaurantId);
+    }
+
     public List<User> getAllUserExceptAdmin() {
         allowAdminExecuteAction();
         return userService.getAllByRoles(List.of(Role.USER, Role.BUYER, Role.SELLER));

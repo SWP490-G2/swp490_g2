@@ -41,4 +41,6 @@ public interface RestaurantReviewRepository extends JpaRepository<RestaurantRevi
                 ;
             """, nativeQuery = true)
     Long getCountStarsByRestaurantId(Long restaurantId);
+
+    List<RestaurantReview> getAllByRestaurantId(Long id);
 }

@@ -2,12 +2,15 @@ package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.common.utils.CommonUtils;
 import com.swp490_g2.hrms.entity.*;
+import com.swp490_g2.hrms.entity.enums.RequestingRestaurantStatus;
 import com.swp490_g2.hrms.entity.shallowEntities.FieldType;
 import com.swp490_g2.hrms.entity.shallowEntities.Operator;
 import com.swp490_g2.hrms.entity.shallowEntities.SortDirection;
 import com.swp490_g2.hrms.repositories.RestaurantRepository;
+import com.swp490_g2.hrms.repositories.UserRepository;
 import com.swp490_g2.hrms.requests.*;
 import com.swp490_g2.hrms.response.RestaurantReviewResponse;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
@@ -27,6 +31,13 @@ public class RestaurantService {
     @Autowired
     public void setRestaurantRepository(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
+    }
+
+    private UserRepository userRepository;
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     private FileService fileService;
@@ -129,6 +140,22 @@ public class RestaurantService {
         restaurant.setAddress(addressService.populateLatLng(restaurant.getAddress()));
         restaurantRepository.save(restaurant);
         return null;
+    }
+
+    @Transactional
+    public void deleteRestaurantInactive(Long id) {
+        User user = userRepository.findByRequestingRestaurantId(id).orElse(null);
+
+        if(Objects.nonNull(user)) {
+            user.setRequestingRestaurant(null);
+            user.setRejectRestaurantOpeningRequestReasons(null);
+            user.setRequestingRestaurantStatus(RequestingRestaurantStatus.PENDING);
+            userService.update(user);
+        }
+        restaurantRepository.deleteOwnersRestaurantByRestaurantId(id);
+        restaurantRepository.deleteProductsByRestaurantId(id);
+        restaurantReviewService.deleteByRestaurantId(id);
+        restaurantRepository.deleteById(id);
     }
 
 
