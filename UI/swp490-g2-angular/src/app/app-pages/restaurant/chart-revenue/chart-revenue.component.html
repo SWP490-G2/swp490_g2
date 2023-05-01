@@ -1,5 +1,19 @@
 <div class="flex flex-column gap-5 p-2 lg:p-5">
-  <h1 class="text-center">Income Over Time</h1>
+  <div>
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Back"
+      icon="pi pi-arrow-left"
+      class="p-button-rounded p-button-info"
+      routerLink=".."
+    ></button>
+  </div>
+
+  <h1 class="text-center">
+    Income Over Time of {{ restaurant.restaurantName }}
+  </h1>
   <p-chart type="line" [data]="data" [options]="options"></p-chart>
 
   <div

@@ -1,11 +1,13 @@
 package com.swp490_g2.hrms.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.swp490_g2.hrms.entity.enums.OrderStatus;
 import com.swp490_g2.hrms.entity.enums.PaymentStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,16 @@ public class Order extends BaseEntity {
     @Column(columnDefinition = "nvarchar(16) null", insertable = false)
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
+
+    @Column(insertable = false, columnDefinition="TIMESTAMP null")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    private Instant completedAt;
+
+    @Column(insertable = false, columnDefinition="TIMESTAMP null")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    private Instant abortedAt;
 
     /// Transient fields
 

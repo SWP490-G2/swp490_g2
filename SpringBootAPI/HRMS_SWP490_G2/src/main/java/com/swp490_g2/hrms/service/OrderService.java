@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -322,6 +323,7 @@ public class OrderService {
 
         order.setOrderStatus(OrderStatus.COMPLETED);
         order.setModifiedBy(currentUser.getId());
+        order.setCompletedAt(Instant.now());
         orderRepository.save(order);
 
         webSocketService.push(
@@ -361,6 +363,7 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.ABORTED);
         order.setModifiedBy(currentUser.getId());
         order.setPaymentStatus(PaymentStatus.NOT_REFUNDED);
+        order.setAbortedAt(Instant.now());
         orderRepository.save(order);
 
         webSocketService.push(
@@ -500,7 +503,7 @@ public class OrderService {
         List<ReportIncomeOverTime> results = new ArrayList<>();
         List<Object> sqlResults;
         if (timeLine == TimeLine.WEEK) {
-            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByWeekAndOrderStatus(restaurantId, offset, OrderStatus.COMPLETED.toString());
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByWeekAndByCompletedOrderStatus(restaurantId, offset);
             sqlResults.forEach(sqlResult -> {
                 Object[] array = (Object[]) sqlResult;
                 results.add(ReportIncomeOverTime.builder()
@@ -510,7 +513,7 @@ public class OrderService {
                         .build());
             });
 
-            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByWeekAndOrderStatus(restaurantId, offset, OrderStatus.ABORTED.toString());
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByWeekAndByAbortedOrderStatus(restaurantId, offset);
             sqlResults.forEach(sqlResult -> {
                 Object[] array = (Object[]) sqlResult;
                 ReportIncomeOverTime reportIncomeOverTime = ReportIncomeOverTime.builder()
@@ -530,7 +533,7 @@ public class OrderService {
                 }
             });
         } else if (timeLine == TimeLine.MONTH) {
-            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByMonthAndOrderStatus(restaurantId, offset, OrderStatus.COMPLETED.toString());
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByMonthAndCompletedOrderStatus(restaurantId, offset);
             sqlResults.forEach(sqlResult -> {
                 Object[] array = (Object[]) sqlResult;
                 results.add(ReportIncomeOverTime.builder()
@@ -540,7 +543,7 @@ public class OrderService {
                         .build());
             });
 
-            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByMonthAndOrderStatus(restaurantId, offset, OrderStatus.ABORTED.toString());
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByMonthAndAbortedOrderStatus(restaurantId, offset);
             sqlResults.forEach(sqlResult -> {
                 Object[] array = (Object[]) sqlResult;
                 ReportIncomeOverTime reportIncomeOverTime = ReportIncomeOverTime.builder()
@@ -560,7 +563,7 @@ public class OrderService {
                 }
             });
         } else if (timeLine == TimeLine.YEAR) {
-            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByYearAndOrderStatus(restaurantId, offset, OrderStatus.COMPLETED.toString());
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByYearAndCompletedOrderStatus(restaurantId, offset);
             sqlResults.forEach(sqlResult -> {
                 Object[] array = (Object[]) sqlResult;
                 results.add(ReportIncomeOverTime.builder()
@@ -570,7 +573,7 @@ public class OrderService {
                         .build());
             });
 
-            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByYearAndOrderStatus(restaurantId, offset, OrderStatus.ABORTED.toString());
+            sqlResults = orderRepository.getReportIncomeOverTimeByRestaurantIdByYearAndAbortedOrderStatus(restaurantId, offset);
             sqlResults.forEach(sqlResult -> {
                 Object[] array = (Object[]) sqlResult;
                 ReportIncomeOverTime reportIncomeOverTime = ReportIncomeOverTime.builder()

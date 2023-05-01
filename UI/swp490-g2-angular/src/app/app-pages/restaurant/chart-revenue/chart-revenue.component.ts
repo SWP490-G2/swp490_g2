@@ -16,7 +16,7 @@ import {
 export class ChartRevenueComponent implements OnInit {
   data: any;
   options: any;
-  restaurant: Restaurant = new Restaurant();
+  restaurant: Restaurant = Restaurant.fromJS({});
   offset = 0;
   periods: {
     name: string;
