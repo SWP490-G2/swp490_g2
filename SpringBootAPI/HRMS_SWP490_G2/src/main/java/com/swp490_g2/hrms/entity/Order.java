@@ -1,6 +1,7 @@
 package com.swp490_g2.hrms.entity;
 
 import com.swp490_g2.hrms.entity.enums.OrderStatus;
+import com.swp490_g2.hrms.entity.enums.PaymentStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -38,6 +39,10 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     @Pattern(regexp = "^(0[3|5|7|8|9])+([0-9]{8})$", flags = Pattern.Flag.UNICODE_CASE)
     private String phoneNumber;
+
+    @Column(columnDefinition = "nvarchar(16) null", insertable = false)
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
 
     /// Transient fields
 

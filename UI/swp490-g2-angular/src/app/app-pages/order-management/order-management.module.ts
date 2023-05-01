@@ -8,6 +8,7 @@ import { TagModule } from "primeng/tag";
 import { DialogModule } from "primeng/dialog";
 import { CardModule } from "primeng/card";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
+import { DividerModule } from "primeng/divider";
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-att
     DialogModule,
     CardModule,
     ImageAttachmentModule,
+    DividerModule
   ],
   declarations: [OrderManagementComponent],
   exports: [OrderManagementComponent],

@@ -3,13 +3,7 @@ import { NgForm } from "@angular/forms";
 import { Title } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MenuItem, MessageService } from "primeng/api";
-import {
-  finalize,
-  forkJoin,
-  Observable,
-  of,
-  switchMap,
-} from "rxjs";
+import { finalize, forkJoin, Observable, of, switchMap } from "rxjs";
 import { AuthService } from "src/app/global/auth.service";
 import {
   AdminClient,
@@ -116,7 +110,8 @@ export class RestaurantComponent implements OnInit {
       .pipe(
         switchMap((user) => {
           this.user = user;
-          if (AuthService.isSeller(this.user) || AuthService.isAdmin(this.user)) this.isVisible = true;
+          if (AuthService.isSeller(this.user) || AuthService.isAdmin(this.user))
+            this.isVisible = true;
           return forkJoin([
             this.$restaurantClient.getById(this.restaurantId),
             this.$userClient.hasControlsOfRestaurant(this.restaurantId),
@@ -160,11 +155,12 @@ export class RestaurantComponent implements OnInit {
 
     this.refreshReviews();
 
-    if(this.user) {
-      this.$orderClient.checkUserEverOrderedInRestaurant(this.user.id!, this.restaurantId)
-      .subscribe((result) => {
-        this.canReview = result;
-      });
+    if (this.user) {
+      this.$orderClient
+        .checkUserEverOrderedInRestaurant(this.user.id!, this.restaurantId)
+        .subscribe((result) => {
+          this.canReview = result;
+        });
     }
   }
 
@@ -229,6 +225,19 @@ export class RestaurantComponent implements OnInit {
     if (!this.restaurant) return;
 
     this.restaurant.avatarFile = image;
+    this.updateRestaurant();
+  }
+
+  private updateRestaurant() {
+    if (!this.restaurant) return;
+    if (
+      !this.restaurant.bankDetail?.accountName ||
+      !this.restaurant.bankDetail?.accountNumber ||
+      !this.restaurant.bankDetail?.acqId
+    ) {
+      this.restaurant.bankDetail = undefined;
+    }
+
     this.$restaurantClient
       .update(this.restaurant)
       .subscribe(() => location.reload());
@@ -387,19 +396,19 @@ export class RestaurantComponent implements OnInit {
       100 -
       Math.round(
         (this.restaurantReviewResponse.starCounts[0] * 100) /
-        this.totalCountReviews
+          this.totalCountReviews
       ) -
       Math.round(
         (this.restaurantReviewResponse.starCounts[1] * 100) /
-        this.totalCountReviews
+          this.totalCountReviews
       ) -
       Math.round(
         (this.restaurantReviewResponse.starCounts[2] * 100) /
-        this.totalCountReviews
+          this.totalCountReviews
       ) -
       Math.round(
         (this.restaurantReviewResponse.starCounts[3] * 100) /
-        this.totalCountReviews
+          this.totalCountReviews
       );
 
     switch (stars) {

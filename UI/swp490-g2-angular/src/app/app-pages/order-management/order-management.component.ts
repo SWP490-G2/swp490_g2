@@ -52,7 +52,7 @@ export class OrderManagementComponent implements OnInit {
     private $userClient: UserClient,
     private $confirmation: ConfirmationService,
     private $address: AddressService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.refresh();
@@ -394,5 +394,104 @@ export class OrderManagementComponent implements OnInit {
 
   getFullAddress(address?: Address) {
     return getFullAddress(address);
+  }
+
+  getPaymentStatus(order: Order):
+    | {
+        name: string;
+        severity: "success" | "warning";
+      }
+    | undefined {
+    let severity: "success" | "warning" | undefined = undefined;
+    if (order.paymentStatus === "PAID" || order.paymentStatus === "REFUNDED")
+      severity = "success";
+    else if (
+      order.paymentStatus === "NOT_PAID" ||
+      order.paymentStatus === "NOT_REFUNDED"
+    ) {
+      severity = "warning";
+    }
+
+    if (!severity) return undefined;
+
+    if (
+      order.orderStatus === "ACCEPTED" ||
+      order.orderStatus === "DELIVERING" ||
+      order.orderStatus === "COMPLETED"
+    ) {
+      if (!order.paymentStatus) return undefined;
+
+      return {
+        name: order.paymentStatus.replace("_", " "),
+        severity: severity,
+      };
+    }
+
+    if (order.orderStatus === "ABORTED") {
+      if (!order.paymentStatus) return undefined;
+
+      return {
+        name: order.paymentStatus.replace("_", " "),
+        severity: severity,
+      };
+    }
+
+    return undefined;
+  }
+
+  receivePayment() {
+    this.$confirmation.confirm({
+      message: "Have you received payment from the buyer?",
+      header: "Payment received?",
+      accept: () => {
+        if (!this.selectedOrder?.id) return;
+
+        this.$orderClient
+          .receivePayment(this.selectedOrder.id)
+          .pipe(
+            map((errorMessage) => {
+              if (errorMessage) throw new Error(errorMessage);
+
+              this.$message.add({
+                severity: "success",
+                summary: "Payment received",
+                detail: `Payment for order #${this.selectedOrder?.id} has been received!`,
+              });
+
+              this.visible = false;
+              this.refresh();
+            })
+          )
+          .subscribe();
+      },
+    });
+  }
+
+  refund() {
+    this.$confirmation.confirm({
+      message: "Have you refunded payment to the buyer?",
+      header: "Payment refunded?",
+      accept: () => {
+        if (!this.selectedOrder?.id) return;
+
+        this.$orderClient
+          .refund(this.selectedOrder.id)
+          .pipe(
+            map((errorMessage) => {
+              if (errorMessage) throw new Error(errorMessage);
+
+              this.$message.add({
+                severity: "success",
+                summary: "Payment refunded",
+                detail: `Payment for order #${this.selectedOrder?.id} has been refunded!`,
+              });
+
+              this.visible = false;
+              this.refresh();
+            })
+          )
+          .subscribe();
+      },
+    });
   }
 }

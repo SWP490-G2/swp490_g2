@@ -25,6 +25,7 @@
         <th>Total Order</th>
         <th>Total Price</th>
         <th>Order Status</th>
+        <th>Payment Status</th>
         <th>Restaurant</th>
         <th>Action</th>
       </tr>
@@ -52,10 +53,17 @@
         </ng-container>
         <td>{{ order.orderProductDetails.length }}</td>
         <td>{{ getOrderTotalPrice(order) | currency : "VND" }}</td>
-        <td>
+        <td class="text-center">
           <p-tag
             [value]="order.orderStatus"
             [severity]="getSeverity(order.orderStatus)"
+          ></p-tag>
+        </td>
+        <td class="text-center">
+          <p-tag
+            *ngIf="getPaymentStatus(order)"
+            [value]="getPaymentStatus(order)!.name"
+            [severity]="getPaymentStatus(order)!.severity"
           ></p-tag>
         </td>
         <td>{{ order?.restaurant?.restaurantName }}</td>
@@ -102,7 +110,31 @@
   [draggable]="false"
   [resizable]="false"
 >
-  <div class="flex justify-content-center align-items-center">
+  <div class="flex flex-wrap justify-content-center align-items-center gap-5">
+    <div class="w-full">
+      <div>
+        <strong> Buyer Name: </strong>
+        <span>
+          {{ getFullName(selectedOrder?.orderCreator) }}
+        </span>
+      </div>
+      <div>
+        <strong> Buyer Phone Number: </strong>
+        <span>
+          {{
+            selectedOrder?.phoneNumber ||
+              selectedOrder?.orderCreator?.phoneNumber
+          }}
+        </span>
+      </div>
+      <div>
+        <strong> Buyer Shipping Address: </strong>
+        <span>
+          {{ getFullAddress(selectedOrder?.destinationAddress) }}
+        </span>
+      </div>
+    </div>
+
     <ng-container *ngIf="showQr">
       <img width="300px" [src]="bankImagePath" />
       <div>
@@ -126,29 +158,6 @@
         </div>
       </div>
     </ng-container>
-    <div>
-      <div>
-        <strong> Buyer Name: </strong>
-        <span>
-          {{ getFullName(selectedOrder?.orderCreator) }}
-        </span>
-      </div>
-      <div>
-        <strong> Buyer Phone Number: </strong>
-        <span>
-          {{
-            selectedOrder?.phoneNumber ||
-              selectedOrder?.orderCreator?.phoneNumber
-          }}
-        </span>
-      </div>
-      <div>
-        <strong> Buyer Shipping Address: </strong>
-        <span>
-          {{ getFullAddress(selectedOrder?.destinationAddress) }}
-        </span>
-      </div>
-    </div>
   </div>
 
   <div class="flex flex-column gap-4 align-items-center">
@@ -220,7 +229,7 @@
       </ng-container>
 
       <ng-container *ngIf="selectedOrder?.orderStatus === 'ACCEPTED'">
-        <div class="col">
+        <div class="col-6">
           <p-button
             label="Start delivery"
             icon="pi pi-check"
@@ -228,7 +237,7 @@
             (onClick)="startDelivery()"
           ></p-button>
         </div>
-        <div class="col">
+        <div class="col-6">
           <p-button
             label="Abort"
             icon="pi pi-times"
@@ -253,6 +262,77 @@
             icon="pi pi-times"
             styleClass="p-button-danger w-full"
             (onClick)="abort()"
+          ></p-button>
+        </div>
+      </ng-container>
+
+      <ng-container
+        *ngIf="
+          selectedOrder?.orderStatus === 'ACCEPTED' ||
+          selectedOrder?.orderStatus === 'DELIVERING' ||
+          selectedOrder?.orderStatus === 'COMPLETED'
+        "
+      >
+        <div class="col-12">
+          <p-divider></p-divider>
+        </div>
+        <div class="col-6 flex justify-content-center align-items-center">
+          <strong
+            [ngClass]="
+              selectedOrder?.paymentStatus === 'PAID'
+                ? 'text-success'
+                : 'text-danger'
+            "
+          >
+            {{
+              "Buyer has " +
+                (selectedOrder?.paymentStatus === "PAID"
+                  ? "paid"
+                  : "not paid") +
+                " the order!"
+            }}
+          </strong>
+        </div>
+        <div class="col-6" *ngIf="selectedOrder?.paymentStatus === 'NOT_PAID'">
+          <p-button
+            label="Receive Payment"
+            icon="pi pi-check"
+            styleClass="w-full"
+            (onClick)="receivePayment()"
+          ></p-button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="selectedOrder?.orderStatus === 'ABORTED'">
+        <div class="col-12">
+          <p-divider></p-divider>
+        </div>
+        <div class="col-6 flex justify-content-center align-items-center">
+          <strong
+            [ngClass]="
+              selectedOrder?.paymentStatus === 'REFUNDED'
+                ? 'text-success'
+                : 'text-danger'
+            "
+          >
+            {{
+              "Buyer has " +
+                (selectedOrder?.paymentStatus === "REFUNDED"
+                  ? "received"
+                  : "not received") +
+                " the refund!"
+            }}
+          </strong>
+        </div>
+        <div
+          class="col-6"
+          *ngIf="selectedOrder?.paymentStatus === 'NOT_REFUNDED'"
+        >
+          <p-button
+            label="Refund"
+            icon="pi pi-check"
+            styleClass="w-full"
+            (onClick)="refund()"
           ></p-button>
         </div>
       </ng-container>

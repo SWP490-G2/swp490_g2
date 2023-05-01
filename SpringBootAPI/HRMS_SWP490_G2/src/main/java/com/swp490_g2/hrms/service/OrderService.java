@@ -1,10 +1,8 @@
 package com.swp490_g2.hrms.service;
 
 import com.swp490_g2.hrms.entity.*;
-import com.swp490_g2.hrms.entity.enums.OrderStatus;
+import com.swp490_g2.hrms.entity.enums.*;
 import com.swp490_g2.hrms.entity.enums.ProductStatus;
-import com.swp490_g2.hrms.entity.enums.Role;
-import com.swp490_g2.hrms.entity.enums.TimeLine;
 import com.swp490_g2.hrms.repositories.OrderRepository;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.response.ReportIncomeOverTime;
@@ -167,6 +165,7 @@ public class OrderService {
 
         order.setOrderStatus(OrderStatus.ACCEPTED);
         order.setModifiedBy(currentUser.getId());
+        order.setPaymentStatus(PaymentStatus.NOT_PAID);
         orderRepository.save(order);
 
         webSocketService.push(
@@ -205,6 +204,7 @@ public class OrderService {
 
         order.setOrderStatus(OrderStatus.CANCELLED);
         order.setModifiedBy(currentUser.getId());
+        order.setPaymentStatus(null);
         orderRepository.save(order);
 
         webSocketService.push(
@@ -243,6 +243,7 @@ public class OrderService {
 
         order.setOrderStatus(OrderStatus.REJECTED);
         order.setModifiedBy(currentUser.getId());
+        order.setPaymentStatus(null);
         orderRepository.save(order);
 
         webSocketService.push(
@@ -358,6 +359,7 @@ public class OrderService {
 
         order.setOrderStatus(OrderStatus.ABORTED);
         order.setModifiedBy(currentUser.getId());
+        order.setPaymentStatus(PaymentStatus.NOT_REFUNDED);
         orderRepository.save(order);
 
         webSocketService.push(
@@ -365,6 +367,88 @@ public class OrderService {
                 Notification.builder()
                         .url("/buyer-orders")
                         .message("Your order #%d has been aborted!".formatted(order.getId()))
+                        .toUsers(List.of(order.getOrderCreator()))
+                        .build()
+        );
+
+        return null;
+    }
+
+    public String receivePayment(Long orderId) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null)
+            return "\"Current user does not have permission to do this action!\"";
+
+        Restaurant restaurant = getRestaurantByOrderId(orderId);
+        if (restaurant == null)
+            return "\"Order [id=%d] is not valid!\"";
+
+        List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
+        if (!currentUser.isAdmin()) {
+            if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+                return "\"Current user does not have permission to do this action!\"";
+        }
+
+        if (!orderRepository.existsById(orderId))
+            return "\"Order [id=%d] does not exist!\"".formatted(orderId);
+
+        Order order = getById(orderId);
+        if (order.getOrderStatus() != OrderStatus.ACCEPTED
+                && order.getOrderStatus() != OrderStatus.DELIVERING
+                && order.getOrderStatus() != OrderStatus.COMPLETED)
+        {
+            return "\"Cannot receive payment!\"";
+        }
+
+        order.setPaymentStatus(PaymentStatus.PAID);
+        order.setModifiedBy(currentUser.getId());
+        orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("/buyer-orders")
+                        .message("Your payment for order #%d has been received!".formatted(order.getId()))
+                        .toUsers(List.of(order.getOrderCreator()))
+                        .build()
+        );
+
+        return null;
+    }
+
+    public String refund(Long orderId) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser == null)
+            return "\"Current user does not have permission to do this action!\"";
+
+        Restaurant restaurant = getRestaurantByOrderId(orderId);
+        if (restaurant == null)
+            return "\"Order [id=%d] is not valid!\"";
+
+        List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
+        if (!currentUser.isAdmin()) {
+            if (owners == null || owners.stream().noneMatch(owner -> owner.getId().equals(currentUser.getId())))
+                return "\"Current user does not have permission to do this action!\"";
+        }
+
+        if (!orderRepository.existsById(orderId))
+            return "\"Order [id=%d] does not exist!\"".formatted(orderId);
+
+        Order order = getById(orderId);
+        if (order.getOrderStatus() != OrderStatus.ABORTED)
+        {
+            return "\"Cannot refund!\"";
+        }
+
+        order.setPaymentStatus(PaymentStatus.REFUNDED);
+        order.setModifiedBy(currentUser.getId());
+        orderRepository.save(order);
+
+        webSocketService.push(
+                "/notification",
+                Notification.builder()
+                        .url("/buyer-orders")
+                        .message("Your refund for order #%d has been issued!".formatted(order.getId()))
                         .toUsers(List.of(order.getOrderCreator()))
                         .build()
         );

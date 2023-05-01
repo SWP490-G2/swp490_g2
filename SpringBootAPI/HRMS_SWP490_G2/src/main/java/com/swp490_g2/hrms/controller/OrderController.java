@@ -67,6 +67,16 @@ public class OrderController {
         return ResponseEntity.ok(orderService.deliver(orderId));
     }
 
+    @PutMapping("/receive-payment/{orderId}")
+    public ResponseEntity<String> receivePayment(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.receivePayment(orderId));
+    }
+
+    @PutMapping("/refund/{orderId}")
+    public ResponseEntity<String> refund(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.refund(orderId));
+    }
+
     @PostMapping("/get-all-by-role/{role}")
     public ResponseEntity<Page<Order>> getAllByRole(@PathVariable String role, @RequestBody SearchRequest searchRequest) {
         return ResponseEntity.ok(orderService.getAllByRole(Role.valueOf(role), searchRequest));

@@ -68,18 +68,20 @@ public class BuyerService {
         }
 
         Restaurant requestedRestaurant = restaurant;
-        if(restaurant.getId() == null)
-        {
+        if (restaurant.getId() == null) {
             requestedRestaurant = restaurantService.insert(restaurant);
-        }
-        else {
+        } else {
             List<User> owners = userService.getAllOwnersByRestaurantIds(List.of(restaurant.getId()));
 
             // This user doesn't have the required restaurant
-            if(owners.stream().anyMatch(o -> o.getId().equals(buyer.getId())))
-            {
+            if (owners.stream().anyMatch(o -> o.getId().equals(buyer.getId()))) {
                 return "\"You already have restaurant [%s]\"".formatted(restaurant.getRestaurantName());
             }
+        }
+
+        List<Restaurant> ownedRestaurants = restaurantService.getAllBySellerId(buyer.getId());
+        if (ownedRestaurants.size() >= 5) {
+            return "\"You cannot own more than 5 restaurants!\"";
         }
 
         buyer.setRequestingRestaurant(requestedRestaurant);
