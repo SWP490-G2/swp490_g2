@@ -53,6 +53,11 @@ public class AdminController {
         adminService.updateRestaurant(restaurant);
     }
 
+    @DeleteMapping("/delete-restaurant-inactive")
+    public void deleteRestaurantInactive(@RequestParam("restaurant-id") Long restaurantId) {
+        adminService.deleteRestaurantInactive(restaurantId);
+    }
+
     @PostMapping("/get-all-users")
     public ResponseEntity<Page<User>> getAllUsers(@RequestBody SearchRequest request) {
         return ResponseEntity.ok(adminService.getAllUsers(request));

@@ -2,6 +2,7 @@ import { Component, NgZone } from "@angular/core";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { of, switchMap } from "rxjs";
 import {
+  AdminClient,
   Restaurant,
   RestaurantClient,
   SearchRestaurantsRequest,
@@ -33,6 +34,7 @@ export class ViewAllRestaurantComponent {
   otherReason = "";
 
   constructor(
+    private $adminClient: AdminClient,
     private $confirmation: ConfirmationService,
     private $restaurantClient: RestaurantClient,
     private $message: MessageService,
@@ -66,9 +68,8 @@ export class ViewAllRestaurantComponent {
     const intended = activate;
 
     this.$confirmation.confirm({
-      message: `Do you want to ${
-        intended ? "activate" : "deactivate"
-      } this restaurant?`,
+      message: `Do you want to ${intended ? "activate" : "deactivate"
+        } this restaurant?`,
       header: "Toggle Status Confirmation",
       icon: "pi pi-info-circle",
       accept: () => {
@@ -98,6 +99,29 @@ export class ViewAllRestaurantComponent {
       reject: () => {
         restaurant.active = !intended;
       },
+    });
+  }
+
+  toggleDeleteRestaurantInactive(restaurantId: number) {
+    this.$confirmation.confirm({
+      message: `Do you want to delete this restaurant?`,
+      header: "Toggle Delete Confirmation",
+      icon: "pi pi-info-circle",
+      accept: () => {
+        this.$adminClient
+          .deleteRestaurantInactive(restaurantId)
+          .subscribe(() => {
+            this.$message.add({
+              severity: "success",
+              summary: "Success",
+              detail: "Delete restaurant successfully!",
+            });
+
+            this.refresh();
+
+            return of(undefined);
+          });
+      }
     });
   }
 

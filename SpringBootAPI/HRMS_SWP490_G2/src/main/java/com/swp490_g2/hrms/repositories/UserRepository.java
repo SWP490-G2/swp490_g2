@@ -63,4 +63,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             where userId = :sellerId
             """, nativeQuery = true)
     void removeAllRestaurantsForSeller(Long sellerId);
+
+    Optional<User> findByRequestingRestaurantId(Long restaurantId);
 }
