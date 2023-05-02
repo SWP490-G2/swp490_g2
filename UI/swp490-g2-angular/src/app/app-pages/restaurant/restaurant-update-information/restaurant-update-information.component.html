@@ -27,6 +27,7 @@
           pInputText
           class="w-full"
           placeholder="Enter name for restaurant ..."
+          maxlength="255"
           required
         />
       </div>
@@ -82,6 +83,17 @@
         </div>
       </div>
 
+      <div
+        class="flex align-items-center gap-1"
+        *ngIf="
+          form.controls['phoneNumber']?.dirty &&
+          form.controls['phoneNumber']?.errors
+        "
+      >
+        <i class="pi pi-times-circle text-danger"></i>
+        <small class="text-danger"> Enter a valid phone number! </small>
+      </div>
+
       <app-address-fields [address]="restaurant.address"></app-address-fields>
 
       <p-divider></p-divider>
@@ -98,11 +110,21 @@
           <input
             id="bankDetail_accountNumber"
             name="bankDetail_accountNumber"
-            [(ngModel)]="restaurant.bankDetail.accountNumber"
+            [(ngModel)]="restaurant.bankDetail!.accountNumber"
             type="text"
             pInputText
             class="w-full"
           />
+        </div>
+        <div
+          class="flex align-items-center gap-1"
+          *ngIf="
+            form.controls['bankDetail_accountNumber']?.dirty &&
+            form.controls['bankDetail_accountNumber']?.errors
+          "
+        >
+          <i class="pi pi-times-circle text-danger"></i>
+          <small class="text-danger"> Enter a valid account number! </small>
         </div>
 
         <div class="col">
@@ -115,10 +137,11 @@
           <input
             id="bankDetail_accountName"
             name="bankDetail_accountName"
-            [(ngModel)]="restaurant.bankDetail.accountName"
+            [(ngModel)]="restaurant.bankDetail!.accountName"
             type="text"
             pInputText
             class="w-full uppercase"
+            maxlength="255"
           />
         </div>
 

@@ -103,6 +103,10 @@ export class RestaurantUpdateInformationComponent
         Validators.pattern(PHONE_NUMBER_PATTERN),
       ]);
       this.form.controls["phoneNumber"].updateValueAndValidity();
+      this.form.controls["bankDetail_accountNumber"].addValidators([
+        Validators.required,
+        Validators.pattern("^[0-9]{9,15}$"),
+      ]);
       if (!this.editable) {
         this.form.control.disable();
       }

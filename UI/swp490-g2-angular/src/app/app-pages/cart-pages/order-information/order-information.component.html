@@ -56,10 +56,21 @@
         name="phoneNumber"
         [(ngModel)]="newOrder.phoneNumber"
         required
-        maxlength="50"
       />
     </div>
+    <div
+      class="flex align-items-center gap-1"
+      *ngIf="
+        form.controls['phoneNumber']?.dirty &&
+        form.controls['phoneNumber']?.errors
+      "
+    >
+      <i class="pi pi-times-circle text-danger"></i>
+      <small class="text-danger"> Enter a valid phone number! </small>
+    </div>
+    
   </div>
+  
 
   <app-update-shipping-address
     [(destinationAddress)]="newOrder.destinationAddress!"
