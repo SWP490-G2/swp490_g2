@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ForgotPassPageComponent } from './forgot-pass-page.component';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ForgotPassPageComponent } from "./forgot-pass-page.component";
 import { ButtonModule } from "primeng/button";
 import { CarouselModule } from "primeng/carousel";
 import { CheckboxModule } from "primeng/checkbox";
@@ -12,11 +12,7 @@ import { MessageModule } from "primeng/message";
 import { ToastModule } from "primeng/toast";
 import { DialogModule } from "primeng/dialog";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { LoginComponent } from '../login-page/login.component';
-import { RegisterComponent } from '../register-page/register.component';
-import { CodeValidatorComponent } from '../register-page/code-validator/code-validator.component';
-import { PasswordFieldsComponent } from '../register-page/password-fields/password-fields.component';
-import { PasswordFieldsModule } from '../register-page/password-fields/password-fields.module';
+import { PasswordFieldsModule } from "../register-page/password-fields/password-fields.module";
 
 @NgModule({
   imports: [

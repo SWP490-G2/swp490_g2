@@ -67,7 +67,7 @@
           ></p-tag>
         </td>
         <td>{{ order?.restaurant?.restaurantName }}</td>
-        <td>
+        <td class="flex flex-wrap gap-2">
           <p-button
             (click)="showDialog(order.id)"
             icon="pi pi-external-link"
@@ -79,7 +79,6 @@
             pRipple
             label="Order again"
             icon="pi pi-shopping-cart"
-            class="ml-2"
             (click)="addToCart(order)"
           ></button>
         </td>

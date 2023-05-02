@@ -15,7 +15,13 @@ const routes: Routes = [
     loadChildren: () =>
       import("./app-pages/app-pages.module").then((m) => m.AppPagesModule),
   },
-  { path: "seller-pages", loadChildren: () => import("./app-pages/seller-pages/seller-pages.module").then(m => m.SellerPagesModule) },
+  {
+    path: "seller-pages",
+    loadChildren: () =>
+      import("./app-pages/seller-pages/seller-pages.module").then(
+        (m) => m.SellerPagesModule
+      ),
+  },
   {
     path: "seller-pages",
     loadChildren: () =>
@@ -30,7 +36,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes), AppPagesRoutingModule],
+  imports: [
+    RouterModule.forRoot(routes, { onSameUrlNavigation: "reload" }),
+    AppPagesRoutingModule,
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

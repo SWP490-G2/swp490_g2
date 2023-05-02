@@ -104,7 +104,7 @@ export class ViewAllRestaurantComponent {
 
   toggleDeleteRestaurantInactive(restaurantId: number) {
     this.$confirmation.confirm({
-      message: `Do you want to delete this restaurant?`,
+      message: "Do you want to delete this restaurant?",
       header: "Toggle Delete Confirmation",
       icon: "pi pi-info-circle",
       accept: () => {

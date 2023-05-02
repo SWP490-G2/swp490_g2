@@ -4,7 +4,6 @@ import { ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
-  Address,
   AdminClient,
   Restaurant,
   RestaurantCategory,
@@ -12,7 +11,6 @@ import {
   RestaurantClient,
   User,
   UserClient,
-  Ward,
 } from "src/app/ngswag/client";
 
 @Component({

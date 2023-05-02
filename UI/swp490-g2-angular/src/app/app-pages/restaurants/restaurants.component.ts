@@ -15,8 +15,6 @@ import { Observable, of, switchMap } from "rxjs";
 import { GoogleMapService } from "src/app/global/google-map.service";
 import {
   Address,
-  City,
-  District,
   PageRestaurant,
   Restaurant,
   RestaurantCategory,
@@ -26,7 +24,6 @@ import {
   SearchRestaurantsRequest,
   User,
   UserClient,
-  Ward,
 } from "src/app/ngswag/client";
 import { AddressService } from "src/app/shared/services/address.service";
 import { getFullAddress, getLocal, setLocal } from "src/app/utils";

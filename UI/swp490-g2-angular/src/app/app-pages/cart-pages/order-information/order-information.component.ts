@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from "@angular/core";
 import { of, switchMap } from "rxjs";
 import { NgForm, Validators } from "@angular/forms";
 import {
@@ -9,7 +9,6 @@ import {
   UserClient,
   OrderProductDetail,
   Product,
-  Address,
 } from "src/app/ngswag/client";
 import { Router } from "@angular/router";
 import { CartService } from "src/app/service/cart.service";
@@ -22,7 +21,7 @@ import { getFullAddress, haversineDistance } from "src/app/utils";
   templateUrl: "./order-information.component.html",
   styleUrls: ["./order-information.component.scss"],
 })
-export class OrderInformationComponent implements OnInit {
+export class OrderInformationComponent implements OnInit, AfterViewInit {
   orders: Order[] = [];
   @Input() isBuyer = false;
   currentUser?: User;

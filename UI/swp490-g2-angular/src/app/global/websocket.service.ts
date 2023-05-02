@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
 import { environment } from "src/environments/environment";
 
 // Declare SockJS and Stomp
@@ -7,6 +8,8 @@ declare let Stomp;
 
 @Injectable({ providedIn: "root" })
 export class WebsocketService {
+  forceRefresh$ = new BehaviorSubject(undefined);
+
   constructor() {
     this.initializeWebSocketConnection();
   }

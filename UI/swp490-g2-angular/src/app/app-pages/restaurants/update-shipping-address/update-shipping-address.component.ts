@@ -3,11 +3,8 @@ import { MessageService } from "primeng/api";
 import { switchMap, of } from "rxjs";
 import {
   Address,
-  Ward,
-  District,
   UserClient,
   User,
-  City,
 } from "src/app/ngswag/client";
 import { AddressService } from "src/app/shared/services/address.service";
 import { getFullAddress, getLocal, setLocal } from "src/app/utils";

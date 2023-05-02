@@ -1,15 +1,13 @@
-import { Component, OnInit, ViewChild, Input } from "@angular/core";
+import { Component, OnInit, ViewChild, Input, AfterViewInit } from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
-  Address,
   BuyerClient,
   Restaurant,
   RestaurantCategory,
   RestaurantCategoryClient,
   User,
-  Ward,
 } from "src/app/ngswag/client";
 
 @Component({
@@ -17,7 +15,7 @@ import {
   templateUrl: "./open-restaurant-request.component.html",
   styleUrls: ["./open-restaurant-request.component.scss"],
 })
-export class OpenRestaurantRequestComponent implements OnInit {
+export class OpenRestaurantRequestComponent implements OnInit, AfterViewInit {
   @ViewChild("form", { static: false }) form!: NgForm;
   restaurantId: number;
   restaurant = Restaurant.fromJS({});
@@ -67,7 +65,6 @@ export class OpenRestaurantRequestComponent implements OnInit {
       .subscribe((restaurantCategories) => {
         this.restaurantCategories = restaurantCategories;
       });
-
   }
   refresh() {
     this.$auth.getCurrentUser().subscribe((user) => (this.user = user));
@@ -90,7 +87,8 @@ export class OpenRestaurantRequestComponent implements OnInit {
         this.$message.add({
           severity: "success",
           summary: "Success",
-          detail: "Opening a new restaurant request has been sent to admin successfully!",
+          detail:
+            "Opening a new restaurant request has been sent to admin successfully!",
         });
       });
   }

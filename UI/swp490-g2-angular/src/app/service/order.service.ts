@@ -1,11 +1,4 @@
 import { Injectable } from "@angular/core";
-import {
-  File,
-  Order,
-  OrderProductDetail,
-  Product,
-  ProductCategory,
-} from "../ngswag/client";
 
 export interface CartItem {
   id: number;

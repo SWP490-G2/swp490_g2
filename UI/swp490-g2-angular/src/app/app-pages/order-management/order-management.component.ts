@@ -1,14 +1,13 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, Input, NgZone, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component, Input, NgZone, OnDestroy, OnInit } from "@angular/core";
+import { NavigationEnd, Router } from "@angular/router";
 import { ConfirmationService, MessageService } from "primeng/api";
-import { map, of, switchMap } from "rxjs";
+import { Subscription, map, of, switchMap } from "rxjs";
 import {
   Address,
   Order,
   OrderClient,
   OrderProductDetail,
-  Restaurant,
   RestaurantClient,
   SearchRequest,
   User,
@@ -23,7 +22,7 @@ import { getFullAddress, getFullName } from "src/app/utils";
   templateUrl: "./order-management.component.html",
   styleUrls: ["./order-management.component.scss"],
 })
-export class OrderManagementComponent implements OnInit {
+export class OrderManagementComponent implements OnInit, OnDestroy {
   orders: Order[] = [];
   totalPrice = 0;
   visible = false;
@@ -40,6 +39,7 @@ export class OrderManagementComponent implements OnInit {
   qrData?: string;
   bankImagePath?: string;
   currentUser?: User;
+  navigationSubscription: Subscription;
 
   constructor(
     private $router: Router,
@@ -52,7 +52,20 @@ export class OrderManagementComponent implements OnInit {
     private $userClient: UserClient,
     private $confirmation: ConfirmationService,
     private $address: AddressService
-  ) {}
+  ) {
+    this.navigationSubscription = this.$router.events.subscribe((e: any) => {
+      // If it is a NavigationEnd event re-initalise the component
+      if (e instanceof NavigationEnd) {
+        this.refresh();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
+  }
 
   ngOnInit() {
     this.refresh();

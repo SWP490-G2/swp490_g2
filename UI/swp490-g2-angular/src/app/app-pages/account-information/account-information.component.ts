@@ -18,13 +18,10 @@ import { AuthService } from "src/app/global/auth.service";
 import {
   Address,
   BuyerClient,
-  City,
-  District,
   Restaurant,
   User,
   UserClient,
   UserInformationRequest,
-  Ward,
 } from "src/app/ngswag/client";
 import { Title } from "@angular/platform-browser";
 import { DateUtils, getFullAddress } from "src/app/utils";
