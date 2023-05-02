@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -229,7 +230,7 @@ public class OrderService {
         return null;
     }
 
-    public String reject(Long orderId) {
+    public String reject(Long orderId, String reasonMessage) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "\"Current user does not have permission to do this action!\"";
@@ -255,6 +256,13 @@ public class OrderService {
         order.setModifiedBy(currentUser.getId());
         order.setPaymentStatus(null);
         orderRepository.save(order);
+
+        OrderTicket orderTicket = OrderTicket.builder()
+                .order(order)
+                .message(reasonMessage)
+                .status(OrderStatus.REJECTED)
+                .build();
+        orderTicketRepository.save(orderTicket);
 
         webSocketService.push(
                 "/notification",

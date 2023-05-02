@@ -192,7 +192,8 @@
           <p>Quantity: {{ orderDetail.quantity }}</p>
           <p>Note: {{ orderDetail.note }}</p>
           <p>Order status: {{ selectedOrder?.orderStatus }}</p>
-          <p *ngIf="selectedOrder?.orderStatus === 'ABORTED'">Reason: {{ getAbortReason(selectedOrder?.id) }}</p>
+          <!-- <p *ngIf="selectedOrder?.orderStatus === 'ABORTED'">Reason: {{ getAbortReason(selectedOrder?.id) }}</p> -->
+          <p *ngIf="selectedOrder?.orderStatus === 'ABORTED'">Reason: Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit aliquid velit praesentium dicta commodi vero eum eaque, neque esse error sed amet repellendus asperiores, magni magnam laborum est, voluptatibus officia.</p>
           <!-- <p-tag
             *ngIf="selectedOrder?.orderStatus !== undefined"
             [value]="selectedOrder.orderStatus"
@@ -226,12 +227,49 @@
           ></p-button>
         </div>
         <div class="col">
-          <p-button
+          <!-- <p-button
             label="Reject"
             icon="pi pi-times"
             styleClass="p-button-danger w-full"
             (onClick)="reject()"
+          ></p-button> -->
+          <p-button
+            label="Reject"
+            icon="pi pi-times"
+            styleClass="p-button-danger w-full"
+            (click)="showRejectDialog()"
           ></p-button>
+          <p-dialog
+            header="Reject reason"
+            [(visible)]="visibleRejectDialog"
+            [modal]="true"
+            [style]="{ width: '50vw' }"
+            [draggable]="false"
+            [resizable]="false"
+          >
+            <div class="m-0">
+              <label for="reason" class="block text-900 font-medium my-4">
+                Why do you want to reject this order?
+              </label>
+              <div class="flex justify-content-center">
+                <textarea
+                  cols="100"
+                  rows="5"
+                  pInputTextarea
+                  [(ngModel)]="selectedRejectReason"
+                ></textarea>
+              </div>
+            </div>
+            <button
+              pButton
+              pRipple
+              class="mt-3"
+              type="button"
+              label="Reject"
+              icon="pi pi-times"
+              (click)="reject()"
+            ></button>
+          </p-dialog>
         </div>
       </ng-container>
 

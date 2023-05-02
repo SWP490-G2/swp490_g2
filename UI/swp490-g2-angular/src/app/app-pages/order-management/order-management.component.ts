@@ -30,6 +30,7 @@ export class OrderManagementComponent implements OnInit {
   visible = false;
   selectedOrder?: Order;
   selectedAbortReason: string;
+  selectedRejectReason: string;
   searchRequest = new SearchRequest({
     page: 0,
     size: 10,
@@ -43,6 +44,7 @@ export class OrderManagementComponent implements OnInit {
   bankImagePath?: string;
   currentUser?: User;
   visibleAbortDialog: boolean;
+  visibleRejectDialog: boolean;
 
   constructor(
     private $router: Router,
@@ -210,7 +212,7 @@ export class OrderManagementComponent implements OnInit {
         if (!this.selectedOrder?.id) return;
 
         this.$orderClient
-          .reject(this.selectedOrder.id)
+          .reject(this.selectedOrder.id, this.selectedRejectReason)
           .pipe(
             map((errorMessage) => {
               if (errorMessage) throw new Error(errorMessage);
@@ -288,6 +290,10 @@ export class OrderManagementComponent implements OnInit {
 
   showAbortDialog() {
     this.visibleAbortDialog = true;
+  }
+
+  showRejectDialog() {
+    this.visibleRejectDialog = true;
   }
 
   abort() {
