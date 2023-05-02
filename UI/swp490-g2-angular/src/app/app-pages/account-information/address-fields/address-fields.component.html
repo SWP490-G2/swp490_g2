@@ -99,5 +99,15 @@
       required
       maxlength="255"
     />
+    <div
+        class="flex align-items-center gap-1"
+        *ngIf="
+          form.controls['specificAddress']?.dirty &&
+          form.controls['specificAddress']?.errors
+        "
+      >
+        <i class="pi pi-times-circle text-danger"></i>
+        <small class="text-danger"> Specific address can't be empty!</small>
+      </div>
   </div>
 </div>
