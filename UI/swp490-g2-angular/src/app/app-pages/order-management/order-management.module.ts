@@ -1,4 +1,5 @@
 import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { OrderManagementComponent } from "./order-management.component";
 import { OrderManagementRoutingModule } from "./order-management-routing.module";
@@ -9,6 +10,7 @@ import { DialogModule } from "primeng/dialog";
 import { CardModule } from "primeng/card";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 import { DividerModule } from "primeng/divider";
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   imports: [
@@ -20,7 +22,9 @@ import { DividerModule } from "primeng/divider";
     DialogModule,
     CardModule,
     ImageAttachmentModule,
-    DividerModule
+    DividerModule,
+    InputTextareaModule,
+    FormsModule
   ],
   declarations: [OrderManagementComponent],
   exports: [OrderManagementComponent],

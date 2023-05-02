@@ -2,12 +2,13 @@ import { HttpClient } from "@angular/common/http";
 import { Component, Input, NgZone, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ConfirmationService, MessageService } from "primeng/api";
-import { map, of, switchMap } from "rxjs";
+import { Observable, map, of, switchMap } from "rxjs";
 import {
   Address,
   Order,
   OrderClient,
   OrderProductDetail,
+  OrderTicket,
   Restaurant,
   RestaurantClient,
   SearchRequest,
@@ -28,6 +29,7 @@ export class OrderManagementComponent implements OnInit {
   totalPrice = 0;
   visible = false;
   selectedOrder?: Order;
+  selectedAbortReason: string;
   searchRequest = new SearchRequest({
     page: 0,
     size: 10,
@@ -40,6 +42,7 @@ export class OrderManagementComponent implements OnInit {
   qrData?: string;
   bankImagePath?: string;
   currentUser?: User;
+  visibleAbortDialog: boolean;
 
   constructor(
     private $router: Router,
@@ -52,7 +55,7 @@ export class OrderManagementComponent implements OnInit {
     private $userClient: UserClient,
     private $confirmation: ConfirmationService,
     private $address: AddressService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.refresh();
@@ -160,6 +163,8 @@ export class OrderManagementComponent implements OnInit {
           .subscribe();
       }
     }
+
+    console.log(this.selectedOrder);
   }
 
   onPage(event: { first: number; rows: number }) {
@@ -281,6 +286,10 @@ export class OrderManagementComponent implements OnInit {
     });
   }
 
+  showAbortDialog() {
+    this.visibleAbortDialog = true;
+  }
+
   abort() {
     this.$confirmation.confirm({
       message: "Do you want to abort this order?",
@@ -289,7 +298,7 @@ export class OrderManagementComponent implements OnInit {
         if (!this.selectedOrder?.id) return;
 
         this.$orderClient
-          .abort(this.selectedOrder.id)
+          .abort(this.selectedOrder.id, this.selectedAbortReason)
           .pipe(
             map((errorMessage) => {
               if (errorMessage) throw new Error(errorMessage);
@@ -398,9 +407,9 @@ export class OrderManagementComponent implements OnInit {
 
   getPaymentStatus(order: Order):
     | {
-        name: string;
-        severity: "success" | "warning";
-      }
+      name: string;
+      severity: "success" | "warning";
+    }
     | undefined {
     let severity: "success" | "warning" | undefined = undefined;
     if (order.paymentStatus === "PAID" || order.paymentStatus === "REFUNDED")
@@ -493,5 +502,16 @@ export class OrderManagementComponent implements OnInit {
           .subscribe();
       },
     });
+  }
+
+  getAbortReason(orderId: number): string {
+    if (!orderId) return "";
+
+    let msg = "";
+    this.$orderClient.getTicketByOrderIdAndStatus(orderId, "ABORTED").subscribe((ticket) => {
+      if (ticket.message)
+        msg = ticket.message;
+    });
+    return msg;
   }
 }

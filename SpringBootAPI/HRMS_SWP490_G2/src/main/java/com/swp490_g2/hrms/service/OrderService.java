@@ -4,6 +4,7 @@ import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.*;
 import com.swp490_g2.hrms.entity.enums.ProductStatus;
 import com.swp490_g2.hrms.repositories.OrderRepository;
+import com.swp490_g2.hrms.repositories.OrderTicketRepository;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.response.ReportIncomeOverTime;
 import lombok.Getter;
@@ -27,6 +28,13 @@ public class OrderService {
     @Autowired
     public void setOrderRepository(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
+    }
+
+    private OrderTicketRepository orderTicketRepository;
+
+    @Autowired
+    public void setOrderTicketRepository(OrderTicketRepository orderTicketRepository) {
+        this.orderTicketRepository = orderTicketRepository;
     }
 
     private ProductService productService;
@@ -338,7 +346,7 @@ public class OrderService {
         return null;
     }
 
-    public String abort(Long orderId) {
+    public String abort(Long orderId, String reasonMessage) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "\"Current user does not have permission to do this action!\"";
@@ -365,6 +373,13 @@ public class OrderService {
         order.setPaymentStatus(PaymentStatus.NOT_REFUNDED);
         order.setAbortedAt(Instant.now());
         orderRepository.save(order);
+
+        OrderTicket orderTicket = OrderTicket.builder()
+                .order(order)
+                .message(reasonMessage)
+                .status(OrderStatus.ABORTED)
+                .build();
+        orderTicketRepository.save(orderTicket);
 
         webSocketService.push(
                 "/notification",
@@ -614,5 +629,9 @@ public class OrderService {
     public Order getOrderById(Long orderId) {
         Order order = orderRepository.findById(orderId).orElse(null);
         return order;
+    }
+
+    public OrderTicket getTicketByOrderIdAndStatus(Long orderId, OrderStatus orderStatus) {
+        return orderTicketRepository.findByOrderAndStatus(orderId, orderStatus);
     }
 }
