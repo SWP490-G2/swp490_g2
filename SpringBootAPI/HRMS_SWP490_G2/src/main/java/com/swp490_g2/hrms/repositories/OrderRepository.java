@@ -78,7 +78,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                 inner join restaurant_product rp on rp.products_productId = opd.product_productId
             where o.orderStatus = "COMPLETED"
                 and rp.restaurant_restaurantId = :restaurantId
-                and date(o.modifiedAt) between date_format(date_sub(curdate(), interval :offset month), "%Y-%m-01")
+                and date(o.completedAt) between date_format(date_sub(curdate(), interval :offset month), "%Y-%m-01")
                     and last_day(date_sub(curdate(), interval :offset month))
             group by date_format(o.completedAt, "%d-%m-%Y")
             ;
@@ -95,7 +95,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                 inner join restaurant_product rp on rp.products_productId = opd.product_productId
             where o.orderStatus = "ABORTED"
                 and rp.restaurant_restaurantId = :restaurantId
-                and date(o.modifiedAt) between date_format(date_sub(curdate(), interval :offset month), "%Y-%m-01")
+                and date(o.abortedAt) between date_format(date_sub(curdate(), interval :offset month), "%Y-%m-01")
                     and last_day(date_sub(curdate(), interval :offset month))
             group by date_format(o.abortedAt, "%d-%m-%Y")
             ;
