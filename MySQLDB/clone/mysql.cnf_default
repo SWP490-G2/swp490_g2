@@ -1,4 +1,0 @@
-[mysqldump]
-skip-grant-tables
-user=root
-password=<your-password>
