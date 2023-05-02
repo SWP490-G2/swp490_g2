@@ -17,10 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Getter
@@ -211,6 +209,17 @@ public class ProductService {
     public void update(Product product) {
         if (product == null)
             return;
+
+        if (product.getImages() != null) {
+//                 employee.stream()
+//                                .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingInt(Employee::getId))),
+//                                                           ArrayList::new));
+
+            product.setImages(product.getImages().stream()
+                    .collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingLong(File::getId))), ArrayList::new))
+            );
+        }
+
         productRepository.save(product);
     }
 
@@ -227,7 +236,7 @@ public class ProductService {
         return topProducts;
     }
 
-    public List<Product> getProductsByOrderId(Long orderId){
+    public List<Product> getProductsByOrderId(Long orderId) {
         return productRepository.getProductsByOrderId(orderId);
     }
 }
