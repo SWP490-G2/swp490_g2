@@ -1,6 +1,8 @@
 package com.swp490_g2.hrms.controller;
 
 import com.swp490_g2.hrms.entity.Order;
+import com.swp490_g2.hrms.entity.OrderTicket;
+import com.swp490_g2.hrms.entity.enums.OrderStatus;
 import com.swp490_g2.hrms.entity.enums.Role;
 import com.swp490_g2.hrms.entity.enums.TimeLine;
 import com.swp490_g2.hrms.response.ReportIncomeOverTime;
@@ -43,8 +45,8 @@ public class OrderController {
     }
 
     @PutMapping("/abort/{orderId}")
-    public ResponseEntity<String> aborted(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderService.abort(orderId));
+    public ResponseEntity<String> aborted(@PathVariable Long orderId, @RequestParam String reasonMessage) {
+        return ResponseEntity.ok(orderService.abort(orderId, reasonMessage));
     }
 
     @PutMapping("/complete/{orderId}")
@@ -53,8 +55,8 @@ public class OrderController {
     }
 
     @PutMapping("/reject/{orderId}")
-    public ResponseEntity<String> rejected(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderService.reject(orderId));
+    public ResponseEntity<String> rejected(@PathVariable Long orderId, @RequestParam String reasonMessage) {
+        return ResponseEntity.ok(orderService.reject(orderId, reasonMessage));
     }
 
     @PutMapping("/cancel/{orderId}")
@@ -97,5 +99,10 @@ public class OrderController {
     @GetMapping("/get-order-by-id/{id}")
     public Order getOrderById(@PathVariable Long id) {
         return orderService.getOrderById(id);
+    }
+
+    @GetMapping("/get-ticket-by-order-id-and-status")
+    public OrderTicket getTicketByOrderIdAndStatus(@RequestParam Long orderId, @RequestParam OrderStatus orderStatus) {
+        return orderService.getTicketByOrderIdAndStatus(orderId, orderStatus);
     }
 }

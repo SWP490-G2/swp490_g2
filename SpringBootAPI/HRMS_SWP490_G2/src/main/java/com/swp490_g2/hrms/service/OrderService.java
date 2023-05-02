@@ -4,6 +4,7 @@ import com.swp490_g2.hrms.entity.*;
 import com.swp490_g2.hrms.entity.enums.*;
 import com.swp490_g2.hrms.entity.enums.ProductStatus;
 import com.swp490_g2.hrms.repositories.OrderRepository;
+import com.swp490_g2.hrms.repositories.OrderTicketRepository;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.response.ReportIncomeOverTime;
 import lombok.Getter;
@@ -27,6 +28,13 @@ public class OrderService {
     @Autowired
     public void setOrderRepository(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
+    }
+
+    private OrderTicketRepository orderTicketRepository;
+
+    @Autowired
+    public void setOrderTicketRepository(OrderTicketRepository orderTicketRepository) {
+        this.orderTicketRepository = orderTicketRepository;
     }
 
     private ProductService productService;
@@ -221,7 +229,7 @@ public class OrderService {
         return null;
     }
 
-    public String reject(Long orderId) {
+    public String reject(Long orderId, String reasonMessage) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "\"Current user does not have permission to do this action!\"";
@@ -247,6 +255,13 @@ public class OrderService {
         order.setModifiedBy(currentUser.getId());
         order.setPaymentStatus(null);
         orderRepository.save(order);
+
+        OrderTicket orderTicket = OrderTicket.builder()
+                .order(order)
+                .message(reasonMessage)
+                .status(OrderStatus.REJECTED)
+                .build();
+        orderTicketRepository.save(orderTicket);
 
         webSocketService.push(
                 "/notification",
@@ -338,7 +353,7 @@ public class OrderService {
         return null;
     }
 
-    public String abort(Long orderId) {
+    public String abort(Long orderId, String reasonMessage) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "\"Current user does not have permission to do this action!\"";
@@ -365,6 +380,13 @@ public class OrderService {
         order.setPaymentStatus(PaymentStatus.NOT_REFUNDED);
         order.setAbortedAt(Instant.now());
         orderRepository.save(order);
+
+        OrderTicket orderTicket = OrderTicket.builder()
+                .order(order)
+                .message(reasonMessage)
+                .status(OrderStatus.ABORTED)
+                .build();
+        orderTicketRepository.save(orderTicket);
 
         webSocketService.push(
                 "/notification",
@@ -399,8 +421,7 @@ public class OrderService {
         Order order = getById(orderId);
         if (order.getOrderStatus() != OrderStatus.ACCEPTED
                 && order.getOrderStatus() != OrderStatus.DELIVERING
-                && order.getOrderStatus() != OrderStatus.COMPLETED)
-        {
+                && order.getOrderStatus() != OrderStatus.COMPLETED) {
             return "\"Cannot receive payment!\"";
         }
 
@@ -439,8 +460,7 @@ public class OrderService {
             return "\"Order [id=%d] does not exist!\"".formatted(orderId);
 
         Order order = getById(orderId);
-        if (order.getOrderStatus() != OrderStatus.ABORTED)
-        {
+        if (order.getOrderStatus() != OrderStatus.ABORTED) {
             return "\"Cannot refund!\"";
         }
 
@@ -483,6 +503,12 @@ public class OrderService {
         orders = orders.stream().sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt())).toList();
         orders.forEach(order -> {
             order.setRestaurant(restaurantService.getByProductId(order.getOrderProductDetails().get(0).getProduct().getId()));
+
+            var orderTicket = getTicketByOrderIdAndStatus(order.getId(), order.getOrderStatus());
+            if (orderTicket != null) {
+                orderTicket.setOrder(null);
+                order.setOrderTicket(orderTicket);
+            }
         });
 
         return new PageImpl<>(orders.subList(
@@ -614,5 +640,9 @@ public class OrderService {
     public Order getOrderById(Long orderId) {
         Order order = orderRepository.findById(orderId).orElse(null);
         return order;
+    }
+
+    public OrderTicket getTicketByOrderIdAndStatus(Long orderId, OrderStatus orderStatus) {
+        return orderTicketRepository.findFirstByOrderIdAndStatus(orderId, orderStatus);
     }
 }

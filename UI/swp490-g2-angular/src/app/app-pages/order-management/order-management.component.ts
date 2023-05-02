@@ -27,6 +27,8 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
   totalPrice = 0;
   visible = false;
   selectedOrder?: Order;
+  selectedAbortReason: string;
+  selectedRejectReason: string;
   searchRequest = new SearchRequest({
     page: 0,
     size: 10,
@@ -40,6 +42,8 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
   bankImagePath?: string;
   currentUser?: User;
   navigationSubscription: Subscription;
+  visibleAbortDialog: boolean;
+  visibleRejectDialog: boolean;
 
   constructor(
     private $router: Router,
@@ -173,6 +177,8 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
           .subscribe();
       }
     }
+
+    console.log(this.selectedOrder);
   }
 
   onPage(event: { first: number; rows: number }) {
@@ -218,7 +224,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
         if (!this.selectedOrder?.id) return;
 
         this.$orderClient
-          .reject(this.selectedOrder.id)
+          .reject(this.selectedOrder.id, this.selectedRejectReason)
           .pipe(
             map((errorMessage) => {
               if (errorMessage) throw new Error(errorMessage);
@@ -294,6 +300,14 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
     });
   }
 
+  showAbortDialog() {
+    this.visibleAbortDialog = true;
+  }
+
+  showRejectDialog() {
+    this.visibleRejectDialog = true;
+  }
+
   abort() {
     this.$confirmation.confirm({
       message: "Do you want to abort this order?",
@@ -302,7 +316,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
         if (!this.selectedOrder?.id) return;
 
         this.$orderClient
-          .abort(this.selectedOrder.id)
+          .abort(this.selectedOrder.id, this.selectedAbortReason)
           .pipe(
             map((errorMessage) => {
               if (errorMessage) throw new Error(errorMessage);
@@ -506,5 +520,17 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
           .subscribe();
       },
     });
+  }
+
+  getAbortReason(orderId: number): string {
+    if (!orderId) return "";
+
+    let msg = "";
+    this.$orderClient
+      .getTicketByOrderIdAndStatus(orderId, "ABORTED")
+      .subscribe((ticket) => {
+        if (ticket.message) msg = ticket.message;
+      });
+    return msg;
   }
 }

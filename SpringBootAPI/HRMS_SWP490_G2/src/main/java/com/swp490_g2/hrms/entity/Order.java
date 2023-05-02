@@ -56,8 +56,14 @@ public class Order extends BaseEntity {
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Instant abortedAt;
 
+//    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY,
+//            cascade = CascadeType.ALL)
+//    private List<OrderTicket> orderTickets;
     /// Transient fields
 
     @Transient
     private Restaurant restaurant;
+
+    @Transient
+    private OrderTicket orderTicket;
 }
