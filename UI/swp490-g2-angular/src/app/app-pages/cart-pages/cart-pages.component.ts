@@ -1,5 +1,12 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from "@angular/core";
-import { MessageService } from "primeng/api";
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+} from "@angular/core";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { of, switchMap } from "rxjs";
 import {
   FilterRequest,
@@ -32,7 +39,8 @@ export class CartPagesComponent implements OnInit {
     private $route: ActivatedRoute,
     private $cart: CartService,
     private $productClient: ProductClient,
-    private $message: MessageService
+    private $message: MessageService,
+    private $confirmation: ConfirmationService
   ) {}
 
   refresh() {
@@ -112,11 +120,36 @@ export class CartPagesComponent implements OnInit {
   }
 
   remove(detail: OrderProductDetail) {
-    this.$cart.removeFromCart(detail);
+    this.$confirmation.confirm({
+      header: "Confirmation",
+      message:
+        this.isSideBar || this.$cart.itemCount > 1
+          ? "Are you sure that you want to remove this item?"
+          : "Are you sure that you want to empty the cart and navigate to the restaurant?",
+      accept: () => {
+        const restaurantId = this.restaurant?.id;
+        this.$cart.removeFromCart(detail);
+        if (!this.isSideBar && !this.$cart.itemCount) {
+          this.$router.navigate(["restaurant", restaurantId]);
+        }
+      },
+    });
   }
 
   emptyCart() {
-    this.$cart.clearCart();
+    this.$confirmation.confirm({
+      header: "Confirmation",
+      message: this.isSideBar
+        ? "Are you sure that you want to empty the cart?"
+        : "Are you sure that you want to empty the cart and navigate to the restaurant?",
+      accept: () => {
+        const restaurantId = this.restaurant?.id;
+        this.$cart.clearCart();
+        if (!this.isSideBar) {
+          this.$router.navigate(["restaurant", restaurantId]);
+        }
+      },
+    });
   }
 
   addOrder() {

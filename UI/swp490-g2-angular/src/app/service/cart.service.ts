@@ -130,4 +130,9 @@ export class CartService {
       })
     );
   }
+
+  get itemCount(): number {
+    const order = this.order$.value;
+    return order.orderProductDetails?.length || 0;
+  }
 }
