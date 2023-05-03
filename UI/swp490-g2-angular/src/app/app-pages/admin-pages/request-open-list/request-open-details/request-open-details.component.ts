@@ -2,8 +2,14 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { finalize } from "rxjs";
-import { AdminClient, User, UserClient } from "src/app/ngswag/client";
-import { DateUtils } from "src/app/utils";
+import {
+  AdminClient,
+  Restaurant,
+  RestaurantClient,
+  User,
+  UserClient,
+} from "src/app/ngswag/client";
+import { DateUtils, getFullAddress } from "src/app/utils";
 
 @Component({
   selector: "app-request-open-details",
@@ -21,9 +27,10 @@ export class RequestOpenDetailsComponent implements OnInit {
   displayMaximizable: boolean;
   requester?: User;
   userId: number;
+  restaurant: Restaurant;
   reasons = [
     "This request sent not enough information",
-    "This request does not sent food safety certifications",
+    "This restaurant is too far from Thach That District, Ha Noi",
     "This restaurant had banned in the past",
   ];
 
@@ -32,7 +39,8 @@ export class RequestOpenDetailsComponent implements OnInit {
   constructor(
     private $adminClient: AdminClient,
     private $route: ActivatedRoute,
-    private $userClient: UserClient
+    private $userClient: UserClient,
+    private $restaurantClient: RestaurantClient
   ) {
     const id: number = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("id")
@@ -117,5 +125,9 @@ export class RequestOpenDetailsComponent implements OnInit {
     }
 
     this.otherReason = otherReason;
+  }
+
+  get fullAddress(): string {
+    return getFullAddress(this.requester?.requestingRestaurant?.address);
   }
 }
