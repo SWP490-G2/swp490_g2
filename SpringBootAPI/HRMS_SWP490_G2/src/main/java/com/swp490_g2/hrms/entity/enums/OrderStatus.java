@@ -3,8 +3,8 @@ package com.swp490_g2.hrms.entity.enums;
 
 /**
  *  PENDING  -> ACCEPTED -> DELIVERING -> COMPLETED
- *           |             |
- *           -> REJECTED   -> ABORTED
+ *           |             |           |
+ *           -> REJECTED   -> ABORTED  -> ABORTED
  *           |
  *           -> CANCELLED
  */
