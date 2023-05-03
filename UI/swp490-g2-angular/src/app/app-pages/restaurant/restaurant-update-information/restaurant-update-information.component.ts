@@ -144,6 +144,8 @@ export class RestaurantUpdateInformationComponent
           summary: "Success",
           detail: "Restaurant's information has changed",
         });
+
+        this.displayModal = false;
       });
   }
 

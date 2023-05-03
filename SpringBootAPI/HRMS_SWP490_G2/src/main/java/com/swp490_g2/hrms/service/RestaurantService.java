@@ -146,7 +146,15 @@ public class RestaurantService {
             }
         }
 
-        restaurant.setAddress(addressService.populateLatLng(restaurant.getAddress()));
+        Restaurant existedRestaurant = getById(restaurant.getId());
+        if (existedRestaurant.getAddress() == null
+                || restaurant.getAddress() == null
+                || !existedRestaurant.getAddress().getId().equals(restaurant.getAddress().getId())
+                || !existedRestaurant.getAddress().getWard().getId().equals(restaurant.getAddress().getWard().getId())
+        ) {
+            restaurant.setAddress(addressService.populateLatLng(restaurant.getAddress()));
+        }
+
         restaurantRepository.save(restaurant);
         return null;
     }
@@ -155,7 +163,7 @@ public class RestaurantService {
     public void deleteRestaurantInactive(Long id) {
         User user = userRepository.findByRequestingRestaurantId(id).orElse(null);
 
-        if(Objects.nonNull(user)) {
+        if (Objects.nonNull(user)) {
             user.setRequestingRestaurant(null);
             user.setRejectRestaurantOpeningRequestReasons(null);
             user.setRequestingRestaurantStatus(RequestingRestaurantStatus.PENDING);
