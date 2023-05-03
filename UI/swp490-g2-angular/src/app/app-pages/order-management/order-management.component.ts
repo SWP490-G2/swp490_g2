@@ -32,6 +32,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
   selectedOrder?: Order;
   selectedAbortReason: string;
   selectedRejectReason: string;
+  selectedCancelReason: string;
   searchRequest = new SearchRequest({
     page: 0,
     size: 10,
@@ -48,6 +49,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
   navigationSubscription: Subscription;
   visibleAbortDialog: boolean;
   visibleRejectDialog: boolean;
+  visibleCancelDialog: boolean;
 
   orderStatuses: OrderStatus[] = [
     "COMPLETED",
@@ -332,7 +334,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
         if (!this.selectedOrder?.id) return;
 
         this.$orderClient
-          .cancel(this.selectedOrder.id)
+          .cancel(this.selectedOrder.id, this.selectedCancelReason)
           .pipe(
             map((errorMessage) => {
               if (errorMessage) throw new Error(errorMessage);
@@ -386,6 +388,10 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
 
   showRejectDialog() {
     this.visibleRejectDialog = true;
+  }
+
+  showCancelDialog() {
+    this.visibleCancelDialog = true;
   }
 
   abort() {
@@ -451,6 +457,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
       this.selectedOrder?.orderStatus === "ABORTED" ||
       this.selectedOrder?.orderStatus === "PENDING" ||
       this.selectedOrder?.orderStatus === "REJECTED" ||
+      this.selectedOrder?.orderStatus === "CANCELLED" ||
       !this.selectedOrder?.restaurant
     ) {
       return false;

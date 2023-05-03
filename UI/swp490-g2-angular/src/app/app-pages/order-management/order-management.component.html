@@ -179,7 +179,7 @@
   [resizable]="false"
 >
   <div class="flex flex-wrap justify-content-center align-items-center gap-5">
-    <div class="w-full">
+    <div class="w-full flex flex-column gap-2">
       <div>
         <strong> Buyer Name: </strong>
         <span>
@@ -199,6 +199,26 @@
         <strong> Buyer Shipping Address: </strong>
         <span>
           {{ getFullAddress(selectedOrder?.destinationAddress) }}
+        </span>
+      </div>
+      <div>
+        <strong> Order Status: </strong>
+        <p-tag
+          [value]="selectedOrder?.orderStatus!"
+          [severity]="getSeverity(selectedOrder?.orderStatus!)"
+        ></p-tag>
+      </div>
+      <div
+        *ngIf="
+          selectedOrder?.orderTicket?.message &&
+          (selectedOrder?.orderStatus === 'REJECTED' ||
+            selectedOrder?.orderStatus === 'ABORTED' ||
+            selectedOrder?.orderStatus === 'CANCELLED')
+        "
+      >
+        <strong>Reason:</strong>
+        <span>
+          {{ selectedOrder?.orderTicket?.message }}
         </span>
       </div>
     </div>
@@ -259,28 +279,6 @@
           </ng-template>
           <p>Quantity: {{ orderDetail.quantity }}</p>
           <p *ngIf="orderDetail.note">Note: {{ orderDetail.note }}</p>
-          <p>
-            Order status:
-            <p-tag
-              [value]="selectedOrder?.orderStatus!"
-              [severity]="getSeverity(selectedOrder?.orderStatus!)"
-            ></p-tag>
-          </p>
-          <p
-            *ngIf="
-              selectedOrder?.orderTicket?.message &&
-              (selectedOrder?.orderStatus === 'REJECTED' ||
-                selectedOrder?.orderStatus === 'ABORTED')
-            "
-          >
-            <strong>Reason:</strong>
-            {{ selectedOrder?.orderTicket?.message }}
-          </p>
-          <!-- <p-tag
-            *ngIf="selectedOrder?.orderStatus !== undefined"
-            [value]="selectedOrder.orderStatus"
-            [severity]="getSeverity(selectedOrder.orderStatus)"
-          ></p-tag> -->
         </p-card>
       </div>
     </div>
@@ -290,12 +288,49 @@
       *ngIf="isBuyer && selectedOrder?.orderStatus === 'PENDING'"
     >
       <div class="col">
-        <p-button
+        <!-- <p-button
           label="Cancel"
           icon="pi pi-times"
           styleClass="p-button-danger w-full"
           (onClick)="cancel()"
+        ></p-button> -->
+        <p-button
+          label="Cancel"
+          icon="pi pi-times"
+          styleClass="p-button-danger w-full"
+          (click)="showCancelDialog()"
         ></p-button>
+        <p-dialog
+          header="Cancel reason"
+          [(visible)]="visibleCancelDialog"
+          [modal]="true"
+          [style]="{ width: '50vw' }"
+          [draggable]="false"
+          [resizable]="false"
+        >
+          <div class="m-0">
+            <label for="reason" class="block text-900 font-medium my-4">
+              Why do you want to cancel this order?
+            </label>
+            <div class="flex justify-content-center">
+              <textarea
+                cols="100"
+                rows="5"
+                pInputTextarea
+                [(ngModel)]="selectedCancelReason"
+              ></textarea>
+            </div>
+          </div>
+          <button
+            pButton
+            pRipple
+            class="mt-3"
+            type="button"
+            label="Cancel"
+            icon="pi pi-times"
+            (click)="cancel()"
+          ></button>
+        </p-dialog>
       </div>
     </div>
     <div class="grid w-full" *ngIf="!isBuyer">
@@ -408,6 +443,7 @@
       <ng-container *ngIf="selectedOrder?.orderStatus === 'DELIVERING'">
         <div class="col">
           <p-button
+            [disabled]="selectedOrder?.paymentStatus !== 'PAID' ? true : false"
             label="Buyer received item"
             icon="pi pi-check"
             styleClass="w-full"
