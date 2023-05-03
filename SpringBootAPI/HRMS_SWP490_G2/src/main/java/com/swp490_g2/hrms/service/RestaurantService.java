@@ -150,6 +150,7 @@ public class RestaurantService {
         if (existedRestaurant.getAddress() == null
                 || restaurant.getAddress() == null
                 || !existedRestaurant.getAddress().getId().equals(restaurant.getAddress().getId())
+                || !existedRestaurant.getAddress().getSpecificAddress().equals(restaurant.getAddress().getSpecificAddress())
                 || !existedRestaurant.getAddress().getWard().getId().equals(restaurant.getAddress().getWard().getId())
         ) {
             restaurant.setAddress(addressService.populateLatLng(restaurant.getAddress()));
