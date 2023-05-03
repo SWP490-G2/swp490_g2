@@ -1,10 +1,13 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   HostListener,
   Input,
   OnInit,
   Output,
+  TemplateRef,
+  ViewChild,
 } from "@angular/core";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { of, switchMap } from "rxjs";
@@ -26,6 +29,8 @@ import { Router, ActivatedRoute } from "@angular/router";
   styleUrls: ["./cart-pages.component.scss"],
 })
 export class CartPagesComponent implements OnInit {
+  @ViewChild("sideBar", { static: false }) sideBar: ElementRef;
+
   order?: Order;
   totalPrice = 0;
   visibleDialog: boolean;
@@ -154,6 +159,7 @@ export class CartPagesComponent implements OnInit {
 
   addOrder() {
     if (this.isSideBar) {
+      this.sideBar.nativeElement.classList.add("hidden");
       this.$router.navigate(["cart-pages", "order-information"]);
     } else {
       this.orderAdded.emit();
