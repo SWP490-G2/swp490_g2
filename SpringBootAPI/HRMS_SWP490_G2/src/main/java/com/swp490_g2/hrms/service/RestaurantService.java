@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
@@ -162,14 +161,17 @@ public class RestaurantService {
 
     @Transactional
     public void deleteRestaurantInactive(Long id) {
-        User user = userRepository.findByRequestingRestaurantId(id).orElse(null);
+        List<User> users = userRepository.findAllByRequestingRestaurantId(id);
 
-        if (Objects.nonNull(user)) {
-            user.setRequestingRestaurant(null);
-            user.setRejectRestaurantOpeningRequestReasons(null);
-            user.setRequestingRestaurantStatus(RequestingRestaurantStatus.PENDING);
-            userService.update(user);
+        if (users != null) {
+            users.forEach(user -> {
+                user.setRequestingRestaurant(null);
+                user.setRejectRestaurantOpeningRequestReasons(null);
+                user.setRequestingRestaurantStatus(RequestingRestaurantStatus.PENDING);
+                userService.update(user);
+            });
         }
+
         restaurantRepository.deleteOwnersRestaurantByRestaurantId(id);
         restaurantRepository.deleteProductsByRestaurantId(id);
         restaurantReviewService.deleteByRestaurantId(id);

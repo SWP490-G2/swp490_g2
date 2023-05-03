@@ -1,11 +1,7 @@
 package com.swp490_g2.hrms.repositories;
 
-import com.swp490_g2.hrms.entity.Product;
-import com.swp490_g2.hrms.entity.Token;
 import com.swp490_g2.hrms.entity.User;
 import com.swp490_g2.hrms.entity.enums.Role;
-import com.swp490_g2.hrms.entity.shallowEntities.SearchSpecification;
-import com.swp490_g2.hrms.response.AdminPagesSummary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -64,5 +60,5 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             """, nativeQuery = true)
     void removeAllRestaurantsForSeller(Long sellerId);
 
-    Optional<User> findByRequestingRestaurantId(Long restaurantId);
+    List<User> findAllByRequestingRestaurantId(Long restaurantId);
 }
