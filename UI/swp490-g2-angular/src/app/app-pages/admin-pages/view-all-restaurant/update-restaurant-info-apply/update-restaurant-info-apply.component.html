@@ -55,6 +55,16 @@
             required
           />
         </div>
+        <div
+          class="flex align-items-center gap-1"
+          *ngIf="
+            form.controls['restaurantName']?.dirty &&
+            form.controls['restaurantName']?.errors
+          "
+        >
+          <i class="pi pi-times-circle text-danger"></i>
+          <small class="text-danger"> Restaurant name can't be empty!</small>
+        </div>
       </div>
     </div>
   </div>
@@ -150,6 +160,7 @@
   </div>
 
   <button
+    [disabled]="form.invalid"
     pButton
     pRipple
     label="Save Changes"

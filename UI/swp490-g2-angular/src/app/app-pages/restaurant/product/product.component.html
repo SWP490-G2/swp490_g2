@@ -29,6 +29,7 @@
           [(ngModel)]="product.productName"
           #productName="ngModel"
           required
+          maxlength="255"
         />
         <div
           class="flex align-items-center gap-1"
@@ -49,13 +50,15 @@
           [(ngModel)]="product.price"
           #price="ngModel"
           [required]="true"
+          [min]="0"
+          [max]="10000000"
         ></p-inputNumber>
         <div
           class="flex align-items-center gap-1"
           *ngIf="price.dirty && price.errors"
         >
           <i class="pi pi-times-circle text-danger"></i>
-          <small class="text-danger"> Enter a valid product price </small>
+          <small class="text-danger"> Enter a valid product price. Price must be less than or equal to 10 million VND!</small>
         </div>
       </div>
     </div>
