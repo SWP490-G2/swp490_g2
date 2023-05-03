@@ -95,9 +95,18 @@
           <button
             pButton
             pRipple
-            label="Add to Cart"
+            [label]="
+              getOrderProductDetail(product).product
+                ? 'Update Cart'
+                : 'Add to Cart'
+            "
             icon="pi pi-shopping-cart"
             class="w-full"
+            [ngClass]="
+              getOrderProductDetail(product).product
+                ? 'p-button-success'
+                : 'p-button-primary'
+            "
             (click)="addToCart(product, quantity.value)"
             [disabled]="product.productStatus === 'OUT_OF_STOCK'"
           ></button>

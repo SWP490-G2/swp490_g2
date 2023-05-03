@@ -123,7 +123,7 @@ export class ProductListComponent implements OnInit {
       this.$message.add({
         severity: "success",
         summary: "Success",
-        detail: `Product [${product.productName}] with quantity = ${quantity} is added to cart!`,
+        detail: `Product [${product.productName}] with quantity = ${quantity} is in the cart!`,
       });
     });
   }
