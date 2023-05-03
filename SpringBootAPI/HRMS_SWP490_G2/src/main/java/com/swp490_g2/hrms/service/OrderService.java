@@ -191,7 +191,7 @@ public class OrderService {
         return null;
     }
 
-    public String cancel(Long orderId) {
+    public String cancel(Long orderId, String reasonMessage) {
         User currentUser = userService.getCurrentUser();
         if (currentUser == null)
             return "\"Current user does not have permission to do this action!\"";
@@ -217,6 +217,13 @@ public class OrderService {
         order.setModifiedBy(currentUser.getId());
         order.setPaymentStatus(null);
         orderRepository.save(order);
+
+        OrderTicket orderTicket = OrderTicket.builder()
+                .order(order)
+                .message(reasonMessage)
+                .status(OrderStatus.CANCELLED)
+                .build();
+        orderTicketRepository.save(orderTicket);
 
         webSocketService.push(
                 "/notification",
