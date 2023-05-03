@@ -43,10 +43,11 @@
             class="mr-5 mb-3 lg:mb-0"
             style="width: 90px; height: 90px"
           />
-          <div>
+          <div class="flex flex-column">
             <span class="text-900 font-medium text-3xl">
               {{ requester?.requestingRestaurant?.restaurantName }}</span
             >
+            <span class="text-lg">{{ fullAddress }}</span>
           </div>
         </div>
         <div class="mt-3 lg:mt-0" *ngIf="getStatus()">
