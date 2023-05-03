@@ -5,6 +5,7 @@ import com.swp490_g2.hrms.entity.enums.*;
 import com.swp490_g2.hrms.entity.enums.ProductStatus;
 import com.swp490_g2.hrms.repositories.OrderRepository;
 import com.swp490_g2.hrms.repositories.OrderTicketRepository;
+import com.swp490_g2.hrms.requests.FilterRequest;
 import com.swp490_g2.hrms.requests.SearchRequest;
 import com.swp490_g2.hrms.response.ReportIncomeOverTime;
 import lombok.Getter;
@@ -498,6 +499,18 @@ public class OrderService {
                                     return restaurants.stream().anyMatch(r -> r.getId().equals(restaurant.getId()));
                                 })).toList();
             }
+        }
+
+        FilterRequest orderStatusFilter = searchRequest.getFilters().stream().filter(f -> f.getKey().equals("orderStatus")).findAny().orElse(null);
+        if (orderStatusFilter != null && orderStatusFilter.getValue() != null) {
+            orders = orders.stream().filter(o -> o.getOrderStatus() != null
+                    && o.getOrderStatus().toString().equals(orderStatusFilter.getValue())).toList();
+        }
+
+        FilterRequest paymentStatusFilter = searchRequest.getFilters().stream().filter(f -> f.getKey().equals("paymentStatus")).findAny().orElse(null);
+        if (paymentStatusFilter != null && paymentStatusFilter.getValue() != null) {
+            orders = orders.stream().filter(o -> o.getPaymentStatus() != null
+                    && o.getPaymentStatus().toString().equals(paymentStatusFilter.getValue())).toList();
         }
 
         orders = orders.stream().sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt())).toList();

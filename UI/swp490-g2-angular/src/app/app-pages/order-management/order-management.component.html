@@ -29,6 +29,75 @@
         <th>Restaurant</th>
         <th>Action</th>
       </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <ng-container *ngIf="!isBuyer">
+          <th></th>
+          <th></th>
+          <th></th>
+        </ng-container>
+        <th></th>
+        <th></th>
+        <th>
+          <p-columnFilter
+            field="orderStatus"
+            matchMode="equals"
+            [showMenu]="false"
+          >
+            <ng-template
+              pTemplate="filter"
+              let-value
+              let-filter="filterCallback"
+            >
+              <p-dropdown
+                [ngModel]="value"
+                [options]="orderStatuses"
+                (onChange)="filter($event.value)"
+                placeholder="Any"
+                [showClear]="true"
+              >
+                <ng-template let-option pTemplate="item">
+                  <p-tag
+                    [value]="option"
+                    [severity]="getSeverity(option)"
+                  ></p-tag>
+                </ng-template>
+              </p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter
+            field="paymentStatus"
+            matchMode="equals"
+            [showMenu]="false"
+          >
+            <ng-template
+              pTemplate="filter"
+              let-value
+              let-filter="filterCallback"
+            >
+              <p-dropdown
+                [ngModel]="value"
+                [options]="paymentStatuses"
+                (onChange)="filter($event.value)"
+                placeholder="Any"
+                [showClear]="true"
+              >
+                <ng-template let-option pTemplate="item">
+                  <p-tag
+                    [value]="getPaymentStatusTagInfo(option).name"
+                    [severity]="getPaymentStatusTagInfo(option).severity"
+                  ></p-tag>
+                </ng-template>
+              </p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th></th>
+        <th></th>
+      </tr>
     </ng-template>
     <ng-template pTemplate="body" let-order>
       <tr>

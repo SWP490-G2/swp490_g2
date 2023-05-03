@@ -5,9 +5,12 @@ import { ConfirmationService, MessageService } from "primeng/api";
 import { Subscription, map, of, switchMap } from "rxjs";
 import {
   Address,
+  FilterRequest,
   Order,
   OrderClient,
+  OrderPaymentStatus,
   OrderProductDetail,
+  OrderStatus,
   RestaurantClient,
   SearchRequest,
   User,
@@ -32,6 +35,7 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
   searchRequest = new SearchRequest({
     page: 0,
     size: 10,
+    filters: [],
   });
 
   totalRecords = 0;
@@ -44,6 +48,23 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
   navigationSubscription: Subscription;
   visibleAbortDialog: boolean;
   visibleRejectDialog: boolean;
+
+  orderStatuses: OrderStatus[] = [
+    "COMPLETED",
+    "ACCEPTED",
+    "DELIVERING",
+    "PENDING",
+    "CANCELLED",
+    "ABORTED",
+    "REJECTED",
+  ];
+
+  paymentStatuses: OrderPaymentStatus[] = [
+    "NOT_PAID",
+    "PAID",
+    "NOT_REFUNDED",
+    "REFUNDED",
+  ];
 
   constructor(
     private $router: Router,
@@ -73,6 +94,22 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.refresh();
+  }
+
+  getPaymentStatusTagInfo(paymentStatus: OrderPaymentStatus): {
+    name: string;
+    severity: "success" | "warning";
+  } {
+    const name = paymentStatus.replaceAll("_", " ");
+    const severity =
+      paymentStatus === "NOT_PAID" || paymentStatus === "NOT_REFUNDED"
+        ? "warning"
+        : "success";
+
+    return {
+      name: name,
+      severity: severity,
+    };
   }
 
   refresh() {
@@ -181,8 +218,51 @@ export class OrderManagementComponent implements OnInit, OnDestroy {
     console.log(this.selectedOrder);
   }
 
-  onPage(event: { first: number; rows: number }) {
-    console.log(event);
+  onPage(event: { first: number; rows: number; filters: any }) {
+    if (event.filters?.orderStatus?.value) {
+      const filter = this.searchRequest.filters?.find(
+        (f) => f.key === "orderStatus"
+      );
+
+      if (filter) {
+        filter.value = event.filters.orderStatus.value;
+      } else {
+        this.searchRequest.filters?.push(
+          new FilterRequest({
+            key: "orderStatus",
+            operator: "EQUAL",
+            value: event.filters.orderStatus.value,
+          })
+        );
+      }
+    } else {
+      this.searchRequest.filters = this.searchRequest.filters?.filter(
+        (f) => f.key !== "orderStatus"
+      );
+    }
+
+    if (event.filters?.paymentStatus?.value) {
+      const filter = this.searchRequest.filters?.find(
+        (f) => f.key === "paymentStatus"
+      );
+
+      if (filter) {
+        filter.value = event.filters.paymentStatus.value;
+      } else {
+        this.searchRequest.filters?.push(
+          new FilterRequest({
+            key: "paymentStatus",
+            operator: "EQUAL",
+            value: event.filters.paymentStatus.value,
+          })
+        );
+      }
+    } else {
+      this.searchRequest.filters = this.searchRequest.filters?.filter(
+        (f) => f.key !== "paymentStatus"
+      );
+    }
+
     this.searchRequest.page = event.first / event.rows;
     this.searchRequest.size = event.rows;
     this.refresh();

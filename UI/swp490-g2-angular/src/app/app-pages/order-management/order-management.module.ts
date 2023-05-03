@@ -11,6 +11,7 @@ import { CardModule } from "primeng/card";
 import { ImageAttachmentModule } from "src/app/shared/image-attachment/image-attachment.module";
 import { DividerModule } from "primeng/divider";
 import { InputTextareaModule } from "primeng/inputtextarea";
+import { DropdownModule } from "primeng/dropdown";
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { InputTextareaModule } from "primeng/inputtextarea";
     ImageAttachmentModule,
     DividerModule,
     InputTextareaModule,
-    FormsModule
+    FormsModule,
+    DropdownModule
   ],
   declarations: [OrderManagementComponent],
   exports: [OrderManagementComponent],
