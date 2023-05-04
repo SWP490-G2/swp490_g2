@@ -105,7 +105,7 @@
           {{ order.id }}
         </td>
         <td>
-          {{ order.createdAt * 1000 | date : "dd/MM/yyyy hh:mm" }}
+          {{ order.createdAt * 1000 | date : "dd/MM/yyyy HH:mm" }}
         </td>
         <ng-container *ngIf="!isBuyer">
           <td>

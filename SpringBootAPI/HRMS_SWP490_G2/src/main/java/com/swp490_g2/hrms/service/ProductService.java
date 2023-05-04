@@ -211,13 +211,14 @@ public class ProductService {
             return;
 
         if (product.getImages() != null) {
-//                 employee.stream()
-//                                .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingInt(Employee::getId))),
-//                                                           ArrayList::new));
+            List<File> newImages = new ArrayList<>();
+            product.getImages().forEach(image -> {
+                if(newImages.stream().noneMatch(i -> i.getId().equals(image.getId()))) {
+                    newImages.add(image);
+                }
+            });
 
-            product.setImages(product.getImages().stream()
-                    .collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingLong(File::getId))), ArrayList::new))
-            );
+            product.setImages(newImages);
         }
 
         productRepository.save(product);
