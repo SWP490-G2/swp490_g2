@@ -1,13 +1,22 @@
-import { Component, OnInit, ViewChild, Input, AfterViewInit } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Input,
+  AfterViewInit,
+} from "@angular/core";
 import { NgForm, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { AuthService } from "src/app/global/auth.service";
 import {
+  Address,
   BuyerClient,
   Restaurant,
   RestaurantCategory,
   RestaurantCategoryClient,
   User,
+  Ward,
 } from "src/app/ngswag/client";
 
 @Component({
@@ -44,7 +53,9 @@ export class OpenRestaurantRequestComponent implements OnInit, AfterViewInit {
     private $restaurantCategoryClient: RestaurantCategoryClient,
     private $auth: AuthService,
     private $message: MessageService,
-    private $buyerClient: BuyerClient
+    private $buyerClient: BuyerClient,
+    private $router: Router,
+    private $route: ActivatedRoute
   ) {
     this.refresh();
   }
@@ -72,11 +83,12 @@ export class OpenRestaurantRequestComponent implements OnInit, AfterViewInit {
 
   submit(): void {
     this.restaurant.restaurantCategories = this.selectedCategories;
-    if (this.restaurant.address?.ward)
+    if (this.form.value?.ward && this.form.value?.specificAddress) {
+      this.restaurant.address = Address.fromJS({});
+      this.restaurant.address.ward = Ward.fromJS({});
       this.restaurant.address.ward.id = this.form.value.ward.id;
-
-    if (this.restaurant.address)
       this.restaurant.address.specificAddress = this.form.value.specificAddress;
+    }
 
     if (this.restaurant.phoneNumber?.startsWith("+84"))
       this.restaurant.phoneNumber.replace("+84", "0");
@@ -90,6 +102,8 @@ export class OpenRestaurantRequestComponent implements OnInit, AfterViewInit {
           detail:
             "Opening a new restaurant request has been sent to admin successfully!",
         });
+
+        this.$router.navigate([".."], { relativeTo: this.$route });
       });
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { finalize } from "rxjs";
 import {
@@ -40,7 +40,8 @@ export class RequestOpenDetailsComponent implements OnInit {
     private $adminClient: AdminClient,
     private $route: ActivatedRoute,
     private $userClient: UserClient,
-    private $restaurantClient: RestaurantClient
+    private $restaurantClient: RestaurantClient,
+    private $router: Router
   ) {
     const id: number = Number.parseInt(
       <string>this.$route.snapshot.paramMap.get("id")
@@ -86,7 +87,7 @@ export class RequestOpenDetailsComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        this.refresh();
+        this.$router.navigate([".."], { relativeTo: this.$route });
       });
   }
 
@@ -103,7 +104,7 @@ export class RequestOpenDetailsComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        this.refresh();
+        this.$router.navigate([".."], { relativeTo: this.$route });
       });
   }
 
